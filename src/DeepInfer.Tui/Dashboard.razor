@@ -1,0 +1,115 @@
+@namespace DeepInfer.Tui
+@using DeepInfer.Core
+@using DeepInfer.Runtime
+@using Microsoft.AspNetCore.Components
+@using RazorConsole.Components
+@using Spectre.Console
+@implements IAsyncDisposable
+@inject ClusterClient Client
+
+<Rows>
+    <Panel Title="DeepInfer.NET / v0.3" BorderColor="Color.Cyan1">
+        <Rows>
+            <Markup Content="DISTRIBUTED INFERENCE LAB" Foreground="Color.Cyan1" Decoration="Decoration.Bold" />
+            <Markup Content="@mode" Foreground="Color.Yellow" />
+            <Markup Content="@status" />
+        </Rows>
+    </Panel>
+    <Panel Title="Worker processes · live leases" BorderColor="Color.Grey">
+        <Rows>
+            @if (snapshot is null || snapshot.Workers.Length == 0)
+            {
+                <Markup Content="No registered workers. Start a coordinator and a worker with model weights." />
+            }
+            else
+            {
+                @foreach (var worker in snapshot.Workers)
+                {
+                    <Markup Content="@WorkerLine(worker)" Foreground="@(worker.Healthy ? Color.Green : Color.Red)" />
+                }
+            }
+        </Rows>
+    </Panel>
+    <TextInput Label="Prompt" @bind-Value="prompt" />
+    <Columns>
+        <TextButton Content="Generate" OnClick="Infer" />
+        <TextButton Content="Refresh workers" OnClick="Refresh" />
+    </Columns>
+    <Panel Title="RPC result" BorderColor="Color.Green">
+        <Markup Content="@result" />
+    </Panel>
+    <Markup Content="Tab: focus · Enter: activate · Ctrl+C: quit · Refresh: every 2 seconds" Foreground="Color.Grey" />
+</Rows>
+
+@code {
+    private string? prompt = "用一句话介绍你自己。";
+    private string mode = "Waiting for a loaded model…";
+    private string model = Protocol.SyntheticModel;
+    private string backend = "simulation";
+    private string status = "Connecting…";
+    private string result = "Ready. Requests go through the coordinator to a separate worker process.";
+    private ClusterSnapshot? snapshot;
+    private readonly CancellationTokenSource stop = new();
+    private Task? poll;
+    private bool busy;
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+        poll = Poll();
+    }
+    private async Task Poll()
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+            while (await timer.WaitForNextTickAsync(stop.Token))
+                await InvokeAsync(async () => { await Refresh(); StateHasChanged(); });
+        }
+        catch (OperationCanceledException) { }
+    }
+    private async Task Refresh()
+    {
+        try
+        {
+            snapshot = await Client.StatusAsync(stop.Token);
+            var loaded = snapshot.Workers.Where(w => w.Healthy)
+                .SelectMany(w => w.Registration.Models.Select(m => (Worker: w.Registration, Model: m)))
+                .OrderBy(x => x.Model.IsSimulation).ThenBy(x => x.Worker.Devices.Any(d => d.Backend == "metal") ? 0 : 1).FirstOrDefault();
+            if (loaded.Model is not null)
+            {
+                if (model != loaded.Model.Id && loaded.Model.Id == Protocol.TinyStoriesModel) prompt = "Once upon a time";
+                model = loaded.Model.Id;
+                backend = loaded.Worker.Devices.First(d => d.SupportsInference).Backend;
+                mode = loaded.Model.IsSimulation ? "SIMULATION ONLY · synthetic output" :
+                    $"REAL MODEL · {model} · {(model == Protocol.Qwen36Model ? "Own Metal MoE engine · FP32 state" : backend == "metal" ? "Metal GEMV + CPU attention" : "CPU transformer")}";
+            }
+            else mode = "No loaded model is currently available.";
+            status = $"Protocol v{snapshot.ProtocolVersion} · {snapshot.Workers.Count(w => w.Healthy)} live workers · {DateTime.Now:T}";
+        }
+        catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException)
+        { snapshot = null; status = $"Coordinator unavailable: {ex.Message}"; }
+    }
+    private async Task Infer()
+    {
+        if (busy) return;
+        busy = true; result = "Dispatching RPC…";
+        try
+        {
+            var response = await Client.InferAsync(new(prompt ?? "", 48, model, backend), stop.Token);
+            result = $"{response.Text.Replace("[SIMULATION]", "SIMULATION")}\nWorker: {response.WorkerId} · Backend: {response.Backend} · Compute: {response.ComputeMs:F1} ms · GPU dispatches: {response.GpuDispatches}" +
+                (response.Timings is null ? "" : $"\nPrefill: {response.Timings.PrefillMs:F0} ms · Decode: {response.Timings.DecodeTokensPerSecond:F2} tokens/s");
+        }
+        catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException)
+        { result = ex.Message; }
+        finally { busy = false; }
+    }
+    private static string WorkerLine(WorkerSnapshot worker) =>
+        $"{(worker.Healthy ? "LIVE" : "EXPIRED")} · {worker.Registration.WorkerId} · {worker.Registration.Endpoint} · " +
+            string.Join(", ", worker.Registration.Devices.Select(d => $"{d.Backend}: {d.Name} ({(d.SupportsInference ? "compute ready" : "compute unavailable")})"));
+    public async ValueTask DisposeAsync()
+    {
+        stop.Cancel();
+        if (poll is not null) await poll;
+        stop.Dispose();
+    }
+}

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+cd "$(dirname "$0")"
+export DEEPINFER_MODEL_SIZE=moe
+# Select the measured M5 profile unless the user has chosen a GEMM precision.
+if [[ "$(sysctl -n machdep.cpu.brand_string 2>/dev/null)" == Apple\ M5* && -z "${DEEPINFER_METAL_PREFILL_GEMM:-}" ]]; then
+  export DEEPINFER_METAL_PREFILL_GEMM=bf16-nax
+  export DEEPINFER_METAL_PREFILL_GEMM_IMPL="${DEEPINFER_METAL_PREFILL_GEMM_IMPL:-hybrid}"
+  export DEEPINFER_METAL_PREFILL_EXPERT_IMPL="${DEEPINFER_METAL_PREFILL_EXPERT_IMPL:-packed}"
+  export DEEPINFER_METAL_PREFILL_ATTENTION_IMPL="${DEEPINFER_METAL_PREFILL_ATTENTION_IMPL:-bf16-nax}"
+  export DEEPINFER_METAL_PREFILL_KEY_TILE="${DEEPINFER_METAL_PREFILL_KEY_TILE:-128}"
+  export DEEPINFER_METAL_KV="${DEEPINFER_METAL_KV:-bf16}"
+  if [[ "$DEEPINFER_METAL_PREFILL_GEMM_IMPL" == hybrid && "$DEEPINFER_METAL_PREFILL_EXPERT_IMPL" == packed ]]; then
+    export DEEPINFER_METAL_PREFILL_EXPERT_TILES="${DEEPINFER_METAL_PREFILL_EXPERT_TILES:-adaptive}"
+    export DEEPINFER_METAL_PREFILL_EXPERT_GATE="${DEEPINFER_METAL_PREFILL_EXPERT_GATE:-fused}"
+  fi
+  if [[ "${DEEPINFER_METAL_PREFILL_DELTA:-chunked}" == chunked ]]; then
+    export DEEPINFER_METAL_PREFILL_DELTA_IMPL="${DEEPINFER_METAL_PREFILL_DELTA_IMPL:-device}"
+  fi
+fi
+exec ./scripts/mvp.sh

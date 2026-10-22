@@ -1,0 +1,32 @@
+{
+  "repository": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "upstream": "Qwen/Qwen3.6-35B-A3B",
+  "upstreamRevision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "license": "Apache-2.0",
+  "licenseSource": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/resolve/995ad96eacd98c81ed38be0c5b274b04031597b0/LICENSE",
+  "purpose": "Packed weights for original DeepInfer.NET inference and independent MLX verification",
+  "sha256": {
+    "README.md": "7a228e82ead2765523661536a3f5ca8da62812ffde0df61519ab09575818328e",
+    "chat_template.jinja": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259",
+    "config.json": "5da49c3a84c5a4a751b720b62b9f8703bdb8a0796b5fc55df3278f8b9d6ce296",
+    "configuration.json": "c1b09db419119513247e9b8b912c4b9897106c9b20c6cada7e107d993c5435eb",
+    "generation_config.json": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e",
+    "model-00001-of-00008.safetensors": "ae1ced7360792820cfc12f2e0c8e1ca4d95c712c122e08ebb474b197dee3edaf",
+    "model-00002-of-00008.safetensors": "b8fdc3700f7339dc29d0e8504d15bc61e9beda7dc69eea037084cfa4067f1b26",
+    "model-00003-of-00008.safetensors": "8a7851d9152dd39369026ab0ac7c369e4e62ce67ea1e3836862ff0c651176675",
+    "model-00004-of-00008.safetensors": "3ad6623bb7ff4ddf39ee3854d473d66543ea8fdffc48f03ae4a1dc866da34b36",
+    "model-00005-of-00008.safetensors": "ec9d987a3c499146e6e8edd92afb3943dfd35c908a3de0685346c1ea6901e383",
+    "model-00006-of-00008.safetensors": "9a843214e1e72bfbae1d2c61283e25ee5930b5ccdbe15dccc7d72fba3a5812c4",
+    "model-00007-of-00008.safetensors": "0a1ed4b82de64955eefb212b2eda57acfa1c2330a4258448e5c7f0f8aaf3649a",
+    "model-00008-of-00008.safetensors": "41a1d955de1a9a97de3abebc40b5519b02d542adf266fefbd33b24dc674aef39",
+    "model.safetensors.index.json": "3db12edeebeb65cab9a6eeb63cd74be4e0c74139a75f672701290b98230501cf",
+    "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+    "processor_config.json": "51c5f33646392e0bf1ed3e96be02504da47406c21c6cb86925d8908d1a6c4da7",
+    "tokenizer.json": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+    "tokenizer_config.json": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182",
+    "video_preprocessor_config.json": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+    "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+    "LICENSE": "50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32"
+  }
+}

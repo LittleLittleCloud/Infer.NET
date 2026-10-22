@@ -1,0 +1,29 @@
+{
+  "repository": "mlx-community/Qwen3.6-35B-A3B-5bit",
+  "revision": "c90c1a8b7e7a6a9e39e549f0361a96eb05bbb499",
+  "upstream": "Qwen/Qwen3.6-35B-A3B",
+  "upstreamRevision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "license": "Apache-2.0",
+  "licenseSource": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/resolve/995ad96eacd98c81ed38be0c5b274b04031597b0/LICENSE",
+  "purpose": "External MLX text inference baseline; not DeepInfer.NET inference",
+  "sha256": {
+    "README.md": "535bc34ad2960dfd8a206de2a2c0e741b1e781a11305b2b074f0b8db8e38cca5",
+    "chat_template.jinja": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259",
+    "config.json": "110e0739faf595a13f33fb182f18d1480bb7168ef31328a648cbada9b81e1fb3",
+    "configuration.json": "c1b09db419119513247e9b8b912c4b9897106c9b20c6cada7e107d993c5435eb",
+    "generation_config.json": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e",
+    "model-00001-of-00005.safetensors": "6aca318d61d3b81e14485ec5bb25410f6beb10d3d3e716ceca7faa7ae1765ca9",
+    "model-00002-of-00005.safetensors": "4c8b27254d16f7a782e8347c666943f2eeeb05f9ccb46784ff2a4d76853afbf9",
+    "model-00003-of-00005.safetensors": "6db2bb1e7a29697526ac903e5e4c47e725e1ad41c99db11ca59e2c579544da08",
+    "model-00004-of-00005.safetensors": "50ca1cf85b3f90457278d77014adcced192d5b8150a947387ff4ddf13394e3a1",
+    "model-00005-of-00005.safetensors": "34aca11b97981a112f44402974075ff342a2cc093cb2efe932b282258a641b8b",
+    "model.safetensors.index.json": "cdce72019e8cef31508c83a7fa7d9e35957d1807a4afdb6939b87667e95e196b",
+    "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+    "processor_config.json": "51c5f33646392e0bf1ed3e96be02504da47406c21c6cb86925d8908d1a6c4da7",
+    "tokenizer.json": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+    "tokenizer_config.json": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182",
+    "video_preprocessor_config.json": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+    "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+    "LICENSE": "50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32"
+  }
+}

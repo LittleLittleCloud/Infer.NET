@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup><OutputType>Exe</OutputType><AssemblyName>deepinfer-tui</AssemblyName></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="RazorConsole.Core" Version="0.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <ProjectReference Include="../DeepInfer.Runtime/DeepInfer.Runtime.csproj" />
+    <TrimmerRootAssembly Include="$(AssemblyName)" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><AssemblyName>deepinfer</AssemblyName>
+    <IsAotCompatible>true</IsAotCompatible><PublishAot>true</PublishAot>
+    <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../DeepInfer.Core/DeepInfer.Core.csproj" />
+    <ProjectReference Include="../DeepInfer.Backends/DeepInfer.Backends.csproj" />
+    <ProjectReference Include="../DeepInfer.Runtime/DeepInfer.Runtime.csproj" />
+  </ItemGroup>
+</Project>

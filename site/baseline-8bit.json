@@ -1,0 +1,155 @@
+{
+  "model": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "recordedAt": "2026-10-22",
+  "measurementSourceCommit": null,
+  "sourceCommitNote": "Historical runs predate the initial Git commit; identify measured builds by binary and report hashes.",
+  "nativeLibrarySha256": "4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c",
+  "hostSha256": "c6f28d325c85ebad4ba5f2767a9bc490d8b05a2d73ce5069dab6c07ebe8cb81b",
+  "sourceSummarySha256": "3ff58e529dfa7c2fcf31967ae6c54df12e6b2e97453c3c62e9238428b20b2b87",
+  "measurements": [
+    {
+      "inputTokens": 8192,
+      "outputTokens": 128,
+      "prefillChunkTokens": 2048,
+      "nativeMetalLibrarySha256": "4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c",
+      "matchesCurrentNativeLibrary": true,
+      "trials": 3,
+      "excludedWarmups": 1,
+      "warmupPrefillSeconds": [
+        17.035357400000002
+      ],
+      "prefillSeconds": 3.467201766666667,
+      "firstTokenSeconds": 3.4722547333333336,
+      "decodeTokensPerSecond": 66.34495689432327,
+      "maxMetalAllocatedGiB": 35.35090637207031,
+      "contextCapacity": 10240,
+      "outputSequencesComparedIncludingWarmup": 4,
+      "outputIdsRepeatable": true,
+      "systemSwapPages": [
+        {
+          "Swapins": 4716,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 6631,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 13718,
+          "Swapouts": 6340
+        }
+      ],
+      "last10PercentPrefillSecondsProxy": 0.3733066666666665,
+      "rawReportName": "qwen36-8bit-split-8k-128out.json",
+      "rawReportSha256": "4bc27afdd3b30e04cfa05983ca445198f2577f338b25458edfe07c63ec086966",
+      "rawReportAvailability": "local-only, not published",
+      "prefillTokensPerSecond": 2362.712224813991
+    },
+    {
+      "inputTokens": 32768,
+      "outputTokens": 128,
+      "prefillChunkTokens": 2048,
+      "nativeMetalLibrarySha256": "4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c",
+      "matchesCurrentNativeLibrary": true,
+      "trials": 3,
+      "excludedWarmups": 1,
+      "warmupPrefillSeconds": [
+        35.338855900000006
+      ],
+      "prefillSeconds": 17.742803033333335,
+      "firstTokenSeconds": 17.7631814,
+      "decodeTokensPerSecond": 60.50599880452219,
+      "maxMetalAllocatedGiB": 35.86836242675781,
+      "contextCapacity": 34816,
+      "outputSequencesComparedIncludingWarmup": 4,
+      "outputIdsRepeatable": true,
+      "systemSwapPages": [
+        {
+          "Swapins": 4603,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 2328,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 9040,
+          "Swapouts": 0
+        }
+      ],
+      "last10PercentPrefillSecondsProxy": 2.2493399999999983,
+      "rawReportName": "qwen36-8bit-split-32k-128out.json",
+      "rawReportSha256": "a4d3685eee519b85db83c29519351cc2ee91d5a1ba82b8e4c4ab82c30d2fc980",
+      "rawReportAvailability": "local-only, not published",
+      "prefillTokensPerSecond": 1846.833329459775
+    },
+    {
+      "inputTokens": 131072,
+      "outputTokens": 128,
+      "prefillChunkTokens": 2048,
+      "nativeMetalLibrarySha256": "4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c",
+      "matchesCurrentNativeLibrary": true,
+      "trials": 3,
+      "excludedWarmups": 1,
+      "warmupPrefillSeconds": [
+        166.357588
+      ],
+      "prefillSeconds": 135.96647043333334,
+      "firstTokenSeconds": 136.0393656666667,
+      "decodeTokensPerSecond": 37.51974919948275,
+      "maxMetalAllocatedGiB": 37.93818664550781,
+      "contextCapacity": 133120,
+      "outputSequencesComparedIncludingWarmup": 4,
+      "outputIdsRepeatable": true,
+      "systemSwapPages": [
+        {
+          "Swapins": 29570,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 9315,
+          "Swapouts": 0
+        },
+        {
+          "Swapins": 12049,
+          "Swapouts": 8428
+        }
+      ],
+      "last10PercentPrefillSecondsProxy": 21.415046666666665,
+      "rawReportName": "qwen36-8bit-split-128k-128out.json",
+      "rawReportSha256": "2011e59ef73905ba60becf4a8c61770b39f67690905442345b9c0300d4e0e9c8",
+      "rawReportAvailability": "local-only, not published",
+      "prefillTokensPerSecond": 964.0023719249726
+    },
+    {
+      "inputTokens": 131072,
+      "outputTokens": 4096,
+      "prefillChunkTokens": 512,
+      "nativeMetalLibrarySha256": "4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c",
+      "matchesCurrentNativeLibrary": true,
+      "trials": 1,
+      "excludedWarmups": 1,
+      "warmupPrefillSeconds": [
+        206.3325955
+      ],
+      "prefillSeconds": 164.1566886,
+      "firstTokenSeconds": 164.23224040000002,
+      "decodeTokensPerSecond": 38.95439901592683,
+      "maxMetalAllocatedGiB": 37.54093933105469,
+      "contextCapacity": 135168,
+      "outputSequencesComparedIncludingWarmup": 2,
+      "outputIdsRepeatable": true,
+      "systemSwapPages": [
+        {
+          "Swapins": 39669,
+          "Swapouts": 16639
+        }
+      ],
+      "last10PercentPrefillSecondsProxy": 24.091859999999997,
+      "rawReportName": "qwen36-8bit-split-128k-chunk512-4096out.json",
+      "rawReportSha256": "9c643cf8dece102532d1eef63d1bf969b40a449ae5fb16d4f6dceea892fbee1a",
+      "rawReportAvailability": "local-only, not published",
+      "prefillTokensPerSecond": 798.4566521037876
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DeepInfer.Backends/DeepInfer.Backends.csproj" />
+    <Project Path="src/DeepInfer.Core/DeepInfer.Core.csproj" />
+    <Project Path="src/DeepInfer.Host/DeepInfer.Host.csproj" />
+    <Project Path="src/DeepInfer.Runtime/DeepInfer.Runtime.csproj" />
+    <Project Path="src/DeepInfer.Tui/DeepInfer.Tui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DeepInfer.Tests/DeepInfer.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,81 @@
+# Third-party notices
+
+## llama2.c and tokenizer compatibility
+
+The legacy FP32 checkpoint reader, tokenizer behavior and transformer implementation were developed with reference to Andrej Karpathy's llama2.c (revision 350e04fe35433e6d2941dce5a1f53308f87058eb). The following notice applies to adapted/reference-derived portions. The Metal bridge/kernel is an original implementation.
+
+MIT License
+
+Copyright (c) 2023 Andrej
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## TinyStories checkpoint
+
+The karpathy/tinyllamas model card labels the downloaded model MIT. Weights are downloaded separately, not committed. Exact model/tokenizer revisions and digests are in models/provenance.json. This notice accompanies the compatible tokenizer and references the upstream licensing; it does not change model authorship.
+
+## RazorConsole
+
+The optional UI uses RazorConsole.Core 0.6.0 (MIT). Its package and transitive dependency notices remain with their upstream packages. No dotLLM source is incorporated.
+
+## Qwen2.5-3B-Instruct
+
+Official Qwen weights/tokenizer/config are separately downloaded at revision aa8e72537993ba99e69dfaafa59ed015b17504d1 under the Qwen Research License. The complete upstream notice is preserved in models/qwen2.5-3b-instruct/LICENSE. These materials are not covered by the TinyStories/llama2.c MIT notice above. The .NET inference path does not invoke Python or Transformers; those are optional independent reference tools.
+
+## Qwen2.5-7B-Instruct
+
+The separately downloaded official 7B checkpoint at revision a09a35458c702b33eeacc393d103063234e8bc28 is Apache-2.0 licensed. Its full upstream license is retained in models/qwen2.5-7b-instruct/LICENSE, with fixed shard digests in provenance.json. This differs from the 3B checkpoint's Qwen Research License.
+
+## Qwen3.6 checkpoint and independent MLX reference
+
+The separately downloaded `mlx-community/Qwen3.6-35B-A3B-5bit` quantization at
+revision `c90c1a8b7e7a6a9e39e549f0361a96eb05bbb499` derives from Qwen's
+Apache-2.0 model. Its upstream license and quantized-file provenance are retained
+in `models/qwen3.6-35b-a3b-5bit-mlx/`. Binaries are not committed. MLX/MLX-LM
+and their Python dependencies are installed only into an ignored external
+benchmark environment; their upstream licenses apply. No MLX implementation
+source is incorporated into the .NET engine. The original .NET implementation
+reads the same affine checkpoint directly. MLX-LM 0.32.2 was consulted to
+interpret the checkpoint's sanitized normalization/conv layout and as an
+independent numerical oracle; it is not a product runtime dependency. See
+`docs/QWEN36-OWN-BENCHMARK.md` and `docs/MLX-BASELINE.md`.
+
+The reference implementation's upstream notice is retained for attribution:
+
+MIT License
+
+Copyright © 2023 Apple Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

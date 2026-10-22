@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+"""Build the Infer.NET progress site using only the Python standard library."""
+import html
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / 'artifacts/pages'
+REPO = 'https://github.com/LittleLittleCloud/Infer.NET'
+
+
+def esc(value):
+    return html.escape(str(value), quote=True)
+
+
+def source(path, label='完整记录'):
+    assert (ROOT / path).is_file(), path
+    return f'<a href="{REPO}/blob/{esc(revision)}/{esc(path)}">{esc(label)} ↗</a>'
+
+
+def table(headers, rows):
+    return '<div class="table-scroll"><table><thead><tr>' + ''.join(
+        f'<th scope="col">{esc(x)}</th>' for x in headers
+    ) + '</tr></thead><tbody>' + ''.join(
+        '<tr>' + ''.join(f'<td>{esc(x)}</td>' for x in row) + '</tr>' for row in rows
+    ) + '</tbody></table></div>'
+
+
+def page(title, body, active):
+    return f'''<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(title)} · Infer.NET</title><meta name="description" content="Infer.NET 项目进展、可复现实验笔记与 8bit 双机性能目标。">
+<link rel="stylesheet" href="style.css"></head><body>
+<a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
+<nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
+<a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 本次更新没有重跑 GPU benchmark</span>
+<span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
+
+
+revision = os.environ.get('GITHUB_SHA')
+if not revision:
+    result = subprocess.run(['git', 'rev-parse', '--verify', 'HEAD'], cwd=ROOT, text=True, capture_output=True)
+    revision = result.stdout.strip() if result.returncode == 0 else 'main'
+baseline = json.loads((ROOT / 'site/baseline-8bit.json').read_text())
+notes = json.loads((ROOT / 'site/experiments.json').read_text())
+assert len({n['id'] for n in notes}) == len(notes)
+measurements = baseline['measurements']
+assert {(m['inputTokens'], m['outputTokens']) for m in measurements} == {(8192,128),(32768,128),(131072,128),(131072,4096)}
+for m in measurements:
+    assert m['prefillSeconds'] > 0 and m['trials'] > 0
+    assert abs(m['prefillTokensPerSecond'] * m['prefillSeconds'] - m['inputTokens']) < .001
+    assert len(m['rawReportSha256']) == 64
+
+target_text = (ROOT / 'docs/QWEN36-8BIT-TARGETS.md').read_text()
+target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
+               if line.startswith('|128K 输入')]
+assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
+
+body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p><h1>从单机基线，<br>走向双机推理。</h1>
+<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。下一阶段是 Windows RTX 4090 接入、CUDA 前段实现与跨机状态交接。</p>
+<div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机尚未实测</span><span>无前缀缓存</span></div></section>
+<section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
+<article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
+<article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
+<section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
+<ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
+<li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
+<li><span class="status pending">待接入</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>等待 SSH 配置；驱动、toolkit、显存与实际网络仍需核验。</p></div></li>
+<li><span class="status pending">待实现</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>4090 前段 prefill → Mac 后段；完整 KV / Delta 状态就绪后由 Mac decode。</p></div></li>
+<li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
+<section><div class="section-head"><h2>8bit 单机实测</h2>''' + source('docs/QWEN36-8BIT.md') + '''</div>
+<p>M5 Pro 20 核 GPU / 48 GiB，AC / High Power。模型已加载，每次清空请求状态；BF16 GEMM 输入及 KV，FP32 状态与累加。</p>'''
+body += table(['输入 / 输出 tokens', 'prefill 秒', 'prefill token/s', 'decode token/s', '分块', '正式次数'], [
+    [f"{m['inputTokens']:,} / {m['outputTokens']:,}", f"{m['prefillSeconds']:.3f}", f"{m['prefillTokensPerSecond']:.1f}", f"{m['decodeTokensPerSecond']:.2f}", m['prefillChunkTokens'], m['trials']] for m in measurements
+])
+body += '''<p class="note">短输出各档为三次均值；长输出只有一次正式测量。固定输出忽略 EOS，用于吞吐测试，不等于自然生成质量。历史 worker prefill 与双机端到端指标的计时范围不同。</p>
+<div class="notice"><strong>内存限制仍然存在</strong><p>128K + 4096 必须使用较小工作区。该轮正式请求整机新增 swap-out 约 260 MiB，首次完整预热约 9.47 GiB。不能宣称“48 GiB 无 swap”。</p></div></section>
+<section><div class="section-head"><h2>固定验收目标</h2>''' + source('docs/QWEN36-8BIT-TARGETS.md', '规范 v1') + '</div>'
+body += table(['指标', '阶段验收', '最终目标'], target_rows)
+body += '''<p class="note">目标设备：M5 Pro 48 GiB + RTX 4090 24 GiB。128K = 131072 tokens，无 prefix cache；每档完整预热一次、正式至少三次。只有正确性、资源、稳定性与性能全部通过才算完成。</p>
+<p>20/20 当前只有理想估算：短输出 prefill 约 68 秒，长输出约 82 秒。没有 CUDA 或网络实测支持，不能把估算当作已达到目标。</p></section>
+<section><div class="section-head"><h2>实验笔记</h2><a href="experiments.html">查看完整笔记 →</a></div><div class="cards">'''
+for n in notes:
+    body += f'<a class="card" href="experiments.html#{esc(n["id"])}"><span class="eyebrow">{esc(n["kind"])}</span><h3>{esc(n["title"])}</h3><p>{esc(n["conclusion"])}</p><span>阅读记录 →</span></a>'
+body += '''</div></section><section><h2>证据与复现</h2><p>历史实验发生在首次 Git 提交之前，通过二进制与报告 SHA-256 定位。页面 commit 是发布版本，不是历史测量版本。</p>
+<p><a href="baseline-8bit.json">下载 8bit 测量摘要 JSON</a> · <a href="experiments.json">下载实验笔记 JSON</a></p>
+<p class="note">公开摘要不含原始提示词和完整 RPC 日志；这些原始文件仍保存在本地，摘要保留其文件名与散列。当前链接不意味着原始日志已公开。</p></section>'''
+OUT.mkdir(parents=True, exist_ok=True)
+(OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
+
+body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
+<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次没有新增 GPU 实验。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
+for n in notes:
+    body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
+    for key, label in [('question','问题与假设'),('setup','实验条件'),('change','本轮改动'),('result','观察结果'),('validation','验证与证据范围'),('conclusion','结论'),('next','后续方向')]:
+        body += f'<h3>{label}</h3><p>{esc(n[key])}</p>'
+    if n['commands']:
+        body += '<details><summary>复现入口与前提</summary><p>先按完整报告准备固定模型、输入与数值参考；GPU 测试串行运行，保留已有服务，使用新的运行标识。汇总命令需要历史原始产物；本页面不提供这些大文件。</p><pre><code>' + esc('\n'.join(n['commands'])) + '</code></pre></details>'
+    body += '<p>' + source(n['source']) + f' · <a href="{REPO}/issues/1">关联总目标 #1</a></p>'
+    if n.get('evidence'):
+        body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
+    body += '</article>'
+(OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
+for name in ['baseline-8bit.json', 'experiments.json', 'style.css']:
+    shutil.copyfile(ROOT / 'site' / name, OUT / name)
+(OUT / '.nojekyll').write_text('')
+print(f'Built {OUT}: 2 pages, {len(notes)} notes, {len(measurements)} measured baselines; revision {revision}')
