@@ -77,7 +77,7 @@
   {
     "id": "first-public-ci",
     "title": "首次公开发布与云端 CI 还原失败",
-    "kind": "工程验证 · Pages 已发布 · CI 待修复",
+    "kind": "工程验证 · 首次失败记录 · 后续已修复",
     "source": ".github/workflows/ci.yml",
     "question": "现有本机开发树能否在干净 GitHub runner 上还原、构建并完成已有检查？",
     "setup": "首次提交 abfb4d1b2ce08f9f5fb54ead893083559bb64cd5；2026-10-22，GitHub Actions，Ubuntu 与 macOS runner。",
@@ -85,8 +85,23 @@
     "result": "Pages 构建与部署成功，进展页、实验笔记与摘要 JSON 均返回 HTTP 200。macOS CI 依赖还原报 NU1004：锁文件请求 ILLink/ILCompiler 10.0.0，选用 SDK 请求 10.0.3。",
     "validation": "已核对 Pages 发布版本、页面内容和本地链接。浏览器自动预览工具无法启动，未完成截图视觉检查。云端还原失败，不能声称该轮云端构建、测试或 AOT 已通过。",
     "conclusion": "发布与产品构建是独立验证项。历史本机测试通过不替代干净云端验证；此次依赖失败本身不证明推理性能退化。",
-    "next": "Issue #5 对齐 SDK 选择与锁文件，随后重新验证两平台 CI；不静默关闭 locked restore。",
+    "next": "后续已在“云端 CI：SDK 固定与 Metal 构建环境修复”记录中完成 Issue #5 验证；保留本次失败作为历史证据。",
     "commands": ["gh run view 39854806684 --repo LittleLittleCloud/Infer.NET --log-failed"],
+    "evidence": null
+  },
+  {
+    "id": "ci-repair",
+    "title": "云端 CI：SDK 固定与 Metal 构建环境修复",
+    "kind": "工程验证 · Linux / macOS 通过",
+    "source": ".github/workflows/ci.yml",
+    "question": "如何让干净云端环境使用与锁文件一致的 SDK，并编译现有 Metal 4 路径？",
+    "setup": "2026-10-22；源版本 2ae54f94ab15d78231afb3e5474df17d82d1d054，GitHub Actions 运行 39855878001。Ubuntu linux-x64、macos-26 osx-arm64；.NET SDK 10.0.100，云端 macOS SDK 26.5。",
+    "change": "global.json 禁止 SDK roll-forward，setup-dotnet 从同一文件安装版本并验证实际选择；保留 locked restore。macOS runner 改为 macos-26，并检查 SDK >= 26。关闭矩阵 fail-fast，使两平台独立完成检查。未更改推理算子或性能目标。",
+    "result": "固定 .NET SDK 后两平台还原成功；随后旧 macOS SDK 暴露 Apple10 / Metal 4 声明缺失，升级构建环境后解决。最终两平台各通过 68/68 单测、25/25 托管进程 RPC 检查、25/25 Native AOT RPC 检查；Release 构建均零警告、零错误。",
+    "validation": "实际 GitHub Actions 完整运行成功，包含 locked restore、build、test、RPC、Native AOT publish 及 AOT RPC。本机也通过 locked restore、Release 构建、68 项单测和 25 项 RPC。锁文件未重新生成。CI RPC 使用模拟推理，未运行 GPU 模型性能测试。",
+    "conclusion": "两项构建环境问题已修复；SDK 安装版本、实际选择版本和依赖锁一致。Metal 新版声明的编译需求与运行时能力检测分别保留，云端 CI 成功不代表双机推理或 GPU 性能目标已完成。",
+    "next": "继续 Issue #2 的 Windows SSH 与 CUDA 环境核验，再推进 CUDA 前段和跨机状态交接。",
+    "commands": [],
     "evidence": null
   }
 ]
