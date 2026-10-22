@@ -8,7 +8,7 @@ jobs:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-          - os: macos-15
+          - os: macos-26
             rid: osx-arm64
     runs-on: ${{ matrix.os }}
     steps:
@@ -30,6 +30,14 @@ jobs:
           if actual != expected:
               raise SystemExit(f'Expected SDK {expected}, selected {actual}')
           PY
+      - name: Verify Metal SDK
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          xcodebuild -version
+          sdk_version="$(xcrun --sdk macosx --show-sdk-version)"
+          echo "macOS SDK: $sdk_version"
+          test "${sdk_version%%.*}" -ge 26
       - run: dotnet restore DeepInfer.slnx --locked-mode
       - run: dotnet build DeepInfer.slnx -c Release --no-restore
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build

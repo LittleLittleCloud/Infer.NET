@@ -108,7 +108,7 @@ deepinfer infer --prompt "写一句关于月亮的诗。"
 
 ## 构建与验证
 
-需要固定的 .NET SDK 10.0.100、Python 3.9+；Metal 需要 macOS 15+、Apple GPU 和构建时的命令行工具。Metal shader 在运行时编译，无需单独安装离线 Metal 编译器。
+需要固定的 .NET SDK 10.0.100、Python 3.9+。构建 Metal bridge 需要含 macOS 26+ SDK 的 Xcode/命令行工具，CI 使用 macos-26 runner；基础运行路径目标仍为 macOS 15+ / Apple GPU，M5 BF16/Metal 4 路径额外要求 macOS 26+ 与相应 GPU。Metal shader 在运行时编译，无需单独安装离线 Metal 编译器。
 
 `global.json` 禁止 SDK 自动滚动到其他补丁版本，CI 也从该文件安装并核对版本。SDK 会引入隐式 ILLink/Native AOT 包，升级时须一起更新并验证依赖锁文件；保留 `--locked-mode`，避免开发机和 runner 使用不同依赖图。
 
