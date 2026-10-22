@@ -73,5 +73,20 @@
     "next": "Issue #2 环境接入 → #3 CUDA 与状态交接 → #4 同口径正式验收。",
     "commands": [],
     "evidence": null
+  },
+  {
+    "id": "first-public-ci",
+    "title": "首次公开发布与云端 CI 还原失败",
+    "kind": "工程验证 · Pages 已发布 · CI 待修复",
+    "source": ".github/workflows/ci.yml",
+    "question": "现有本机开发树能否在干净 GitHub runner 上还原、构建并完成已有检查？",
+    "setup": "首次提交 abfb4d1b2ce08f9f5fb54ead893083559bb64cd5；2026-10-22，GitHub Actions，Ubuntu 与 macOS runner。",
+    "change": "首次建立公开仓库、版本化实验摘要、Issues 和 GitHub Pages 发布流程。未改动推理算子。",
+    "result": "Pages 构建与部署成功，进展页、实验笔记与摘要 JSON 均返回 HTTP 200。macOS CI 依赖还原报 NU1004：锁文件请求 ILLink/ILCompiler 10.0.0，选用 SDK 请求 10.0.3。",
+    "validation": "已核对 Pages 发布版本、页面内容和本地链接。浏览器自动预览工具无法启动，未完成截图视觉检查。云端还原失败，不能声称该轮云端构建、测试或 AOT 已通过。",
+    "conclusion": "发布与产品构建是独立验证项。历史本机测试通过不替代干净云端验证；此次依赖失败本身不证明推理性能退化。",
+    "next": "Issue #5 对齐 SDK 选择与锁文件，随后重新验证两平台 CI；不静默关闭 locked restore。",
+    "commands": ["gh run view 39854806684 --repo LittleLittleCloud/Infer.NET --log-failed"],
+    "evidence": null
   }
 ]
