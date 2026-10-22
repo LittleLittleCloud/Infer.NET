@@ -67,6 +67,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
+<div class="notice"><strong>首次云端 CI 待修复</strong><p>首次发布的 macOS CI 在依赖还原阶段出现 NU1004：SDK 补丁选择与锁文件不一致。Pages 发布已成功，云端构建与推理验收仍需分别验证。<a href="''' + REPO + '''/issues/5">跟踪 #5 ↗</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
 <li><span class="status pending">待接入</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>等待 SSH 配置；驱动、toolkit、显存与实际网络仍需核验。</p></div></li>
