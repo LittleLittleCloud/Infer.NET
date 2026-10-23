@@ -75,3 +75,7 @@ Evidence run: `setup-native-after-msvc-20261022`, exit **0**, with `result.json`
 | Result JSON | `c59b02bd62dbabb717637e6d4458a027284814d423e951faa3d8b2a32ead2d50` |
 
 The Windows development environment is ready. [PR #6](https://github.com/LittleLittleCloud/Infer.NET/pull/6) contains the reproducible setup and validation scripts. Next are effective link/state-transfer measurements and the actual 8bit CUDA front-stage implementation. Issue #2 remains open for its unmeasured network acceptance item; model inference and dual-host performance are not claimed by this environment check.
+
+## Follow-up: state-transfer link baseline
+
+The effective-bandwidth item was measured later on 2026-10-22. [The state-transfer report](KV-SYNC-BENCHMARK.md) records 40 validated direct-TCP transfers, actual GPU memory staging, full 128K first-20-layer state and a prefix-hit payload surrogate. Complete-state medians were 24.659 s CUDA→Metal and 41.203 s Metal→CUDA. This completes the environment/link baseline scope of Issue #2; functional model state export/import and continuation remain Issue #3. Earlier “unmeasured” entries above describe their historical checkpoints.

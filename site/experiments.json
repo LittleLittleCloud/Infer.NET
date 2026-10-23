@@ -150,7 +150,7 @@
   {
     "id": "windows-native-validation",
     "title": "Windows CUDA 与 Native AOT 验证",
-    "kind": "工程验证 · 原生通过 · 链路待测",
+    "kind": "工程验证 · 原生通过 · 网络后续已测",
     "source": "docs/WINDOWS-ENVIRONMENT.md",
     "question": "管理员完成 Build Tools 安装后，4090 能否实际编译执行 CUDA，并运行 Native AOT 原生 RPC？",
     "setup": "2026-10-22，Windows 原生 RTX 4090，MSVC 14.44.35207，CUDA 13.4.59，SDK 10.0.100。两端干净源码版本 bfb363fab08d49cc2b2c57d9857802a8df9f4db2；run setup-native-after-msvc-20261022。",
@@ -158,7 +158,22 @@
     "result": "FP32 GEMM 的 851/851 输出通过 CPU double 参考检查，最大绝对误差 5.96756026e-07（容差 1e-5）。Native AOT 发布成功，原生程序的 25/25 独立进程 RPC 检查通过，整体退出码 0。",
     "validation": "M=37、N=23、K=53，包含 tile 尾部。原始日志与结果 JSON 在两端保留但未公开，源码和产物 SHA256 见完整记录。此前托管阶段的 68 单测与 25 RPC 通过，本轮未重复。",
     "conclusion": "Windows 开发环境已就绪。CUDA 检查只证明工具链和小型计算正确，RPC 使用模拟推理；CUDA 模型推理、双机交接和性能目标仍待实现验收。",
-    "next": "继续测量有效链路吞吐与状态传输开销，推进 8bit CUDA 前段实现；Issue #2 因网络验收未完成保持打开。",
+    "next": "后续“CUDA ↔ Metal：KV 与递归状态同步基线”已完成有效吞吐测量；模型前段和语义正确的状态交接仍待实现。",
+    "commands": [],
+    "evidence": null
+  },
+  {
+    "id": "kv-sync-lan",
+    "title": "CUDA ↔ Metal：KV 与递归状态同步基线",
+    "kind": "传输实测 · 40 次校验通过 · 非模型推理",
+    "source": "docs/KV-SYNC-BENCHMARK.md",
+    "question": "家庭局域网上，128K 前 20 层状态真正从一端 GPU 到另一端 GPU 可读需要多久？",
+    "setup": "2026-10-22；Mac M5 Pro，AC / High Power，5 GHz Wi-Fi；Windows RTX 4090 接物理千兆网口。两端源码 75afbb2ed240ca55fd8aedd00fdb2420dfefd991。单连接直接 TCP、无压缩，SSH 仅负责控制。",
+    "change": "新增合成状态传输基准：CUDA 显存 ↔ 页锁定内存 ↔ TCP ↔ Metal 共享缓冲；接收端 GPU 检查全部数据。先测 host-only 分块，再测完整状态和 90% 前缀已同步的增量，每档一轮预热、三轮正式。",
+    "result": "128K 前 20 层 BF16 KV 1.25 GiB，加 FP32 Delta/卷积状态 31.406 MiB：4090 → Mac 中位 24.659 s / 55.77 MB/s，反向 41.203 s / 33.37 MB/s。增量 159.414 MiB 分别为 2.469 s、4.501 s。完整状态 CUDA 拷贝仅约 0.51–0.53 s。",
+    "validation": "40/40 次传输完成校验，两端通过 CPU 参考、尾部和故意损坏数据拒绝检查。所有正式轮次与散列见公开 JSON；原始日志仅保存在两端。最终通用路径启动器另通过双向小数据 smoke。",
+    "conclusion": "这条实际链路的状态同步主要受网络传输限制。完整正向三轮 21.489 / 24.659 / 25.933 s，不能继续默认 110 MB/s。按实测中位速率外推 hidden 加状态的链路服务约 43.91 s，仍非完整 prefill 实测。",
+    "next": "CUDA 模型状态导出、导入和连续生成正确性仍待实现；可用相同基准做 Mac 有线网络对照。90% 命中测试只模拟传输量，不代表已有 prefix cache 功能。",
     "commands": [],
     "evidence": null
   }
