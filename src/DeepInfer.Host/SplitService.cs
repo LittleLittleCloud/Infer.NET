@@ -30,6 +30,8 @@ public static class SplitService
     }
     private static void Profile(Options o)
     {
+        // Managed environment changes below do not configure libc getenv on Unix.
+        // Keep the managed chunk policy; verify native precision before warming or accepting requests.
         if (o.Get("kv", "fp32") != "fp32") throw new ArgumentException("Deployment currently accepts only verified FP32 KV; BF16 remains experimental.");
         foreach (System.Collections.DictionaryEntry item in Environment.GetEnvironmentVariables())
             if (item.Key is string key && key.StartsWith("DEEPINFER_METAL_", StringComparison.Ordinal) || item.Key is string k && k.StartsWith("DEEPINFER_GRAPH_", StringComparison.Ordinal))
@@ -41,6 +43,9 @@ public static class SplitService
         _ = SplitInference.IncrementalKv(o);
         _ = SplitInference.FusedDecode(o);
         if (o.Get("suffix-chunk-tokens", "128") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
+        if (o.Get("metal-scratch-tokens", "512") is not ("128" or "512")) throw new ArgumentException("metal-scratch-tokens must be 128 or 512.");
+        if (o.Number("metal-scratch-tokens", 512, 128, 512) < o.Number("suffix-chunk-tokens", 128, 32, 512))
+            throw new ArgumentException("metal-scratch-tokens must cover suffix-chunk-tokens.");
         if (o.Get("suffix-receive-overlap", "off") is not ("on" or "off")) throw new ArgumentException("suffix-receive-overlap must be on or off.");
         if (o.Get("cuda-send-overlap", "on") is not ("on" or "off")) throw new ArgumentException("cuda-send-overlap must be on or off.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("cuda-prefill must be serial, batch-fp32 or batch-fp32-packed.");
@@ -291,7 +296,12 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
-                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: 512, fusedFp32Decode: SplitInference.FusedDecode(o));
+                var scratchTokens = o.Number("metal-scratch-tokens", 512, 128, 512);
+                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: scratchTokens, fusedFp32Decode: SplitInference.FusedDecode(o));
+                var nativeProfile = gpu.ExecutionProfile();
+                Console.WriteLine($"METAL_NATIVE_PROFILE {nativeProfile}");
+                if (nativeProfile.KvElementBytes != 4 || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
+                    throw new InvalidOperationException("Native Metal profile differs from the verified FP32 deployment profile.");
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

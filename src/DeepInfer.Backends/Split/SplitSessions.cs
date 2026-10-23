@@ -24,6 +24,7 @@ public sealed class MetalSplitSession : IDisposable
         catch { device.Dispose(); throw; }
     }
     public void ConfigureFusedFp32Decode(bool enabled) => graph.ConfigureFusedFp32Decode(enabled);
+    public MetalExecutionProfile ExecutionProfile() => graph.ExecutionProfile();
     public int[] Tokenize(string prompt, CancellationToken ct) => tokenizer.EncodePrompt(prompt, ct);
     public int[] Tokenize(DeepInfer.Core.ChatTurn[] messages, CancellationToken ct) => tokenizer.EncodeMessages(messages, ct);
     public string Decode(int[] tokens) => tokenizer.Decode(tokens);

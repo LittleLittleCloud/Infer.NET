@@ -3,6 +3,10 @@ using DeepInfer.Backends.Models;
 using Microsoft.Win32.SafeHandles;
 namespace DeepInfer.Backends.Compute;
 
+public sealed record MetalExecutionProfile(int KvElementBytes, bool Bf16Gemm, bool Matrix, bool ChunkedDelta,
+    bool GroupedExperts, bool PackedExperts, bool ExpandedGemm, bool DeviceDelta, int ScratchTokens,
+    bool FusedAttention, bool FusedAllAttention, int AttentionFeatures, int AttentionBatchTokens, int MatrixRows);
+
 // Own Metal executor; the native graph retains references to all weight buffers.
 internal sealed unsafe class Qwen36Gpu : IDisposable
 {
@@ -76,6 +80,14 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         if (GraphNative.Stats(handle, out var capacity, out var kv, out var allocated) != 0)
             throw new InvalidOperationException("Cannot read GPU graph allocation statistics.");
         return (capacity, kv, allocated);
+    }
+    public MetalExecutionProfile ExecutionProfile()
+    {
+        var v = stackalloc int[14];
+        if (GraphNative.ExecutionProfile(handle, v, 14) != 0)
+            throw new InvalidOperationException("Cannot read native Metal execution profile.");
+        return new(v[0], v[1] != 0, v[2] != 0, v[3] != 0, v[4] != 0, v[5] != 0, v[6] != 0,
+            v[7] != 0, v[8], v[9] != 0, v[10] != 0, v[11], v[12], v[13]);
     }
     public int Forward(int token, int position, bool classifier, float[] logits, Action<int, int, float[]>? trace, bool fullLogits)
     {
@@ -183,6 +195,8 @@ internal static unsafe partial class GraphNative
     internal static partial int Grow(GraphHandle graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_stats")]
     internal static partial int Stats(GraphHandle graph, out int capacity, out long kvBytes, out long allocatedBytes);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_execution_profile")]
+    internal static partial int ExecutionProfile(GraphHandle graph, int* values, int count);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_forward")]
     internal static partial int Forward(GraphHandle graph, int token, int position, int classifier,
         float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);

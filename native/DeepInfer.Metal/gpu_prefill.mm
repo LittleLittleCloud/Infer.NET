@@ -768,6 +768,15 @@ static int g_reserve(void *graph,int tokens,char *error,int capacity,bool preser
 }
 extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,false);}
 extern "C" int di_graph_grow(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,true);}
+// Read the effective native settings, not the managed environment cache. Version 1 is 14 ints.
+extern "C" int di_graph_execution_profile(void *graph,int *values,int count) {
+ if(!graph||!values||count!=14)return -1;
+ auto *g=static_cast<GModel*>(graph);auto *p=g->prefill;if(!p)return -1;
+ const int actual[]={g->kvBf16?2:4,p->bf16Gemm,p->matrix,p->chunkedDelta,p->groupedExperts,
+  p->packedExperts,p->expandedGemm,p->deviceDelta,int(p->maxTokens),p->fusedAttention,
+  p->fusedAll,int(p->attentionFeatures),int(p->attentionBatchTokens),int(p->matrixRows)};
+ memcpy(values,actual,sizeof(actual));return 0;
+}
 extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64_t *allocatedBytes) {
  if(!graph||!capacity||!kvBytes||!allocatedBytes)return -1;
  auto *g=static_cast<GModel*>(graph);*capacity=g->capacity;*kvBytes=uint64_t(g->capacity)*(g->kvBf16?20480:40960);
