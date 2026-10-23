@@ -137,7 +137,7 @@ public static class Server
                 if (target is null) return Failure(503, "no_eligible_worker", "No live worker implements the requested model/backend. Check model/backend advertisements and loaded weights.");
                 using var rpc = new ClusterClient(target.Endpoint, token, TimeSpan.FromHours(24));
                 try { return Results.Json(await rpc.InferAsync(request, context.RequestAborted), RpcJson.Default.InferenceResult); }
-                catch (RpcException ex) { return Failure(ex.StatusCode is 400 or 429 or 501 ? ex.StatusCode : 502, "worker_error", ex.Message); }
+                catch (RpcException ex) { return Failure(ex.StatusCode is 400 or 429 or 501 or 503 or 504 ? ex.StatusCode : 502, "worker_error", ex.Message); }
                 catch (HttpRequestException) { return Failure(502, "worker_unreachable", $"Worker '{target.WorkerId}' is unreachable."); }
                 catch (OperationCanceledException) when (!context.RequestAborted.IsCancellationRequested)
                 { return Failure(504, "worker_timeout", $"Worker '{target.WorkerId}' exceeded the RPC deadline."); }
