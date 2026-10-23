@@ -12,6 +12,7 @@ public static class Commands
         var options = new Options(args);
         switch (options.Command)
         {
+            case "version": Console.WriteLine(typeof(Commands).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion); break;
             case "split-serve": await SplitService.RunMac(options, ct); break;
             case "split-agent": await SplitService.RunAgent(options, ct); break;
             case "split-worker": await SplitInference.Worker(options, ct); break;

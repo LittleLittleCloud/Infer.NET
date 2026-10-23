@@ -134,7 +134,7 @@ public static class SplitService
                 do { peer = await peers.Reader.ReadAsync(timeout.Token); if (peer.Connected) break; peer.Dispose(); } while (true);
                 using (peer)
                 {
-                    var timer = Stopwatch.StartNew();
+                    var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     await peer.Wire.SendAsync(new(SplitWire.Start, 20, 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
                     var next = -1;
                     for (var offset = 0; offset < ids.Length; offset += 32)
@@ -155,7 +155,6 @@ public static class SplitService
                     if (end.Kind != SplitWire.End || end.Position != ids.Length) throw new InvalidDataException("Missing handoff completion.");
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
-                    var gpuStart = gpu.GpuMilliseconds;
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < input.MaxTokens; i++)
                     {
@@ -186,7 +185,7 @@ public static class SplitService
                     var timing = InferenceTimings.Create(prefillMs, first, output.Count > 1 ? last - first : 0, output.Count) with
                     { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes };
                     var result = new InferenceResult(peer.Wire.Request.ToString(), registration.WorkerId, Protocol.Qwen36Model, "metal", gpu.Decode(output.ToArray()), [], false, timer.Elapsed.TotalMilliseconds,
-                        output.ToArray(), ids.Length, finish, 0, gpu.GpuMilliseconds - gpuStart, timing);
+                        output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart);
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
                     Interlocked.Increment(ref completed);
@@ -207,7 +206,9 @@ public static class SplitService
         {
             try
             {
-                gpu = new MetalSplitSession(o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx"), 4);
+                var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
+                await PinnedSplitModel.Verify(directory, life.Token);
+                gpu = new MetalSplitSession(directory, 4);
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

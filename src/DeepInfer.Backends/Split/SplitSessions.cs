@@ -28,6 +28,8 @@ public sealed class MetalSplitSession : IDisposable
     public bool IsEnd(int token) => tokenizer.IsEnd(token);
     public byte[] Piece(int token) => tokenizer.DecodePiece(0, token);
     public double GpuMilliseconds => device.GpuMilliseconds;
+    public long Dispatches => device.Dispatches;
+    public long Submissions => device.Submissions;
     public (int Capacity, long KvBytes, long AllocatedBytes) Stats() => graph.Stats();
     public void Reset(int capacity) { graph.Reset(); graph.Reserve(capacity); }
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null) => graph.Suffix(tokens, hidden, final, logits);

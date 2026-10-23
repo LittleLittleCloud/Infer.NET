@@ -6,6 +6,10 @@ repo=pathlib.Path(__file__).resolve().parents[2];source=pathlib.Path(a.publish_d
 if out.exists():raise SystemExit('Output already exists; releases are immutable')
 for name in (['deepinfer','libdeepinfer_metal.dylib'] if a.rid=='osx-arm64' else ['deepinfer.exe','deepinfer_cuda.dll']):
  if not (source/name).is_file():raise SystemExit('Missing native artifact: '+name)
+if subprocess.check_output(['git','status','--porcelain'],cwd=repo,text=True).strip():raise SystemExit('Commit source before packaging')
+version=subprocess.check_output([str(source/('deepinfer' if a.rid=='osx-arm64' else 'deepinfer.exe')),'version'],text=True).strip()
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
+if head not in version:raise SystemExit('Published binary was built from a different commit; rebuild it')
 shutil.copytree(source,out,ignore=shutil.ignore_patterns('*.pdb','*.dbg','*.dSYM'))
 shutil.copytree(repo/'scripts/deploy',out/'deploy',ignore=shutil.ignore_patterns('__pycache__'))
 sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
