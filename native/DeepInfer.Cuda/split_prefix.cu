@@ -22,7 +22,7 @@ struct Model {
 __device__ float bf(unsigned short x){return __uint_as_float(unsigned(x)<<16);}
 __device__ float sig(float x){return 1.f/(1.f+expf(-x));}
 __device__ float sil(float x){return x*sig(x);}
-__device__ float sum32(float x){for(int n=16;n;n/=2)x+=__shfl_xor_sync(0xffffffff,x,n);return x;}
+__device__ float sum32(float x){for(int n=1;n<32;n*=2)x+=__shfl_xor_sync(0xffffffff,x,n);return x;}
 __device__ float blocksum(float x){__shared__ float part[8];int t=threadIdx.x; x=sum32(x);if((t&31)==0)part[t/32]=x;__syncthreads();if(t==0){float v=0;for(int i=0;i<blockDim.x/32;i++)v+=part[i];part[0]=v;}__syncthreads();return part[0];}
 __device__ float weight(Matrix m,size_t r,int c){size_t i=r*m.cols+c,p=i/64;return float(m.w[i])*bf(m.s[p])+bf(m.b[p]);}
 __global__ void embed(Matrix m,int token,float*x){int c=blockIdx.x*blockDim.x+threadIdx.x;if(c<2048)x[c]=weight(m,token,c);}
