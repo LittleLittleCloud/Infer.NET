@@ -49,6 +49,9 @@ public static class SplitService
         if (o.Get("suffix-receive-overlap", "off") is not ("on" or "off")) throw new ArgumentException("suffix-receive-overlap must be on or off.");
         if (o.Get("cuda-send-overlap", "on") is not ("on" or "off")) throw new ArgumentException("cuda-send-overlap must be on or off.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("cuda-prefill must be serial, batch-fp32 or batch-fp32-packed.");
+        if (o.Get("cuda-prefill-chunk", "32") is not ("32" or "1024" or "2048")) throw new ArgumentException("cuda-prefill-chunk must be 32, 1024 or 2048.");
+        if (o.Get("cuda-prefill", "batch-fp32") == "serial" && o.Get("cuda-prefill-chunk", "32") != "32")
+            throw new ArgumentException("Long CUDA chunks require layer-major prefill.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
@@ -65,9 +68,10 @@ public static class SplitService
         Console.WriteLine("AGENT Loading: verifying pinned 8bit prefix");
         await using (var f = File.OpenRead(bundle))
             if (Convert.ToHexStringLower(await SHA256.HashDataAsync(f, ct)) != SplitInference.PrefixHash) throw new InvalidDataException("Prefix bundle hash mismatch.");
-        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch", o.Get("cuda-prefill", "batch-fp32") != "serial", o.Get("cuda-prefill", "batch-fp32") == "batch-fp32-packed");
+        var prefillChunk = o.Number("cuda-prefill-chunk", 32, 32, 2048);
+        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch", o.Get("cuda-prefill", "batch-fp32") != "serial", o.Get("cuda-prefill", "batch-fp32") == "batch-fp32-packed", prefillChunk);
         gpu.Run([1, 2, 3, 4], 0, null); gpu.Reset();
-        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context} prefill={o.Get("cuda-prefill", "batch-fp32")} sendOverlap={o.Get("cuda-send-overlap", "on")} readback={o.Get("cuda-readback", "token")}");
+        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context} prefill={o.Get("cuda-prefill", "batch-fp32")} chunk={prefillChunk} sendOverlap={o.Get("cuda-send-overlap", "on")} readback={o.Get("cuda-readback", "token")}");
         while (!ct.IsCancellationRequested)
         {
             try
@@ -81,7 +85,7 @@ public static class SplitService
                 using var request = CancellationTokenSource.CreateLinkedTokenSource(ct);
                 request.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
                 gpu.Reset();
-                await SplitInference.ServePrefix(gpu, wire, request.Token, start, o.Get("cuda-send-overlap", "on") == "on");
+                await SplitInference.ServePrefix(gpu, wire, request.Token, start, o.Get("cuda-send-overlap", "on") == "on", prefillChunk);
                 var ack = await wire.ReceiveAsync(request.Token);
                 if (ack.Kind != SplitWire.End || ack.Position != start.Count) throw new InvalidDataException("Missing state import acknowledgement.");
             }

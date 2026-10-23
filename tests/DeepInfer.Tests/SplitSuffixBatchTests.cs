@@ -47,4 +47,37 @@ public class SplitSuffixBatchTests
         var source=SplitSuffixBatches.Read(_=>Task.FromResult(frames[index++]),33,128,true,CancellationToken.None);
         await Assert.ThrowsAsync<InvalidDataException>(()=>SplitReceivePump.Run(source,(_,_)=>{consumed++;return ValueTask.CompletedTask;},CancellationToken.None));Assert.Equal(0,consumed);
     }
+    [Theory]
+    [InlineData(1024)]
+    [InlineData(2048)]
+    public async Task SplitsLongAuthenticatedFramesIntoSmallSuffixBatches(int tokens)
+    {
+        var hidden = new float[tokens * 2048];
+        for (var i = 0; i < hidden.Length; i++) hidden[i] = i % 1009;
+        var frames = new Queue<SplitWire.Frame>();
+        frames.Enqueue(new(SplitWire.Hidden, 20, 0, 0, tokens, MemoryMarshal.AsBytes(hidden.AsSpan()).ToArray()));
+        for (var layer = 3; layer < 20; layer += 4) for (var tensor = 0; tensor < 2; tensor++)
+        {
+            var data = new byte[tokens * 512 * 4];
+            for (var i = 0; i < data.Length; i++) data[i] = (byte)(i + layer + tensor);
+            frames.Enqueue(new(SplitWire.KvRange, layer, tensor, 0, tokens, data));
+        }
+        frames.Enqueue(new(SplitWire.End, 20, 0, tokens, 0, []));
+        var batches = new List<SplitSuffixBatch>();
+        await foreach (var batch in SplitSuffixBatches.Read(_ => Task.FromResult(frames.Dequeue()), tokens, 128, true, CancellationToken.None))
+            batches.Add(batch);
+        Assert.Equal(tokens / 128, batches.Count);
+        Assert.Single(frames); Assert.Equal(SplitWire.End, frames.Peek().Kind);
+        foreach (var batch in batches)
+        {
+            Assert.Equal(128, batch.Count);
+            Assert.Equal(hidden.AsSpan(batch.Position * 2048, 128 * 2048).ToArray(), batch.Hidden);
+            for (var layer = 3; layer < 20; layer += 4) for (var tensor = 0; tensor < 2; tensor++)
+            {
+                var expected = new byte[128 * 512 * 4];
+                for (var i = 0; i < expected.Length; i++) expected[i] = (byte)(batch.Position * 512 * 4 + i + layer + tensor);
+                Assert.Equal(expected, batch.Kv![(layer / 4) * 2 + tensor]);
+            }
+        }
+    }
 }

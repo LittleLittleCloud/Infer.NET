@@ -5,7 +5,7 @@ using Xunit;
 namespace DeepInfer.Tests;
 public sealed class SplitWireTests
 {
-    [Theory] [InlineData(2)] [InlineData(4)] public async Task AuthenticatesPeersAndTransfersRealTensorBytes(int kvBytes)
+    [Theory] [InlineData(2,2)] [InlineData(4,2)] [InlineData(4,1024)] public async Task AuthenticatesPeersAndTransfersRealTensorBytes(int kvBytes,int frameTokens)
     {
         using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(5));var ct=timeout.Token;
         using var listener=new TcpListener(IPAddress.Loopback,0);listener.Start();
@@ -14,8 +14,9 @@ public sealed class SplitWireTests
         var id=Guid.NewGuid();var token=new string('a',64);
         var server=SplitWire.ConnectAsync(peer.GetStream(),token,true,Guid.Empty,ct,kvBytes);
         var sender=await SplitWire.ConnectAsync(client.GetStream(),token,false,id,ct,kvBytes);var receiver=await server;
-        var frame=new SplitWire.Frame(SplitWire.Hidden,20,0,32,2,new byte[2*2048*4]);frame.Data[123]=42;
-        await sender.SendAsync(frame,ct);var actual=await receiver.ReceiveAsync(ct);
+        var frame=new SplitWire.Frame(SplitWire.Hidden,20,0,32,frameTokens,new byte[frameTokens*2048*4]);frame.Data[123]=42;
+        var incoming=receiver.ReceiveAsync(ct);
+        await sender.SendAsync(frame,ct);var actual=await incoming;
         Assert.Equal(id,receiver.Request);Assert.Equal(frame.Data,actual.Data);Assert.Equal(32,actual.Position);
     }
     [Theory] [InlineData(false)] [InlineData(true)]
@@ -79,6 +80,13 @@ public sealed class SplitWireTests
         SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*2]));
         SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*4]),4);
         Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*4]),2));
+    }
+    [Fact] public void BoundsLongChunkFrames()
+    {
+        SplitWire.Validate(new(SplitWire.Hidden,20,0,0,2048,new byte[2048*2048*4]),4);
+        SplitWire.Validate(new(SplitWire.KvRange,3,0,0,2048,new byte[2048*512*4]),4);
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Hidden,20,0,0,2049,new byte[2049*2048*4]),4));
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Trace,0,0,0,33,new byte[33*20*2048*4]),4));
     }
     [Fact] public async Task TransfersOptionalAgentTimingOnEndFrame()
     {
