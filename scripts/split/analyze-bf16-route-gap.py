@@ -8,7 +8,9 @@ import argparse
 import array
 import hashlib
 import json
+import math
 import pathlib
+import statistics
 import sys
 
 
@@ -26,12 +28,56 @@ def load(directory, name, expected_sha, tokens):
     return values
 
 
+def activation_impact(directory, result, first_layer_differences):
+    traces = {}
+    for name in ("baseline", "candidate"):
+        path = directory / f"{name}-trace.f32"
+        raw = path.read_bytes()
+        if len(raw) != 128 * 20 * 2048 * 4 or hashlib.sha256(raw).hexdigest() != result[name]["traceSha256"]:
+            raise ValueError(f"Layer trace size or SHA mismatch: {path}")
+        values = array.array("f")
+        values.frombytes(raw)
+        traces[name] = values
+    route_kind = {item["token"]: "orderOnly" if item["sameSet"] else "expertSetChanged"
+                  for item in first_layer_differences}
+    groups = {key: [] for key in ("sameOrderedExperts", "orderOnly", "expertSetChanged")}
+    for token in range(128):
+        start = token * 20 * 2048
+        delta2 = ref2 = 0.0
+        for i in range(start, start + 2048):
+            baseline = float(traces["baseline"][i])
+            candidate = float(traces["candidate"][i])
+            if not math.isfinite(baseline) or not math.isfinite(candidate):
+                raise ValueError("Nonfinite layer-0 activation")
+            delta2 += (candidate - baseline) ** 2
+            ref2 += baseline ** 2
+        groups[route_kind.get(token, "sameOrderedExperts")].append((token, delta2, ref2))
+    total_delta2 = sum(item[1] for group in groups.values() for item in group)
+    total_ref2 = sum(item[2] for group in groups.values() for item in group)
+    calculated = (total_delta2 / max(total_ref2, 1e-30)) ** .5
+    if abs(calculated - result["layerDrift"][0]["relativeL2"]) > 1e-10:
+        raise ValueError("Layer-0 trace gap disagrees with saved diagnostic")
+    answer = {}
+    for key, group in groups.items():
+        answer[key] = {
+            "tokenCount": len(group),
+            "aggregateRelativeL2": (sum(item[1] for item in group) /
+                                    max(sum(item[2] for item in group), 1e-30)) ** .5 if group else None,
+            "medianTokenRelativeL2": statistics.median((item[1] / max(item[2], 1e-30)) ** .5 for item in group) if group else None,
+            "layer0SquaredErrorShare": sum(item[1] for item in group) / max(total_delta2, 1e-30),
+        }
+        if key == "expertSetChanged":
+            answer[key]["tokenIds"] = [item[0] for item in group]
+    return answer
+
+
 def main():
     if sys.byteorder != "little":
         raise SystemExit("Route traces require little-endian integers")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cuda", required=True, type=pathlib.Path)
     parser.add_argument("--output", required=True, type=pathlib.Path)
+    parser.add_argument("--include-activation", action="store_true", help="Correlate layer-0 trace errors with route changes")
     args = parser.parse_args()
     if args.output.exists():
         raise SystemExit("Use a fresh output file")
@@ -82,6 +128,8 @@ def main():
         "candidateRoutesSha256": result["candidate"]["routesSha256"],
         "limitations": ["Synthetic token IDs", "CUDA mode 5 is an internal baseline, not an independent FP32 reference",
                         "Selected IDs alone do not measure router margins or establish full-model correctness"]}
+    if args.include_activation:
+        summary["layer0ActivationByRouteKind"] = activation_impact(args.cuda, result, summary["firstLayerDifferences"])
     args.output.write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps({key: summary[key] for key in ("comparedDecisions", "differentDecisions", "differentExpertSets", "differentByLayer")}))
 

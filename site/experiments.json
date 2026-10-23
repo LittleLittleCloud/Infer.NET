@@ -466,9 +466,9 @@
     "question": "缩短CUDA QKV及输出投影的FP32 MMA累加链，能否消除首层跨后端误差并通过完整BF16数值门槛？",
     "setup": "2026-10-23；Windows RTX4090源码5c1dea1/e6b119d、Mac固定数值参考；128合成token，CUDA块32、Metal块128，affine8/group64、BF16 KV/GEMM、诊断FP32路由与共享专家。独占GPU，探针读回。",
     "change": "CUDA QKV和输出投影可分别每256输入列重置FP32 MMA累加器并汇总部分结果；分别测QKV、仅输出、两者同时启用。开关默认关闭。",
-    "result": "QKV对CPU参考误差2.676e-6→2.251e-7；输出投影对自身输入参考误差4.908e-6→约4.16e-7。但层0误差三档仍约1.60e-4，全部仅2/60层/状态检查通过。两者同时启用时输出投影跨端差仍2.112e-5，主要由上游BF16输入差引起。同机BF16与内部FP32模式首层差约0.009913，128/128 token超过1e-4。 新增同机路由诊断：BF16与内部FP32模式2560次token/层选择中1562次顺序不同、671次专家集合不同；首层5/128次换专家，误差最大的token16第八专家217→78。",
+    "result": "QKV对CPU参考误差2.676e-6→2.251e-7；输出投影对自身输入参考误差4.908e-6→约4.16e-7。但层0误差三档仍约1.60e-4，全部仅2/60层/状态检查通过。两者同时启用时输出投影跨端差仍2.112e-5，主要由上游BF16输入差引起。同机BF16与内部FP32模式首层差约0.009913，128/128 token超过1e-4。 新增同机路由诊断：BF16与内部FP32模式2560次token/层选择中1562次顺序不同、671次专家集合不同；首层5/128次换专家，误差最大的token16第八专家217→78。 首层5个换专家集合的token贡献97.125%平方误差；其余115个专家顺序未变的token，合并相对L2仍为0.001702。",
     "validation": "SM89 DLL构建通过；各128-token候选有限、重复trace一致。Mac/CUDA 12段及20层、40份状态离线比较，CPU参考核对输入和导出权重。旧Windows agent恢复连接，serve Ready，短请求HTTP 200。没有正式吞吐、logits、真实候选RPC、128K或内存验收。 路由采集重复哈希一致；原agent恢复，短请求HTTP200。",
-    "conclusion": "两处GEMM局部数值改善仍不足以让整模BF16路径通过；下游BF16输入舍入边界使整体误差未单调改善。保留默认关闭，不将诊断秒数当作提速。 同机模式差异已直接改变MoE路由，仍需固定独立FP32参考，不能把跨后端对齐当作充分条件。",
+    "conclusion": "两处GEMM局部数值改善仍不足以让整模BF16路径通过；下游BF16输入舍入边界使整体误差未单调改善。保留默认关闭，不将诊断秒数当作提速。 同机模式差异已直接改变MoE路由，仍需固定独立FP32参考，不能把跨后端对齐当作充分条件。 大误差与换专家显著关联，但相同路由下的基础漂移也超过目标量级；路由变化不等于首因已定位。",
     "next": "针对token16定位首个路由margin变化，建立固定独立FP32参考，再复测层/状态/logits与真实RPC。",
     "commands": [
       "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe '' -StageProbe -SplitKQkv",
@@ -476,7 +476,7 @@
       "python3 scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON",
       "python3 scripts/split/analyze-bf16-mode-gap.py --cuda CUDA_DIRECTORY --output NEW_MODE_GAP_JSON",
       "python3 scripts/split/analyze-bf16-stage-reference.py --model MODEL_DIR --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --bundle PREFIX_BUNDLE --output NEW_REFERENCE_JSON",
-      "python3 scripts/split/analyze-bf16-route-gap.py --cuda NEW_CUDA_DIRECTORY --output NEW_ROUTE_JSON"
+      "python3 scripts/split/analyze-bf16-route-gap.py --cuda NEW_CUDA_DIRECTORY --output NEW_ROUTE_JSON --include-activation"
     ],
     "evidence": "PR #31；artifacts/dual-host/bf16-route-gap-176b666-v2.json等原始比较仅本机"
   }
