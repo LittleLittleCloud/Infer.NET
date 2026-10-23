@@ -43,7 +43,7 @@ def main() -> None:
         raise ValueError('Only the validated serial MLX oracle is accepted')
     if (oracle['kind'] != 'independent-fp32-prefix-oracle-not-product-inference-or-benchmark'
             or oracle['dtype'] != metal['kv'] or metal['gemm'] != 'fp32'
-            or cuda['kv'] != 'fp32' or cuda['baselineGemm'] != 'fp32'
+            or cuda['kv'] not in ('fp32', 'bf16') or cuda['baselineGemm'] != 'fp32'
             or cuda['candidateGemm'] != 'bf16'
             or not (oracle['weightBits'] == metal['weightBits'] == cuda['weightBits'] == 8)):
         raise ValueError('Precision or weight profile mismatch')
@@ -53,10 +53,12 @@ def main() -> None:
     if hashlib.sha256(json.dumps(ids).encode()).hexdigest() != oracle['tokensSha256']:
         raise ValueError('Metal token IDs differ from oracle')
     shape = (128, 20, 2048)
+    control_name = 'cudaFp32' if cuda['kv'] == 'fp32' else 'cudaFp32GemmBf16Kv'
+    candidate_name = 'cudaBf16GemmFp32Kv' if cuda['kv'] == 'fp32' else 'cudaBf16GemmBf16Kv'
     traces = {
         'metalFp32': read(args.metal / 'trace.f32', shape),
-        'cudaFp32': read(args.cuda / 'baseline-trace.f32', shape),
-        'cudaBf16GemmFp32Kv': read(args.cuda / 'candidate-trace.f32', shape),
+        control_name: read(args.cuda / 'baseline-trace.f32', shape),
+        candidate_name: read(args.cuda / 'candidate-trace.f32', shape),
     }
     results = {name: [] for name in traces}
     for layer in range(20):
@@ -76,6 +78,7 @@ def main() -> None:
         'kind': 'offline-independent-fp32-prefix-layer-comparison-not-e2e',
         'tokens': 128,
         'modelRevision': oracle['modelRevision'],
+        'cudaKv': cuda['kv'],
         'tokensSha256': oracle['tokensSha256'],
         'oracleLogitsSha256': oracle['logitsSha256'],
         'metalTraceSha256': metal['traceSha256'],
