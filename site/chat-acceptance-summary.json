@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-22",
+  "source": "91479e3ac0bb6897fdeb8c90a4255f31fb9140db",
+  "scope": "Functional acceptance, not a performance benchmark",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "kv": "fp32",
+  "maxContextTokens": 2048,
+  "maxOutputTokens": 256,
+  "checks": {
+    "unit": 102,
+    "ciLegacyRpcPerRuntime": 25,
+    "ciChatProtocolPerRuntime": 32,
+    "localAotSdkPty": 48,
+    "realLegacy": 15,
+    "realChat": 15,
+    "realTui": 5
+  },
+  "realChatChecks": [
+    {
+      "name": "Chat full remembers prior user/assistant turns",
+      "pass": true
+    },
+    {
+      "name": "Chat stream text and exact token usage agree",
+      "pass": true
+    },
+    {
+      "name": "Messages full agrees with Chat",
+      "pass": true
+    },
+    {
+      "name": "Messages SDK stream accumulates exact text and usage",
+      "pass": true
+    },
+    {
+      "name": "Responses full agrees with Chat",
+      "pass": true
+    },
+    {
+      "name": "Responses output history round trip works with real model",
+      "pass": true
+    },
+    {
+      "name": "Responses SDK stream accumulates exact text and usage",
+      "pass": true
+    },
+    {
+      "name": "Real deltas arrive before final completion",
+      "pass": true
+    },
+    {
+      "name": "Client closes real chat stream after first text",
+      "pass": true
+    },
+    {
+      "name": "Next chat correct after cancellation",
+      "pass": true
+    },
+    {
+      "name": "Response output limit reports incomplete",
+      "pass": true
+    },
+    {
+      "name": "Models endpoint advertises real chat model",
+      "pass": true
+    },
+    {
+      "name": "Immediate next short turn 0",
+      "pass": true
+    },
+    {
+      "name": "Immediate next short turn 1",
+      "pass": true
+    },
+    {
+      "name": "Immediate next short turn 2",
+      "pass": true
+    }
+  ],
+  "realTuiChecks": [
+    {
+      "name": "Default TUI connects to deployed port 5200 without env credentials",
+      "pass": true
+    },
+    {
+      "name": "Compact real terminal has no borders",
+      "pass": true
+    },
+    {
+      "name": "Real model response through IChatClient",
+      "pass": true
+    },
+    {
+      "name": "Multi-turn Enter sends and completes",
+      "pass": true
+    },
+    {
+      "name": "Real TUI displays incremental output",
+      "pass": true
+    }
+  ],
+  "queueStatuses": [
+    200,
+    200,
+    429,
+    429,
+    429,
+    429,
+    429,
+    200
+  ],
+  "binarySha256": {
+    "macHost": "496652b264853f07dd1116107cfd74ba877888f458a29b3bf420523295ec97e4",
+    "metal": "701e01d6ccf99ddc9bf1fb46872658a960bea011c40da5020f4393bad57315ed",
+    "windowsHost": "7838fd6e23ac1a7f2e223f225a8fb8c3b70b1e3853051584425034b0f1775a48",
+    "cuda": "cb90b1801a7066d72d63c1e677b2baf0a0f96c5a0d3be04b78830087309bc2a9"
+  },
+  "localEvidenceSha256": {
+    "artifacts/chat/real-legacy-final/summary.json": "2872b73afd22c9578f892c1ffa609534d7dc704297e540d6cd7cf36d6113a84e",
+    "artifacts/chat/real-public-final/summary.json": "c9f18e796e8b134305368427030fef4beddc16aceae2364f4533850e49171916",
+    "artifacts/chat/real-tui-final/summary.json": "2df000dab1019ddd18b18bda1a4f00f717030c1a4026482976fe560b65ad1a03",
+    "artifacts/chat/token-probe/comparison.json": "586b82dce7c918661d3b64ebf86f40533f5e5ac865f58aab04d9d5b7829f80ba",
+    "artifacts/chat/aot-91479e3.log": "db75550f6f6ed2b32fd23467195c9b23d4f0926d4a783d5428e2bd68072031ba",
+    "artifacts/chat/windows-91479e3.log": "5a89fe47db7164383b7b4339431580d1c5381ab535bcad084a6258517f565c1b"
+  }
+}

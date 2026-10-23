@@ -37,7 +37,7 @@ def page(title, body, active):
 <a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
 <nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 新增常驻服务验收；Windows SCM 待安装</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 新增 Chat API / TUI 验收；Windows SCM 待安装</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -67,12 +67,13 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
-<div class="notice"><strong>部署候选三平台 CI 已通过</strong><p>Linux、macOS、Windows 构建与 Native AOT 发布通过：85 项单测、25 项 RPC、25 项 Native AOT RPC。云端 RPC 使用模拟后端；真实双机服务另通过 15 项验收。<a href="https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39895496808">候选版本 85c68ef 成功运行 ↗</a></p></div>
+<div class="notice"><strong>流式 Chat playground 已接入双机部署</strong><p>TUI 默认 5200，提供无边框多轮对话；HTTP 同时支持 Chat Completions、Claude Messages、Responses 的流式与完整响应。真实旧 API 15 项、新 API 15 项、TUI 5 项通过；102 项单测与三平台 CI 通过。<a href="https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39902470818">运行候选 91479e3 CI ↗</a> · <a href="chat-acceptance-summary.json">验收摘要 JSON</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
 <li><span class="status done">基线完成</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>工具链、68 项单测、两组 25 项 RPC 和 SM89 数值检查通过。Mac Wi-Fi ↔ Windows 千兆网口已实测：128K 前 20 层状态，4090 → Mac 中位 24.66 秒，反向 41.20 秒；40 次传输校验全部通过。合成 GPU 状态传输不代表模型状态恢复。<a href="experiments.html#kv-sync-lan">实验记录 →</a></p></div></li>
 <li><span class="status pending">诊断通过</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>FP32 KV：17/8、61/32 与 Native AOT 通过；状态齐备后接管 decode。BF16 目标路径未通过，当前上限 2K，代码见未合并 <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/8">PR #8</a>。<a href="experiments.html#split-prefill-mvp">实验记录 →</a> · <a href="split-prefill-summary.json">数值摘要 JSON</a></p></div></li>
 <li><span class="status pending">候选已测</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/9">常驻服务与部署 #9</a></h3><p>真实模型 15 项验收通过：连续请求、SSE、取消恢复、EOS 与限流；双向 TLS，8bit/FP32 KV/2K。Mac 已由 LaunchAgent 托管，Windows SCM 待管理员安装。首请求仍有长停顿。<a href="experiments.html#persistent-deployment">完整记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/10">PR #10</a></p></div></li>
+<li><span class="status done">已接入</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/11">Chat API 与 TUI #11</a></h3><p>Microsoft.Extensions.AI.IChatClient、真实流式、多轮历史、取消恢复；三格式官方 SDK 互通。8bit/FP32 KV/2K 边界不变。<a href="experiments.html#chat-playground">验收记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/12">PR #12</a></p></div></li>
 <li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
 <section id="device-topology" aria-labelledby="topology-heading"><div class="section-head"><h2 id="topology-heading">当前设备拓扑</h2><a href="experiments.html#kv-sync-lan">传输实测 →</a></div>
 <figure class="device-topology"><a href="assets/device-topology-pixel.png" aria-label="查看设备拓扑原图"><img src="assets/device-topology-pixel.png" width="1942" height="809" loading="lazy" decoding="async" alt="M5 Pro，48 GiB 统一内存，Metal，经 Wi-Fi 连接家庭路由器；Windows RTX 4090，24 GiB 显存，CUDA，经 1 Gbps 有线网络连接路由器。GPU 缓冲同步实测：4090 到 Mac 为 55.77 MB/s，Mac 到 4090 为 33.37 MB/s。"></a>
@@ -98,7 +99,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 (OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增常驻双机服务验收与失败记录，没有新增正式模型性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增三种 Chat API 与 TUI 的真实双机验收，保留连接竞态等失败记录；没有新增正式性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
@@ -111,7 +112,7 @@ for n in notes:
         body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
