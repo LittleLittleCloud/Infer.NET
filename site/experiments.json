@@ -1,5 +1,40 @@
 [
   {
+    "id": "kv-streaming",
+    "kind": "2026-10-23 · 真实双机 A/B · FP32 诊断",
+    "title": "KV 分段交接：16.84s → 14.35s",
+    "question": "能否把末尾 KV 传输与前段计算重叠，减少首字等待？",
+    "setup": "8bit/group64，8192 输入、128 输出；FP32 GEMM/KV，无缓存，CUDA32 / Metal128，两端788dd4a，AC，预热1次、正式3次。",
+    "change": "每32 token发送10份KV范围；两组有界队列；Metal完成后段计算再导入；最终递归状态仍全部必需。",
+    "result": "prefill中位数16.839→14.348s，降低14.79%；完整请求19.130→16.621s；decode约56t/s，8次128个token一致、零swap-out。",
+    "validation": "84/8数值对照1728/1748项通过；两种传输的40份状态及8份完整logits逐字节一致；真实中途取消3.65s内恢复。两端AOT、114项Mac测试、37项HTTP检查、CI通过。",
+    "conclusion": "减少等待约2.5秒；没有减少状态字节，也没有改变8bit精度。BF16/128K正式目标未通过。",
+    "next": "32K+4096持续测试、CUDA计算和BF16数值一致性。",
+    "commands": [
+      "split-serve --config ... --kv-transfer incremental",
+      "split-infer --verify --kv fp32 --kv-transfer incremental ..."
+    ],
+    "source": "docs/KV-STREAMING.md",
+    "evidence": "artifacts/dual-host/kv-e2e-incremental-20261023T092055Z"
+  },
+  {
+    "id": "sustained-decode",
+    "kind": "2026-10-23 · 8K / 4096 持续生成",
+    "title": "4096 输出：55.05 t/s，末段53.90 t/s",
+    "question": "短输出的decode速度能否维持到4096 tokens？",
+    "setup": "8192输入、4096固定输出，affine8，FP32 GEMM/KV，2760e44，发送重叠开启，AC，预热1次、正式3次。",
+    "change": "固定输出长度，记录每个token间隔并统计最后1024个token。",
+    "result": "中位decode55.045t/s；最后1024为53.897t/s，约97.96%；客户端整次91.147s。所有4096个token在4轮中一致，新增swap-out为0。",
+    "validation": "Metal峰值35.27GiB、Windows19585MiB；原始SSE事件、GPU采样、内存和电源记录本地保留。",
+    "conclusion": "8K输入下长输出没有持续降速；不能当作128K/BF16正式门槛通过。",
+    "next": "扩大输入长度，单独测量注意力开销、内存和末段速度。",
+    "commands": [
+      "POST /v1/infer/stream: maxTokens=4096, profile=true, benchmarkIgnoreEos=true"
+    ],
+    "source": "docs/SUSTAINED-DECODE.md",
+    "evidence": "artifacts/dual-host/long-output-8192-4096-on-20261023T085635Z"
+  },
+  {
     "id": "expert-flow",
     "title": "专家中间布局与反量化双缓冲",
     "kind": "5bit · 实测 · 未采用默认",

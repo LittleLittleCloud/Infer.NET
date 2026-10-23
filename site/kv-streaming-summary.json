@@ -1,0 +1,530 @@
+{
+  "date": "2026-10-23",
+  "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "groupSize": 64,
+  "gemm": "fp32",
+  "kv": "fp32",
+  "inputTokens": 8192,
+  "outputTokens": 128,
+  "cacheHit": 0,
+  "cudaChunk": 32,
+  "suffixChunk": 128,
+  "sendOverlap": "on",
+  "ignoreEos": true,
+  "warmups": 1,
+  "measuredTrials": 3,
+  "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+  "all128TokensEqualAcross8Requests": true,
+  "runs": [
+    {
+      "kvTransfer": "final",
+      "runId": "kv-e2e-final-20261023T091733Z",
+      "trials": [
+        {
+          "warmup": true,
+          "trial": 0,
+          "prefillSeconds": 16.2974553,
+          "clientSeconds": 18.605933875000005,
+          "ttftSeconds": 16.32818079100001,
+          "decodeTokensPerSecond": 55.74653988469598,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 1,
+          "prefillSeconds": 16.8394351,
+          "clientSeconds": 19.130425791999997,
+          "ttftSeconds": 16.8510895,
+          "decodeTokensPerSecond": 55.70939976806468,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 2,
+          "prefillSeconds": 16.9074881,
+          "clientSeconds": 19.187089541999995,
+          "ttftSeconds": 16.916595125,
+          "decodeTokensPerSecond": 55.92829341022027,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 3,
+          "prefillSeconds": 16.7543033,
+          "clientSeconds": 19.040003458,
+          "ttftSeconds": 16.76558029200001,
+          "decodeTokensPerSecond": 55.82822245005802,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "prefixStages": [
+        {
+          "computeMs": 13230.354,
+          "sendMs": 943.233,
+          "elapsedMs": 13418.036
+        },
+        {
+          "computeMs": 13471.65,
+          "sendMs": 936.735,
+          "elapsedMs": 13656.068
+        },
+        {
+          "computeMs": 13346.983,
+          "sendMs": 946.383,
+          "elapsedMs": 13529.965
+        },
+        {
+          "computeMs": 13383.949,
+          "sendMs": 1026.017,
+          "elapsedMs": 13615.204
+        }
+      ],
+      "median": {
+        "prefillSeconds": 16.8394351,
+        "clientSeconds": 19.130425791999997,
+        "ttftSeconds": 16.8510895,
+        "decodeTokensPerSecond": 55.82822245005802
+      },
+      "windowsWholeGpuPeakMiB": 19585.0,
+      "rawSummarySha256": "d1901622474ea5ef71086af0046b905216e0e23fc7d62f618b45a33125994fc7",
+      "metalStages": [
+        {
+          "hiddenWaitMs": 2953.514,
+          "suffixMs": 10658.158,
+          "stateWaitMs": 2638.72,
+          "importMs": 21.812,
+          "stateBytes": 200704000.0,
+          "totalMs": 16297.455
+        },
+        {
+          "hiddenWaitMs": 3265.929,
+          "suffixMs": 10573.028,
+          "stateWaitMs": 2957.177,
+          "importMs": 17.673,
+          "stateBytes": 200704000.0,
+          "totalMs": 16839.435
+        },
+        {
+          "hiddenWaitMs": 3098.126,
+          "suffixMs": 10620.555,
+          "stateWaitMs": 3148.257,
+          "importMs": 16.872,
+          "stateBytes": 200704000.0,
+          "totalMs": 16907.488
+        },
+        {
+          "hiddenWaitMs": 3114.952,
+          "suffixMs": 10682.132,
+          "stateWaitMs": 2922.874,
+          "importMs": 11.699,
+          "stateBytes": 200704000.0,
+          "totalMs": 16754.303
+        }
+      ]
+    },
+    {
+      "kvTransfer": "incremental",
+      "runId": "kv-e2e-incremental-20261023T092055Z",
+      "trials": [
+        {
+          "warmup": true,
+          "trial": 0,
+          "prefillSeconds": 14.2321837,
+          "clientSeconds": 16.526145958,
+          "ttftSeconds": 14.2590635,
+          "decodeTokensPerSecond": 55.99953930457744,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 1,
+          "prefillSeconds": 14.2966972,
+          "clientSeconds": 16.571146457999998,
+          "ttftSeconds": 14.304961500000001,
+          "decodeTokensPerSecond": 56.04282165810593,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 2,
+          "prefillSeconds": 14.348279,
+          "clientSeconds": 16.621342167,
+          "ttftSeconds": 14.356505958999996,
+          "decodeTokensPerSecond": 56.06525890186082,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "warmup": false,
+          "trial": 3,
+          "prefillSeconds": 14.361381999999999,
+          "clientSeconds": 16.634259707999995,
+          "ttftSeconds": 14.368183041000002,
+          "decodeTokensPerSecond": 56.039688454632824,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "prefixStages": [
+        {
+          "computeMs": 13437.16,
+          "sendMs": 2652.36,
+          "elapsedMs": 13617.352
+        },
+        {
+          "computeMs": 13501.65,
+          "sendMs": 2572.749,
+          "elapsedMs": 13668.668
+        },
+        {
+          "computeMs": 13544.144,
+          "sendMs": 2533.166,
+          "elapsedMs": 13752.832
+        },
+        {
+          "computeMs": 13532.012,
+          "sendMs": 2625.388,
+          "elapsedMs": 13727.55
+        }
+      ],
+      "median": {
+        "prefillSeconds": 14.348279,
+        "clientSeconds": 16.621342167,
+        "ttftSeconds": 14.356505958999996,
+        "decodeTokensPerSecond": 56.04282165810593
+      },
+      "windowsWholeGpuPeakMiB": 19585.0,
+      "rawSummarySha256": "566fc6e7cb249d83e4d6d8b3ac5b407e829410388894ac489ea5345f0d127b21",
+      "metalStages": [
+        {
+          "hiddenWaitMs": 3128.272,
+          "suffixMs": 10659.16,
+          "stateWaitMs": 392.753,
+          "importMs": 14.021,
+          "stateBytes": 200704000.0,
+          "totalMs": 14232.184
+        },
+        {
+          "hiddenWaitMs": 3148.773,
+          "suffixMs": 10674.014,
+          "stateWaitMs": 423.77,
+          "importMs": 13.744,
+          "stateBytes": 200704000.0,
+          "totalMs": 14296.697
+        },
+        {
+          "hiddenWaitMs": 3169.675,
+          "suffixMs": 10732.979,
+          "stateWaitMs": 399.896,
+          "importMs": 12.383,
+          "stateBytes": 200704000.0,
+          "totalMs": 14348.279
+        },
+        {
+          "hiddenWaitMs": 3221.48,
+          "suffixMs": 10666.454,
+          "stateWaitMs": 430.618,
+          "importMs": 8.222,
+          "stateBytes": 200704000.0,
+          "totalMs": 14361.382
+        }
+      ]
+    }
+  ],
+  "prefillReductionPercent": 14.793584732542486,
+  "numericChecks": [
+    {
+      "kvTransfer": "final",
+      "promptTokens": 84,
+      "checks": 1728,
+      "maxRelativeL2": 1.4991171297750514e-05,
+      "maxAbs": 0.00012339651584625244,
+      "passedSafetyChecks": [
+        "decode-before-state",
+        "wrong-state-position",
+        "wrong-state-size",
+        "duplicate-state",
+        "decode-before-last-state"
+      ],
+      "tokenIds": [
+        1206,
+        3418,
+        279,
+        6463,
+        1881,
+        2972,
+        895,
+        34243
+      ],
+      "resultSha256": "808cebc610b34f7658ba37453b002df19015171363aed432696f66525268d341"
+    },
+    {
+      "kvTransfer": "incremental",
+      "promptTokens": 84,
+      "checks": 1748,
+      "maxRelativeL2": 1.4991171297750514e-05,
+      "maxAbs": 0.00012339651584625244,
+      "passedSafetyChecks": [
+        "decode-before-state",
+        "wrong-state-position",
+        "wrong-state-size",
+        "duplicate-state",
+        "decode-before-last-state"
+      ],
+      "tokenIds": [
+        1206,
+        3418,
+        279,
+        6463,
+        1881,
+        2972,
+        895,
+        34243
+      ],
+      "resultSha256": "6a4a7f6579d1be56d9af36de9833b3668825c204e696f41fdc3fdb14409dc90f"
+    }
+  ],
+  "all40StateTensorsByteEqualBetweenTransferModes": true,
+  "all8LogitsByteEqualBetweenTransferModes": true,
+  "nativeKvRangeChecks": [
+    {
+      "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+      "dllSha256": "47153d8de99c92d85303ff54e6768dfa56352548d342182ffe4c18547cd83670",
+      "kvBytes": 2,
+      "weightBits": 8,
+      "tokensSha256": "0040fef20910cc640cdc3ea957a5ce82d17b3a21cc436da9f148e0a05dfe447a",
+      "correctnessTokens": 131,
+      "allFinite": true,
+      "allLayerTraceEqual": true,
+      "hiddenEqual": true,
+      "all40StateTensorsEqual": true,
+      "incrementalKvEqualsFinal": true,
+      "kvRangeBoundsRejected": true,
+      "records": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": false,
+          "seconds": 2.6853425999870524,
+          "tokensPerSecond": 190.66468464860634,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": true,
+          "seconds": 0.7661814000457525,
+          "tokensPerSecond": 668.2490595170099,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7654644000576809,
+          "tokensPerSecond": 668.8749992310794,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.6161635000025854,
+          "tokensPerSecond": 195.70642278263344,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.678092500078492,
+          "tokensPerSecond": 191.18084979700808,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7649650000967085,
+          "tokensPerSecond": 669.311667769469,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.76648250001017,
+          "tokensPerSecond": 667.986548933872,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.7169425999745727,
+          "tokensPerSecond": 188.44711699275197,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        }
+      ],
+      "medianSeconds": {
+        "False": 2.678092500078492,
+        "True": 0.7654644000576809
+      },
+      "kind": "layer-major-fp32-prefix-only-synthetic-token-test-not-e2e-acceptance"
+    },
+    {
+      "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+      "dllSha256": "47153d8de99c92d85303ff54e6768dfa56352548d342182ffe4c18547cd83670",
+      "kvBytes": 4,
+      "weightBits": 8,
+      "tokensSha256": "0040fef20910cc640cdc3ea957a5ce82d17b3a21cc436da9f148e0a05dfe447a",
+      "correctnessTokens": 131,
+      "allFinite": true,
+      "allLayerTraceEqual": true,
+      "hiddenEqual": true,
+      "all40StateTensorsEqual": true,
+      "incrementalKvEqualsFinal": true,
+      "kvRangeBoundsRejected": true,
+      "records": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": false,
+          "seconds": 2.627900099963881,
+          "tokensPerSecond": 194.8323682498574,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": true,
+          "seconds": 0.7634753999300301,
+          "tokensPerSecond": 670.617547136323,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7640146999619901,
+          "tokensPerSecond": 670.1441739608833,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.666118200053461,
+          "tokensPerSecond": 192.03949771984355,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.660161199979484,
+          "tokensPerSecond": 192.46953906550803,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7725279000587761,
+          "tokensPerSecond": 662.7592349234837,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7980481999693438,
+          "tokensPerSecond": 641.5652588649006,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.8572739999508485,
+          "tokensPerSecond": 179.19177510060553,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        }
+      ],
+      "medianSeconds": {
+        "False": 2.666118200053461,
+        "True": 0.7725279000587761
+      },
+      "kind": "layer-major-fp32-prefix-only-synthetic-token-test-not-e2e-acceptance"
+    }
+  ],
+  "packages": {
+    "windows": {
+      "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+      "rid": "win-x64",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "splitProtocol": 4,
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "requiredPlatform": "Windows x64 / RTX 4090 SM89 / CUDA 13 compatible driver",
+      "files": {
+        "deepinfer.exe": "d167ab229c2592df98db5fe516005142f4122767f8fa6f3a05206a2584058c72",
+        "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+        "deepinfer_cuda.dll": "47153d8de99c92d85303ff54e6768dfa56352548d342182ffe4c18547cd83670",
+        "deploy\\acceptance.py": "788e33ef0cf2952c2161c4791dfacc0d8b1406ad306c6a3d5e4f42a67ef5cc79",
+        "deploy\\install-macos.py": "db42dda9a82e0ab42b8442384b458e059a52a900c2173cca8482ce965424e0cc",
+        "deploy\\install-windows.ps1": "68ec7f5b85906d4b4f194a6c5e378109d13999e7dfb636c0a5da57672706a340",
+        "deploy\\package.py": "25cd2bd6d398a1d74b5cba43a2b8389e46246be1d62696db835223a51ab029a9",
+        "deploy\\prepare.py": "a4ef50156f2f0a9d213c598dc6c3ffae80d6c60669ba0c2947ac5dad81c95a85",
+        "deploy\\verify-package.py": "0f0825fafae67db191a05e2054fd2eabc274c1855e3f0848e736d9202bed8115",
+        "source.txt": "ef6cd974b815e1a1a0a31e718755d1b97650dd944ddd3caf2a404ff5988f2954"
+      }
+    },
+    "mac": {
+      "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+      "rid": "osx-arm64",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "splitProtocol": 4,
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "requiredPlatform": "macOS 26+ / Apple M5",
+      "files": {
+        "deepinfer": "3eca63f14852fde82d55c233945807e080ab1616498b2a40e9d0f9e92520c246",
+        "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+        "deploy/acceptance.py": "b9adcd2d036c7abcb1d7d7c79c126b0ccc5033554d25618800a71b7f75bea771",
+        "deploy/install-macos.py": "5c603465deb586739b835fe9a72a6195af1f04e739dcb665adeee8e6f9a33310",
+        "deploy/install-windows.ps1": "4224c38d0d82bb73ab9e824973185733f4286f7c07de5df0484b493ca83db092",
+        "deploy/package.py": "cfbb586244c322dcf7e21869880ae6926114c1f6ef2ca9ce56edcea3747be798",
+        "deploy/prepare.py": "f979dc106f2be9dd677dbb0fd6c0c7eb0d79a312698bc41cb5034460124eaebd",
+        "deploy/verify-package.py": "1730da5c0668aac357a645decc6d51e416ea068db69edba1b9ff7f0308b5b518",
+        "libdeepinfer_metal.dylib": "0ceeda854a02f4911553ffff80498c355e7bd3f5d3f4efce5bc36f8db869167a"
+      }
+    }
+  },
+  "limits": [
+    "FP32/8K diagnostic, not formal BF16/128K gate",
+    "Final then incremental; one warmup plus three measured per mode, not randomized",
+    "computeMs includes native execution and host readback; overlapping intervals must not be added",
+    "Full-model BF16 correctness is not established by lossless BF16 KV export tests"
+  ],
+  "cancellation": {
+    "source": "0.3.0+788dd4a158cb6fee853f729b3f19032f3a774dbe",
+    "abortAfterSeconds": 1.064774959,
+    "readyAfterAbortSeconds": 3.6507278750000003,
+    "recovery8TokensMatch": true,
+    "localResetDeterministic": true,
+    "agentPidUnchanged": true
+  }
+}

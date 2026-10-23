@@ -1,0 +1,88 @@
+{
+  "source": "2760e449364fbfd18f192d80aa66e41eb734a5da",
+  "date": "2026-10-23",
+  "runId": "long-output-8192-4096-on-20261023T085635Z",
+  "inputTokens": 8192,
+  "outputTokens": 4096,
+  "weightBits": 8,
+  "groupSize": 64,
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "kv": "fp32",
+  "gemm": "fp32",
+  "cacheHit": 0,
+  "cudaChunk": 32,
+  "suffixChunk": 128,
+  "sendOverlap": "on",
+  "power": "AC",
+  "warmups": 1,
+  "measuredTrials": 3,
+  "all4096TokensEqualAcross4Requests": true,
+  "first128MatchesSerialBaseline": true,
+  "trials": [
+    {
+      "trial": 0,
+      "warmup": true,
+      "prefillSeconds": 16.3724322,
+      "clientSeconds": 91.012352208,
+      "ttftSeconds": 16.399013667000002,
+      "decodeTokensPerSecond": 54.889630624955636,
+      "last1024TokensPerSecond": 53.96847339922121,
+      "tailRatio": 0.9832180101187341,
+      "metalAllocatedBytes": 37870944256,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 1,
+      "warmup": false,
+      "prefillSeconds": 16.744475299999998,
+      "clientSeconds": 91.14678612499999,
+      "ttftSeconds": 16.757513708000005,
+      "decodeTokensPerSecond": 55.05461413689074,
+      "last1024TokensPerSecond": 53.95491645207689,
+      "tailRatio": 0.9800253311724335,
+      "metalAllocatedBytes": 37870944256,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 2,
+      "warmup": false,
+      "prefillSeconds": 16.5360726,
+      "clientSeconds": 90.99947966599998,
+      "ttftSeconds": 16.554577166,
+      "decodeTokensPerSecond": 55.013780797594436,
+      "last1024TokensPerSecond": 53.891038215060284,
+      "tailRatio": 0.9795916120241777,
+      "metalAllocatedBytes": 37766086656,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 3,
+      "warmup": false,
+      "prefillSeconds": 16.783496500000002,
+      "clientSeconds": 91.20444300000003,
+      "ttftSeconds": 16.801449542,
+      "decodeTokensPerSecond": 55.04528035515672,
+      "last1024TokensPerSecond": 53.896766764542335,
+      "tailRatio": 0.9791351123437999,
+      "metalAllocatedBytes": 37766086656,
+      "swapOutBytes": 0
+    }
+  ],
+  "median": {
+    "prefillSeconds": 16.744475299999998,
+    "clientSeconds": 91.14678612499999,
+    "ttftSeconds": 16.757513708000005,
+    "decodeTokensPerSecond": 55.04528035515672,
+    "last1024TokensPerSecond": 53.896766764542335,
+    "tailRatio": 0.9795916120241777
+  },
+  "windowsWholeGpuPeakMiB": 19585,
+  "macPhysicalFootprintPeak": "35.8 GiB as reported by vmmap",
+  "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+  "rawSummarySha256": "0d41db5d2acb1bb963324bff833bd53fdbe347d8a6455d6ec395015b4f20ada0",
+  "limits": [
+    "8K input FP32 GEMM/KV diagnostic; not formal BF16/128K acceptance",
+    "Fixed synthetic benchmark prompt and ignoreEOS=true output; not a quality score",
+    "Raw per-token logs and host identities retained locally; public summary contains aggregate evidence"
+  ]
+}
