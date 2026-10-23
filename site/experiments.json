@@ -115,7 +115,22 @@
     "result": "RTX 4090 总显存 24564 MiB、当时占用 1334 MiB，驱动 610.88；nvcc 13.4.59、Git 与 CMake 可用。物理网卡报告 1 Gbps，10 Gbps 为 Hyper-V 虚拟接口。所需 .NET SDK 10.0.100 缺失，MSVC C++ 工具链尚未找到，Python 不在账户 PATH。",
     "validation": "实际密钥登录、主机身份命令与环境读取成功；普通账户的部分 CIM 查询被拒，改用 .NET API 读取系统、磁盘和网络信息。未执行 CUDA 编译、GPU 模型验收或有效带宽测试。",
     "conclusion": "SSH 开发控制通道已可用；这不代表 CUDA 工具链、跨机推理或性能目标已通过。先补齐构建环境，保留当前精确 SDK 与依赖锁策略。",
-    "next": "Issue #2：补齐工具链、确定独立工作目录、通过 GitHub 同步相同 SHA，再进行 CUDA 与链路验证。",
+    "next": "后续“Windows 用户工具安装与托管验证”记录已补齐 .NET/Python 并完成托管检查；MSVC、CUDA 原生检查与链路实测仍待完成。",
+    "commands": [],
+    "evidence": null
+  },
+  {
+    "id": "windows-user-tools",
+    "title": "Windows 用户工具安装与托管验证",
+    "kind": "工程验证 · 托管通过 · MSVC 待管理员安装",
+    "source": "docs/WINDOWS-ENVIRONMENT.md",
+    "question": "能否保持固定 SDK 和依赖锁，在 Windows 完成构建、单测与实际进程 RPC，并准备原生验证？",
+    "setup": "2026-10-22，本地普通账户，独立 GitHub checkout；验证版本 1022ea3e0e6503c2c7600f86b314c154dfb8dedd，安装和验证脚本在 draft PR #6。",
+    "change": "用户目录安装 .NET SDK 10.0.100、Python 3.13.17 与 pip；核验官方归档散列。增加持久日志和退出状态，以及待运行的 SM89 数值检查和 AOT 验证脚本。",
+    "result": "带漏洞检查的 locked restore 成功，Release 构建零警告、零错误；68/68 单测、25/25 RPC 检查通过。程序识别 RTX 4090 / SM89，正确标记 CUDA 推理未实现。原生预检因未找到 MSVC 失败。",
+    "validation": "Python EXE 安装先报 1601，官方完整 ZIP 安装成功；NuGet V3 TLS 握手失败，改用官方 V2 包地址及独立漏洞数据端点，确认漏洞缓存已下载。未关闭 TLS 校验、依赖锁或漏洞检查；失败日志保留。",
+    "conclusion": "Windows 托管开发环境已可用。MSVC 管理员安装尚未完成，CUDA kernel 与 Native AOT 尚未验收；原 NuGet V3 连通性问题仍存在。不能把设备发现或模拟 RPC 视为 GPU 推理成功。",
+    "next": "执行已准备并验证微软签名的 Build Tools 安装程序，再完成 CUDA SM89 数值检查和 Native AOT RPC。Issue #2 保持打开。",
     "commands": [],
     "evidence": null
   }
