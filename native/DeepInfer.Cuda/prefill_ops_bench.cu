@@ -23,17 +23,19 @@ static void gemm_case(int tokens,int rows,int cols,bool oracle) {
     Model g;Matrix m;m.experts=1;m.rows=rows;m.cols=cols;
     size_t size=size_t(rows)*cols;
     std::vector<unsigned char>w(size);std::vector<unsigned short>s(size/64),b(size/64);
-    std::vector<float>x(size_t(tokens)*cols),actual(size_t(tokens)*rows+64,-123.f),reference(actual.size(),-123.f);
+    std::vector<float>x(size_t(tokens)*cols),actual(size_t(tokens)*rows+64,-123.f),reference(actual.size(),-123.f),scalarActual(actual.size(),-123.f);
     for(size_t i=0;i<size;i++)w[i]=(i*17+3)%256;
     for(size_t i=0;i<s.size();i++){s[i]=0x3b00+(i%8)*16;b[i]=0xbe00+(i%4)*16;}
     for(size_t i=0;i<x.size();i++)x[i]=float(int((i*11)%101)-50)/211.f;
     m.w=g.alloc<unsigned char>(size);m.s=g.alloc<unsigned short>(s.size());m.b=g.alloc<unsigned short>(b.size());
-    float *input=g.alloc<float>(x.size()),*y=g.alloc<float>(actual.size()),*ref=g.alloc<float>(actual.size());
+    float *input=g.alloc<float>(x.size()),*y=g.alloc<float>(actual.size()),*ref=g.alloc<float>(actual.size()),*old=g.alloc<float>(actual.size());
     ck(cudaMemcpy(m.w,w.data(),size,cudaMemcpyHostToDevice));ck(cudaMemcpy(m.s,s.data(),s.size()*2,cudaMemcpyHostToDevice));ck(cudaMemcpy(m.b,b.data(),b.size()*2,cudaMemcpyHostToDevice));
-    ck(cudaMemcpy(input,x.data(),x.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(y,actual.data(),actual.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(ref,reference.data(),reference.size()*4,cudaMemcpyHostToDevice));
-    auto gemm=[&]{prefill_gemm_bf16<<<dim3((rows+63)/64,(tokens+31)/32),128>>>(m,input,y,tokens);};
+    ck(cudaMemcpy(input,x.data(),x.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(y,actual.data(),actual.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(ref,reference.data(),reference.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(old,scalarActual.data(),scalarActual.size()*4,cudaMemcpyHostToDevice));
+    auto gemm=[&]{prefill_gemm_bf16<true><<<dim3((rows+63)/64,(tokens+31)/32),128>>>(m,input,y,tokens);};
+    auto scalar=[&]{prefill_gemm_bf16<false><<<dim3((rows+63)/64,(tokens+31)/32),128>>>(m,input,old,tokens);};
     auto gemv=[&]{prefill_gemv_bf16<<<dim3((rows+3)/4,tokens),128>>>(m,input,ref,tokens);};
-    gemm();gemv();ck(cudaGetLastError());ck(cudaMemcpy(actual.data(),y,actual.size()*4,cudaMemcpyDeviceToHost));ck(cudaMemcpy(reference.data(),ref,reference.size()*4,cudaMemcpyDeviceToHost));
+    gemm();scalar();gemv();ck(cudaGetLastError());ck(cudaMemcpy(actual.data(),y,actual.size()*4,cudaMemcpyDeviceToHost));ck(cudaMemcpy(reference.data(),ref,reference.size()*4,cudaMemcpyDeviceToHost));ck(cudaMemcpy(scalarActual.data(),old,scalarActual.size()*4,cudaMemcpyDeviceToHost));
+    if(actual!=scalarActual)throw std::runtime_error("Packed BF16 GEMM differs bitwise from scalar-load Tensor Core GEMM");
     double maxAbs=0,sumError=0,sumRef=0;
     for(int t=0;t<tokens;t++)for(int r=0;r<rows;r++) {
         double expected=reference[t*rows+r];
@@ -42,9 +44,9 @@ static void gemm_case(int tokens,int rows,int cols,bool oracle) {
     }
     for(size_t i=size_t(tokens)*rows;i<actual.size();i++)if(actual[i]!=-123.f||reference[i]!=-123.f)throw std::runtime_error("GEMM tail overwrite");
     double relative=sqrt(sumError/std::max(1e-30,sumRef));if(!std::isfinite(relative)||maxAbs>=.01||relative>=1e-4)throw std::runtime_error("GEMM BF16 oracle mismatch");
-    auto v=timings(gemv,5),z=timings(gemm,5);
-    printf("{\"op\":\"affine8-bf16-gemm\",\"tokens\":%d,\"rows\":%d,\"cols\":%d,\"oracle\":\"%s\",\"maxAbs\":%.9g,\"relativeL2\":%.9g,",tokens,rows,cols,oracle?"double-bf16":"simt-bf16",maxAbs,relative);
-    print_times("simt",v);printf(",");print_times("tensorCore",z);puts("}");fflush(stdout);
+    auto v=timings(gemv,5),o=timings(scalar,5),z=timings(gemm,5);
+    printf("{\"op\":\"affine8-bf16-gemm\",\"tokens\":%d,\"rows\":%d,\"cols\":%d,\"oracle\":\"%s\",\"maxAbs\":%.9g,\"relativeL2\":%.9g,\"bitwiseScalarEqual\":true,",tokens,rows,cols,oracle?"double-bf16":"simt-bf16",maxAbs,relative);
+    print_times("simt",v);printf(",");print_times("scalarTensorCore",o);printf(",");print_times("tensorCore",z);puts("}");fflush(stdout);
 }
 static void delta_case(int tokens) {
     Model g;size_t n=32*128*128;

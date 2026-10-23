@@ -32,7 +32,7 @@ static void prepare_chunk(Model *g) {
 }
 static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const int *ids=nullptr,int experts=1,bool routed=false) {
     if(g->bf16Projections && !ids && m.rows>=256 && m.cols>=256)
-        prefill_gemm_bf16<<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
+        prefill_gemm_bf16<true><<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
     else if((g->fastFp32 || g->densePacked) && !ids && count>=4 && m.rows>=256 && m.cols%256==0) {
         if(m.cols<=2048)chunk_dense_reuse<8,true><<<dim3((m.rows+3)/4,(count+7)/8),128>>>(m,x,y,count);
         else chunk_dense_reuse<4,true><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
