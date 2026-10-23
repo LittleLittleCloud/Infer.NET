@@ -18,7 +18,7 @@ public sealed class ChatTests
     [Fact] public void ParsesMessagesAndResponsesWithoutFlatteningHistory()
     {
         var a = Parse("""{"model":"qwen3.6-35b-a3b","system":[{"type":"text","text":"Remember"}],"messages":[{"role":"user","content":"red"},{"role":"assistant","content":[{"type":"text","text":"ok"}]},{"role":"user","content":"which color?"}],"max_tokens":32} """, ChatFormat.Messages);
-        var b = Parse("""{"model":"qwen3.6-35b-a3b","instructions":"Remember","input":[{"role":"user","content":"red"},{"type":"message","role":"assistant","content":[{"type":"output_text","text":"ok","annotations":[]}]},{"role":"user","content":[{"type":"input_text","text":"which color?"}]}],"max_output_tokens":32,"store":false} """, ChatFormat.Responses);
+        var b = Parse("""{"model":"qwen3.6-35b-a3b","instructions":"Remember","input":[{"role":"user","content":"red"},{"type":"message","role":"assistant","content":[{"type":"output_text","text":"ok","annotations":[],"logprobs":[]}]},{"role":"user","content":[{"type":"input_text","text":"which color?"}]}],"max_output_tokens":32,"store":false} """, ChatFormat.Responses);
         Assert.Equal(a.Inference.Messages, b.Inference.Messages); Assert.Equal(32, b.Inference.MaxTokens);
     }
     [Theory]

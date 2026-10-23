@@ -89,7 +89,10 @@ try:
    check(sdk.chat.completions.create(**args).choices[0].message.content=='你好 [world]','OpenAI SDK complete')
    stream=list(sdk.chat.completions.create(**args,stream=True,stream_options={'include_usage':True}))
    check(''.join(x.choices[0].delta.content or '' for x in stream if x.choices)=='你好 [world]' and stream[-1].usage.total_tokens==25,'OpenAI SDK chat stream')
-   check(sdk.responses.create(model='qwen3.6-35b-a3b',input='hi',max_output_tokens=32,store=False).output_text=='你好 [world]','OpenAI SDK Responses complete')
+   first=sdk.responses.create(model='qwen3.6-35b-a3b',input='hi',max_output_tokens=32,store=False)
+   check(first.output_text=='你好 [world]','OpenAI SDK Responses complete')
+   second=sdk.responses.create(model='qwen3.6-35b-a3b',input=[dict(role='user',content='hi')]+[item.model_dump(exclude_none=True) for item in first.output]+[dict(role='user',content='again')],max_output_tokens=32,store=False)
+   check(second.output_text=='你好 [world]' and len(seen[-1]['messages'])==3,'OpenAI SDK Responses output history round trip')
    with sdk.responses.stream(model='qwen3.6-35b-a3b',input='hi',max_output_tokens=32,store=False) as stream:
     for event in stream:pass
     check(stream.get_final_response().output_text=='你好 [world]','OpenAI SDK Responses stream accumulator')

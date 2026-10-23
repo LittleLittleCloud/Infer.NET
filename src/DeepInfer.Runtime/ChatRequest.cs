@@ -26,8 +26,9 @@ public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool I
             foreach (var block in e.EnumerateArray())
             {
                 if (block.ValueKind != JsonValueKind.Object || !block.TryGetProperty("type", out var type) || type.GetString() is not ("text" or "input_text" or "output_text") || !block.TryGetProperty("text", out var text)) throw new ArgumentException("Only text content blocks are supported.");
-                if (block.EnumerateObject().Any(p => p.Name is not ("type" or "text" or "annotations"))) throw new ArgumentException("Unsupported content block parameter.");
+                if (block.EnumerateObject().Any(p => p.Name is not ("type" or "text" or "annotations" or "logprobs"))) throw new ArgumentException("Unsupported content block parameter.");
                 if (block.TryGetProperty("annotations", out var annotations) && (annotations.ValueKind != JsonValueKind.Array || annotations.GetArrayLength() != 0)) throw new ArgumentException("Annotations are not supported.");
+                if (block.TryGetProperty("logprobs", out var logprobs) && logprobs.ValueKind != JsonValueKind.Null && (logprobs.ValueKind != JsonValueKind.Array || logprobs.GetArrayLength() != 0)) throw new ArgumentException("Logprobs are not supported.");
                 parts.Add(String(text));
             }
             return string.Concat(parts);
