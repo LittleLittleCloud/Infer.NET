@@ -4,6 +4,7 @@ using System.Text;
 namespace DeepInfer.Runtime;
 
 // Version 4 adds ordered incremental KV slices; older peers fail authentication.
+// KV profile 1 is Q8 block32 (544 bytes per 512-component tensor/token).
 // Frames authenticate both metadata and payload; nonce-derived keys prevent replay.
 // Trusted LAN transport: authenticated/integrity-protected, NOT encrypted.
 public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvBytes = 2)
@@ -15,7 +16,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
     public sealed record Frame(int Kind, int Layer, int Tensor, int Position, int Count, byte[] Data);
     public static async Task<SplitWire> ConnectAsync(Stream stream, string token, bool server, Guid request, CancellationToken ct, int kvBytes = 2)
     {
-        if (kvBytes is not (2 or 4)) throw new ArgumentException("Unsupported KV profile.");
+        if (kvBytes is not (1 or 2 or 4)) throw new ArgumentException("Unsupported KV profile.");
         if (token.Length < 32) throw new ArgumentException("Split transport requires a token of at least 32 characters.");
         if (!BitConverter.IsLittleEndian) throw new PlatformNotSupportedException("Split protocol uses little-endian tensors.");
         var secret=Encoding.UTF8.GetBytes(token); var a=new byte[32]; var b=new byte[32]; var id=new byte[16];
@@ -32,14 +33,15 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
         => ValidateDescriptor(f.Kind, f.Layer, f.Tensor, f.Position, f.Count, f.Data.Length, kvBytes);
     private static void ValidateDescriptor(int kind, int layer, int tensor, int position, int count, int size, int kvBytes)
     {
-        if(kvBytes is not (2 or 4)) throw new InvalidDataException("Unsupported KV profile.");
+        if(kvBytes is not (1 or 2 or 4)) throw new InvalidDataException("Unsupported KV profile.");
+        var kvTokenBytes = kvBytes == 1 ? Q8KvCodec.TensorTokenBytes : 512 * kvBytes;
         var valid=kind switch
         {
             Start => layer==20 && tensor is >=0 and <=3 && position==0 && count is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && size==count*4,
             Hidden => layer==20 && tensor==0 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*2048*4,
             Trace => layer==0 && tensor==0 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*20*2048*4,
-            KvRange => layer is >=0 and <20 && (layer+1)%4==0 && tensor is 0 or 1 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*512*kvBytes,
-            State => layer is >=0 and <20 && tensor is 0 or 1 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==1 && size==((layer+1)%4==0?position*512*kvBytes:tensor==0?32*128*128*4:3*8192*4),
+            KvRange => layer is >=0 and <20 && (layer+1)%4==0 && tensor is 0 or 1 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*kvTokenBytes,
+            State => layer is >=0 and <20 && tensor is 0 or 1 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==1 && size==((layer+1)%4==0?position*kvTokenBytes:tensor==0?32*128*128*4:3*8192*4),
             End => layer==20 && tensor==0 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==0 && size is 0 or PrefixAgentTiming.PayloadBytes,
             _ => false
         };
