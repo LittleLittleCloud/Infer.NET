@@ -1,0 +1,148 @@
+{
+  "date": "2026-10-22",
+  "timezone": "America/Los_Angeles",
+  "kind": "real-model-split-correctness",
+  "model": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "topology": "Mac Wi-Fi -> home router -> Windows 1GbE",
+  "scope": "Resident first 20 CUDA layers, last 20 Metal layers, complete prefix state handoff, full Metal decode. Experimental CLI; 2048-token total limit.",
+  "performanceAcceptance": false,
+  "targetBF16Acceptance": false,
+  "testsPerHost": 79,
+  "nativeAotBuiltOnBothHosts": true,
+  "runs": [
+    {
+      "id": "split-20261022-fp32kv",
+      "source": "b180ba405a5485fbd53f4080592bdd5423973ce8",
+      "native": false,
+      "profile": "affine8 weights / FP32 GEMV and KV / FP32 recurrent state",
+      "promptTokens": 17,
+      "outputTokens": 8,
+      "tokensMatch": true,
+      "numericalChecks": 388,
+      "allChecksPass": true,
+      "maxRelativeL2": 7.224317875345808e-07,
+      "maxAbsolute": 8.463859558105469e-06,
+      "safetyChecks": [],
+      "diagnosticHiddenReadyMs": 684.1179,
+      "diagnosticDecodeReadyMs": 1556.1949,
+      "diagnosticElapsedMs": 1837.8309,
+      "resultSHA256": "2b927817f7bcf5dc1ab05c1742698912d9e04df20938c4123e94b9a2ea4d58b3",
+      "macArtifacts": {
+        "src/DeepInfer.Host/bin/Release/net10.0/deepinfer.dll": "b523dea9555724236eb6cba1dc128bee91bff2e534d872249879bae75c161300",
+        "src/DeepInfer.Backends/bin/Release/net10.0/DeepInfer.Backends.dll": "c7fafcafc8621e4dadeebe8f85b82bed7227fce0b4c1409d8430b360d489f8d1",
+        "native/DeepInfer.Metal/build/libdeepinfer_metal.dylib": "701e01d6ccf99ddc9bf1fb46872658a960bea011c40da5020f4393bad57315ed"
+      },
+      "windowsArtifacts": {
+        "deepinfer.exe": "b793dbeb091e18aa5d6413c3eabf31e7fed24bf3cdf87fcd27cdb39e25e53c6c",
+        "deepinfer_cuda.dll": "fb7d4d6b4b173c60c3027c423403786003fc0c60ef530e6adb7492811024c1e1",
+        "DeepInfer.Backends.dll": "3da0088941de8d5588810ff84eec48e809be82a093aaf29793fc12dc335f5ae7"
+      }
+    },
+    {
+      "id": "split-20261022-multichunk",
+      "source": "b180ba405a5485fbd53f4080592bdd5423973ce8",
+      "native": false,
+      "profile": "affine8 weights / FP32 GEMV and KV / FP32 recurrent state",
+      "promptTokens": 61,
+      "outputTokens": 32,
+      "tokensMatch": true,
+      "numericalChecks": 1292,
+      "allChecksPass": true,
+      "maxRelativeL2": 2.6344789141046576e-06,
+      "maxAbsolute": 4.1961669921875e-05,
+      "safetyChecks": [],
+      "diagnosticHiddenReadyMs": 1327.598,
+      "diagnosticDecodeReadyMs": 1923.2453,
+      "diagnosticElapsedMs": 2629.2769,
+      "resultSHA256": "e76dddb9ed17008a48b3f7ea0e305373c1f6d7455aa3b8f6cee873cebeea2e24",
+      "macArtifacts": {
+        "src/DeepInfer.Host/bin/Release/net10.0/deepinfer.dll": "b523dea9555724236eb6cba1dc128bee91bff2e534d872249879bae75c161300",
+        "src/DeepInfer.Backends/bin/Release/net10.0/DeepInfer.Backends.dll": "c7fafcafc8621e4dadeebe8f85b82bed7227fce0b4c1409d8430b360d489f8d1",
+        "native/DeepInfer.Metal/build/libdeepinfer_metal.dylib": "701e01d6ccf99ddc9bf1fb46872658a960bea011c40da5020f4393bad57315ed"
+      },
+      "windowsArtifacts": {
+        "deepinfer.exe": "b793dbeb091e18aa5d6413c3eabf31e7fed24bf3cdf87fcd27cdb39e25e53c6c",
+        "deepinfer_cuda.dll": "fb7d4d6b4b173c60c3027c423403786003fc0c60ef530e6adb7492811024c1e1",
+        "DeepInfer.Backends.dll": "3da0088941de8d5588810ff84eec48e809be82a093aaf29793fc12dc335f5ae7"
+      }
+    },
+    {
+      "id": "split-20261022-aot",
+      "source": "c25d20970bce198646d7befe08622d685150b4da",
+      "native": true,
+      "profile": "affine8 weights / FP32 GEMV and KV / FP32 recurrent state",
+      "promptTokens": 17,
+      "outputTokens": 8,
+      "tokensMatch": true,
+      "numericalChecks": 388,
+      "allChecksPass": true,
+      "maxRelativeL2": 7.224317875345808e-07,
+      "maxAbsolute": 8.463859558105469e-06,
+      "safetyChecks": [
+        "decode-before-state",
+        "wrong-state-position",
+        "wrong-state-size",
+        "duplicate-state",
+        "decode-before-last-state"
+      ],
+      "diagnosticHiddenReadyMs": 1016.7917,
+      "diagnosticDecodeReadyMs": 1604.0243,
+      "diagnosticElapsedMs": 1911.7928,
+      "resultSHA256": "52e2386d45e375ad1ba6633bed1983fb4a0cc96e33851e3ea7e01a489d234bca",
+      "macArtifacts": {
+        "artifacts/split/native-mac-final/deepinfer": "da90770c2d1728d33c7123358d8c80f162128b7548ae89d060d24b47527342f8",
+        "artifacts/split/native-mac-final/libdeepinfer_metal.dylib": "701e01d6ccf99ddc9bf1fb46872658a960bea011c40da5020f4393bad57315ed"
+      },
+      "windowsArtifacts": {
+        "deepinfer.exe": "ef16a8de2ac9ee8b5245264654cd432fc5061c47fb44a35ea968f52f1e8c14c8",
+        "deepinfer_cuda.dll": "fb7d4d6b4b173c60c3027c423403786003fc0c60ef530e6adb7492811024c1e1"
+      }
+    }
+  ],
+  "failedExperiments": [
+    {
+      "id": "split-20261022-second",
+      "source": "731d0c01af4a3b36e68569c20618407c9cfb54fa",
+      "profile": "FP32 GEMV, BF16 KV",
+      "passed": false,
+      "failedChecks": 7,
+      "totalChecks": 388,
+      "greedyTokensMatch": true,
+      "maxRelativeL2": 0.00025933999079012717,
+      "maxAbsolute": 0.015625,
+      "resultSHA256": "fb4a08f2be4c1e35a01347c4cb098e54c0231568c708526c57b1cb931fb953ed"
+    },
+    {
+      "id": "split-20261022-ascending-fixed",
+      "source": "16278c5f141e0bbfe3fbccdeb514ba9246c57250",
+      "profile": "Ascending reduction, FP32 GEMV, BF16 KV",
+      "passed": false,
+      "failedChecks": 9,
+      "totalChecks": 388,
+      "greedyTokensMatch": true,
+      "maxRelativeL2": 0.00023881007612182024,
+      "maxAbsolute": 0.015625,
+      "resultSHA256": "8d9084e33f4cb2a2fd703dd9797f5cff894f381d7b93440e9709314e12860f20"
+    },
+    {
+      "id": "split-20261022-bf16-synced",
+      "source": "7a3bcd2336d77eac3c6d022d10b85be71831d311",
+      "profile": "BF16 multiplicands and KV; not adopted",
+      "passed": false,
+      "failedChecks": 376,
+      "totalChecks": 388,
+      "greedyTokensMatch": true,
+      "maxRelativeL2": 0.08672237073805308,
+      "maxAbsolute": 0.8517855405807495,
+      "resultSHA256": "c36912bf8631281cb09d3760ffe39f8e906de64cf04a01970385d14e485286a4"
+    }
+  ],
+  "limitations": [
+    "Successful cases use explicit FP32 KV diagnostic profile, not the fixed BF16 target profile.",
+    "Times include numerical tracing/comparison and state file I/O; single diagnostic runs, no formal warmup/three trials.",
+    "Existing Mac 5bit service retained; model loading caused substantial system swapping. No resource acceptance claimed.",
+    "Raw tensors/logs kept locally on both hosts, not published. Digests identify local evidence; they are not download links.",
+    "Original eight-token text agrees, but target BF16 state/logit tolerances remain unmet. No 128K split benchmark."
+  ]
+}

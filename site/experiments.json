@@ -176,5 +176,23 @@
     "next": "CUDA 模型状态导出、导入和连续生成正确性仍待实现；可用相同基准做 Mac 有线网络对照。90% 命中测试只模拟传输量，不代表已有 prefix cache 功能。",
     "commands": [],
     "evidence": null
+  },
+  {
+    "id": "split-prefill-mvp",
+    "title": "真实双机 20/20 prefill 与完整状态接管",
+    "kind": "8bit · FP32 KV 诊断通过 · BF16 目标未通过",
+    "source": "docs/SPLIT-PREFILL.md",
+    "question": "现有家庭网络上，4090 前段与 Mac 后段能否执行真实模型，并把全部状态交给 Mac 连续 decode？",
+    "setup": "2026-10-22，M5 Pro 48 GiB + RTX 4090，原有 Wi-Fi/千兆拓扑。8bit 权重常驻，FP32 GEMV / KV 诊断模式；单次正确性运行，非性能基准。",
+    "change": "自写 CUDA 前 20 层、Metal 后 20 层及认证 TCP；收齐 40 份 KV、DeltaNet、卷积状态后完整 decode。增加 AOT 双机启动和状态缺失拒绝检查。",
+    "result": "17/8（Managed、Native AOT）和 61/32（两块 32+29）全部 token 一致；388/388、1292/1292 数值检查通过。最大 relative L2 2.6345e-6，max abs 4.1962e-5。",
+    "validation": "两端各 79 项单测、25 项 AOT RPC 检查通过。Native AOT 真实模型及五项状态拒绝行为通过；摘要保存源码及产物散列。",
+    "conclusion": "短请求链路成立，尚非目标精度或性能验收。BF16 KV 原型 7 项严格检查失败；BF16 乘法输入实验也未通过。均保留证据，未降低阈值。",
+    "next": "先处理 BF16 目标精度一致性，再做 CUDA 批量 GEMM、长上下文、TUI/调度器接入及正式资源性能验收。目前上限 2K，Mac 加载存在 swap。",
+    "commands": [
+      "python3 scripts/split/run-dual.py --verify --kv fp32 --max-tokens 8",
+      "python3 scripts/split/run-dual.py --native --verify --kv fp32 --max-tokens 8"
+    ],
+    "evidence": null
   }
 ]
