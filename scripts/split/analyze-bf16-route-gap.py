@@ -83,8 +83,8 @@ def main():
         raise SystemExit("Use a fresh output file")
     result = json.loads((args.cuda / "result.json").read_text())
     tokens = result["tokens"]
-    if (tokens, result["baseline"]["mode"], result["candidate"]["mode"], result["kv"]) != (128, 5, 6, "bf16"):
-        raise ValueError("Expected 128-token CUDA mode-5/mode-6 BF16 diagnostic")
+    if (tokens, result["baseline"]["mode"], result["candidate"]["mode"]) != (128, 5, 6) or result["kv"] not in ("bf16", "fp32"):
+        raise ValueError("Expected 128-token CUDA mode-5/mode-6 diagnostic")
     traces = {name: load(args.cuda, name, result[name]["routesSha256"], tokens)
               for name in ("baseline", "candidate", "repeat")}
     if traces["candidate"] != traces["repeat"]:
@@ -115,6 +115,8 @@ def main():
                                   "sameSet": same_set})
     summary = {
         "kind": "isolated-cuda-bf16-versus-fp32-expert-route-gap",
+        "kv": result["kv"],
+        "candidateQkvCompensation": result.get("candidateQkvCompensation", "none"),
         "tokens": tokens,
         "layers": 20,
         "comparedDecisions": tokens * 20,

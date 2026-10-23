@@ -50,9 +50,9 @@ def main():
     if args.output.exists():
         raise SystemExit("Use a fresh output file")
     result = json.loads((args.cuda / "result.json").read_text())
-    if (result["tokens"], result["weightBits"], result["kv"],
+    if (result["tokens"], result["weightBits"],
             result["baseline"]["mode"], result["candidate"]["mode"],
-            result.get("stageCompareModes")) != (128, 8, "bf16", 5, 6, True):
+            result.get("stageCompareModes")) != (128, 8, 5, 6, True) or result["kv"] not in ("bf16", "fp32"):
         raise ValueError("Expected same-input CUDA mode-5/mode-6 stage probe")
     token = result["stageProbeToken"]
     if not isinstance(token, int) or not 0 <= token < 32:
@@ -69,6 +69,8 @@ def main():
                        "maxAbs": max(abs(float(y) - float(x)) for x, y in zip(baseline, candidate)),
                        "exact": baseline_sha == candidate_sha})
     summary = {"kind": "isolated-cuda-fp32-mode-versus-bf16-mode-stage-probe",
+               "kv": result["kv"],
+               "candidateQkvCompensation": result.get("candidateQkvCompensation", "none"),
                "token": token, "layer": 0, "stages": stages,
                "firstNonExactStage": next((item["stage"] for item in stages if not item["exact"]), None),
                "limitations": ["Synthetic token IDs", "CUDA mode 5 is an internal baseline, not the independent FP32 reference",
