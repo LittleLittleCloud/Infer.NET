@@ -1,5 +1,23 @@
 [
   {
+    "id": "bf16-fp32-control",
+    "kind": "2026-10-23 · BF16 正确性诊断",
+    "title": "加入 Mac FP32 对照：BF16 首层差约 0.99%",
+    "question": "跨机 BF16 差值主要是设备实现差异，还是精度策略本身已改变前段激活？",
+    "setup": "Qwen3.6 35B A3B affine8；128个固定合成token。Mac在9e417bf记录FP32 GEMM/KV层输出及40份状态；对照较早e6b119d的CUDA FP32/BF16双模式诊断，CUDA BF16使用试验性输出投影split-K。两端源码不同，均非正式吞吐配置。",
+    "change": "新增split-check-fp32-prefix与混合dtype离线比较；原Mac服务仅在独占模型加载时暂停，随后恢复连接。",
+    "result": "Mac FP32与CUDA内部FP32的第0层相对L2为2.73e-7，前3层低于1e-4，第3层升至4.09e-4；CUDA BF16对Mac FP32第0层为0.009913，60项层/状态检查0项通过，最差状态相对L2为0.09979。",
+    "validation": "Mac Release构建及125项测试通过；trace与离线报告有SHA-256记录。原919259d服务恢复后Ready，Windows agent重新连接。跨源码结果只作诊断，未验证独立整模FP32 logits参考。",
+    "conclusion": "首层大差值与BF16操作数舍入的同CUDA证据一致，但后续FP32跨设备也发生漂移；不能仅通过对齐单个CUDA算子宣称BF16正确。当前固定BF16/128K门槛仍未通过。",
+    "next": "用同一源码重测FP32/BF16控制，定位FP32第3层差值，并与固定整模FP32参考及logits比较。",
+    "commands": [
+      "deepinfer split-check-fp32-prefix --weights MODEL_DIR --output NEW_METAL_DIRECTORY",
+      "python3 scripts/split/compare-bf16-prefix.py --metal NEW_METAL_DIRECTORY --cuda CUDA_PROBE_DIRECTORY --metal-fp32 --output NEW_REPORT.json"
+    ],
+    "source": "docs/BF16-STAGE-PROBE-20261023.md",
+    "evidence": "site/bf16-fp32-control-summary.json"
+  },
+  {
     "id": "cuda-midchunk-wired",
     "kind": "2026-10-23 · 有线双机完整对照",
     "title": "CUDA块256/512原生更快，8K双机仍以32最快",

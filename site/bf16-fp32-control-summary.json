@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-23",
+  "kind": "isolated-bf16-prefix-versus-metal-fp32-control-not-e2e",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "tokens": 128,
+  "input": "fixed synthetic token IDs, not the formal request prompt",
+  "macSource": "9e417bf9d6dbbe82b1d265982b11d528936bd4ba",
+  "cudaSource": "e6b119d613b5bb15af2b459b035edd70ad176dd2",
+  "macProfile": "FP32 GEMM/KV, 128-token chunk, matrix off, sequential DeltaNet",
+  "cudaProfile": "BF16 GEMM/KV, diagnostic FP32 router/shared projections, opt-in output split-K",
+  "macTraceSha256": "63619b6126310a1293bd3852c31abf9c93d509060a470cf16ac437d63817d36e",
+  "comparisonLocalSha256": "b1b47546642961ae70010afa355979daef9230ce0139f548bea377765d563243",
+  "cudaFp32VsMacFp32": {
+    "firstLayerRelativeL2": 0.0000002726606169129398,
+    "firstLayerMaxAbs": 0.00000017881393432617188,
+    "passingLayers": 3,
+    "layerCount": 20,
+    "layer3RelativeL2": 0.0004086,
+    "layer19RelativeL2": 0.018782711982820707
+  },
+  "cudaBf16VsMacFp32": {
+    "firstLayerRelativeL2": 0.0099131292429899,
+    "firstLayerMaxAbs": 0.00564404996111989,
+    "passingLayerAndStateChecks": 0,
+    "totalLayerAndStateChecks": 60,
+    "worstCheck": "state-15-1",
+    "worstRelativeL2": 0.09979051388178899,
+    "worstMaxAbs": 0.3831757605075836
+  },
+  "validation": "Mac Release build and 125 tests passed; old serve restored, coordinator Ready and Windows agent connected",
+  "correctnessAcceptance": false,
+  "performanceAcceptance": false,
+  "limitations": [
+    "Mac and CUDA source commits differ; repeat on the same source before formal acceptance",
+    "CUDA candidate used an opt-in output split-K diagnostic rather than the deployed default",
+    "Metal FP32 is a device control, not the independent full-model CPU/logit reference",
+    "Synthetic token IDs and instrumented readbacks; no real RPC or throughput measurement",
+    "Raw tensors and full comparison report are retained only on the local development host"
+  ]
+}
