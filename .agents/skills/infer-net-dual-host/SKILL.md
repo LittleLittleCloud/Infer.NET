@@ -1,6 +1,6 @@
 ---
 name: infer-net-dual-host
-description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务、GitHub Pages 展示项目进展与实验笔记，通过 SSH 开发及验证 Mac Metal 与 Windows RTX 4090 推理。用于该项目的双机接入、实现、调优、进展与实验记录维护，不用于普通远程运维。"
+description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务、GitHub Pages 展示项目进展与实验笔记，通过 SSH 开发及验证 Mac Metal 与 Windows RTX 4090 推理。用于该项目的双机接入、实现、调优、部署更新与回退、进展与实验记录维护，不用于普通远程运维。"
 ---
 
 # Infer.NET 双机开发
@@ -21,6 +21,12 @@ description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务�
 - `README.md`、`scripts/`、`native/`、`src/`：当前启动、构建和真实实现状态。文档中的计划不证明代码已经实现。
 
 不在技能中复制性能阈值或模型 revision。规范缺失时查找迁移后的文件；找不到则说明缺少验收依据，不自定替代指标。
+
+## 部署、更新与回退
+
+涉及首次部署、更新运行版本、服务重启、回退或托管验收时，读取 [部署与更新 SOP](references/deployment-sop.md)，并以目标版本的部署文档、安装脚本和包清单核对实际能力。
+保留 `split-serve` / `split-agent` 命令名；当前验收拓扑为 Mac serve 与 Windows agent 一对一，Windows 经 serve 间接接入 coordinator。
+只编写 SOP 不触发部署；用户明确自行安装并稍后反馈时，等待反馈再执行依赖安装的验证。常规更新沿用已有授权，管理员步骤遵循下文权限边界。
 
 ## SSH 接入与环境发现
 
