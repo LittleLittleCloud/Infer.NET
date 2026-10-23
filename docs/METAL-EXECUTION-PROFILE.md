@@ -7,3 +7,5 @@ This is deliberately a native readback: .NET 10 on Unix keeps Environment.SetEnv
 `split-serve --metal-scratch-tokens 128` is an opt-in allocation experiment. Default remains512. Supported capacities128/512 must cover suffix-chunk-tokens32/128/512. Short local requests are already capped at128tokens. Request chunking, quantization and arithmetic remain unchanged; only preallocated temporary capacity changes. Smaller scratch is not a larger context window or a throughput claim.
 
 Validation: native getter rejects null pointers and wrong result sizes, guards output bounds, reports changed precision/mode fields, and checks scratch32/128/512 allocation. CLI integration rejects invalid or insufficient scratch geometry. Real request parity, allocation and timing evidence will be appended after the experiment.
+
+Real deployment A/B and limitations: [published experiment](https://www.littlelittlecloud.com/Infer.NET/experiments.html#metal-scratch-profile). Local raw runs are listed in the public JSON.
