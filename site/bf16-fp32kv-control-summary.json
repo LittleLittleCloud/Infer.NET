@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-23",
+  "kind": "isolated-same-source-fp32-prefix-control-not-e2e",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "tokens": 128,
+  "tokensSha256": "8894963a38fa5ac5efc5991b5eb193536d712234d434a83cf8dc3cc47072f0e7",
+  "macSource": "1f42e6fab4d58a683c66a3d009a8465521ad4403",
+  "cudaSource": "1f42e6fab4d58a683c66a3d009a8465521ad4403",
+  "macProfile": "FP32 GEMM/KV, 128-token chunk, matrix off, sequential DeltaNet",
+  "cudaControlProfile": "mode 5 FP32 GEMM/KV, diagnostic FP32 router/shared projections, no split-K",
+  "cudaCandidateProfile": "mode 6 BF16 GEMM/FP32 KV, diagnostic FP32 router/shared projections, no split-K",
+  "fp32Control": {
+    "passingLayers": 20,
+    "totalLayers": 20,
+    "passingStates": 40,
+    "totalStates": 40,
+    "worstLayerRelativeL2": 8.535455318893589e-07,
+    "worstStateRelativeL2": 3.4083270313557796e-06,
+    "worstStateMaxAbs": 5.435943603515625e-05
+  },
+  "bf16GemmFp32KvCandidate": {
+    "passingLayers": 0,
+    "totalLayers": 20,
+    "passingStates": 0,
+    "totalStates": 40,
+    "firstLayerRelativeL2": 0.00991372813880126,
+    "firstLayerMaxAbs": 0.005644968710839748,
+    "worstStateRelativeL2": 0.10349216797471952
+  },
+  "cudaDllSha256": "4128dd0a48fa25481733f7cbe8851264e006765da1e7af7c233dd398661f3edd",
+  "cudaResultLocalSha256": "c1a5ef1e419ab2ac52ed76ce96d08841c9ebb07cd367984ea4f8bb4d6a289cac",
+  "macResultLocalSha256": "a20eadb1555ca920922827a84c6c9829af53111323bba09f2e6c1c624a525883",
+  "comparisonLocalSha256": "3c67f4113e8622324f53675885e86c787a352c2e7039d49122c67a994068a08e",
+  "thresholds": {
+    "relativeL2LessThan": 0.0001,
+    "maxAbsLessThan": 0.01
+  },
+  "validation": "Same full source commit and same 128 token IDs on both devices; 20 FP32 layers and 40 FP32 states pass; original Mac serve and Windows agent restored Ready and connected",
+  "correctnessAcceptance": false,
+  "performanceAcceptance": false,
+  "limitations": [
+    "FP32 control is not the required BF16 GEMM/KV target profile",
+    "Metal FP32 is a device control, not independent full-model CPU/logit reference",
+    "Separate isolated captures, no real RPC, suffix, decode, 128K, or throughput gate",
+    "Raw tensors and full comparison report remain local only"
+  ]
+}

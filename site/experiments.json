@@ -1,5 +1,24 @@
 [
   {
+    "id": "bf16-fp32kv-control",
+    "kind": "2026-10-23 · 同精度正确性诊断",
+    "title": "4090前20层FP32同精度对照：20层与40状态通过",
+    "question": "先前首个注意力层的差值来自跨设备实现，还是来自CUDA BF16 KV与Metal FP32 KV混用？",
+    "setup": "Qwen3.6 35B A3B affine8/group64；双端完整源码1f42e6f；128个固定合成token，SHA-256 8894963a…；Mac FP32 GEMM/KV、128块；CUDA mode5 FP32 GEMM/KV，mode6 BF16 GEMM/FP32 KV，诊断FP32路由与共享专家；隔离读回，非吞吐基准。",
+    "change": "Windows隔离检查增加-Kv fp32及mode5状态保存；Mac在同源码上重新采集FP32控制，离线比较20层与40份状态。",
+    "result": "CUDA FP32 GEMM/KV对Metal FP32 GEMM/KV：20/20层、40/40状态通过；最差层相对L2 8.535e-7、最差状态3.408e-6，最大状态绝对差5.436e-5。BF16 GEMM/FP32 KV从第0层失败：相对L2 0.009914；0/60层/状态通过。",
+    "validation": "同源码同token；Windows DLL SHA-256 4128dd0a…；三份结果/比较JSON留有完整SHA-256；原919259d服务均恢复，协调器显示Mac Ready、Windows agent已连接。早前125项Mac及124项Windows测试见旧记录；本轮Mac Release构建与Python语法检查通过。",
+    "conclusion": "同精度FP32对照消除了此前首个注意力层的差值，支持将旧差值归因于KV dtype混用，不能称设备固有漂移。BF16 GEMM本身仍造成首层大差值；本轮未测目标BF16 KV的完整正确性、整模logits、128K与性能。",
+    "next": "对固定独立整模FP32参考核对BF16层、状态、logits和greedy；定位路由舍入与可能的混合精度修正，再测真实RPC与128K门槛。",
+    "commands": [
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_CUDA_DIRECTORY -Kv fp32 -Router fp32 -Shared fp32 -RouteProbe 999:999",
+      "DEEPINFER_METAL_KV=fp32 DEEPINFER_METAL_PREFILL_GEMM=fp32 DEEPINFER_METAL_PREFILL_CHUNK=128 DEEPINFER_METAL_PREFILL_MATRIX=0 DEEPINFER_METAL_PREFILL_DELTA=sequential deepinfer split-check-fp32-prefix --weights MODEL_DIR --output NEW_METAL_DIRECTORY",
+      "python3 scripts/split/compare-bf16-prefix.py --metal NEW_METAL_DIRECTORY --cuda NEW_CUDA_DIRECTORY --metal-fp32 --output NEW_REPORT.json"
+    ],
+    "source": "docs/BF16-FP32KV-CONTROL-20261023.md",
+    "evidence": "site/bf16-fp32kv-control-summary.json"
+  },
+  {
     "id": "bf16-fp32-control",
     "kind": "2026-10-23 · BF16 正确性诊断",
     "title": "加入 Mac FP32 对照：BF16 首层差约 0.99%",
