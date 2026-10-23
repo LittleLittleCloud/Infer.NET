@@ -65,6 +65,10 @@ public static class Commands
                                [--coordinator http://127.0.0.1:5100] [--backend simulation|cpu|metal|cuda]
                                [--capacity 1] [--advertise http://127.0.0.1:5101]
                                [--weights models/stories15M.bin --tokenizer models/tokenizer.bin --model stories15m]
+                  split-serve  --config PRIVATE_MAC_WORKER_JSON   persistent Metal worker + API
+                  split-agent  --config PRIVATE_WINDOWS_JSON      persistent CUDA agent
+                  infer        --endpoint http://127.0.0.1:5200 --token-file FILE --stream
+                  version      print build version and source commit
                   split-infer  --weights MODEL_DIR --listen tcp://MAC_INTERFACE:5210 --allow-remote
                                [--verify] [--max-tokens 8] [--output RUN_DIRECTORY]
                   split-worker --weights PREFIX_BUNDLE --endpoint tcp://MAC_INTERFACE:5210

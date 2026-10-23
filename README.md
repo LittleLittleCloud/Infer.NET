@@ -174,3 +174,9 @@ TinyStories 15M 仍保留为小模型回归：`demo --backend metal --model stor
 Metal BF16 matrix operands and 16-bit KV are available as an opt-in M5 path; precision boundaries, measurements and commands are documented in [BF16 Metal](docs/BF16-METAL.md).
 
 The M5 MoE launcher selects the measured hybrid GEMM, packed expert input and fused BF16 attention profile. See [current tuning and matched MLX measurements](docs/PREFILL-TUNING.md).
+
+## Persistent 8bit deployment
+
+The `split-serve` / `split-agent` commands keep Metal and CUDA weights loaded across requests, warm the complete Mac graph before readiness, reset request state, and use pinned mutual TLS for cross-host state transfer. The local coordinator exposes both complete and streamed responses; CLI and TUI share it. Current limits: affine8 weights, FP32 KV, 2048 total tokens and 256 output tokens, one active request plus a bounded queue. BF16/128K performance acceptance remains open.
+
+See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Native AOT packaging, Mac LaunchAgents, Windows Service installation, upgrade/rollback and real-model acceptance. Windows Service installation requires administrator PowerShell; the foreground SSH runner is only for development.

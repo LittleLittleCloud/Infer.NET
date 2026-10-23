@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exercise a running real deployment. Requires no shell/SSH during inference."""
-import argparse,concurrent.futures,hashlib,json,pathlib,time,urllib.request,urllib.error
+import argparse,concurrent.futures,hashlib,json,pathlib,time,threading,urllib.request,urllib.error
 p=argparse.ArgumentParser();p.add_argument('--endpoint',default='http://127.0.0.1:5200');p.add_argument('--worker',default='http://127.0.0.1:5201');p.add_argument('--token-file',required=True);p.add_argument('--output',required=True);a=p.parse_args()
 out=pathlib.Path(a.output);out.mkdir(parents=True,exist_ok=False);token=pathlib.Path(a.token_file).read_text().strip();checks=[]
 base={'prompt':'用一句话介绍你自己。','maxTokens':32,'model':'qwen3.6-35b-a3b','backend':'metal','profile':True,'benchmarkIgnoreEos':True}
@@ -48,8 +48,16 @@ time.sleep(.5)
 status,result=request('/v1/infer',base);check('next request correct after cancellation',status==200 and result['tokenIds']==results[0]['tokenIds'])
 status,eos=request('/v1/infer',dict(base,prompt='只回答一个字：好。不要解释。',maxTokens=256,benchmarkIgnoreEos=False))
 check('natural EOS terminates before limit',status==200 and eos['finishReason']=='eos' and len(eos['tokenIds'])<256)
+deadline=time.monotonic()+30
+while request('/ready',root=a.worker)[0]!=200:
+ if time.monotonic()>deadline:raise TimeoutError('Peer not reconnected after EOS')
+ time.sleep(.1)
+barrier=threading.Barrier(8)
+def concurrent_request(_):
+ barrier.wait();return request('/v1/infer',dict(base,maxTokens=128))
 with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
- busy=list(pool.map(lambda _:request('/v1/infer',dict(base,maxTokens=128)),range(8)))
+ busy=list(pool.map(concurrent_request,range(8)))
+(out/'queue-responses.json').write_text(json.dumps(busy,ensure_ascii=False))
 check('bounded queue provides explicit backpressure',any(code==429 for code,_ in busy) and all(code in (200,429) for code,_ in busy))
 status,health=request('/health',root=a.worker);check('Mac model PID remains unchanged',status==200 and health['pid']==pid)
 summary={'checks':checks,'pid':pid,'build':health['build'],'completedRequests':health['completedRequests'],'timings':[r['timings'] for r in results],'outputSha256':hashlib.sha256(json.dumps(results[0]['tokenIds']).encode()).hexdigest(),'queueStatuses':[s for s,_ in busy],'elapsedSeconds':time.monotonic()-started}

@@ -12,7 +12,7 @@ if (Console.IsInputRedirected || Console.IsOutputRedirected)
 }
 try
 {
-    using var client = new ClusterClient(endpoint, Environment.GetEnvironmentVariable("DEEPINFER_TOKEN"));
+    using var client = new ClusterClient(endpoint, Environment.GetEnvironmentVariable("DEEPINFER_TOKEN_FILE") is { Length: > 0 } tokenFile ? File.ReadAllText(tokenFile).Trim() : Environment.GetEnvironmentVariable("DEEPINFER_TOKEN"));
     var host = Host.CreateDefaultBuilder()
         .ConfigureServices(services => services.AddSingleton(client))
         .UseRazorConsole<Dashboard>().Build();

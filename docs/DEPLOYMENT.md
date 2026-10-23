@@ -61,7 +61,7 @@ deepinfer infer --endpoint http://127.0.0.1:5200 \
   --model qwen3.6-35b-a3b --prompt "你好" --max-tokens 128
 ```
 
-`--stream` 实时打印 token，最后显示 finish reason 和 decode 吞吐；不带该参数返回完整响应。自然生成遇到 EOS 结束，测试 API 可显式设置 `benchmarkIgnoreEos=true`。TUI 仍走原有完整响应接口，可连接同一 5200 coordinator；token 从 `DEEPINFER_TOKEN` 环境变量读取。TUI 自身不加载模型。
+`--stream` 实时打印 token，最后显示 finish reason 和 decode 吞吐；不带该参数返回完整响应。自然生成遇到 EOS 结束，测试 API 可显式设置 `benchmarkIgnoreEos=true`。TUI 仍走原有完整响应接口，可连接同一 5200 coordinator；token 从 `DEEPINFER_TOKEN_FILE` 指定的文件读取（也兼容 `DEEPINFER_TOKEN`）。TUI 自身不加载模型。
 
 `GET /health` 可见 Loading/Warming/Ready/Busy/Faulted、PID、build、模型与容量。`GET /ready` 需要 `X-DeepInfer-Token`，模型完成实际预热且 Windows 已认证连接才返回 200；加载完成并不等于 Ready。首次预热执行全部 40 层及 32 个 decode 步骤，之后重置请求状态，无 prefix cache 命中。
 

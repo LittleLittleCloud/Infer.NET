@@ -108,7 +108,7 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(state, warmed && peers.Reader.TryPeek(out var peer) && peer.Connected, Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", 2048, 256, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && peers.Reader.TryPeek(out var peer) && peer.Connected, Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", 2048, 256, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
@@ -120,15 +120,13 @@ public static class SplitService
             var error = RequestValidation.Error(input);
             if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal" || input.MaxTokens > 256)
             { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens 1..256 is supported."); return; }
-            if (!warmed || (state != "Busy" && !Status().Ready)) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
+            if (!warmed || (!queue.Busy && !Status().Ready)) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
-            var acquired = false;
             try
             {
                 using var slot = await queue.Enter(timeout.Token);
                 if (slot is null) { await Fail(context, 429, "queue_full", "Request queue is full."); return; }
-                acquired = true; state = "Busy";
                 var ids = gpu!.Tokenize(input.Prompt, timeout.Token);
                 if (ids.Length + input.MaxTokens > 2048) { await Fail(context, 400, "context_length", "Prompt plus output must fit 2048 tokens; no silent truncation."); return; }
                 gpu.Reset(ids.Length + input.MaxTokens);
@@ -200,7 +198,6 @@ public static class SplitService
             { Console.Error.WriteLine("HANDOFF_ERROR " + ex); await Fail(context, 502, "handoff_failed", "State transfer failed; request state discarded."); }
             catch (InvalidOperationException)
             { state = "Faulted"; warmed = false; life.Cancel(); throw; }
-            finally { if (acquired && warmed) state = "Ready"; }
         }
         app.MapPost("/v1/infer", (InferenceRequest r, HttpContext c) => Handle(r, c, false));
         app.MapPost("/v1/infer/stream", (InferenceRequest r, HttpContext c) => Handle(r, c, true));
@@ -242,7 +239,7 @@ public static class SplitService
             using var rpc = new ClusterClient(o.Get("coordinator", "http://127.0.0.1:5200"), token, TimeSpan.FromSeconds(3));
             while (!life.IsCancellationRequested)
             {
-                try { if (Status().Ready || state == "Busy") await rpc.RegisterAsync(registration, life.Token); }
+                try { if (Status().Ready || queue.Busy) await rpc.RegisterAsync(registration, life.Token); }
                 catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException) { }
                 await Task.Delay(2000, life.Token);
             }

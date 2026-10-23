@@ -10,6 +10,8 @@ jobs:
             rid: linux-x64
           - os: macos-26
             rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -43,4 +45,7 @@ jobs:
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build
       - run: python3 scripts/integration.py
       - run: dotnet publish src/DeepInfer.Host -c Release -r ${{ matrix.rid }} -o artifacts/native
-      - run: python3 scripts/integration.py --executable artifacts/native/deepinfer
+      - if: runner.os != 'Windows'
+        run: python3 scripts/integration.py --executable artifacts/native/deepinfer
+      - if: runner.os == 'Windows'
+        run: python scripts/integration.py --executable artifacts/native/deepinfer.exe
