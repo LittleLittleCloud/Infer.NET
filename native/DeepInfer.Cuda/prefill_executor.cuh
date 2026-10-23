@@ -33,6 +33,8 @@ static void prepare_chunk(Model *g) {
 static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const int *ids=nullptr,int experts=1,bool routed=false) {
     if(g->bf16Projections && !ids && m.rows>=256 && m.cols>=256)
         prefill_gemm_bf16<<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
+    else if(g->denseReuse && !ids && count>=4 && m.rows>=256)
+        chunk_dense_reuse<4><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
 }
 static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *trace) {

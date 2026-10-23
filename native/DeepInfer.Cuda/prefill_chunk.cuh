@@ -161,6 +161,24 @@ __global__ void chunk_gemv(Matrix m,const float *x,float *y,const int *ids,int r
     for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++)val+=weight(m,wr,base+j)*input[base+j];
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// Reuse each dequantized dense weight across independent token accumulators.
+// Preserve the original per-lane accumulation and warp reduction order.
+template<int Tile> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,first=blockIdx.y*Tile;
+    if(row>=m.rows)return;
+    float sums[Tile]{};
+    for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++) {
+        float w=weight(m,row,base+j);
+        #pragma unroll
+        for(int t=0;t<Tile;t++)if(first+t<count)
+            sums[t]+=w*x[size_t(first+t)*m.cols+base+j];
+    }
+    #pragma unroll
+    for(int t=0;t<Tile;t++) {
+        float v=sum32(sums[t]);
+        if(lane==0&&first+t<count)y[size_t(first+t)*m.rows+row]=v;
+    }
+}
 __device__ float chunk_previous(const float *raw,const float *history,int t,int back,int d) {
     int index=t-back;return index<0?history[(index+3)*8192+d]:raw[index*8192+d];
 }
