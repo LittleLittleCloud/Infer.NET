@@ -1,0 +1,946 @@
+{
+  "date": "2026-10-22",
+  "timezone": "America/Los_Angeles",
+  "manifest": {
+    "schemaVersion": 1,
+    "kind": "synthetic-state-transport",
+    "transport": "direct TCP, authenticated; no TLS or compression; SSH control only",
+    "modelExecution": false,
+    "fullKVBytes": 1342177280,
+    "recurrentBytes": 32931840,
+    "local": {
+      "commit": "75afbb2ed240ca55fd8aedd00fdb2420dfefd991",
+      "librarySHA256": "a5be9b93e4929b8d18a01cb2ace5aebd7084afc8f3741842d9d6c474e334310d",
+      "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+      "platform": "darwin"
+    },
+    "warmups": 1,
+    "trials": 3,
+    "timing": "Mac monotonic clock; GO through receiver GPU validation and final acknowledgment; allocation/pattern fill excluded",
+    "gpuPath": "CUDA device <-> pinned staging <-> socket <-> Metal shared MTLBuffer; no overlap/double buffering",
+    "status": "passed",
+    "remote": {
+      "commit": "75afbb2ed240ca55fd8aedd00fdb2420dfefd991",
+      "librarySHA256": "d738f4e495e7bcd3179e9bd1302f4dd99b76f405eecf046c3647cfb77a0e798e",
+      "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+      "platform": "win32"
+    },
+    "gpuSelftests": "CPU pattern, tail and corruption rejection passed on both GPUs"
+  },
+  "network": "Mac 5 GHz Wi-Fi 802.11ax through home LAN to Windows physical 1 Gbps Ethernet. Wi-Fi snapshot 432 Mbps, RSSI -58 dBm; rate is variable.",
+  "power": "Mac AC High Power, Windows RTX4090 driver 610.88; initial 0% utilization, 1262 MiB occupied, 28 C.",
+  "limitations": [
+    "Synthetic bit patterns, not a model-generated KV export or model-session restore.",
+    "No model weights allocated by probe; existing idle Mac services retained.",
+    "Sequential copies and transfer; no double-buffer overlap; Python sockets and ctypes orchestration.",
+    "Wi-Fi is time-varying. Sequential chunk sweep is not a controlled optimization A/B.",
+    "90% hit requires already synchronized matching prefix and state snapshots; benchmark does not implement prefix caching.",
+    "Receiver GPU verifies all transferred words; timing includes verification and final acknowledgment.",
+    "No payload compression/encryption; HMAC authentication only. Synthetic payloads contain no private user data."
+  ],
+  "groups": [
+    {
+      "name": "host-128MiB",
+      "direction": "cuda-to-metal",
+      "chunkBytes": 262144,
+      "bytes": 134217728,
+      "warmupSeconds": 3.2997540410000004,
+      "medianSeconds": 3.3160394999999996,
+      "meanSeconds": 3.7757198749999996,
+      "minSeconds": 3.3072218749999998,
+      "maxSeconds": 4.70389825,
+      "medianMBps": 40.47531038155608,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.006666666000000987,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "cuda-to-metal",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 3.3072218749999998,
+          "MBps": 40.58322455308506,
+          "mac": {
+            "payloadSeconds": 3.296336833,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.006894875000000411,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 3.28495570004452,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 3.00002284348011e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "cuda-to-metal",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 3.3160394999999996,
+          "MBps": 40.47531038155608,
+          "mac": {
+            "payloadSeconds": 3.307053,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.005274207999999447,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 3.2952363999793306,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "cuda-to-metal",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 4.70389825,
+          "MBps": 28.53329746237602,
+          "mac": {
+            "payloadSeconds": 4.692229832999999,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.006666666000000987,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 4.678661799989641,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "host-128MiB",
+      "direction": "metal-to-cuda",
+      "chunkBytes": 262144,
+      "bytes": 134217728,
+      "warmupSeconds": 5.2277049999999985,
+      "medianSeconds": 4.7134762089999995,
+      "meanSeconds": 4.627278944666668,
+      "minSeconds": 4.156159917000004,
+      "maxSeconds": 5.012200708000002,
+      "medianMBps": 28.47531674048172,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.0374165999237448,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "metal-to-cuda",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 4.7134762089999995,
+          "MBps": 28.47531674048172,
+          "mac": {
+            "payloadSeconds": 4.643895666999999,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 5.840000021350988e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.675957200000994,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.029610599973239005,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "metal-to-cuda",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 5.012200708000002,
+          "MBps": 26.77820299290376,
+          "mac": {
+            "payloadSeconds": 4.895313166000001,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 3.339999992135745e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.967071099905297,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.03770970006007701,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 262144,
+          "direction": "metal-to-cuda",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 4.156159917000004,
+          "MBps": 32.293687124743975,
+          "mac": {
+            "payloadSeconds": 4.040668708999998,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 6.249999984220267e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.109168800059706,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.0374165999237448,
+            "validated": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "host-128MiB",
+      "direction": "cuda-to-metal",
+      "chunkBytes": 4194304,
+      "bytes": 134217728,
+      "warmupSeconds": 2.4009699169999976,
+      "medianSeconds": 2.1843348749999976,
+      "meanSeconds": 2.212686694333333,
+      "minSeconds": 2.0695764580000002,
+      "maxSeconds": 2.3841487500000014,
+      "medianMBps": 61.445582147746535,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.005563166000001729,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 2.3841487500000014,
+          "MBps": 56.29586996197276,
+          "mac": {
+            "payloadSeconds": 2.3688359169999984,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.006643624999995268,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 2.2433456999715418,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 2.1843348749999976,
+          "MBps": 61.445582147746535,
+          "mac": {
+            "payloadSeconds": 2.1753742089999974,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.00500816699999973,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 2.071936299907975,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 2.0695764580000002,
+          "MBps": 64.852751625183,
+          "mac": {
+            "payloadSeconds": 2.0571385000000006,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.005563166000001729,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 1.9175280999625102,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "host-128MiB",
+      "direction": "metal-to-cuda",
+      "chunkBytes": 4194304,
+      "bytes": 134217728,
+      "warmupSeconds": 7.6651558750000035,
+      "medianSeconds": 5.523280290999999,
+      "meanSeconds": 6.371067444000002,
+      "minSeconds": 3.828833958000004,
+      "maxSeconds": 9.761088083000004,
+      "medianMBps": 24.300365168630552,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.033314800006337464,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 9.761088083000004,
+          "MBps": 13.750283458025008,
+          "mac": {
+            "payloadSeconds": 9.436739709000001,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 5.420000022127169e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 9.596872200025246,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.030600299942307174,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 5.523280290999999,
+          "MBps": 24.300365168630552,
+          "mac": {
+            "payloadSeconds": 5.4034907919999995,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 4.1699999542288424e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 5.4826435999711975,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.03374950005672872,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 3.828833958000004,
+          "MBps": 35.05446552978986,
+          "mac": {
+            "payloadSeconds": 3.6894615000000073,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 4.999999987376214e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 3.7860138999531046,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.033314800006337464,
+            "validated": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "host-128MiB",
+      "direction": "cuda-to-metal",
+      "chunkBytes": 16777216,
+      "bytes": 134217728,
+      "warmupSeconds": 2.4805687500000033,
+      "medianSeconds": 2.1931724169999995,
+      "meanSeconds": 2.2020064306666662,
+      "minSeconds": 2.179285667000002,
+      "maxSeconds": 2.2335612079999976,
+      "medianMBps": 61.197982867026006,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.005253749999994284,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "cuda-to-metal",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 2.2335612079999976,
+          "MBps": 60.091358821629456,
+          "mac": {
+            "payloadSeconds": 2.2205570840000064,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.005312625000001958,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 1.6305613999720663,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "cuda-to-metal",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 2.179285667000002,
+          "MBps": 61.58794601020054,
+          "mac": {
+            "payloadSeconds": 2.1684071249999874,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.005253749999994284,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 1.6183026999933645,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "cuda-to-metal",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 2.1931724169999995,
+          "MBps": 61.197982867026006,
+          "mac": {
+            "payloadSeconds": 2.180510040999991,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.004966457999998397,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 1.717407500022091,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "host-128MiB",
+      "direction": "metal-to-cuda",
+      "chunkBytes": 16777216,
+      "bytes": 134217728,
+      "warmupSeconds": 4.287355124999991,
+      "medianSeconds": 3.9324364170000052,
+      "meanSeconds": 3.913948264000003,
+      "minSeconds": 3.735925917000003,
+      "maxSeconds": 4.073482458000001,
+      "medianMBps": 34.130934048869534,
+      "medianCudaStagingSeconds": 0.0,
+      "medianReceiverValidationSeconds": 0.03549779998138547,
+      "trials": [
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "metal-to-cuda",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "crc32": 2122363259,
+          "seconds": 3.9324364170000052,
+          "MBps": 34.130934048869534,
+          "mac": {
+            "payloadSeconds": 3.8144060419999875,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 4.999999987376214e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 3.8883153999922797,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.03549779998138547,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "metal-to-cuda",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "crc32": 2905261163,
+          "seconds": 4.073482458000001,
+          "MBps": 32.94913612219119,
+          "mac": {
+            "payloadSeconds": 3.984847375000001,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 3.329999884726931e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.0371635999763384,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.029556599911302328,
+            "validated": true
+          }
+        },
+        {
+          "name": "host-128MiB",
+          "mode": "host",
+          "bytes": 134217728,
+          "chunk": 16777216,
+          "direction": "metal-to-cuda",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "crc32": 1432611492,
+          "seconds": 3.735925917000003,
+          "MBps": 35.92622845898898,
+          "mac": {
+            "payloadSeconds": 3.631737874999999,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 1.0840000044254339e-06,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 3.678836000035517,
+            "stagingSeconds": 0.0,
+            "validationSeconds": 0.043619300005957484,
+            "validated": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "128K-first20-state",
+      "direction": "cuda-to-metal",
+      "chunkBytes": 4194304,
+      "bytes": 1375109120,
+      "warmupSeconds": 23.199059375000004,
+      "medianSeconds": 24.65862541700001,
+      "meanSeconds": 24.02671387466667,
+      "minSeconds": 21.488779416,
+      "maxSeconds": 25.932736790999996,
+      "medianMBps": 55.765846503835526,
+      "medianCudaStagingSeconds": 0.5085755004547536,
+      "medianReceiverValidationSeconds": 0.04316220800001247,
+      "trials": [
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "seconds": 24.65862541700001,
+          "MBps": 55.765846503835526,
+          "mac": {
+            "payloadSeconds": 24.598741458000006,
+            "stagingSeconds": 0.008844029000059095,
+            "validationSeconds": 0.054481082999984665,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 24.462719999952242,
+            "stagingSeconds": 0.5069003996904939,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "seconds": 21.488779416,
+          "MBps": 63.991960333313706,
+          "mac": {
+            "payloadSeconds": 21.448301125,
+            "stagingSeconds": 0.008851954999812506,
+            "validationSeconds": 0.036362249999996266,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 21.343751200009137,
+            "stagingSeconds": 0.5088043003343046,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "seconds": 25.932736790999996,
+          "MBps": 53.02599301733684,
+          "mac": {
+            "payloadSeconds": 25.884051083000003,
+            "stagingSeconds": 0.008950252000289538,
+            "validationSeconds": 0.04316220800001247,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 25.745341500034556,
+            "stagingSeconds": 0.5085755004547536,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "128K-first20-state",
+      "direction": "metal-to-cuda",
+      "chunkBytes": 4194304,
+      "bytes": 1375109120,
+      "warmupSeconds": 43.997471625,
+      "medianSeconds": 41.203248916999996,
+      "meanSeconds": 40.505056264,
+      "minSeconds": 38.31679600000001,
+      "maxSeconds": 41.99512387499999,
+      "medianMBps": 33.37380318649206,
+      "medianCudaStagingSeconds": 0.5254282997921109,
+      "medianReceiverValidationSeconds": 0.04838449996896088,
+      "trials": [
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "seconds": 38.31679600000001,
+          "MBps": 35.88789417570299,
+          "mac": {
+            "payloadSeconds": 38.207138707999974,
+            "stagingSeconds": 0.001588714000121172,
+            "validationSeconds": 4.169999670011748e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 38.25864460004959,
+            "stagingSeconds": 0.5254282997921109,
+            "validationSeconds": 0.04981719993520528,
+            "validated": true
+          }
+        },
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "seconds": 41.203248916999996,
+          "MBps": 33.37380318649206,
+          "mac": {
+            "payloadSeconds": 41.06119345899998,
+            "stagingSeconds": 0.0016300440000804883,
+            "validationSeconds": 3.7499995642065187e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 41.14767320000101,
+            "stagingSeconds": 0.5266293997410685,
+            "validationSeconds": 0.04838449996896088,
+            "validated": true
+          }
+        },
+        {
+          "name": "128K-first20-state",
+          "mode": "gpu",
+          "bytes": 1375109120,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "seconds": 41.99512387499999,
+          "MBps": 32.744494910720164,
+          "mac": {
+            "payloadSeconds": 41.755831583999964,
+            "stagingSeconds": 0.0016609259999427195,
+            "validationSeconds": 4.999999987376214e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 41.93643879995216,
+            "stagingSeconds": 0.5233791992068291,
+            "validationSeconds": 0.04819949995726347,
+            "validated": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "90pct-hit-state-delta",
+      "direction": "cuda-to-metal",
+      "chunkBytes": 4194304,
+      "bytes": 167157760,
+      "warmupSeconds": 2.7151012919999857,
+      "medianSeconds": 2.4690580409999825,
+      "meanSeconds": 2.47018029166666,
+      "minSeconds": 2.4296826670000087,
+      "maxSeconds": 2.51180016699999,
+      "medianMBps": 67.70102493512067,
+      "medianCudaStagingSeconds": 0.0616440000012517,
+      "medianReceiverValidationSeconds": 0.025481124999998883,
+      "trials": [
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "seconds": 2.51180016699999,
+          "MBps": 66.54898832961209,
+          "mac": {
+            "payloadSeconds": 2.4818376250000256,
+            "stagingSeconds": 0.001085455999941587,
+            "validationSeconds": 0.025481124999998883,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 2.398177700000815,
+            "stagingSeconds": 0.060977499932050705,
+            "validationSeconds": 9.988434612751007e-08,
+            "validated": false
+          }
+        },
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "seconds": 2.4690580409999825,
+          "MBps": 67.70102493512067,
+          "mac": {
+            "payloadSeconds": 2.430748625000035,
+            "stagingSeconds": 0.0011091280001664927,
+            "validationSeconds": 0.0324802079999813,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 2.304298800067045,
+            "stagingSeconds": 0.0616440000012517,
+            "validationSeconds": 1.00000761449337e-07,
+            "validated": false
+          }
+        },
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "cuda-to-metal",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "seconds": 2.4296826670000087,
+          "MBps": 68.79818598137919,
+          "mac": {
+            "payloadSeconds": 2.4003406660000337,
+            "stagingSeconds": 0.0010536649997447967,
+            "validationSeconds": 0.025142333000019335,
+            "validated": true
+          },
+          "windows": {
+            "payloadSeconds": 2.308738199993968,
+            "stagingSeconds": 0.06278769951313734,
+            "validationSeconds": 2.00001522898674e-07,
+            "validated": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "90pct-hit-state-delta",
+      "direction": "metal-to-cuda",
+      "chunkBytes": 4194304,
+      "bytes": 167157760,
+      "warmupSeconds": 4.429430083,
+      "medianSeconds": 4.50106787499999,
+      "meanSeconds": 4.517633708333335,
+      "minSeconds": 4.379316500000016,
+      "maxSeconds": 4.67251675,
+      "medianMBps": 37.13735598799438,
+      "medianCudaStagingSeconds": 0.06364350009243935,
+      "medianReceiverValidationSeconds": 0.007570000016130507,
+      "trials": [
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 1,
+          "warmup": false,
+          "seed": 1001,
+          "seconds": 4.379316500000016,
+          "MBps": 38.16982855657941,
+          "mac": {
+            "payloadSeconds": 4.3302988750000395,
+            "stagingSeconds": 0.00021504400018557135,
+            "validationSeconds": 4.580000450005173e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.364412000053562,
+            "stagingSeconds": 0.06352950038854033,
+            "validationSeconds": 0.0077448999509215355,
+            "validated": true
+          }
+        },
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 2,
+          "warmup": false,
+          "seed": 1002,
+          "seconds": 4.67251675,
+          "MBps": 35.774673252910226,
+          "mac": {
+            "payloadSeconds": 4.6067792080000345,
+            "stagingSeconds": 0.00018679699991253074,
+            "validationSeconds": 8.330000014211691e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.659426299971528,
+            "stagingSeconds": 0.06413489987608045,
+            "validationSeconds": 0.007570000016130507,
+            "validated": true
+          }
+        },
+        {
+          "name": "90pct-hit-state-delta",
+          "mode": "gpu",
+          "bytes": 167157760,
+          "chunk": 4194304,
+          "direction": "metal-to-cuda",
+          "trial": 3,
+          "warmup": false,
+          "seed": 1003,
+          "seconds": 4.50106787499999,
+          "MBps": 37.13735598799438,
+          "mac": {
+            "payloadSeconds": 4.450071084000001,
+            "stagingSeconds": 0.0002855420003697873,
+            "validationSeconds": 7.080000159476185e-07,
+            "validated": false
+          },
+          "windows": {
+            "payloadSeconds": 4.488555300049484,
+            "stagingSeconds": 0.06364350009243935,
+            "validationSeconds": 0.00755749992094934,
+            "validated": true
+          }
+        }
+      ]
+    }
+  ],
+  "rawEvidenceSHA256": {
+    "manifest.json": "65405cbf76bebd814758042b3fd02dbca0b5b672edbd04c74ad094049f38abc2",
+    "trials.jsonl": "84a63ec16e946160d371c928e967cf66cf009f228a2b3cc875549e4d648e1f71",
+    "windows.log": "b72c766f4b527e20cb05d6b219a33be3868a91a216676f29402850d5b08057be"
+  }
+}

@@ -37,7 +37,7 @@ def page(title, body, active):
 <a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
 <nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 本次更新没有重跑 GPU benchmark</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 本次未重跑模型推理 benchmark</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -61,7 +61,7 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
 body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p><h1>从单机基线，<br>走向双机推理。</h1>
-<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。下一阶段是 Windows RTX 4090 接入、CUDA 前段实现与跨机状态交接。</p>
+<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。Windows 开发环境与网络传输基线已完成，下一阶段是 CUDA 模型前段实现与跨机状态交接。</p>
 <div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机尚未实测</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
@@ -70,7 +70,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <div class="notice"><strong>Linux / macOS 云端 CI 已通过</strong><p>已固定 .NET SDK 选择，并升级 macOS 构建 SDK。两平台各通过 68 项单测、25 项 RPC 与 25 项 Native AOT RPC 检查；构建零警告、零错误。这些检查使用模拟推理，不替代 GPU 模型验收。<a href="''' + REPO + '''/actions/runs/39855878001">成功运行 ↗</a> · <a href="experiments.html#ci-repair">修复记录 →</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
-<li><span class="status pending">链路待测</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>Windows 工具链已就绪：68 项单测、25 项托管 RPC、25 项 Native AOT RPC 通过；4090 SM89 的 851 项 GEMM 数值检查通过。CUDA 模型推理待实现，1 Gbps 物理链路的有效吞吐待测。</p></div></li>
+<li><span class="status done">基线完成</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>工具链、68 项单测、两组 25 项 RPC 和 SM89 数值检查通过。Mac Wi-Fi ↔ Windows 千兆网口已实测：128K 前 20 层状态，4090 → Mac 中位 24.66 秒，反向 41.20 秒；40 次传输校验全部通过。合成 GPU 状态传输不代表模型状态恢复。<a href="experiments.html#kv-sync-lan">实验记录 →</a></p></div></li>
 <li><span class="status pending">待实现</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>4090 前段 prefill → Mac 后段；完整 KV / Delta 状态就绪后由 Mac decode。</p></div></li>
 <li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
 <section><div class="section-head"><h2>8bit 单机实测</h2>''' + source('docs/QWEN36-8BIT.md') + '''</div>
@@ -83,7 +83,7 @@ body += '''<p class="note">短输出各档为三次均值；长输出只有一�
 <section><div class="section-head"><h2>固定验收目标</h2>''' + source('docs/QWEN36-8BIT-TARGETS.md', '规范 v1') + '</div>'
 body += table(['指标', '阶段验收', '最终目标'], target_rows)
 body += '''<p class="note">目标设备：M5 Pro 48 GiB + RTX 4090 24 GiB。128K = 131072 tokens，无 prefix cache；每档完整预热一次、正式至少三次。只有正确性、资源、稳定性与性能全部通过才算完成。</p>
-<p>20/20 当前只有理想估算：短输出 prefill 约 68 秒，长输出约 82 秒。没有 CUDA 或网络实测支持，不能把估算当作已达到目标。</p></section>
+<p>20/20 prefill 仍只有理想估算：短输出约 68 秒，长输出约 82 秒。网络已有独立基线，CUDA 模型前段和真实流水线尚未实测，不能把估算当作已达到目标。</p></section>
 <section><div class="section-head"><h2>实验笔记</h2><a href="experiments.html">查看完整笔记 →</a></div><div class="cards">'''
 for n in notes:
     body += f'<a class="card" href="experiments.html#{esc(n["id"])}"><span class="eyebrow">{esc(n["kind"])}</span><h3>{esc(n["title"])}</h3><p>{esc(n["conclusion"])}</p><span>阅读记录 →</span></a>'
@@ -94,7 +94,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 (OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增 CUDA 环境数值检查，没有新增模型性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增 CUDA/Metal 状态传输基线，没有新增模型性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
@@ -107,7 +107,7 @@ for n in notes:
         body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'experiments.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'experiments.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 (OUT / '.nojekyll').write_text('')
 print(f'Built {OUT}: 2 pages, {len(notes)} notes, {len(measurements)} measured baselines; revision {revision}')
