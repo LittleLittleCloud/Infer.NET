@@ -63,11 +63,15 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             profile.mark(0);
             if(g->kvBf16) {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
+                if(g->scoreReuse2)
+                    chunk_scores_reuse2<<<dim3((pos+count+3)/4,16,(count+1)/2),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity,count);
+                else chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
                 chunk_attend<<<dim3(16,count),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv,p.attention,pos,g->capacity);
             } else {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(float*)v.keys,(float*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,g->capacity);
+                if(g->scoreReuse2)
+                    chunk_scores_reuse2<<<dim3((pos+count+3)/4,16,(count+1)/2),128>>>(p.q,(float*)v.keys,p.scores,pos,g->capacity,count);
+                else chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,g->capacity);
                 chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,g->capacity);
             }
         }
