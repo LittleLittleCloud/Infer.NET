@@ -37,18 +37,27 @@ public static class SplitInference
         IEnumerable<SplitWire.Frame[]> Chunks()
         {
             var step = verify ? 32 : prefillChunk;
+            // Keep the CUDA compute tile large while making each handoff small enough
+            // for the Mac suffix to overlap transfer with its 128-token batches.
+            var frameTokens = step == 32 ? 32 : 128;
             for(var offset=0;offset<tokens.Length;offset+=step)
             {
                 ct.ThrowIfCancellationRequested();var count=Math.Min(step,tokens.Length-offset);
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
-                var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden)) };
-                if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset,count,Bytes(trace)));
-                if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
-                    frames.Add(new(SplitWire.KvRange,layer,kind,offset,count,gpu.KvRange(layer,kind,offset,count)));
                 computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
-                yield return frames.ToArray();
+                for(var at=0;at<count;at+=frameTokens)
+                {
+                    var take=Math.Min(frameTokens,count-at);
+                    var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset+at,take,Bytes(hidden.AsSpan(at*2048,take*2048))) };
+                    if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset+at,take,Bytes(trace.AsSpan(at*20*2048,take*20*2048))));
+                    began=Stopwatch.GetTimestamp();
+                    if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
+                        frames.Add(new(SplitWire.KvRange,layer,kind,offset+at,take,gpu.KvRange(layer,kind,offset+at,take)));
+                    computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                    yield return frames.ToArray();
+                }
             }
         }
         async ValueTask Send(SplitWire.Frame frame,CancellationToken cancel)
@@ -186,6 +195,7 @@ public static class SplitInference
     private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };
     private static string RequireToken(Options o)=>o.Token is {Length:>=32} t?t:throw new ArgumentException("Set DEEPINFER_TOKEN to a random secret of at least 32 characters.");
     private static byte[] Bytes(float[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
+    private static byte[] Bytes(ReadOnlySpan<float> x)=>MemoryMarshal.AsBytes(x).ToArray();
     private static byte[] Bytes(int[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
     private static int[] Ints(byte[] x)=>MemoryMarshal.Cast<byte,int>(x).ToArray();
     private static float[] Floats(byte[] x)=>MemoryMarshal.Cast<byte,float>(x).ToArray();
