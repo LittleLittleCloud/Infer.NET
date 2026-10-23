@@ -163,15 +163,25 @@ __global__ void chunk_gemv(Matrix m,const float *x,float *y,const int *ids,int r
 }
 // Reuse each dequantized dense weight across independent token accumulators.
 // Preserve the original per-lane accumulation and warp reduction order.
-template<int Tile> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
+template<int Tile,bool Packed=false> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
     int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,first=blockIdx.y*Tile;
     if(row>=m.rows)return;
     float sums[Tile]{};
-    for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++) {
-        float w=weight(m,row,base+j);
+    for(int base=lane*8;base<m.cols;base+=256) {
+      uint2 bytes{};float scale=0,bias=0;
+      if constexpr(Packed) {
+        size_t index=size_t(row)*m.cols+base;
+        bytes=*reinterpret_cast<const uint2*>(m.w+index);
+        scale=bf(m.s[index/64]);bias=bf(m.b[index/64]);
+      }
+      for(int j=0;j<8;j++) {
+        float w;
+        if constexpr(Packed)w=float(((j<4?bytes.x:bytes.y)>>(8*(j&3)))&255)*scale+bias;
+        else w=weight(m,row,base+j);
         #pragma unroll
         for(int t=0;t<Tile;t++)if(first+t<count)
             sums[t]+=w*x[size_t(first+t)*m.cols+base+j];
+      }
     }
     #pragma unroll
     for(int t=0;t<Tile;t++) {

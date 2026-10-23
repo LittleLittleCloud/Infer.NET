@@ -4,7 +4,7 @@ Requires an idle GPU without a resident agent. Event instrumentation is diagnost
 report unprofiled and profiled wall times separately, never as end-to-end throughput.
 """
 import argparse,ctypes as c,hashlib,json,pathlib,subprocess,time
-p=argparse.ArgumentParser();p.add_argument('--compare-reuse',action='store_true');p.add_argument('--weights',required=True);p.add_argument('--library',required=True);p.add_argument('--tokens-file',required=True,type=pathlib.Path);p.add_argument('--output',required=True,type=pathlib.Path);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--compare-reuse',action='store_true');p.add_argument('--packed',action='store_true');p.add_argument('--weights',required=True);p.add_argument('--library',required=True);p.add_argument('--tokens-file',required=True,type=pathlib.Path);p.add_argument('--output',required=True,type=pathlib.Path);a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False);tokens=json.loads(a.tokens_file.read_text());assert 0<len(tokens)<=262144 and all(type(x) is int and 0<=x<248320 for x in tokens)
 sha=hashlib.sha256()
 with open(a.weights,'rb') as f:
@@ -23,7 +23,7 @@ records=[]
 try:
  assert profile(h,-1)!=0 and read(h,None,9)!=0
  runs=[('warmup',0,1),('unprofiled',0,1),('profiled',1,1)]
- if a.compare_reuse:runs=[(f'{label}-{i}',0,modeId) for label,modeId in [('legacy',1),('reuse',3)] for i in range(4)]
+ if a.compare_reuse:runs=[(f'{label}-{i}',0,modeId) for label,modeId in [('legacy',1),('reuse',4 if a.packed else 3)] for i in range(4)]
  for label,enabled,modeId in runs:
   ok(reset(h,err,len(err)));ok(mode(h,modeId));ok(profile(h,enabled));digest=hashlib.sha256();start=time.perf_counter()
   for pos in range(0,len(tokens),32):

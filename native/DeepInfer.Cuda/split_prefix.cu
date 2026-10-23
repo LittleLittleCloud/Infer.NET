@@ -40,7 +40,7 @@ struct Model {
     int position = 0, capacity;
     bool kvBf16 = true, batchReadback = false, layerBatch=false, bf16Projections=false;
     ChunkWorkspace chunk;
-    bool profileEnabled=false,denseReuse=false;double profileTotals[9]{};
+    bool profileEnabled=false,denseReuse=false,densePacked=false;double profileTotals[9]{};
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
         *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
@@ -491,8 +491,8 @@ API int di_cuda_prefix_readback_mode(void *ptr, int batched) {
     g->batchReadback=batched!=0;return 0;
 }
 API int di_cuda_prefix_execution_mode(void *ptr,int mode) {
-    auto *g=static_cast<Model*>(ptr);if(!g||mode<0||mode>3||g->position!=0)return -1;
-    g->layerBatch=mode!=0;g->bf16Projections=mode==2;g->denseReuse=mode==3;return 0;
+    auto *g=static_cast<Model*>(ptr);if(!g||mode<0||mode>4||g->position!=0)return -1;
+    g->layerBatch=mode!=0;g->bf16Projections=mode==2;g->denseReuse=mode>=3;g->densePacked=mode==4;return 0;
 }
 // Diagnostic phase timing; disabled in every production session by default.
 API int di_cuda_prefix_profile_mode(void *ptr,int enabled) {
