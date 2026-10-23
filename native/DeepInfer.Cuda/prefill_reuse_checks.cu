@@ -19,7 +19,7 @@ static std::vector<float> timings(const std::function<void()> &work,int repetiti
 static void print_times(const char *name,const std::vector<float>& a) {
     printf("\"%sMs\":[%.6f,%.6f,%.6f]",name,a[0],a[1],a[2]);
 }
-template<int Tile> static void reuse_case(int tokens,int rows,int cols,bool oracle) {
+template<int Tile,bool Packed=false> static void reuse_case(int tokens,int rows,int cols,bool oracle) {
     Model g;Matrix m;m.experts=1;m.rows=rows;m.cols=cols;
     size_t size=size_t(rows)*cols;
     std::vector<unsigned char>w(size);std::vector<unsigned short>s(size/64),b(size/64);
@@ -31,7 +31,7 @@ template<int Tile> static void reuse_case(int tokens,int rows,int cols,bool orac
     float *input=g.alloc<float>(x.size()),*y=g.alloc<float>(actual.size()),*ref=g.alloc<float>(actual.size());
     ck(cudaMemcpy(m.w,w.data(),size,cudaMemcpyHostToDevice));ck(cudaMemcpy(m.s,s.data(),s.size()*2,cudaMemcpyHostToDevice));ck(cudaMemcpy(m.b,b.data(),b.size()*2,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(input,x.data(),x.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(y,actual.data(),actual.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(ref,reference.data(),reference.size()*4,cudaMemcpyHostToDevice));
-    auto gemm=[&]{chunk_dense_reuse<Tile><<<dim3((rows+3)/4,(tokens+Tile-1)/Tile),128>>>(m,input,y,tokens);};
+    auto gemm=[&]{chunk_dense_reuse<Tile,Packed><<<dim3((rows+3)/4,(tokens+Tile-1)/Tile),128>>>(m,input,y,tokens);};
     auto gemv=[&]{chunk_gemv<<<dim3((rows+3)/4,1,tokens),128>>>(m,input,ref,nullptr,0);};
     gemm();gemv();ck(cudaGetLastError());ck(cudaMemcpy(actual.data(),y,actual.size()*4,cudaMemcpyDeviceToHost));ck(cudaMemcpy(reference.data(),ref,reference.size()*4,cudaMemcpyDeviceToHost));
     if(actual!=reference)throw std::runtime_error("Reuse must match FP32 GEMV bitwise");
@@ -45,12 +45,13 @@ template<int Tile> static void reuse_case(int tokens,int rows,int cols,bool orac
     double relative=sqrt(sumError/std::max(1e-30,sumRef));if(!std::isfinite(relative)||maxAbs>=.01||relative>=1e-4)throw std::runtime_error("GEMM FP32 oracle mismatch");
     auto v=timings(gemv,5),z=timings(gemm,5);
     printf("{\"op\":\"affine8-fp32-reuse\",\"tokens\":%d,\"rows\":%d,\"cols\":%d,\"oracle\":\"%s\",\"maxAbs\":%.9g,\"relativeL2\":%.9g,",tokens,rows,cols,oracle?"double-fp32":"simt-fp32",maxAbs,relative);
-    printf("\"tile\":%d,\"bitwiseEqual\":true,",Tile);print_times("simt",v);printf(",");print_times("reuse",z);puts("}");fflush(stdout);
+    printf("\"tile\":%d,\"packed\":%s,\"bitwiseEqual\":true,",Tile,Packed?"true":"false");print_times("simt",v);printf(",");print_times("reuse",z);puts("}");fflush(stdout);
 }
 int main(){try {
     for(auto v:std::vector<std::vector<int>>{{1,13,256},{3,33,512},{17,83,2048},{31,256,2048},{32,8192,2048},{32,2048,4096},{32,512,2048}}) {
         bool oracle=v[1]<100;
         reuse_case<2>(v[0],v[1],v[2],oracle);reuse_case<4>(v[0],v[1],v[2],oracle);reuse_case<8>(v[0],v[1],v[2],oracle);
+        reuse_case<4,true>(v[0],v[1],v[2],oracle);reuse_case<8,true>(v[0],v[1],v[2],oracle);
     }
     puts("{\"passed\":true}");return 0;
 }catch(const std::exception&e){fprintf(stderr,"FAILED: %s\n",e.what());return 1;}}
