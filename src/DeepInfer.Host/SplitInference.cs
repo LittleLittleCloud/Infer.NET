@@ -37,8 +37,8 @@ public static class SplitInference
         IEnumerable<SplitWire.Frame[]> Chunks()
         {
             var step = verify ? 32 : prefillChunk;
-            // Keep the CUDA compute tile large while making each handoff small enough
-            // for the Mac suffix to overlap transfer with its 128-token batches.
+            // Keep each CUDA tile as one queued pump item, so the next tile can
+            // compute while 128-token frames from the previous tile are sent.
             var frameTokens = step == 32 ? 32 : 128;
             for(var offset=0;offset<tokens.Length;offset+=step)
             {
@@ -47,17 +47,18 @@ public static class SplitInference
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
                 computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                var frames=new List<SplitWire.Frame>();
                 for(var at=0;at<count;at+=frameTokens)
                 {
                     var take=Math.Min(frameTokens,count-at);
-                    var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset+at,take,Bytes(hidden.AsSpan(at*2048,take*2048))) };
+                    frames.Add(new(SplitWire.Hidden,20,0,offset+at,take,Bytes(hidden.AsSpan(at*2048,take*2048))));
                     if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset+at,take,Bytes(trace.AsSpan(at*20*2048,take*20*2048))));
                     began=Stopwatch.GetTimestamp();
                     if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
                         frames.Add(new(SplitWire.KvRange,layer,kind,offset+at,take,gpu.KvRange(layer,kind,offset+at,take)));
                     computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
-                    yield return frames.ToArray();
                 }
+                yield return frames.ToArray();
             }
         }
         async ValueTask Send(SplitWire.Frame frame,CancellationToken cancel)
