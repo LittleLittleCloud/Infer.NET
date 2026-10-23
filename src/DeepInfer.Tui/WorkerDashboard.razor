@@ -79,7 +79,19 @@
             lines.Add($"Last completed request  {m.InputTokens} in / {m.OutputTokens} out · {m.CompletedAt.ToLocalTime():HH:mm:ss}");
             var path = m.ExecutionPath == "metal-local" ? "Mac local" : "4090 → Mac · includes handoff";
             lines.Add($"Prefill  {m.PrefillMs / 1000:F2}s · {path}");
-            lines.Add($"Decode   {m.DecodeTokensPerSecond:F1} tok/s · request {m.ComputeMs / 1000:F2}s");
+            if (m.PrefillStages is { } stages)
+            {
+                if (m.ExecutionPath == "metal-local")
+                    lines.Add($"Mac prefill  {stages.MacSuffixMs / 1000:F2}s · other {stages.MacOtherMs / 1000:F2}s");
+                else
+                {
+                    lines.Add($"4090 compute  {(stages.CudaComputeMs + stages.CudaStateExportMs) / 1000:F2}s · stage wall {stages.CudaElapsedMs / 1000:F2}s");
+                    lines.Add($"Transfer  send/write {stages.CudaSendMs / 1000:F2}s · Mac waits {(stages.MacHiddenWaitMs + stages.MacStateWaitMs) / 1000:F2}s · {GiB(stages.WirePayloadBytes)}");
+                    lines.Add($"Mac takeover  suffix {stages.MacSuffixMs / 1000:F2}s · state import {stages.MacStateImportMs / 1000:F2}s · other {stages.MacOtherMs / 1000:F2}s");
+                    lines.Add("Stages overlap; Mac waits include remote compute and network.");
+                }
+            }
+            lines.Add($"Decode   {m.DecodeTokensPerSecond:F1} tok/s · worker {m.ComputeMs / 1000:F2}s");
             lines.Add($"Last Metal allocation {GiB(m.MetalAllocatedBytes)} · KV {GiB(m.KvCacheBytes)}");
         }
         else lines.Add("No completed request yet · performance and allocation not sampled");

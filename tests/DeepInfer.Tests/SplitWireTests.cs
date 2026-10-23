@@ -80,4 +80,17 @@ public sealed class SplitWireTests
         SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*4]),4);
         Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*4]),2));
     }
+    [Fact] public async Task TransfersOptionalAgentTimingOnEndFrame()
+    {
+        var timing=new PrefixAgentTiming(4100.25,82.5,315.75,5020.5,128000000);
+        var id=Guid.NewGuid();using var stream=new MemoryStream();
+        await new SplitWire(stream,new byte[32],id,4).SendAsync(new(SplitWire.End,20,0,4642,0,timing.ToPayload()),default);
+        stream.Position=0;
+        var frame=await new SplitWire(stream,new byte[32],id,4).ReceiveAsync(default);
+        Assert.Equal(timing,PrefixAgentTiming.FromPayload(frame.Data));
+        Assert.Null(PrefixAgentTiming.FromPayload([])); // Previous agents send an empty End.
+        var invalid=timing.ToPayload();invalid[0]^=1;
+        Assert.Throws<InvalidDataException>(()=>PrefixAgentTiming.FromPayload(invalid));
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(frame with { Data=new byte[47] },4));
+    }
 }

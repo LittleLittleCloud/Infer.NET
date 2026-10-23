@@ -40,7 +40,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
             Trace => layer==0 && tensor==0 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*20*2048*4,
             KvRange => layer is >=0 and <20 && (layer+1)%4==0 && tensor is 0 or 1 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*512*kvBytes,
             State => layer is >=0 and <20 && tensor is 0 or 1 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==1 && size==((layer+1)%4==0?position*512*kvBytes:tensor==0?32*128*128*4:3*8192*4),
-            End => layer==20 && tensor==0 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==0 && size==0,
+            End => layer==20 && tensor==0 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==0 && size is 0 or PrefixAgentTiming.PayloadBytes,
             _ => false
         };
         if(!valid)throw new InvalidDataException("Invalid split tensor descriptor/shape/layout.");
@@ -71,4 +71,42 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
     }
     private static void Write(byte[] b,int at,int value)=>BinaryPrimitives.WriteInt32LittleEndian(b.AsSpan(at,4),value);
     private static int Read(byte[] b,int at)=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(at,4));
+}
+
+// Optional timings on the agent's final End frame. Old agents send an empty End.
+// These are durations on the agent's own monotonic clock, never timestamps to
+// subtract from Mac timestamps. CUDA production and socket writes can overlap.
+public sealed record PrefixAgentTiming(double ComputeMs, double StateExportMs, double SendMs,
+    double ElapsedMs, long SentBytes)
+{
+    public const int PayloadBytes = 48;
+    private const int Magic = 0x314D5450; // PTM1
+    public byte[] ToPayload()
+    {
+        var data = new byte[PayloadBytes];
+        BinaryPrimitives.WriteInt32LittleEndian(data, Magic);
+        BinaryPrimitives.WriteInt32LittleEndian(data.AsSpan(4), 1);
+        WriteDouble(data, 8, ComputeMs); WriteDouble(data, 16, StateExportMs);
+        WriteDouble(data, 24, SendMs); WriteDouble(data, 32, ElapsedMs);
+        BinaryPrimitives.WriteInt64LittleEndian(data.AsSpan(40), SentBytes);
+        return data;
+    }
+    public static PrefixAgentTiming? FromPayload(ReadOnlySpan<byte> data)
+    {
+        if (data.IsEmpty) return null;
+        if (data.Length != PayloadBytes || BinaryPrimitives.ReadInt32LittleEndian(data) != Magic ||
+            BinaryPrimitives.ReadInt32LittleEndian(data[4..]) != 1)
+            throw new InvalidDataException("Invalid prefix agent timing payload.");
+        var result = new PrefixAgentTiming(ReadDouble(data, 8), ReadDouble(data, 16),
+            ReadDouble(data, 24), ReadDouble(data, 32), BinaryPrimitives.ReadInt64LittleEndian(data[40..]));
+        if (!Finite(result.ComputeMs) || !Finite(result.StateExportMs) || !Finite(result.SendMs) ||
+            !Finite(result.ElapsedMs) || result.SentBytes < 0)
+            throw new InvalidDataException("Invalid prefix agent timing values.");
+        return result;
+    }
+    private static bool Finite(double value) => double.IsFinite(value) && value >= 0;
+    private static void WriteDouble(Span<byte> data, int offset, double value) =>
+        BinaryPrimitives.WriteInt64LittleEndian(data[offset..], BitConverter.DoubleToInt64Bits(value));
+    private static double ReadDouble(ReadOnlySpan<byte> data, int offset) =>
+        BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64LittleEndian(data[offset..]));
 }

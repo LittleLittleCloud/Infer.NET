@@ -35,7 +35,13 @@ public sealed record WorkerTelemetry(DateTimeOffset ObservedAt, string State, bo
     bool? AgentConnected = null, int? WeightBits = null, string? Kv = null,
     int? MaxContextTokens = null, int? MaxOutputTokens = null, WorkerRequestMetrics? LastRequest = null);
 public sealed record WorkerRequestMetrics(DateTimeOffset CompletedAt, int InputTokens, int OutputTokens,
-    double PrefillMs, double DecodeTokensPerSecond, double ComputeMs, long MetalAllocatedBytes, long KvCacheBytes, string? ExecutionPath = null);
+    double PrefillMs, double DecodeTokensPerSecond, double ComputeMs, long MetalAllocatedBytes, long KvCacheBytes,
+    string? ExecutionPath = null, PrefillStageMetrics? PrefillStages = null);
+// Durations are measured independently on each host. CUDA compute, socket writes,
+// Mac receive waits and suffix compute overlap and must not be summed as wall time.
+public sealed record PrefillStageMetrics(double CudaComputeMs, double CudaStateExportMs, double CudaSendMs,
+    double CudaElapsedMs, long WirePayloadBytes, double MacHiddenWaitMs, double MacSuffixMs,
+    double MacStateWaitMs, double MacStateImportMs, double MacOtherMs);
 public sealed record WorkerSnapshot(WorkerRegistration Registration, DateTimeOffset LastSeenUtc, bool Healthy);
 public sealed record ClusterSnapshot(int ProtocolVersion, WorkerSnapshot[] Workers);
 public sealed record HealthInfo(string Role, string Status, int ProtocolVersion);
@@ -93,7 +99,8 @@ public sealed class InferenceInputException(string message) : Exception(message)
 // EOS detection after the final emitted token, model loading, prompt prefill and network time are excluded.
 public sealed record DecodeWindow(int StartOutputToken, int EndOutputToken, int ContextTokens, double Milliseconds, double TokensPerSecond);
 public sealed record InferenceTimings(double PrefillMs, double FirstTokenMs, double DecodeMs, int DecodeTokens, double DecodeTokensPerSecond,
-    DecodeWindow[]? DecodeWindows = null, int ContextCapacity = 0, long KvCacheBytes = 0, long MetalAllocatedBytes = 0)
+    DecodeWindow[]? DecodeWindows = null, int ContextCapacity = 0, long KvCacheBytes = 0, long MetalAllocatedBytes = 0,
+    PrefillStageMetrics? PrefillStages = null)
 {
     public static InferenceTimings Create(double prefillMs, double firstTokenMs, double decodeMs, int outputTokens)
     {

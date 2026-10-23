@@ -31,7 +31,8 @@ public static class SplitInference
     {
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=(start.Tensor&1)!=0;var incremental=(start.Tensor&2)!=0;var timer=Stopwatch.StartNew();
-        double computeMs=0, sendMs=0;
+        double computeMs=0, stateExportMs=0, sendMs=0;
+        long sentBytes=0;
         IEnumerable<SplitWire.Frame[]> Chunks()
         {
             for(var offset=0;offset<tokens.Length;offset+=32)
@@ -52,6 +53,7 @@ public static class SplitInference
         {
             var began=Stopwatch.GetTimestamp();await wire.SendAsync(frame,cancel);
             sendMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+            sentBytes+=frame.Data.Length;
             if(frame.Kind==SplitWire.Hidden)Console.Error.WriteLine($"PREFIX_PROGRESS tokens={frame.Position+frame.Count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         }
         if(overlapSend)await SplitFramePump.RunBatches(Chunks(),Send,ct);
@@ -59,9 +61,15 @@ public static class SplitInference
         Console.Error.WriteLine($"PREFIX_CHUNKS overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         for(var layer=0;layer<20;layer++)for(var tensor=0;tensor<2;tensor++)
             if(!incremental||(layer+1)%4!=0)
-                await wire.SendAsync(new(SplitWire.State,layer,tensor,tokens.Length,1,gpu.State(layer,tensor,tokens.Length)),ct);
-        await wire.SendAsync(new(SplitWire.End,20,0,tokens.Length,0,[]),ct);
-        Console.Error.WriteLine($"PREFIX_FINISHED elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+            {
+                var began=Stopwatch.GetTimestamp();
+                var data=gpu.State(layer,tensor,tokens.Length);
+                stateExportMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                await Send(new(SplitWire.State,layer,tensor,tokens.Length,1,data),ct);
+            }
+        var timing=new PrefixAgentTiming(computeMs,stateExportMs,sendMs,timer.Elapsed.TotalMilliseconds,sentBytes);
+        await wire.SendAsync(new(SplitWire.End,20,0,tokens.Length,0,timing.ToPayload()),ct);
+        Console.Error.WriteLine($"PREFIX_FINISHED computeMs={computeMs:F3} stateExportMs={stateExportMs:F3} sendMs={sendMs:F3} sentBytes={sentBytes} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
     }
     public static async Task Coordinator(Options options,CancellationToken ct)
     {

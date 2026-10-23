@@ -183,6 +183,7 @@ public static class SplitService
                     gpu.Reset(ids.Length + Math.Min(maxTokens, 32));
                     var resetMs = Stopwatch.GetElapsedTime(resetStart).TotalMilliseconds;
                     double hiddenWaitMs = 0, suffixMs = 0, stateWaitMs = 0, importMs = 0;
+                    PrefixAgentTiming? agentTiming = null;
                     long stateBytes = 0;
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     var next = -1;
@@ -236,10 +237,17 @@ public static class SplitService
                         }
                         var end = await peer.Wire.ReceiveAsync(timeout.Token);
                         if (end.Kind != SplitWire.End || end.Position != ids.Length) throw new InvalidDataException("Missing handoff completion.");
+                        agentTiming = PrefixAgentTiming.FromPayload(end.Data);
                         await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     }
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
-                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} decodeAttention={o.Get("decode-attention", "legacy")} receiveOverlap={o.Get("suffix-receive-overlap", "off")} incrementalKv={incrementalKv} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
+                    var otherMs = Math.Max(0, prefillMs - hiddenWaitMs - suffixMs - stateWaitMs - importMs);
+                    PrefillStageMetrics? stages = localPrefill || agentTiming is not null
+                        ? new(agentTiming?.ComputeMs ?? 0, agentTiming?.StateExportMs ?? 0,
+                            agentTiming?.SendMs ?? 0, agentTiming?.ElapsedMs ?? 0, agentTiming?.SentBytes ?? 0,
+                            hiddenWaitMs, suffixMs, stateWaitMs, importMs, otherMs)
+                        : null;
+                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} decodeAttention={o.Get("decode-attention", "legacy")} receiveOverlap={o.Get("suffix-receive-overlap", "off")} incrementalKv={incrementalKv} resetMs={resetMs:F3} cudaComputeMs={agentTiming?.ComputeMs:F3} cudaExportMs={agentTiming?.StateExportMs:F3} cudaSendMs={agentTiming?.SendMs:F3} cudaElapsedMs={agentTiming?.ElapsedMs:F3} wireBytes={agentTiming?.SentBytes} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} otherMs={otherMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < maxTokens; i++)
@@ -270,13 +278,13 @@ public static class SplitService
                     }
                     var stats = gpu.Stats();
                     var timing = InferenceTimings.Create(prefillMs, first, output.Count > 1 ? last - first : 0, output.Count) with
-                    { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes };
+                    { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes, PrefillStages = stages };
                     var result = new InferenceResult(requestId.ToString(), registration.WorkerId, Protocol.Qwen36Model, "metal", gpu.Decode(output.ToArray()), [], false, timer.Elapsed.TotalMilliseconds,
                         output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart, executionPath);
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
                     Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
-                        timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath));
+                        timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
                     Interlocked.Increment(ref completed);
                 }
             }
