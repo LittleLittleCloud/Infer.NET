@@ -40,4 +40,6 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\windows\verify-e
 
 Every invocation writes a transcript, result JSON, source commit and (for successful native validation) executable hashes under a new `artifacts/windows/<run-id>` directory. Failures return nonzero and remain recorded. Installation logs and downloads stay in the user-local installer directory.
 
+An explicit `-PackageSource` can select an alternate package endpoint for a validation run without changing global NuGet configuration or disabling locked restore. Record that endpoint and any limitations of its vulnerability-audit support in the validation report; a source change is not a fix to the original endpoint's network connectivity.
+
 The CUDA check compares 851 matrix-product outputs against a CPU double-precision reference with absolute tolerance 1e-5, including partial thread blocks. It verifies compiler/runtime/GPU operation only. It is not the CUDA inference backend, a model correctness test, or a throughput benchmark. CUDA model inference and cross-machine state handoff require separate implementation and validation.

@@ -1,6 +1,7 @@
 param(
     [ValidateSet('Managed','Native','All')][string]$Stage = 'All',
     [string]$VcVarsPath,
+    [string]$PackageSource,
     [ValidatePattern('^[A-Za-z0-9_-]+$')][string]$RunId = (Get-Date -Format yyyyMMdd-HHmmss)
 )
 $ErrorActionPreference = 'Stop'
@@ -22,7 +23,9 @@ try {
     $actual = (& dotnet --version | Out-String).Trim()
     if ($LASTEXITCODE -ne 0 -or $actual -ne $expected) { throw "SDK mismatch: $actual / $expected" }
     if ($Stage -in 'Managed','All') {
-        Invoke-Checked dotnet @('restore','DeepInfer.slnx','--locked-mode')
+        $restoreArguments = @('restore','DeepInfer.slnx','--locked-mode')
+        if ($PackageSource) { $restoreArguments += @('--source',$PackageSource) }
+        Invoke-Checked dotnet $restoreArguments
         Invoke-Checked dotnet @('build','DeepInfer.slnx','-c','Release','--no-restore')
         Invoke-Checked dotnet @('test','tests/DeepInfer.Tests','-c','Release','--no-build')
         Invoke-Checked python @('scripts/integration.py','--executable','src/DeepInfer.Host/bin/Release/net10.0/deepinfer.exe')
@@ -48,7 +51,9 @@ try {
         Invoke-Checked nvcc @('-std=c++17','-arch=sm_89','-O2','native/DeepInfer.Cuda/environment_check.cu','-o',$cudaCheck)
         Invoke-Checked $cudaCheck @()
         $native = Join-Path $output 'native'
-        Invoke-Checked dotnet @('publish','src/DeepInfer.Host','-c','Release','-r','win-x64','-o',$native)
+        $publishArguments = @('publish','src/DeepInfer.Host','-c','Release','-r','win-x64','-o',$native)
+        if ($PackageSource) { $publishArguments += "-p:RestoreSources=$PackageSource" }
+        Invoke-Checked dotnet $publishArguments
         Invoke-Checked python @('scripts/integration.py','--executable',(Join-Path $native 'deepinfer.exe'))
         $result.cudaExecutableSHA256 = (Get-FileHash $cudaCheck -Algorithm SHA256).Hash
         $result.hostExecutableSHA256 = (Get-FileHash (Join-Path $native 'deepinfer.exe') -Algorithm SHA256).Hash
