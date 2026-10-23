@@ -18,6 +18,18 @@ public sealed class SplitWireTests
         await sender.SendAsync(frame,ct);var actual=await receiver.ReceiveAsync(ct);
         Assert.Equal(id,receiver.Request);Assert.Equal(frame.Data,actual.Data);Assert.Equal(32,actual.Position);
     }
+    [Theory] [InlineData(false)] [InlineData(true)]
+    public async Task RejectsWrongSecretOrKvProfile(bool wrongProfile)
+    {
+        using var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(5));var ct=timeout.Token;
+        using var listener=new TcpListener(IPAddress.Loopback,0);listener.Start();
+        using var client=new TcpClient();var connect=client.ConnectAsync(IPAddress.Loopback,((IPEndPoint)listener.LocalEndpoint).Port,ct);
+        using var peer=await listener.AcceptTcpClientAsync(ct);await connect;
+        var server=SplitWire.ConnectAsync(peer.GetStream(),new string('a',64),true,Guid.Empty,ct,wrongProfile?4:2);
+        var sender=SplitWire.ConnectAsync(client.GetStream(),new string(wrongProfile?'a':'b',64),false,Guid.NewGuid(),ct,2);
+        await Assert.ThrowsAsync<InvalidDataException>(()=>server);peer.Dispose();
+        await Assert.ThrowsAnyAsync<IOException>(()=>sender);
+    }
     [Theory] [InlineData(0)] [InlineData(8)] [InlineData(24)] [InlineData(52)] [InlineData(100)]
     public async Task RejectsHeaderAndPayloadTampering(int index)
     {

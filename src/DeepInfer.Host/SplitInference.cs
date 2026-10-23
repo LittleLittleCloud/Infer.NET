@@ -90,6 +90,13 @@ public static class SplitInference
             Console.Error.WriteLine($"SUFFIX_PROGRESS tokens={offset+count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         }
         var hiddenReadyMs=timer.Elapsed.TotalMilliseconds;
+        var guards=new List<string>();
+        void Reject(Action operation,string guard)
+        {
+            try { operation(); } catch(InvalidOperationException) { guards.Add(guard); return; }
+            throw new InvalidOperationException("Handoff safety check failed: "+guard);
+        }
+        if(verify)Reject(()=>gpu.Forward(nextToken,tokens.Length),"decode-before-state");
         for(var l=0;l<20;l++)for(var t=0;t<2;t++)
         {
             var f=await wire.ReceiveAsync(ct);if(f.Kind!=SplitWire.State||f.Layer!=l||f.Tensor!=t||f.Position!=tokens.Length)throw new InvalidDataException("Missing, duplicate or stale prefix state.");
@@ -99,7 +106,14 @@ public static class SplitInference
                 await File.WriteAllBytesAsync(Path.Combine(output,$"cuda-state-{l}-{t}.bin"),f.Data,ct);
                 checks.Add(Compare($"state/l{l}/t{t}",StateFloats(reference,l,kvBytes),StateFloats(f.Data,l,kvBytes)));
             }
+            if(verify&&l==0&&t==0)
+            {
+                Reject(()=>gpu.State(l,t,tokens.Length+1,f.Data,true),"wrong-state-position");
+                Reject(()=>gpu.State(l,t,tokens.Length,f.Data[..^1],true),"wrong-state-size");
+            }
+            if(verify&&l==19&&t==1)Reject(()=>gpu.Forward(nextToken,tokens.Length),"decode-before-last-state");
             gpu.State(l,t,tokens.Length,f.Data,true);
+            if(verify&&l==0&&t==0)Reject(()=>gpu.State(l,t,tokens.Length,f.Data,true),"duplicate-state");
         }
         var end=await wire.ReceiveAsync(ct);if(end.Kind!=SplitWire.End||end.Position!=tokens.Length)throw new InvalidDataException("Incomplete prefix handoff.");
         var readyMs=timer.Elapsed.TotalMilliseconds;var ids=new List<int>();
@@ -111,7 +125,7 @@ public static class SplitInference
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
         var result=new SplitResult(wire.Request.ToString(),SplitWire.Revision,tokens.Length,ids.ToArray(),gpu.Decode(ids.ToArray()),expected.ToArray(),
-            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),$"CUDA serial-token affine8 prefix; Metal <=32-token suffix; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
+            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),guards.ToArray(),$"CUDA serial-token affine8 prefix; Metal <=32-token suffix; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
         var json=JsonSerializer.Serialize(result,SplitJson.Default.SplitResult);await File.WriteAllTextAsync(Path.Combine(output,"result.json"),json+Environment.NewLine,ct);Console.WriteLine(json);
         if(verify&&!result.Verified)throw new InvalidOperationException("Split correctness gate failed; see result.json. Do not use these timings as accepted performance.");
     }
@@ -129,7 +143,7 @@ public static class SplitInference
     }
 }
 public sealed record SplitCheck(string Tensor,double RelativeL2,double MaxAbs,bool Pass);
-public sealed record SplitResult(string Request,string Revision,int PromptTokens,int[] Tokens,string Text,int[] ReferenceTokens,bool Verified,bool VerificationEnabled,double HiddenReadyMs,double DecodeReadyMs,double ElapsedMs,SplitCheck[] Checks,string Execution);
+public sealed record SplitResult(string Request,string Revision,int PromptTokens,int[] Tokens,string Text,int[] ReferenceTokens,bool Verified,bool VerificationEnabled,double HiddenReadyMs,double DecodeReadyMs,double ElapsedMs,SplitCheck[] Checks,string[] PassedSafetyChecks,string Execution);
 [JsonSerializable(typeof(SplitResult))]
 [JsonSourceGenerationOptions(WriteIndented=true)]
 internal partial class SplitJson:JsonSerializerContext;
