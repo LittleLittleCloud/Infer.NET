@@ -44,6 +44,7 @@ def main():
     if traces["candidate"] != traces["repeat"]:
         raise ValueError("Candidate expert routes were not deterministic")
     layer_counts = [0] * 20
+    layer_set_counts = [0] * 20
     different = []
     chunk_size = 32
     for token in range(tokens):
@@ -60,9 +61,12 @@ def main():
                     raise ValueError(f"Invalid top-eight expert IDs at token {token}, layer {layer}")
             if baseline != candidate:
                 layer_counts[layer] += 1
+                same_set = set(baseline) == set(candidate)
+                if not same_set:
+                    layer_set_counts[layer] += 1
                 different.append({"token": token, "layer": layer,
                                   "baseline": baseline, "candidate": candidate,
-                                  "sameSet": set(baseline) == set(candidate)})
+                                  "sameSet": same_set})
     summary = {
         "kind": "isolated-cuda-bf16-versus-fp32-expert-route-gap",
         "tokens": tokens,
@@ -71,7 +75,9 @@ def main():
         "differentDecisions": len(different),
         "differentExpertSets": sum(not item["sameSet"] for item in different),
         "differentByLayer": layer_counts,
+        "differentExpertSetsByLayer": layer_set_counts,
         "firstDifferences": different[:20],
+        "firstLayerDifferences": [item for item in different if item["layer"] == 0],
         "baselineRoutesSha256": result["baseline"]["routesSha256"],
         "candidateRoutesSha256": result["candidate"]["routesSha256"],
         "limitations": ["Synthetic token IDs", "CUDA mode 5 is an internal baseline, not an independent FP32 reference",
