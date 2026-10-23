@@ -24,6 +24,7 @@ public sealed class MetalSplitSession : IDisposable
         catch { device.Dispose(); throw; }
     }
     public int[] Tokenize(string prompt, CancellationToken ct) => tokenizer.EncodePrompt(prompt, ct);
+    public int[] Tokenize(DeepInfer.Core.ChatTurn[] messages, CancellationToken ct) => tokenizer.EncodeMessages(messages, ct);
     public string Decode(int[] tokens) => tokenizer.Decode(tokens);
     public bool IsEnd(int token) => tokenizer.IsEnd(token);
     public byte[] Piece(int token) => tokenizer.DecodePiece(0, token);

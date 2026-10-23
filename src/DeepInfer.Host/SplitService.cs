@@ -113,7 +113,7 @@ public static class SplitService
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
             [new("metal-split", "metal", "Metal + CUDA split prefill", "M5/SM89", null, true, true, "affine8, FP32 KV, 2K")],
-            [new(Protocol.Qwen36Model, "mlx-qwen36-affine", false)], 1);
+            [new(Protocol.Qwen36Model, "mlx-qwen36-affine-chat-v1", false)], 1);
         app.MapGet("/v1/capabilities", () => Results.Json(registration, RpcJson.Default.WorkerRegistration));
         async Task Handle(InferenceRequest input, HttpContext context, bool streaming)
         {
@@ -127,7 +127,7 @@ public static class SplitService
             {
                 using var slot = await queue.Enter(timeout.Token);
                 if (slot is null) { await Fail(context, 429, "queue_full", "Request queue is full."); return; }
-                var ids = gpu!.Tokenize(input.Prompt, timeout.Token);
+                var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
                 if (ids.Length + input.MaxTokens > 2048) { await Fail(context, 400, "context_length", "Prompt plus output must fit 2048 tokens; no silent truncation."); return; }
                 gpu.Reset(ids.Length + input.MaxTokens);
                 Peer peer;
@@ -166,7 +166,7 @@ public static class SplitService
                         {
                             var bytes = gpu.Piece(next); var chars = new char[bytes.Length + 4];
                             var length = decoder.GetChars(bytes, chars, false);
-                            await Event(context, "token", new ServiceEvent(new string(chars, 0, length), next, null, null), timeout.Token);
+                            await Event(context, "token", new ServiceEvent(new string(chars, 0, length), next, null, null, ids.Length), timeout.Token);
                         }
                         if (i + 1 < input.MaxTokens)
                         {
@@ -265,7 +265,7 @@ public static class SplitService
     }
 }
 public sealed record ServiceStatus(string State, bool Ready, int Pid, string Build, string Revision, int WeightBits, string Kv, int MaxContextTokens, int MaxOutputTokens, long CompletedRequests);
-public sealed record ServiceEvent(string? Text, int? TokenId, InferenceResult? Result, RpcError? Error);
+public sealed record ServiceEvent(string? Text, int? TokenId, InferenceResult? Result, RpcError? Error, int? PromptTokens = null);
 [JsonSerializable(typeof(ServiceStatus))]
 [JsonSerializable(typeof(ServiceEvent))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]

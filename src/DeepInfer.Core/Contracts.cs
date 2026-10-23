@@ -18,9 +18,10 @@ public static class Protocol
 public sealed record DeviceInfo(string Id, string Backend, string Name, string Architecture,
     long? MemoryBytes, bool NativeAvailable, bool SupportsInference, string Status);
 public sealed record ModelInfo(string Id, string Format, bool IsSimulation);
+public sealed record ChatTurn(string Role, string Content);
 public sealed record InferenceRequest(string Prompt, int MaxTokens = 16,
     string Model = Protocol.SyntheticModel, string Backend = "simulation",
-    bool Profile = false, bool BenchmarkIgnoreEos = false);
+    bool Profile = false, bool BenchmarkIgnoreEos = false, ChatTurn[]? Messages = null);
 public sealed record InferenceResult(string RequestId, string WorkerId, string Model, string Backend,
     string Text, string[] Tokens, bool IsSimulation, double ComputeMs,
     int[]? TokenIds = null, int PromptTokens = 0, string? FinishReason = null,
@@ -42,11 +43,18 @@ public static class RequestValidation
 {
     public static string? Error(InferenceRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Prompt)) return "Prompt is required.";
+        if (request.Messages is { } messages)
+        {
+            if (request.Model != Protocol.Qwen36Model) return "Structured chat is supported only by Qwen3.6 chat workers.";
+            if (messages.Length is < 1 or > 256 || messages.Any(m => m is null || m.Content is null || m.Role is not ("system" or "user" or "assistant"))) return "Invalid text conversation.";
+            if (messages[^1].Role != "user") return "Conversation must end with a user message.";
+            if (messages.Sum(m => (long)m.Content.Length) > Protocol.MaxPromptChars) return "Conversation exceeds character limit.";
+        }
+        else if (string.IsNullOrWhiteSpace(request.Prompt)) return "Prompt is required.";
         var moe = request.Model == Protocol.Qwen36Model;
         var chars = moe ? Protocol.MaxLongPromptChars : Protocol.MaxPromptChars;
         var tokens = moe ? Protocol.MaxTokens : 256;
-        if (request.Prompt.Length > chars) return $"Prompt exceeds {chars} characters.";
+        if ((request.Prompt?.Length ?? 0) > chars) return $"Prompt exceeds {chars} characters.";
         if (request.MaxTokens < 1 || request.MaxTokens > tokens) return $"MaxTokens must be 1..{tokens}.";
         if (request.BenchmarkIgnoreEos && !moe) return "BenchmarkIgnoreEos is only implemented for Qwen3.6.";
         if (string.IsNullOrWhiteSpace(request.Model) || string.IsNullOrWhiteSpace(request.Backend))

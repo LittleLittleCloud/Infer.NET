@@ -43,9 +43,14 @@ jobs:
       - run: dotnet restore DeepInfer.slnx --locked-mode
       - run: dotnet build DeepInfer.slnx -c Release --no-restore
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build
+      - run: python3 scripts/chat-integration.py
       - run: python3 scripts/integration.py
       - run: dotnet publish src/DeepInfer.Host -c Release -r ${{ matrix.rid }} -o artifacts/native
       - if: runner.os != 'Windows'
         run: python3 scripts/integration.py --executable artifacts/native/deepinfer
       - if: runner.os == 'Windows'
         run: python scripts/integration.py --executable artifacts/native/deepinfer.exe
+      - if: runner.os != 'Windows'
+        run: python3 scripts/chat-integration.py --executable artifacts/native/deepinfer
+      - if: runner.os == 'Windows'
+        run: python scripts/chat-integration.py --executable artifacts/native/deepinfer.exe

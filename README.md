@@ -180,3 +180,7 @@ The M5 MoE launcher selects the measured hybrid GEMM, packed expert input and fu
 The `split-serve` / `split-agent` commands keep Metal and CUDA weights loaded across requests, warm the complete Mac graph before readiness, reset request state, and use pinned mutual TLS for cross-host state transfer. The local coordinator exposes both complete and streamed responses; CLI and TUI share it. Current limits: affine8 weights, FP32 KV, 2048 total tokens and 256 output tokens, one active request plus a bounded queue. BF16/128K performance acceptance remains open.
 
 See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Native AOT packaging, Mac LaunchAgents, Windows Service installation, upgrade/rollback and real-model acceptance. Windows Service installation requires administrator PowerShell; the foreground SSH runner is only for development.
+
+## Chat playground 与 HTTP 兼容接口
+
+TUI 默认连接当前 5200 coordinator，支持 Microsoft.Extensions.AI 流式多轮对话、无边框紧凑布局。HTTP 提供 Chat Completions、Claude Messages 和 Responses 的文本流式/非流式格式。用法、鉴权与明确的能力边界见 [Chat API / TUI](docs/CHAT-API.md)。
