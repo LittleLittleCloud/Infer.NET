@@ -1,6 +1,7 @@
 // Original affine 5/8-bit selected-expert GEMV and gated-delta recurrence.
 // No MLX, ggml or other inference library is linked or invoked.
 #include <cstdlib>
+#include "residency.mm"
 struct QContext {
     id<MTLDevice> device;
     id<MTLCommandQueue> queue;
@@ -10,10 +11,12 @@ struct QContext {
     id<MTLComputePipelineState> wide5,wide8;
     uint32_t rowTile;
     bool generic;
+    std::shared_ptr<QResidency> residency;
 };
 struct QMatrix {
     id<MTLBuffer> packed, scales, biases, input, output;
     uint32_t experts, rows, columns, bits, group;
+    std::shared_ptr<QResidencyLease> residency;
 };
 struct DeltaState {
     id<MTLBuffer> state, q, k, v, decay, beta, output;
@@ -210,7 +213,14 @@ kernel void delta_step(device float *state [[buffer(0)]],
 }
 )metal";
 static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, int capacity) {
-    [command commit]; [command waitUntilCompleted];
+    auto started=std::chrono::steady_clock::now();
+    [command commit];auto committed=std::chrono::steady_clock::now();
+    [command waitUntilCompleted];auto completed=std::chrono::steady_clock::now();
+    double wall=std::chrono::duration<double,std::milli>(completed-started).count();
+    if(wall>100)fprintf(stderr,"METAL_WAIT commitMs=%.3f waitMs=%.3f gpuMs=%.3f\n",
+        std::chrono::duration<double,std::milli>(committed-started).count(),
+        std::chrono::duration<double,std::milli>(completed-committed).count(),
+        std::max(0.0,(command.GPUEndTime-command.GPUStartTime)*1000.0));
     if(command.status!=MTLCommandBufferStatusCompleted) {
         error_text(error,capacity,command.error.localizedDescription ?: @"Quantized Metal command failed"); return false;
     }
@@ -256,8 +266,22 @@ void *di_quant_create(char *error,int capacity) {
         }
         const char *generic=std::getenv("DEEPINFER_METAL_GENERIC");
         const char *tile=std::getenv("DEEPINFER_METAL_ROW_TILE");uint32_t rowTile=tile&&strcmp(tile,"8")==0?8:4;
-        return new QContext{d,queue,gemv,delta,tiled5,tiled8,small5,small8,gateUp5,gateUp8,wide5,wide8,rowTile,generic&&strcmp(generic,"1")==0};
+        std::shared_ptr<QResidency> residency;
+        if(const char *mode=std::getenv("DEEPINFER_METAL_RESIDENCY"); mode&&strcmp(mode,"1")==0) {
+            int refresh=1000;
+            if(const char *value=std::getenv("DEEPINFER_METAL_RESIDENCY_REFRESH_MS"))refresh=atoi(value);
+            if(refresh<0||refresh>60000){error_text(error,capacity,@"Residency refresh must be 0..60000 ms");return nullptr;}
+            uint64_t reserve=512ULL<<20;
+            uint64_t limit=std::min<uint64_t>(d.recommendedMaxWorkingSetSize,NSProcessInfo.processInfo.physicalMemory*4/5);
+            if(limit<=reserve){error_text(error,capacity,@"Insufficient Metal residency budget");return nullptr;}
+            residency=std::make_shared<QResidency>(d,refresh,limit-reserve);
+            if(!residency->valid()){error_text(error,capacity,residency->error());return nullptr;}
+        }
+        return new QContext{d,queue,gemv,delta,tiled5,tiled8,small5,small8,gateUp5,gateUp8,wide5,wide8,rowTile,generic&&strcmp(generic,"1")==0,residency};
     }
+}
+void di_quant_residency_prepare(void *p) {
+    if(p){auto *c=static_cast<QContext*>(p);if(c->residency)c->residency->start();}
 }
 void di_quant_destroy(void *p){delete static_cast<QContext*>(p);}
 void *di_quant_matrix_create(void *ctx,int experts,int rows,int columns,int bits,int group,char *error,int capacity) {
@@ -273,6 +297,11 @@ void *di_quant_matrix_create(void *ctx,int experts,int rows,int columns,int bits
             (uint32_t)experts,(uint32_t)rows,(uint32_t)columns,(uint32_t)bits,(uint32_t)group};
         if(!m->packed||!m->scales||!m->biases||!m->input||!m->output) {
             delete m;error_text(error,capacity,@"Quantized buffer allocation failed");return nullptr;
+        }
+        if(c->residency) {
+            std::vector<id<MTLBuffer>> buffers{m->packed,m->scales,m->biases};
+            if(!c->residency->add(buffers)){delete m;error_text(error,capacity,@"Model weights exceed safe Metal residency budget");return nullptr;}
+            m->residency=std::make_shared<QResidencyLease>(c->residency,std::move(buffers));
         }
         return m;
     }

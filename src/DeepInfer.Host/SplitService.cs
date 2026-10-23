@@ -34,6 +34,10 @@ public static class SplitService
         foreach (System.Collections.DictionaryEntry item in Environment.GetEnvironmentVariables())
             if (item.Key is string key && key.StartsWith("DEEPINFER_METAL_", StringComparison.Ordinal) || item.Key is string k && k.StartsWith("DEEPINFER_GRAPH_", StringComparison.Ordinal))
                 Environment.SetEnvironmentVariable((string)item.Key, null);
+        var residency = o.Get("metal-residency", "on");
+        if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
+        Environment.SetEnvironmentVariable("DEEPINFER_METAL_RESIDENCY", residency == "on" ? "1" : "0");
+        Environment.SetEnvironmentVariable("DEEPINFER_METAL_RESIDENCY_REFRESH_MS", o.Number("residency-refresh-ms", 1000, 0, 60000).ToString(System.Globalization.CultureInfo.InvariantCulture));
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_GEMM", "fp32");
@@ -156,28 +160,41 @@ public static class SplitService
                 using (peer)
                 {
                     Volatile.Write(ref activePeer, peer);
+                    var resetStart = Stopwatch.GetTimestamp();
                     gpu.Reset(ids.Length + Math.Min(maxTokens, 32));
+                    var resetMs = Stopwatch.GetElapsedTime(resetStart).TotalMilliseconds;
+                    double hiddenWaitMs = 0, suffixMs = 0, stateWaitMs = 0, importMs = 0;
+                    long stateBytes = 0;
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     await peer.Wire.SendAsync(new(SplitWire.Start, 20, 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
                     var next = -1;
                     for (var offset = 0; offset < ids.Length; offset += 32)
                     {
-                        var count = Math.Min(32, ids.Length - offset); var frame = await peer.Wire.ReceiveAsync(timeout.Token);
+                        var count = Math.Min(32, ids.Length - offset); var phase = Stopwatch.GetTimestamp();
+                        var frame = await peer.Wire.ReceiveAsync(timeout.Token);
+                        hiddenWaitMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                         if (frame.Kind != SplitWire.Hidden || frame.Position != offset || frame.Count != count) throw new InvalidDataException("Noncontiguous hidden stream.");
                         var hidden = MemoryMarshal.Cast<byte, float>(frame.Data).ToArray();
                         if (hidden.Any(x => !float.IsFinite(x))) throw new InvalidDataException("Nonfinite hidden.");
+                        phase = Stopwatch.GetTimestamp();
                         next = gpu.Suffix(ids.AsSpan(offset, count).ToArray(), hidden, offset + count == ids.Length);
+                        suffixMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                     }
                     for (var layer = 0; layer < 20; layer++) for (var tensor = 0; tensor < 2; tensor++)
                     {
+                        var phase = Stopwatch.GetTimestamp();
                         var frame = await peer.Wire.ReceiveAsync(timeout.Token);
+                        stateWaitMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                         if (frame.Kind != SplitWire.State || frame.Layer != layer || frame.Tensor != tensor || frame.Position != ids.Length) throw new InvalidDataException("Incomplete state handoff.");
+                        phase = Stopwatch.GetTimestamp();
                         gpu.State(layer, tensor, ids.Length, frame.Data, true);
+                        importMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds; stateBytes += frame.Data.Length;
                     }
                     var end = await peer.Wire.ReceiveAsync(timeout.Token);
                     if (end.Kind != SplitWire.End || end.Position != ids.Length) throw new InvalidDataException("Missing handoff completion.");
                     await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
+                    Console.Error.WriteLine($"PREFILL request={peer.Wire.Request} tokens={ids.Length} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < maxTokens; i++)

@@ -98,3 +98,11 @@ python3 scripts/deploy/acceptance.py --token-file /PATH/mac/token.txt --output a
 ```
 
 它验证真实连续请求、输出确定性、流式文本与 token 一致、取消后恢复、自然 EOS、容量拒绝、队列背压和 PID 稳定。需另外执行 agent 断连/重启测试、服务安装/重启测试，以及 `docs/QWEN36-8BIT-TARGETS.md` 的完整性能门槛。
+
+## Metal 权重驻留候选
+
+`split-serve` 默认启用 `metal-residency=on`，为已加载权重建立 Metal residency set，预算不超过建议工作集与物理内存 80% 的较小值减 512 MiB。权重超出预算会明确失败，不静默退回；尚未固定驻留 KV/工作区。权重上传完成后、预热与 Ready 之前提交驻留请求。默认 `residency-refresh-ms=1000`，空闲时续驻留，不提交空 GPU 推理；资源最后一个图/矩阵引用释放时撤销登记。
+
+`metal-residency=off` 为同一候选版本的对照开关，`residency-refresh-ms=0` 可测仅申请一次的行为。这些配置只作用于应用，不修改系统 wired limit。`RESIDENCY` 日志记录预算和登记大小，不保证操作系统一定满足驻留请求；仍须测空闲后的真实请求与换页。
+
+新增 `PREFILL` 日志分别记录 reset、hidden 等待、Mac suffix、状态等待/导入及交接字节数；hidden 等待含远端计算和传输，不称为纯 CUDA 时间。`METAL_WAIT` 对超过 100 ms 的命令记录 commit、wait 和 GPU 时间。日志用于定位，不改变 API 已有计时定义。

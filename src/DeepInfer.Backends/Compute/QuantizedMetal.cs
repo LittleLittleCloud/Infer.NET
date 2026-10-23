@@ -23,6 +23,8 @@ public sealed unsafe class QuantizedMetal : IDisposable
             Context = new(p, 0);
         }
     }
+    // Call after weight uploads, before readiness; the native manager owns the idle refresh.
+    public void PrepareResidency() => QuantNative.PrepareResidency(Context);
     public QuantMatrix Allocate(int experts, int rows, int columns, int bits, int group = 64)
     {
         ObjectDisposedException.ThrowIf(Context.IsClosed, this);
@@ -235,6 +237,8 @@ internal sealed class QuantHandle : SafeHandleZeroOrMinusOneIsInvalid
 }
 internal static unsafe partial class QuantNative
 {
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_quant_residency_prepare")]
+    internal static partial void PrepareResidency(QuantHandle context);
     [StructLayout(LayoutKind.Sequential)]
     internal struct Job
     {
