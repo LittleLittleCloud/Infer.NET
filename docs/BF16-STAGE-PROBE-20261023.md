@@ -16,7 +16,22 @@ Both hosts built source `9f43459b50dad44a83a669a2308d9144f9539e12`. The Windows 
 | Expert down | 0.000694768 | 0.00008685 |
 | Layer merge | 0.000395050 | 0.00003073 |
 
-The first non-identical arithmetic output is **QKV**, before DeltaNet and MoE. The first listed stage whose relative L2 exceeds the target's `1e-4` numerical threshold is **expert gate**. This threshold comparison is diagnostic: the target's formal gate applies to the specified reference states and logits, not every intermediate tensor. Token 0 selected the same top-eight experts on both hosts: `238, 112, 6, 173, 56, 106, 43, 200`. Thus its expert-gate discrepancy is not explained by a route flip. Of the 2048 MoE input-normalization values, 15 round to different BF16 operands across hosts under round-to-nearest-even; this could amplify the small upstream differences but does not yet establish the cause. A replay feeding *identical* BF16 operands into both expert kernels is needed to separate input drift from kernel arithmetic.
+The first non-identical arithmetic output is **QKV**, before DeltaNet and MoE. The first listed stage whose relative L2 exceeds the target's `1e-4` numerical threshold is **expert gate**. This threshold comparison is diagnostic: the target's formal gate applies to the specified reference states and logits, not every intermediate tensor. Token 0 selected the same top-eight experts on both hosts: `238, 112, 6, 173, 56, 106, 43, 200`. Thus its expert-gate discrepancy is not explained by a route flip. Of the 2048 MoE input-normalization values, 15 round to different BF16 operands across hosts under round-to-nearest-even.
+
+## Offline quantized-weight reference
+
+`scripts/split/analyze-bf16-stage-reference.py` reads the pinned safetensors directly, rounds dequantized weights and activations to BF16, and computes the token-0 QKV and selected expert gate/up products with float64 accumulation. This is a high-precision diagnostic reference, **not** the target's formal FP32 layer/logit reference. It also checked that the exported prefix bundle's QKV and all eight selected experts' gate/up weight, scale and bias bytes match the safetensors. The BF16 QKV weight operands were identical whether affine dequantization used separate float32 operations or one rounded fused operation: 0 of 16,777,216 differed.
+
+| Comparison | Relative L2 | Max absolute difference |
+| --- | ---: | ---: |
+| Metal QKV vs same-input CPU reference | 0.000000342 | 0.00002031 |
+| CUDA QKV vs same-input CPU reference | 0.000002676 | 0.00007445 |
+| Metal expert gate vs own-input CPU reference | 0.000000367 | 0.000000635 |
+| CUDA expert gate vs own-input CPU reference | 0.000000080 | 0.000000140 |
+| Expert gate drift predicted from each host's BF16 input | 0.000195069 | 0.00018620 |
+| Expert gate drift observed across hosts | 0.000195088 | 0.00018692 |
+
+The residual between observed and input-predicted expert-gate drift has maximum absolute value `7.18e-7`. This strongly supports upstream input drift as the cause of the token-0 expert-gate mismatch; both expert implementations are close to the same mathematical operation on their *own* inputs. Identical-input GPU replay can still check backend accumulation order. For QKV, the inputs and quantized weights are identical, and CUDA is about 7.8 times farther from this reference in relative L2 than Metal. Accumulation order/rounding is now the leading hypothesis; the reference alone does not prove which CUDA operation is responsible or that changing it will make all 128 tokens and later states pass.
 
 The Windows prefix result reports 0.5014 s for its baseline and 0.2934/0.3189 s for the candidate/repeat. These are single, instrumented, synthetic runs with readbacks and no full service path or formal warmup. They are **not** a prefill throughput result. This probe has no transfer, Mac suffix, decode, logits, long context, or swap acceptance. Previous full 128-token BF16 layer/state comparison still passed only 2 of 60 checks.
 
@@ -28,8 +43,9 @@ Reproduce using the pinned model and new artifact directories, with active GPU w
 Windows: powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_CUDA_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe 1:93 -StageProbe
 Mac: DEEPINFER_METAL_KV=bf16 DEEPINFER_METAL_PREFILL_GEMM=bf16-nax DEEPINFER_METAL_PREFILL_CHUNK=128 DEEPINFER_METAL_PREFILL_MATRIX=1 DEEPINFER_METAL_PREFILL_DELTA=sequential DEEPINFER_METAL_ROUTER_FP32=1 DEEPINFER_METAL_STAGE_DIR=NEW_METAL_DIRECTORY deepinfer split-check-bf16-prefix --weights MODEL_DIR --output NEW_METAL_DIRECTORY
 Compare: python3 scripts/split/compare-bf16-stages.py --metal NEW_METAL_DIRECTORY --cuda NEW_CUDA_DIRECTORY --output NEW_REPORT.json
+CPU reference (NumPy diagnostic dependency): python3 scripts/split/analyze-bf16-stage-reference.py --model MODEL_DIR --metal NEW_METAL_DIRECTORY --cuda NEW_CUDA_DIRECTORY --bundle PREFIX_BUNDLE --output NEW_REFERENCE.json
 ```
 
-Local raw evidence is retained outside Git under `artifacts/dual-host/bf16-cuda-stage-9f43459`, `bf16-metal-stage-9f43459`, and `bf16-stage-compare-9f43459.json`. The comparison JSON SHA-256 is `ec4035c3f8b3a175bf1978d40fc415d1aeef0b54f9be44a32daf54d5a44c3f81`; Windows result SHA-256 `a16278faaf8804d72047ec865e4dbb293c370f7012bda087049da09d78bad3f7`; Mac result SHA-256 `a5e76538a78f909abc8f2945e4eab338d9bfb0510cfdf8670b6e5957a67f6a21`. Raw tensors are not published. The Windows DLL SHA-256 is `0a7ded1c3f365a837961d790265adc53c4ee42f5f2c90474baeace577a5478f3`; Mac dylib SHA-256 is `290e2d5b07ebc764b3ba3201ab3c86642aca087606c3234c241ed937b43f5ec1`.
+Local raw evidence is retained outside Git under `artifacts/dual-host/bf16-cuda-stage-9f43459`, `bf16-metal-stage-9f43459`, `bf16-stage-compare-9f43459.json`, and `bf16-cpu-reference-9f43459-v3.json`. The comparison JSON SHA-256 is `ec4035c3f8b3a175bf1978d40fc415d1aeef0b54f9be44a32daf54d5a44c3f81`; CPU reference JSON SHA-256 is `e9ad09a3078e5d64fe97d02db2c5df1ea4c237739f93ef58270443c6c02e8392`; Windows result SHA-256 `a16278faaf8804d72047ec865e4dbb293c370f7012bda087049da09d78bad3f7`; Mac result SHA-256 `a5e76538a78f909abc8f2945e4eab338d9bfb0510cfdf8670b6e5957a67f6a21`. Raw tensors are not published. The Windows DLL SHA-256 is `0a7ded1c3f365a837961d790265adc53c4ee42f5f2c90474baeace577a5478f3`; Mac dylib SHA-256 is `290e2d5b07ebc764b3ba3201ab3c86642aca087606c3234c241ed937b43f5ec1`.
 
-Next: replay the first expert-gate operation with identical BF16 inputs and quantized weights on both hosts, then trace the first QKV projection with a scalar reference. Re-run full layer/state/logit and real split RPC checks before any performance claim or rollout.
+Next: try a CUDA QKV accumulation-order candidate against the fixed same-input reference, then repeat all 128 token/layer states; if needed, replay the expert gate with identical BF16 operands on both GPUs. Re-run full layer/state/logit and real split RPC checks before any performance claim or rollout.
