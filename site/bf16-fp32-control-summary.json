@@ -6,13 +6,13 @@
   "weightBits": 8,
   "tokens": 128,
   "input": "fixed synthetic token IDs, not the formal request prompt",
-  "macSource": "9e417bf9d6dbbe82b1d265982b11d528936bd4ba",
-  "cudaSource": "e6b119d613b5bb15af2b459b035edd70ad176dd2",
+  "macSource": "6699ad5f786ebb992918dee47e7a5f7dfd539a36",
+  "cudaSource": "6699ad5f786ebb992918dee47e7a5f7dfd539a36",
   "macProfile": "FP32 GEMM/KV, 128-token chunk, matrix off, sequential DeltaNet",
-  "cudaProfile": "BF16 GEMM/KV, diagnostic FP32 router/shared projections, opt-in output split-K",
+  "cudaProfile": "Mode 5 FP32 GEMM/BF16 KV; mode 6 BF16 GEMM/KV; diagnostic FP32 router/shared projections; no split-K",
   "macTraceSha256": "63619b6126310a1293bd3852c31abf9c93d509060a470cf16ac437d63817d36e",
-  "comparisonLocalSha256": "b1b47546642961ae70010afa355979daef9230ce0139f548bea377765d563243",
-  "cudaFp32VsMacFp32": {
+  "comparisonLocalSha256": "32e2c364774a31078f66e3523b6b44eed5815e72f6dca9f41faa558a80e1895d",
+  "cudaFp32GemmBf16KvVsMacFp32": {
     "firstLayerRelativeL2": 0.0000002726606169129398,
     "firstLayerMaxAbs": 0.00000017881393432617188,
     "passingLayers": 3,
@@ -21,20 +21,20 @@
     "layer19RelativeL2": 0.018782711982820707
   },
   "cudaBf16VsMacFp32": {
-    "firstLayerRelativeL2": 0.0099131292429899,
-    "firstLayerMaxAbs": 0.00564404996111989,
+    "firstLayerRelativeL2": 0.00991372813880126,
+    "firstLayerMaxAbs": 0.005644968710839748,
     "passingLayerAndStateChecks": 0,
     "totalLayerAndStateChecks": 60,
     "worstCheck": "state-15-1",
-    "worstRelativeL2": 0.09979051388178899,
-    "worstMaxAbs": 0.3831757605075836
+    "worstRelativeL2": 0.10170607591832939,
+    "worstMaxAbs": 0.4049042761325836
   },
-  "validation": "Mac Release build and 125 tests passed; old serve restored, coordinator Ready and Windows agent connected",
+  "validation": "Both hosts used source 6699ad5; Mac 125 tests passed, Windows 124 passed with one Metal-only skip; old serve and agent restored and connected",
   "correctnessAcceptance": false,
   "performanceAcceptance": false,
   "limitations": [
-    "Mac and CUDA source commits differ; repeat on the same source before formal acceptance",
-    "CUDA candidate used an opt-in output split-K diagnostic rather than the deployed default",
+    "CUDA mode 5 retains BF16 KV; it is not a pure FP32 device control against Mac FP32 KV",
+    "The first attention-layer gap cannot be attributed to a device implementation until CUDA FP32 KV is tested",
     "Metal FP32 is a device control, not the independent full-model CPU/logit reference",
     "Synthetic token IDs and instrumented readbacks; no real RPC or throughput measurement",
     "Raw tensors and full comparison report are retained only on the local development host"
