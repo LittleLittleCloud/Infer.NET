@@ -264,5 +264,23 @@
       "python3 scripts/chat-integration.py --sdk --tui"
     ],
     "evidence": "site/dashboard-acceptance-summary.json（原始日志仅本地）"
+  },
+  {
+    "id": "tui-three-part",
+    "title": "TUI 三段式布局与连接入口",
+    "kind": "界面功能验证 · 非 GPU 基准",
+    "source": "docs/TUI-LAYOUT.md",
+    "question": "让对话与监控充分利用终端空间，同时方便第三方文本客户端连接。",
+    "setup": "2026-10-22；TUI 0ea14381f1ce98498c41fceb68543eafc3f550ac；后端部署保持 5064814。",
+    "change": "Header / body / footer；宽屏 worker 双栏；底部固定输入区、统计和三个 API 地址。",
+    "result": "65 项受控 API/SDK/PTY 检查通过，80×24、100×30、120×40 缩放保持内容与底部位置。",
+    "validation": "Release 零警告零错误；真实部署 Dashboard 两种尺寸只读检查通过，没有提交 GPU 测试请求。",
+    "conclusion": "代码已推送 PR #14；重新启动源码 TUI 即可使用。文本接口不等于完整 Claude Code 工具兼容。",
+    "next": "首字延迟仍需拆解 prefill / 状态交接 / 首步 decode，尚未修复。",
+    "commands": [
+      "dotnet run --project src/DeepInfer.Tui -c Release",
+      "python3 scripts/chat-integration.py --sdk --tui"
+    ],
+    "evidence": "docs/TUI-LAYOUT.md（原始终端记录仅本地）"
   }
 ]
