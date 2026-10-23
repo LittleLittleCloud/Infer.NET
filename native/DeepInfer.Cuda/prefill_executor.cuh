@@ -67,7 +67,10 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         auto &v=g->layers[l];auto *m=v.m;
         chunk_norm<<<count,256>>>(p.x,nullptr,v.p,p.norm,g->eps,2048);
         probe("embedding-norm",p.norm,2048,l);
-        chunk_mv(g,m[0],p.norm,p.qkv,count);
+        const char *splitK=std::getenv("DEEPINFER_CUDA_QKV_SPLIT_K");
+        if(g->bf16Projections&&splitK&&std::strcmp(splitK,"1")==0)
+            prefill_gemm_bf16_split_k<<<dim3((m[0].rows+63)/64,(count+31)/32),128>>>(m[0],p.norm,p.qkv,count);
+        else chunk_mv(g,m[0],p.norm,p.qkv,count);
         if((l+1)%4) {
             chunk_mv(g,m[3],p.norm,p.z,count);chunk_mv(g,m[4],p.norm,p.a,count);chunk_mv(g,m[5],p.norm,p.b,count);
             probe("qkv",p.qkv,8192,l);

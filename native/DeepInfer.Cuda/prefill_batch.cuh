@@ -50,6 +50,52 @@ __global__ void prefill_gemm_bf16(Matrix m, const float *x, float *y, int tokens
         if(token<tokens && row+16<m.rows)y[token*m.rows+row+16]=result[warp*512+256+i];
     }
 }
+// Diagnostic QKV variant: reset the FP32 MMA accumulator every 256 input
+// columns, then combine eight partial tiles. This tests whether the long
+// serial accumulator causes the cross-backend first-projection drift.
+__global__ void prefill_gemm_bf16_split_k(Matrix m, const float *x, float *y, int tokens) {
+    using namespace nvcuda;
+    __shared__ __align__(32) __nv_bfloat16 sa[32*32], sb[64*32];
+    __shared__ __align__(32) float result[4*512];
+    int tid=threadIdx.x, warp=tid/32, lane=tid&31;
+    int token0=blockIdx.y*32, row0=blockIdx.x*64;
+    wmma::fragment<wmma::accumulator,16,16,16,float> total0,total1,c0,c1;
+    wmma::fill_fragment(total0,0.f);wmma::fill_fragment(total1,0.f);
+    for(int part=0;part<m.cols;part+=256) {
+        wmma::fill_fragment(c0,0.f);wmma::fill_fragment(c1,0.f);
+        for(int base=part;base<part+256 && base<m.cols;base+=32) {
+            for(int i=tid;i<32*32;i+=128) {
+                int token=token0+i/32, col=base+i%32;
+                sa[i]=__float2bfloat16_rn(token<tokens && col<m.cols ? x[token*m.cols+col] : 0.f);
+            }
+            for(int i=tid;i<64*32;i+=128) {
+                int row=row0+i/32,col=base+i%32;
+                sb[i]=__float2bfloat16_rn(row<m.rows && col<m.cols ? weight(m,row,col) : 0.f);
+            }
+            __syncthreads();
+            for(int k=0;k<32;k+=16) {
+                wmma::fragment<wmma::matrix_a,16,16,16,__nv_bfloat16,wmma::row_major> av;
+                wmma::fragment<wmma::matrix_b,16,16,16,__nv_bfloat16,wmma::col_major> b0,b1;
+                wmma::load_matrix_sync(av,sa+(warp/2)*16*32+k,32);
+                wmma::load_matrix_sync(b0,sb+(warp%2)*32*32+k,32);
+                wmma::load_matrix_sync(b1,sb+((warp%2)*32+16)*32+k,32);
+                wmma::mma_sync(c0,av,b0,c0);wmma::mma_sync(c1,av,b1,c1);
+            }
+            __syncthreads();
+        }
+        for(int i=0;i<c0.num_elements;i++) {
+            total0.x[i]+=c0.x[i];total1.x[i]+=c1.x[i];
+        }
+    }
+    wmma::store_matrix_sync(result+warp*512,total0,16,wmma::mem_row_major);
+    wmma::store_matrix_sync(result+warp*512+256,total1,16,wmma::mem_row_major);
+    __syncwarp();
+    for(int i=lane;i<256;i+=32) {
+        int token=token0+(warp/2)*16+i/16, row=row0+(warp%2)*32+i%16;
+        if(token<tokens && row<m.rows)y[token*m.rows+row]=result[warp*512+i];
+        if(token<tokens && row+16<m.rows)y[token*m.rows+row+16]=result[warp*512+256+i];
+    }
+}
 // Identical Delta recurrence/order to delta(), holding the state row in registers
 // across the token sequence. Prepared conv/a/b for the entire chunk are required.
 __global__ void prefill_delta_sequence(float *state,const float *conv,const float *a,
