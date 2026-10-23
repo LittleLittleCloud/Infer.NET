@@ -148,6 +148,27 @@ __global__ void chunk_attend_reuse4(const float *s,const KV *v,const float *raw,
             result[j]*sig(raw[size_t(seq)*8192+h*512+256+d]);
     }
 }
+template <class KV>
+__global__ void chunk_attend_shared2(const float *s,const KV *v,const float *raw,
+                                     float *out,int pos,int capacity,int count) {
+    constexpr int Tile=32;
+    __shared__ KV cache[Tile*256];
+    int h=blockIdx.x,seq=blockIdx.y*2+threadIdx.x/256,d=threadIdx.x%256;
+    int last=min(blockIdx.y*2+1,count-1),lastPos=pos+last;
+    float result=0;
+    for(int base=0;base<=lastPos;base+=Tile) {
+        for(int j=threadIdx.x;j<Tile*256;j+=512) {
+            int key=base+j/256;
+            cache[j]=key<=lastPos?v[size_t(key)*512+(h/8)*256+j%256]:KV(0);
+        }
+        __syncthreads();
+        if(seq<count)for(int j=0;j<Tile && base+j<=pos+seq;j++)
+            result+=s[(size_t(seq)*16+h)*capacity+base+j]*float(cache[j*256+d]);
+        __syncthreads();
+    }
+    if(seq<count)out[size_t(seq)*4096+h*256+d]=
+        result*sig(raw[size_t(seq)*8192+h*512+256+d]);
+}
 
 __global__ void chunk_top8(const float *logits, int *ids, float *prob) {
     logits+=blockIdx.x*256;ids+=blockIdx.x*8;prob+=blockIdx.x*8;
