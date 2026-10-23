@@ -21,6 +21,7 @@ p.add_argument('--library',required=True)
 p.add_argument('--output',required=True,type=pathlib.Path)
 p.add_argument('--tokens',type=int,choices=(128,131),default=131)
 p.add_argument('--save-trace',action='store_true',help='Save the 20-layer CUDA trace for offline numerical comparison')
+p.add_argument('--save-routes',action='store_true',help='Save selected expert IDs for each token/layer in all three runs')
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False)
 tokens=[100+(i*137)%247000 for i in range(a.tokens)]
@@ -42,8 +43,14 @@ run=bind('run',[c.c_void_p,c.POINTER(c.c_int),c.c_int,c.c_int,c.POINTER(c.c_floa
 state=bind('state',[c.c_void_p,c.c_int,c.c_int,c.c_int,c.c_void_p,c.c_int,c.c_char_p,c.c_int])
 assert bind('abi_version',[])()==6
 
-def execute(handle,mode_id):
+def execute(handle,mode_id,route_label):
     ok(reset(handle,err,len(err)));ok(mode(handle,mode_id))
+    route_path=a.output/f'{route_label}-routes.i32'
+    if a.save_routes:
+        if route_path.exists():raise RuntimeError(f'Route trace already exists: {route_path}')
+        os.environ['DEEPINFER_CUDA_ROUTE_TRACE']=str(route_path)
+    else:
+        os.environ.pop('DEEPINFER_CUDA_ROUTE_TRACE',None)
     hidden=bytearray();trace=bytearray();start=time.perf_counter()
     for pos in range(0,len(tokens),32):
         part=tokens[pos:pos+32]
@@ -53,6 +60,10 @@ def execute(handle,mode_id):
         ok(run(handle,ids,len(part),pos,out,layer,err,len(err)))
         hidden.extend(bytes(out));trace.extend(bytes(layer))
     seconds=time.perf_counter()-start
+    if a.save_routes:
+        os.environ.pop('DEEPINFER_CUDA_ROUTE_TRACE',None)
+        if route_path.stat().st_size!=len(tokens)*20*8*4:
+            raise RuntimeError(f'Route trace size mismatch: {route_path}')
     states=[]
     for layer in range(20):
         for kind in range(2):
@@ -68,16 +79,20 @@ def execute(handle,mode_id):
     if not all(math.isfinite(v) for v in values):raise RuntimeError('Nonfinite layer trace')
     if a.save_trace and mode_id==5:
         (a.output/'baseline-trace.f32').write_bytes(trace)
-    return {'mode':mode_id,'seconds':seconds,'hiddenSha256':hashlib.sha256(hidden).hexdigest(),
-            'traceSha256':hashlib.sha256(trace).hexdigest(),'stateSha256':states},values
+    run_result={'mode':mode_id,'seconds':seconds,'hiddenSha256':hashlib.sha256(hidden).hexdigest(),
+                'traceSha256':hashlib.sha256(trace).hexdigest(),'stateSha256':states}
+    if a.save_routes:
+        run_result['routesSha256']=hashlib.sha256(route_path.read_bytes()).hexdigest()
+    return run_result,values
 
 handle=create(a.weights.encode(),256,2,err,len(err))
 if not handle:raise RuntimeError(err.value.decode())
 try:
-    baseline,reference=execute(handle,5)
-    candidate,observed=execute(handle,6)
-    repeat,_=execute(handle,6)
-    if any(candidate[k]!=repeat[k] for k in ('hiddenSha256','traceSha256','stateSha256')):
+    baseline,reference=execute(handle,5,'baseline')
+    candidate,observed=execute(handle,6,'candidate')
+    repeat,_=execute(handle,6,'repeat')
+    deterministic_fields=('hiddenSha256','traceSha256','stateSha256','routesSha256') if a.save_routes else ('hiddenSha256','traceSha256','stateSha256')
+    if any(candidate[k]!=repeat[k] for k in deterministic_fields):
         raise RuntimeError('BF16 full-prefix execution is not deterministic')
     if a.save_trace:
         (a.output/'candidate-trace.f32').write_bytes(observed.tobytes())

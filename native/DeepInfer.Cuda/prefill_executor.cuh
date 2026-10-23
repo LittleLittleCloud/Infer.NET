@@ -57,6 +57,12 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
     prepare_chunk(g);auto &p=g->chunk;int pos=g->position;ChunkProfile profile(g);
     const char *stageDir=trace&&pos==0?std::getenv("DEEPINFER_CUDA_STAGE_DIR"):nullptr;
     const bool stageProbe=stageDir&&*stageDir;
+    const char *routeTracePath=trace?std::getenv("DEEPINFER_CUDA_ROUTE_TRACE"):nullptr;
+    std::ofstream routeTrace;
+    if(routeTracePath&&*routeTracePath) {
+        routeTrace.open(routeTracePath,std::ios::binary|std::ios::app);
+        if(!routeTrace)throw std::runtime_error("Cannot open CUDA route trace output");
+    }
     auto probe=[&](const char *stage,const float *device,size_t floats,int layer){
         if(stageProbe&&layer==0)chunk_stage_probe(stageDir,stage,device,floats);
     };
@@ -117,6 +123,13 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         }
         probe("router",p.router,256,l);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);
+        if(routeTrace.is_open()) {
+            std::vector<int> selected(size_t(count)*8);
+            ck(cudaMemcpy(selected.data(),p.ids,selected.size()*sizeof(int),cudaMemcpyDeviceToHost));
+            routeTrace.write(reinterpret_cast<const char*>(selected.data()),
+                             std::streamsize(selected.size()*sizeof(int)));
+            if(!routeTrace)throw std::runtime_error("Cannot write CUDA route trace output");
+        }
         int probeLayer=0,probeTokenA=49,probeTokenB=91;
         const char *routeProbe=std::getenv("DEEPINFER_CUDA_ROUTE_PROBE");
         if(routeProbe&&std::sscanf(routeProbe,"%d:%d",&probeLayer,&probeTokenA)==2)probeTokenB=-1;
