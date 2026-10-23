@@ -56,7 +56,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
     private readonly int kvBytes;
-    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = true)
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false)
     {
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
         if(CudaPrefixNative.AbiVersion()!=4) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");

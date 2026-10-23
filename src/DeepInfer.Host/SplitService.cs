@@ -38,7 +38,7 @@ public static class SplitService
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         _ = o.Number("short-prefill-tokens", 128, 0, 128);
-        if (o.Get("cuda-readback", "batch") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
+        if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_GEMM", "fp32");
@@ -54,7 +54,7 @@ public static class SplitService
         Console.WriteLine("AGENT Loading: verifying pinned 8bit prefix");
         await using (var f = File.OpenRead(bundle))
             if (Convert.ToHexStringLower(await SHA256.HashDataAsync(f, ct)) != SplitInference.PrefixHash) throw new InvalidDataException("Prefix bundle hash mismatch.");
-        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "batch") == "batch");
+        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch");
         gpu.Run([1, 2, 3, 4], 0, null); gpu.Reset();
         Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
         while (!ct.IsCancellationRequested)

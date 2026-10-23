@@ -31,7 +31,7 @@ struct Model {
     Matrix embedding;
     Layer layers[20];
     int position = 0, capacity;
-    bool kvBf16 = true, batchReadback = true;
+    bool kvBf16 = true, batchReadback = false;
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
         *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
