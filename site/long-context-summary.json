@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-23",
+  "source": "788dd4a158cb6fee853f729b3f19032f3a774dbe",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "groupSize": 64,
+  "gemm": "fp32",
+  "kv": "fp32",
+  "inputTokens": 32768,
+  "outputTokens": 4096,
+  "cudaChunk": 32,
+  "suffixChunk": 128,
+  "sendOverlap": "on",
+  "kvTransfer": "incremental",
+  "cacheHit": 0,
+  "ignoreEos": true,
+  "power": "AC",
+  "warmups": 1,
+  "measuredTrials": 3,
+  "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+  "all4096TokensEqualAcross4Requests": true,
+  "trials": [
+    {
+      "trial": 0,
+      "warmup": true,
+      "prefillSeconds": 66.543159,
+      "clientSeconds": 183.648864041,
+      "ttftSeconds": 66.582643833,
+      "decodeTokensPerSecond": 34.98301365387023,
+      "last1024TokensPerSecond": 34.77469154729744,
+      "tailRatio": 0.9940450497308786,
+      "metalAllocatedBytes": 39642906624,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 1,
+      "warmup": false,
+      "prefillSeconds": 66.5407815,
+      "clientSeconds": 183.171820208,
+      "ttftSeconds": 66.584740791,
+      "decodeTokensPerSecond": 35.1267024962692,
+      "last1024TokensPerSecond": 34.797857107180356,
+      "tailRatio": 0.9906383074493322,
+      "metalAllocatedBytes": 39642906624,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 2,
+      "warmup": false,
+      "prefillSeconds": 66.3762027,
+      "clientSeconds": 182.96040000000005,
+      "ttftSeconds": 66.43085962500004,
+      "decodeTokensPerSecond": 35.1437830386479,
+      "last1024TokensPerSecond": 34.81255636281202,
+      "tailRatio": 0.9905750990019591,
+      "metalAllocatedBytes": 38720159744,
+      "swapOutBytes": 0
+    },
+    {
+      "trial": 3,
+      "warmup": false,
+      "prefillSeconds": 66.42073570000001,
+      "clientSeconds": 182.92270508399997,
+      "ttftSeconds": 66.46943254199994,
+      "decodeTokensPerSecond": 35.167443349171286,
+      "last1024TokensPerSecond": 34.805031458854295,
+      "tailRatio": 0.98969467621747,
+      "metalAllocatedBytes": 38720159744,
+      "swapOutBytes": 0
+    }
+  ],
+  "median": {
+    "prefillSeconds": 66.42073570000001,
+    "clientSeconds": 182.96040000000005,
+    "ttftSeconds": 66.46943254199994,
+    "decodeTokensPerSecond": 35.1437830386479,
+    "last1024TokensPerSecond": 34.805031458854295,
+    "tailRatio": 0.9905750990019591
+  },
+  "windowsWholeGpuObservedPeakMiB": 20115.0,
+  "rawRunId": "long-output-32768-4096-incremental-20261023T092422Z",
+  "rawSummarySha256": "7e8525f129aa405dd3c2f2433e303bc74983df32512f78a194d2d82376cf9bb3",
+  "limits": [
+    "FP32 / 32K diagnostic, not formal BF16 / 128K acceptance",
+    "Decode ~35.14 tok/s is below the fixed goal number of37; target configuration still differs",
+    "Metal allocation sampled in each response, not a continuous allocator high-water mark",
+    "No cross-mode final-handoff long-output32K comparison yet; repeatability is within this mode"
+  ]
+}

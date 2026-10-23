@@ -1,5 +1,22 @@
 [
   {
+    "id": "long-context-32k",
+    "kind": "2026-10-23 · 32K / 4096 · 性能差距",
+    "title": "32K decode 降至35.14 t/s：瓶颈仍在",
+    "question": "输入扩大后，4096-token持续生成能否维持目标速度？",
+    "setup": "32768输入、4096输出，788dd4a，两端affine8/FP32，分段KV，CUDA32/Metal128，AC，预热1次、正式3次。",
+    "change": "扩大固定输入长度，保留完整输出和每token时间窗口。",
+    "result": "prefill中位66.421s，整次182.960s，decode35.144t/s，末段34.805t/s；四轮4096个token一致，零swap-out。",
+    "validation": "Windows采样峰值20115MiB，响应记录Metal最大36.920GiB；原始事件、电源、内存和GPU采样保留。",
+    "conclusion": "低于37t/s目标数字；FP32长上下文的计算/KV成本仍然明显，不能宣称正式目标通过。",
+    "next": "独立比较旧注意力、prefill融合路径及单token专用实现，再测整模。",
+    "commands": [
+      "POST /v1/infer/stream: fixed32768 prompt, maxTokens4096, profile=true, benchmarkIgnoreEos=true"
+    ],
+    "source": "docs/SUSTAINED-DECODE.md",
+    "evidence": "artifacts/dual-host/long-output-32768-4096-incremental-20261023T092422Z"
+  },
+  {
     "id": "kv-streaming",
     "kind": "2026-10-23 · 真实双机 A/B · FP32 诊断",
     "title": "KV 分段交接：16.84s → 14.35s",
