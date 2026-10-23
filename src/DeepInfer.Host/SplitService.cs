@@ -36,8 +36,7 @@ public static class SplitService
                 Environment.SetEnvironmentVariable((string)item.Key, null);
         var residency = o.Get("metal-residency", "on");
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
-        Environment.SetEnvironmentVariable("DEEPINFER_METAL_RESIDENCY", residency == "on" ? "1" : "0");
-        Environment.SetEnvironmentVariable("DEEPINFER_METAL_RESIDENCY_REFRESH_MS", o.Number("residency-refresh-ms", 1000, 0, 60000).ToString(System.Globalization.CultureInfo.InvariantCulture));
+        _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_GEMM", "fp32");
@@ -251,7 +250,7 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
-                gpu = new MetalSplitSession(directory, 4);
+                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000));
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

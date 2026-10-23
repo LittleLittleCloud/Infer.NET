@@ -63,6 +63,11 @@ def registration(id, endpoint, version=1):
         'models':[{'id':'synthetic-v1','format':'synthetic','isSimulation':True}]}
 
 try:
+    option = subprocess.run([exe, 'version', '--metal-residency', 'off', '--residency-refresh-ms', '0'], capture_output=True, text=True, timeout=10)
+    check(option.returncode == 0, 'residency A/B CLI options are accepted')
+    for arguments, expected in [(['--metal-residency', 'invalid'], 'metal-residency must be on or off'), (['--residency-refresh-ms', '-1'], 'residency-refresh-ms must be 0..60000')]:
+        option = subprocess.run([exe, 'split-serve', *arguments], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and expected in option.stdout + option.stderr, 'residency invalid policy rejected before model load: ' + arguments[0])
     origin = f'http://127.0.0.1:{port()}'
     start('coordinator', '--listen', origin)
     wait_for(lambda: rpc(origin, '/health', token='')[0] == 200)

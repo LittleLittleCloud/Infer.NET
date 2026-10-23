@@ -10,11 +10,11 @@ public sealed class MetalSplitSession : IDisposable
     private readonly Qwen36Weights weights;
     private readonly Qwen36Gpu graph;
     private readonly QwenTokenizer tokenizer;
-    public MetalSplitSession(string directory, int kvBytes = 2)
+    public MetalSplitSession(string directory, int kvBytes = 2, bool? residency = null, int residencyRefreshMilliseconds = 1000)
     {
         if (kvBytes is not (2 or 4) || Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != (kvBytes == 2 ? "bf16" : "fp32"))
             throw new InvalidOperationException("Split session KV precision must match the selected protocol profile.");
-        device = new();
+        device = new(residency: residency, residencyRefreshMilliseconds: residencyRefreshMilliseconds);
         try
         {
             weights = new(directory, device);

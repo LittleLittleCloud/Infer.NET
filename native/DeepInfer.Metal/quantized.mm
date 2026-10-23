@@ -239,7 +239,8 @@ static void q_encode(QContext *c,id<MTLComputeCommandEncoder> e,QMatrix *m,
     else [e dispatchThreadgroups:MTLSizeMake((m->rows+(small?0:c->rowTile-1))/(small?1:c->rowTile),count,1) threadsPerThreadgroup:MTLSizeMake(small?32:c->rowTile*32,1,1)];
 }
 extern "C" {
-void *di_quant_create(char *error,int capacity) {
+void *di_quant_create_configured(int resident,int refresh,char *error,int capacity) {
+    if((resident!=0&&resident!=1)||refresh<0||refresh>60000){error_text(error,capacity,@"Invalid residency configuration");return nullptr;}
     @autoreleasepool {
         id<MTLDevice> d=MTLCreateSystemDefaultDevice(); if(!d){error_text(error,capacity,@"No Metal device");return nullptr;}
         NSError *failure=nil; MTLCompileOptions *options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe;
@@ -267,10 +268,7 @@ void *di_quant_create(char *error,int capacity) {
         const char *generic=std::getenv("DEEPINFER_METAL_GENERIC");
         const char *tile=std::getenv("DEEPINFER_METAL_ROW_TILE");uint32_t rowTile=tile&&strcmp(tile,"8")==0?8:4;
         std::shared_ptr<QResidency> residency;
-        if(const char *mode=std::getenv("DEEPINFER_METAL_RESIDENCY"); mode&&strcmp(mode,"1")==0) {
-            int refresh=1000;
-            if(const char *value=std::getenv("DEEPINFER_METAL_RESIDENCY_REFRESH_MS"))refresh=atoi(value);
-            if(refresh<0||refresh>60000){error_text(error,capacity,@"Residency refresh must be 0..60000 ms");return nullptr;}
+        if(resident) {
             uint64_t reserve=512ULL<<20;
             uint64_t limit=std::min<uint64_t>(d.recommendedMaxWorkingSetSize,NSProcessInfo.processInfo.physicalMemory*4/5);
             if(limit<=reserve){error_text(error,capacity,@"Insufficient Metal residency budget");return nullptr;}
@@ -279,6 +277,15 @@ void *di_quant_create(char *error,int capacity) {
         }
         return new QContext{d,queue,gemv,delta,tiled5,tiled8,small5,small8,gateUp5,gateUp8,wide5,wide8,rowTile,generic&&strcmp(generic,"1")==0,residency};
     }
+}
+// Legacy experiments may still configure creation through inherited native environment.
+void *di_quant_create(char *error,int capacity) {
+    const char *mode=std::getenv("DEEPINFER_METAL_RESIDENCY");
+    const char *value=std::getenv("DEEPINFER_METAL_RESIDENCY_REFRESH_MS");
+    return di_quant_create_configured(mode&&strcmp(mode,"1")==0,value?atoi(value):1000,error,capacity);
+}
+uint64_t di_quant_residency_bytes(void *p) {
+    auto *c=static_cast<QContext*>(p);return c&&c->residency?c->residency->allocated():0;
 }
 void di_quant_residency_prepare(void *p) {
     if(p){auto *c=static_cast<QContext*>(p);if(c->residency)c->residency->start();}
