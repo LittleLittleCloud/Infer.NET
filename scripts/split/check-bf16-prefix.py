@@ -18,9 +18,11 @@ p=argparse.ArgumentParser()
 p.add_argument('--weights',required=True)
 p.add_argument('--library',required=True)
 p.add_argument('--output',required=True,type=pathlib.Path)
+p.add_argument('--tokens',type=int,choices=(128,131),default=131)
+p.add_argument('--save-trace',action='store_true',help='Save the 20-layer CUDA trace for offline numerical comparison')
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False)
-tokens=[100+(i*137)%247000 for i in range(131)]
+tokens=[100+(i*137)%247000 for i in range(a.tokens)]
 weight_sha=hashlib.sha256()
 with open(a.weights,'rb') as f:
     for block in iter(lambda:f.read(8<<20),b''):weight_sha.update(block)
@@ -58,6 +60,9 @@ def execute(handle,mode_id):
             data=c.create_string_buffer(size)
             ok(state(handle,layer,kind,len(tokens),data,size,err,len(err)))
             states.append(hashlib.sha256(data.raw).hexdigest())
+            if a.save_trace and mode_id==6:
+                path=a.output/f'candidate-state-{layer}-{kind}.bin'
+                if not path.exists():path.write_bytes(data.raw)
     values=array.array('f');values.frombytes(trace)
     if not all(math.isfinite(v) for v in values):raise RuntimeError('Nonfinite layer trace')
     return {'mode':mode_id,'seconds':seconds,'hiddenSha256':hashlib.sha256(hidden).hexdigest(),
@@ -71,6 +76,8 @@ try:
     repeat,_=execute(handle,6)
     if any(candidate[k]!=repeat[k] for k in ('hiddenSha256','traceSha256','stateSha256')):
         raise RuntimeError('BF16 full-prefix execution is not deterministic')
+    if a.save_trace:
+        (a.output/'candidate-trace.f32').write_bytes(observed.tobytes())
     layers=[]
     for layer in range(20):
         diff2=ref2=max_abs=0.0

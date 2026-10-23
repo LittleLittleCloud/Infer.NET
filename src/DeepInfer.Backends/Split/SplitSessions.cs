@@ -41,6 +41,8 @@ public sealed class MetalSplitSession : IDisposable
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
     public void KvRange(int layer, int tensor, int position, int count, int total, byte[] bytes) => graph.PrefixKvRange(layer, tensor, position, count, total, bytes);
     public int Prefill(int[] tokens, CancellationToken ct) => graph.Prefill(tokens, ct);
+    public int PrefillTrace(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]> trace)
+        => graph.Prefill(tokens, ct, logits, trace);
     public int Reference(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]>? trace)
     {
         // Match the first CUDA correctness path: <=32-token chunks, FP32 affine GEMV.
