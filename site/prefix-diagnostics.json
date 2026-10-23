@@ -636,5 +636,70 @@
         }
       }
     ]
+  },
+  "wholePrefixAttention32k": {
+    "source": "381b29c6921c3c5a01e49f279e04dd9bd0d0b013",
+    "librarySha256": "a4de81bab49c171ce8a74f4be0b241a94810474a830de9a178599241472cbe6b",
+    "inputTokens": 32768,
+    "tokensFileSha256": "4248176bd03278693b6573f6bb63990d65f773259d8dde63256cbcd6b22ba50b",
+    "weightBits": 8,
+    "kv": "fp32",
+    "partitionThreshold": 8192,
+    "legacyWarmupSeconds": 49.716116700088605,
+    "legacyMeasuredSeconds": [
+      50.26014030002989,
+      49.78306320006959,
+      49.91664780001156
+    ],
+    "legacyMedianSeconds": 49.91664780001156,
+    "candidateWarmupSeconds": 48.945915700052865,
+    "candidateMeasuredSeconds": [],
+    "numericalChecks": 32808,
+    "failedChecks": 11176,
+    "firstFailure": {
+      "tensor": "hidden/p14975",
+      "relativeL2": 0.02735391710072888,
+      "maxAbs": 0.007973998785018921,
+      "pass": false
+    },
+    "worstRelative": {
+      "tensor": "hidden/p28883",
+      "relativeL2": 0.26174578383467867,
+      "maxAbs": 0.09731600247323513,
+      "pass": false
+    },
+    "worstMaxAbs": {
+      "tensor": "state-19-0.f32",
+      "relativeL2": 0.004279978109999744,
+      "maxAbs": 1.500582218170166,
+      "pass": false
+    },
+    "failedHidden": 11163,
+    "failedStates": 13,
+    "wholeGpuPeakMiB": 20211.0,
+    "restoredSmoke": {
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "agentConnected": true,
+      "macPid": 90652,
+      "tokenIdsMatch": true,
+      "path": "cuda-metal-split",
+      "tokenIds": [
+        2,
+        17642,
+        623,
+        776,
+        35309,
+        220,
+        96618,
+        100900
+      ]
+    },
+    "accepted": false,
+    "limits": [
+      "Candidate had only one warmup because unchanged numerical gate failed; no measured speedup claim",
+      "Native CUDA front20 layers only, excludes transport, Metal suffix and decode",
+      "No BF16 GEMM or KV acceptance",
+      "Whole GPU memory includes other Windows workloads"
+    ]
   }
 }

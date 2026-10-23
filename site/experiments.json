@@ -42,10 +42,10 @@
     "question": "8K前段13秒花在哪里，统一求和顺序能否修复BF16误差？",
     "setup": "实际8192输入、FP32、CUDA32；计时开关前后hidden和40状态逐位一致。另做84输入/8输出BF16状态检查。",
     "change": "增加关闭默认的CUDA阶段计时；测试Metal有序归约及独立CUDA分段注意力。",
-    "result": "前段13.132秒：输入投影4.457秒、输出投影1.587秒、专家相关约5秒、注意力0.943秒。BF16有序归约误差反而增大，拒绝采用。",
-    "validation": "计时没有改变hidden/40状态；FP32跨机1748项通过，BF16仍失败。注意力算子通过独立oracle，尚未接入整模。",
+    "result": "前段13.132秒：输入投影4.457秒、输出投影1.587秒、专家相关约5秒、注意力0.943秒。BF16有序归约误差反而增大，拒绝采用。 追加真实32K前段测试：分段注意力11,176/32,808项数值失败，候选未计入测速。",
+    "validation": "计时没有改变hidden/40状态；FP32跨机1748项通过，BF16仍失败。注意力算子通过独立oracle，尚未接入整模。 32K数值门槛仍未通过，已恢复并验证原服务。",
     "conclusion": "优先减少投影中的重复权重读取和反量化；不把短greedy一致或算子提速当作正式目标通过。",
-    "next": "测试FP32跨token权重复用，先逐位验证再测整段。",
+    "next": "定位长输入下首个误差放大点，再评估BF16执行精度与128K目标。",
     "commands": [
       "python scripts/split/profile-prefix.py --help",
       "scripts/windows/check-prefill-attention.ps1 -OutputDirectory artifacts/attention-check"
