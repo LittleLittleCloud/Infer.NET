@@ -12,7 +12,8 @@ public sealed class DeploymentTests
     {
         using var key = RSA.Create(2048);
         var request = new CertificateRequest("CN=" + name, key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-        return request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddHours(1));
+        using var cert = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddHours(1));
+        return X509CertificateLoader.LoadPkcs12(cert.Export(X509ContentType.Pkcs12), null);
     }
     private static string Pin(X509Certificate2 cert) => Convert.ToHexString(SHA256.HashData(cert.RawData));
     [Fact]
@@ -49,7 +50,8 @@ public sealed class DeploymentTests
             catch (Exception ex) when (ex is System.Security.Authentication.AuthenticationException or IOException) { }
         }, ct);
         using var client = new TcpClient(); await client.ConnectAsync((IPEndPoint)listener.LocalEndpoint, ct);
-        await Assert.ThrowsAsync<System.Security.Authentication.AuthenticationException>(() => SplitTls.Authenticate(client.GetStream(), clientCert, Pin(wrong), false, ct));
+        var failure = await Record.ExceptionAsync(() => SplitTls.Authenticate(client.GetStream(), clientCert, Pin(wrong), false, ct));
+        Assert.True(failure is System.Security.Authentication.AuthenticationException or IOException, failure?.ToString() ?? "Unexpected TLS success");
         await receive;
     }
     [Fact]

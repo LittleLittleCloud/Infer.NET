@@ -21,7 +21,7 @@ public static class SplitService
 {
     private static readonly string Build = typeof(SplitService).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unknown";
     private static string Token(Options o) => o.Token is { Length: >= 32 } s ? s : throw new ArgumentException("A token-file containing at least 32 characters is required.");
-    private static X509Certificate2 Certificate(Options o) => X509CertificateLoader.LoadPkcs12FromFile(o.Get("tls-cert", ""), File.ReadAllText(o.Get("tls-password-file", "")).Trim(), X509KeyStorageFlags.EphemeralKeySet);
+    private static X509Certificate2 Certificate(Options o) => X509CertificateLoader.LoadPkcs12FromFile(o.Get("tls-cert", ""), File.ReadAllText(o.Get("tls-password-file", "")).Trim(), OperatingSystem.IsWindows() ? X509KeyStorageFlags.DefaultKeySet : X509KeyStorageFlags.EphemeralKeySet);
     private static FileStream Lock(Options o, string role)
     {
         var path = o.Get("lock-file", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Infer.NET", role + ".lock"));
