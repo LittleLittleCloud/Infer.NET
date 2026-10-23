@@ -3,6 +3,9 @@ $ErrorActionPreference='Stop'
 $root=Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $root
 . scripts\windows\environment.ps1
+# Establish the same MSVC/CUDA environment as the deployed prefix build.
+# This only writes to this isolated checkout's native/build directory.
+. scripts\windows\build-prefix.ps1
 $out=Join-Path $root $OutputDirectory
 if(Test-Path $out){throw 'Output directory already exists'}
 New-Item -ItemType Directory $out | Out-Null
