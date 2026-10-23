@@ -59,3 +59,7 @@ Mac 模型 Metal allocation 为约 35.22 GiB；设备 recommendedMaxWorkingSetSi
 验收建议：同一模型、输入、精度、供电和后台环境下，分别空闲 0/2/10/60 秒再请求，比较 TTFT、token 1→2 间隔、后续 decode、swap 增量与 token IDs。驻留前后多轮比较，再判断收益；不能靠持续发空推理维持繁忙来掩盖问题。
 
 [公开诊断摘要](../site/idle-latency-summary.json)。原始 JSON、逐秒 vm_stat、采样栈、vmmap、decode 日志在本地忽略目录 `artifacts/dual-host/idle-latency-20261023T061238Z`，未公开进程映射或本机路径明细。没有达到正式性能门槛，也没有宣称问题已修复。
+
+## 后续更正与复测
+
+见 [Metal 驻留 A/B](METAL-RESIDENCY.md)：同版本开关对照已经完成，短请求空闲后首步等待显著降低。上文“部署 Profile 固定 matrix=0 / sequential Delta”的表述是依据托管赋值作出的推断，后来被托管环境变量不能更新 Unix 原生 getenv 的证据纠正；原生默认实际为 matrix=true / chunked Delta。CUDA 逐 token GEMV 与 32-token 网络调用的判断仍成立。保留原始诊断，不将其与后续低内存压力 A/B 混算。
