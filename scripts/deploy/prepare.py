@@ -17,7 +17,7 @@ for role in ['mac','windows']:
 mac=root/'mac';win=a.windows_config_dir.rstrip('\\/')
 common={'kv':'fp32','deadline-seconds':'300','queue-size':'2'}
 mc={**common,'listen':'http://127.0.0.1:5201','coordinator':'http://127.0.0.1:5200','data-listen':'tcp://'+a.mac_address+':5210','allow-remote':True,'weights':str(pathlib.Path(a.mac_weights).resolve()),'token-file':str(mac/'token.txt'),'tls-cert':str(mac/'identity.pfx'),'tls-password-file':str(mac/'password.txt'),'tls-peer-sha256':pins['windows'],'lock-file':str(mac/'metal.lock')}
-wc={'kv':'fp32','deadline-seconds':'300','endpoint':'tcp://'+a.mac_address+':5210','weights':a.windows_weights,'token-file':win+'\\token.txt','tls-cert':win+'\\identity.pfx','tls-password-file':win+'\\password.txt','tls-peer-sha256':pins['mac'],'lock-file':win+'\\cuda.lock'}
+wc={'kv':'fp32','cuda-prefill-chunk':'1024','deadline-seconds':'300','endpoint':'tcp://'+a.mac_address+':5210','weights':a.windows_weights,'token-file':win+'\\token.txt','tls-cert':win+'\\identity.pfx','tls-password-file':win+'\\password.txt','tls-peer-sha256':pins['mac'],'lock-file':win+'\\cuda.lock'}
 for file,data in [(mac/'worker.json',mc),(mac/'coordinator.json',{'listen':'http://127.0.0.1:5200','token-file':str(mac/'token.txt')}),(root/'windows'/'worker.json',wc)]:file.write_text(json.dumps(data,indent=2)+'\n')
 print('Private configuration created:',root)
 print('Transfer only windows/ to the configured Windows directory, then restrict its ACL to the service account, SYSTEM and Administrators.')
