@@ -82,3 +82,21 @@ Windows 私有配置已增加 `log-file`，SCM 启动后记录持久日志；日
 - 管理员安装 Windows Service，验证启动/停止、退出 SSH 后驻留、故障恢复及重启主机后的 GPU 可见性。
 - 首次请求长停顿、日志自动轮转和更长运行稳定性。
 - BF16 KV 与 128K 双机数值、资源、正确性、性能验收仍依照 [固定目标](QWEN36-8BIT-TARGETS.md)，本轮不改阈值。
+
+## 用户启动后的复测（2026-10-22，追加）
+
+用户反馈“启动了”后，通过新建、随后关闭的 SSH 检查连接读取 Windows agent 日志；agent build 仍为上述 85c68ef 候选，Mac build 相同且模型 PID 未变。目标包 exe/CUDA DLL 散列与上表一致；当前账号无法读取该运行进程的 exe 路径，因此包散列验证不替代运行进程路径核验。
+
+15 项真实模型验收再次全部通过，原始证据位于本地 `artifacts/deploy/acceptance-scm-1/`。目录名只是运行标识，**不证明 Windows SCM 已通过**：`sc.exe queryex/qc/qfailure/qfailureflag InferNetCuda` 均返回 1060（服务不存在），指定名称的 Get-Service 同样未找到；日志中的 agent PID 位于桌面 Session 2。CIM 查询另因权限不足失败，未尝试改变权限。已向用户确认具体启动方式，服务安装、开机运行及 SCM 恢复仍保持未验收。
+
+本轮连续三次 17 输入/32 固定输出请求：
+
+| 请求 | prefill ms | decode token/s |
+|---|---:|---:|
+| 1 | 66435.5217 | 1.4843 |
+| 2 | 1300.6365 | 47.5921 |
+| 3 | 806.8059 | 72.2919 |
+
+首次 prefill 约 66.44 秒，decode 约 20.89 秒，单 token 最大约 20.47 秒；保留慢轮，不将第三轮恢复到约 72 t/s 表述为稳定性能。长停顿期间采样显示 Metal command queue 在提交系统调用中、模型线程在 `waitUntilCompleted`，只能定位等待发生在 Mac Metal 路径，不能单凭该采样确定根因。没有完整换页增量和供电对照，本轮不是正式性能实验，也不能证明 swap。未因验收重启两端 worker。
+
+本轮 summary SHA256：`bc19d603077b28c55388309f581b97260c7ff2884c4f9316e1085f5b31b9a3db`。采样及服务查询输出仅本地保留，公开记录省略账号、路径与网络地址。
