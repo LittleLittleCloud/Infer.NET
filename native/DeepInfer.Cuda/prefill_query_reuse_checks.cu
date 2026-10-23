@@ -3,6 +3,18 @@
 #include "split_prefix.cu"
 #include <functional>
 
+static float median_ms(const std::function<void()> &work) {
+    work();ck(cudaDeviceSynchronize());
+    cudaEvent_t begin,end;ck(cudaEventCreate(&begin));ck(cudaEventCreate(&end));
+    std::vector<float> samples;
+    for(int trial=0;trial<3;trial++){
+        ck(cudaEventRecord(begin));work();ck(cudaEventRecord(end));ck(cudaEventSynchronize(end));
+        float ms=0;ck(cudaEventElapsedTime(&ms,begin,end));samples.push_back(ms);
+    }
+    ck(cudaEventDestroy(begin));ck(cudaEventDestroy(end));
+    std::sort(samples.begin(),samples.end());return samples[1];
+}
+
 template<class KV> static void check_case(int length,int count) {
     Model g;
     const int pos=length-count;
@@ -44,13 +56,17 @@ template<class KV> static void check_case(int length,int count) {
                 length,count,sizeof(KV),first,baseline[first],candidate[first]);
         throw std::runtime_error("Query reuse changed the retained attention result");
     }
-    printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true}\n",length,count,sizeof(KV));
+    if(count==32 && length>=4096){
+        float oldMs=median_ms(retained),newMs=median_ms(reuse);
+        printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true,\"retainedMedianMs\":%.6f,\"reuseMedianMs\":%.6f}\n",
+               length,count,sizeof(KV),oldMs,newMs);
+    }else printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true}\n",length,count,sizeof(KV));
     fflush(stdout);
 }
 int main() {try {
-    for(int length:{17,257,4096,32768})
+    for(int length:{17,257,4096,32768,131072})
         for(int count:{1,3,7,17,32}) {
-            if(count>length)continue;
+            if(count>length || (length==131072 && count!=32))continue;
             check_case<float>(length,count);
             check_case<__nv_bfloat16>(length,count);
         }
