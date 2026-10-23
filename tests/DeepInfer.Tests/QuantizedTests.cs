@@ -19,6 +19,12 @@ public sealed class ResidencyFactAttribute : FactAttribute
 
 public class QuantizedTests
 {
+    [Fact]
+    public void PackedCudaWeightsRejectSerialExecutionBeforeLoadingNativeLibrary()
+    {
+        Assert.Throws<ArgumentException>(() => new DeepInfer.Backends.Split.CudaPrefixSession("unused", 32, layerBatch: false, packedWeights: true));
+    }
+
     [ResidencyFact]
     public void ExplicitResidencyCrossesManagedNativeBoundaryAndReleasesWeights()
     {

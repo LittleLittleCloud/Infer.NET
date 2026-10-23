@@ -21,7 +21,7 @@ h=create(a.weights.encode(),len(tokens),4,err,len(err))
 if not h:raise RuntimeError(err.value.decode())
 records=[]
 try:
- assert profile(h,-1)!=0 and read(h,None,9)!=0
+ assert profile(h,-1)!=0 and read(h,None,9)!=0 and mode(h,6)!=0
  runs=[('warmup',0,1),('unprofiled',0,1),('profiled',1,1)]
  if a.compare_reuse:runs=[(f'{label}-{i}',0,modeId) for label,modeId in [('legacy',1),('reuse',5 if a.packed_experts else 4 if a.packed else 3)] for i in range(4)]
  for label,enabled,modeId in runs:
