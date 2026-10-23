@@ -1,0 +1,51 @@
+{
+  "source": "919259d290855b1ce0401374bf8b3d781ed1ed43",
+  "postDeployTestOnlySource": "1bf5ed3",
+  "codeReview": "https://github.com/LittleLittleCloud/Infer.NET/pull/25",
+  "weightBits": 8,
+  "kv": "fp32",
+  "gemm": "fp32",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "topology": "RTX 4090 front20 + M5 Pro back20; local coordinator",
+  "probe": "instrumentation validation, not formal performance cohort",
+  "repeatedShortSplit": {
+    "inputTokens": 947,
+    "outputTokens": 8,
+    "twoGreedyOutputsMatch": true,
+    "bothStageTelemetry": true
+  },
+  "longerSplit": {
+    "inputTokens": 4636,
+    "outputTokens": 8,
+    "prefillMs": 6892.9095,
+    "clientElapsedMs": 7067.49575,
+    "stages": {
+      "cudaComputeMs": 5540.339999999999,
+      "cudaStateExportMs": 12.682000000000002,
+      "cudaSendMs": 5623.622999999996,
+      "cudaElapsedMs": 6860.3427,
+      "wirePayloadBytes": 165855232,
+      "macHiddenWaitMs": 638.9915,
+      "macSuffixMs": 5703.681099999999,
+      "macStateWaitMs": 539.7727999999998,
+      "macStateImportMs": 10.196499999999999,
+      "macOtherMs": 0.2676000000009413
+    }
+  },
+  "validation": {
+    "macUnitPassed": 125,
+    "windowsUnitPassed": 124,
+    "windowsUnitSkipped": 1,
+    "cudaSelfTestPassed": true,
+    "deploymentChecksPassed": 15,
+    "tuiPtyStagesVisible": true,
+    "macLaunchAgent": true,
+    "windowsScmVerified": false
+  },
+  "limits": [
+    "Stage durations overlap and cannot be summed to wall prefill",
+    "Mac receive wait includes upstream compute and network delivery; socket writes include backpressure",
+    "No BF16 or 131072-token acceptance",
+    "Longer split prompt was repetitive synthetic text, not a standard benchmark input"
+  ]
+}

@@ -749,5 +749,68 @@
       "Trace covers one 32-token chunk after preceding14944 tokens",
       "No expert ID capture; causal attribution to router selection remains a hypothesis"
     ]
+  },
+  "partitionRouteTrace": {
+    "source128": "a98d0c4310f51e2b4132ad516313e201cdf4a85d",
+    "dllSha256128": "ce08e55b8512154b3c7e3cd11babd48d000b2be62604a1548ddf58f008b6bf26",
+    "source512": "1b5551ae78d369913beafe208532d93a878c3bb2",
+    "dllSha256512": "1f8d11c9a95e5950edcc70defd57066e73ca046f8a1b854576a1ed03588a0c63",
+    "inputTokensFileSha256": "4248176bd03278693b6573f6bb63990d65f773259d8dde63256cbcd6b22ba50b",
+    "position": 14975,
+    "layer": 17,
+    "retainedTop8Ids": [
+      255,
+      166,
+      59,
+      124,
+      116,
+      250,
+      247,
+      35
+    ],
+    "partition128Top8Ids": [
+      255,
+      166,
+      59,
+      124,
+      116,
+      250,
+      247,
+      20
+    ],
+    "partition512Top8Ids": [
+      255,
+      166,
+      59,
+      124,
+      116,
+      250,
+      247,
+      20
+    ],
+    "retainedTop8Margin": 9.5367431640625e-07,
+    "partition128Top8Margin": 0.0,
+    "partition512Top8Margin": 4.76837158203125e-07,
+    "partition128MaxRouterLogitAbsDiff": 1.33514404296875e-05,
+    "firstGateFailure128": {
+      "token": 14975,
+      "layer": 17,
+      "relativeL2": 0.032016497596827655,
+      "maxAbs": 0.008551357313990593,
+      "pass": false
+    },
+    "firstGateFailure512": {
+      "token": 14975,
+      "layer": 17,
+      "relativeL2": 0.0320164949020729,
+      "maxAbs": 0.00855134055018425,
+      "pass": false
+    },
+    "accepted": false,
+    "limits": [
+      "Focused 32-token trace after 14944 earlier tokens, not whole-prefix throughput",
+      "The 8th expert changes from35 to20 at the first failing layer in both tile variants",
+      "No BF16/128K acceptance; neither route candidate deployed"
+    ]
   }
 }

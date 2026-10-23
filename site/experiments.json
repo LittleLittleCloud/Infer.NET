@@ -1,5 +1,20 @@
 [
   {
+    "id": "prefill-stage-timing",
+    "kind": "2026-10-23 · 双机计时与部署验收",
+    "title": "把约7秒 prefill 拆到两端，标明流水线重叠",
+    "question": "4090计算、跨机传输等待与Mac接管分别花多久？",
+    "setup": "919259d同源Native AOT双端；Qwen3.6 35B A3B affine8/FP32；4636输入/8输出计时探针，另有947输入双轮确定性检查。",
+    "change": "agent在认证End帧回报计算、状态导出、socket写入和前段墙钟；serve记录收包等待、suffix及状态导入并送到API/TUI。",
+    "result": "4636输入prefill6.893秒：4090计算+导出5.553秒、写入5.624秒、Mac等远端数据1.179秒、suffix5.704秒、导入0.010秒；165.86MB载荷。各阶段重叠，不能相加。",
+    "validation": "Mac125项、Windows124项+1跳过、CUDA原生自检、双端AOT及15项真实部署检查通过；947输入两次输出ID一致，真实PTY看到分项行。",
+    "conclusion": "现有7秒包含传输与Mac后段，也包含首token计算；后续逐token解码在外。Mac等待不是纯网络延迟，本轮仅验证观测能力，不是性能提速。",
+    "next": "用固定长输入在同一计时口径下定位128K瓶颈；BF16和128K验收仍未通过。",
+    "commands": ["GET /v1/workers", "POST /v1/infer"],
+    "source": "docs/PREFILL-STAGE-EXPERIMENT.md",
+    "evidence": "site/prefill-stage-summary.json"
+  },
+  {
     "id": "metal-scratch-profile",
     "kind": "2026-10-23 · 双机完整对照",
     "title": "Metal临时缓冲缩到128：节省约101MiB",
@@ -42,10 +57,10 @@
     "question": "8K前段13秒花在哪里，统一求和顺序能否修复BF16误差？",
     "setup": "实际8192输入、FP32、CUDA32；计时开关前后hidden和40状态逐位一致。另做84输入/8输出BF16状态检查。",
     "change": "增加关闭默认的CUDA阶段计时；测试Metal有序归约及独立CUDA分段注意力。",
-    "result": "前段13.132秒：输入投影4.457秒、输出投影1.587秒、专家相关约5秒、注意力0.943秒。BF16有序归约误差反而增大，拒绝采用。 追加真实32K前段测试：分段注意力11,176/32,808项数值失败，候选未计入测速。",
-    "validation": "计时没有改变hidden/40状态；FP32跨机1748项通过，BF16仍失败。注意力算子通过独立oracle，尚未接入整模。 32K数值门槛仍未通过，已恢复并验证原服务。",
-    "conclusion": "优先减少投影中的重复权重读取和反量化；不把短greedy一致或算子提速当作正式目标通过。",
-    "next": "定位长输入下首个误差放大点，再评估BF16执行精度与128K目标。",
+    "result": "8K前段13.132秒：输入投影4.457秒、输出投影1.587秒、专家约5秒、注意力0.943秒。32K分段注意力11,176/32,808项数值失败；首个失败在token14975/layer17，最后专家35变20。",
+    "validation": "单算子oracle通过，整模32K门槛未通过；128/512-key分块都发生同一专家切换，未上线。旧服务已恢复，后续计时版本仍用原注意力。",
+    "conclusion": "临界路由分数差仅约9.54e-7；注意力求和顺序的小偏差足以切换专家并放大误差。不能用算子提速或少量greedy一致代替长上下文正确性。",
+    "next": "改进数值一致的长上下文前段，不放宽门槛；继续BF16/128K验收。",
     "commands": [
       "python scripts/split/profile-prefix.py --help",
       "scripts/windows/check-prefill-attention.ps1 -OutputDirectory artifacts/attention-check"
