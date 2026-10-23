@@ -161,6 +161,24 @@ __global__ void chunk_gemv(Matrix m,const float *x,float *y,const int *ids,int r
     for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++)val+=weight(m,wr,base+j)*input[base+j];
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// cols must be divisible by256: eight bytes share one affine group and are aligned.
+__global__ void chunk_gemv_packed(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
+    if(row>=m.rows)return;
+    int expert=ids?ids[t*n+e]:0;size_t wr=size_t(expert)*m.rows+row;
+    const float *input=x+(size_t(t)*(routedInput?n:1)+(routedInput?e:0))*m.cols;
+    float val=0;
+    for(int base=lane*8;base<m.cols;base+=256) {
+        size_t index=wr*m.cols+base;
+        uint2 bytes=*reinterpret_cast<const uint2*>(m.w+index);
+        float scale=bf(m.s[index/64]),bias=bf(m.b[index/64]);
+        for(int j=0;j<8;j++) {
+            float w=float(((j<4?bytes.x:bytes.y)>>(8*(j&3)))&255)*scale+bias;
+            val+=w*input[base+j];
+        }
+    }
+    val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
+}
 // Reuse each dequantized dense weight across independent token accumulators.
 // Preserve the original per-lane accumulation and warp reduction order.
 template<int Tile,bool Packed=false> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
