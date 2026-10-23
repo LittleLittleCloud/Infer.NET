@@ -14,6 +14,8 @@ The existing 32 × 64 output tile used the same BF16 Tensor Core MMA before and 
 
 The raw baseline/candidate directories are `gemm-experts-e017d84-ops` and `gemm-experts-4c0aed3-ops` under each checkout's ignored `artifacts/dual-host` directory. These figures do not establish a deployed speedup: `batch-fp32` does not use the BF16 Tensor Core kernel, and the BF16 model path has outstanding cross-backend quality checks documented in [the stage probe](BF16-STAGE-PROBE-20261023.md).
 
+A same-binary check at `25b0153` retained the original scalar tile loader alongside the candidate: all six shapes, including non-full rows/tokens, produced **bitwise-identical Tensor Core output**. The 32 × 8192 × 2048 scalar/packed medians were 0.2134/0.0690 ms. The checker reported `passed=true`; its raw JSONL SHA-256 is `b6bb0536ff827d74ef0c24a4c70f751e947aff4dcb8f0c7aa38089a8ba4da2c5` in `gemm-experts-25b0153-ops`. The GPU was in P8 at 31°C and 7.34 W before warmup, with 21107 MiB allocated by the resident agent; CUDA events cover warmed kernel execution, not model loading or transport.
+
 ## FP32 expert and dense candidate
 
 The new `batch-fp32-fast` option combines three FP32 changes while retaining the existing 32-token chunk and FP32 KV:
@@ -23,5 +25,7 @@ The new `batch-fp32-fast` option combines three FP32 changes while retaining the
 - The shared expert's gate/up projections share one kernel launch and activation load stream. At `2a98284`, 32 tokens × 512 rows × 2048 columns with one shared expert measured median **0.0836 → 0.0327 ms**, with outputs bitwise equal to the two production SIMT kernels.
 
 The first attempt to fuse the **large routed** gate/up matrices was a negative result: for 32 tokens × 8 routes × 4096 rows × 2048 columns, separate packed kernels took about **3.48 ms**, while dual-accumulator fusion took **4.83 ms**. A single-launch dispatch variant also took about **4.82 ms**. Both were bitwise correct. The final candidate keeps large routed gate/up separate and fuses only the small shared expert. The failed measurements remain in `gemm-experts-de4e1bc-reuse`, `gemm-experts-9760a33-reuse`, and `gemm-experts-25863e2-reuse` on Windows.
+
+The routed expert checker at `e3dce22` passed with JSONL SHA-256 `94acc1d99a50b3dd6e69cc7c5ac624d055147ccf1bcd72ebf028cbe012ad07a8`. The shared-expert checker at `2a98284` passed with JSONL SHA-256 `bef9dfa6dc3a95fa9d25c8fbb326ed115a31d7559bef15658e148a7496efdb85`. At `cbff46a`, the native SM89 DLL and managed Host built on Windows, Windows tests passed 127 with one Metal-only skip, and Mac tests passed 128; the Host build also passed on Mac. These establish build and operator correctness for the candidate, not full-model equivalence.
 
 `batch-fp32-fast` remains opt-in. Required before selecting it as default: an isolated full pinned-model prefix comparison against `batch-fp32` (all 20 layer boundaries, KV/Delta states and logits), a real split RPC A/B with same source commit on both hosts, and the correctness, memory and 128K cold-prefill/long-decode gates in [the fixed target](QWEN36-8BIT-TARGETS.md). Do not load a second 18 GiB prefix while the resident agent occupies about 21 GiB; arrange an isolated validation slot and restore the previous service afterward.
