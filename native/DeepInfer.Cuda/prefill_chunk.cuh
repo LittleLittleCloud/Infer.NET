@@ -127,6 +127,17 @@ __global__ void chunk_softmax(float *s, int pos, int capacity) {
     for(int i=t;i<=pos;i+=256)prob[i]/=den;
 }
 template <class KV>
+__global__ void chunk_attend_pv(const float *s,const KV *v,const float *raw,
+                                float *out,int pos,int capacity) {
+    int seq=blockIdx.y,h=blockIdx.x,d=threadIdx.x;
+    const float *prob=s+(size_t(seq)*16+h)*capacity;
+    float result=0;
+    for(int i=0;i<=pos+seq;i++)
+        result+=prob[i]*float(v[size_t(i)*512+(h/8)*256+d]);
+    out[size_t(seq)*4096+h*256+d]=
+        result*sig(raw[size_t(seq)*8192+h*512+256+d]);
+}
+template <class KV>
 __global__ void chunk_attend_reuse4(const float *s,const KV *v,const float *raw,
                                     float *out,int pos,int capacity,int count) {
     int h=blockIdx.x,first=blockIdx.y*4,d=threadIdx.x;

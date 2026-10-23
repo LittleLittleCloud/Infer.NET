@@ -14,6 +14,17 @@ static float median_ms(const std::function<void()> &work) {
     ck(cudaEventDestroy(begin));ck(cudaEventDestroy(end));
     std::sort(samples.begin(),samples.end());return samples[1];
 }
+static float median_stage_ms(const std::function<void()> &setup,const std::function<void()> &work) {
+    setup();work();ck(cudaDeviceSynchronize());
+    cudaEvent_t begin,end;ck(cudaEventCreate(&begin));ck(cudaEventCreate(&end));
+    std::vector<float> samples;
+    for(int trial=0;trial<3;trial++){
+        setup();ck(cudaEventRecord(begin));work();ck(cudaEventRecord(end));ck(cudaEventSynchronize(end));
+        float ms=0;ck(cudaEventElapsedTime(&ms,begin,end));samples.push_back(ms);
+    }
+    ck(cudaEventDestroy(begin));ck(cudaEventDestroy(end));
+    std::sort(samples.begin(),samples.end());return samples[1];
+}
 
 template<class KV> static void check_case(int length,int count) {
     Model g;
@@ -27,12 +38,13 @@ template<class KV> static void check_case(int length,int count) {
     for(auto &x:keys)x=KV(sample());
     for(auto &x:values)x=KV(sample());
     const size_t outputCount=size_t(count)*4096+64;
-    std::vector<float> baseline(outputCount,-123.f),candidate(baseline),shared(baseline);
+    std::vector<float> baseline(outputCount,-123.f),candidate(baseline),shared(baseline),plain(baseline);
     float *dq=g.alloc<float>(q.size()),*dr=g.alloc<float>(raw.size());
     KV *dk=g.alloc<KV>(keys.size()),*dv=g.alloc<KV>(values.size());
     float *scores0=g.alloc<float>(size_t(count)*16*length),*scores1=g.alloc<float>(size_t(count)*16*length),
           *scores2=g.alloc<float>(size_t(count)*16*length);
-    float *y0=g.alloc<float>(outputCount),*y1=g.alloc<float>(outputCount),*y2=g.alloc<float>(outputCount);
+    float *y0=g.alloc<float>(outputCount),*y1=g.alloc<float>(outputCount),*y2=g.alloc<float>(outputCount),
+          *y3=g.alloc<float>(outputCount);
     ck(cudaMemcpy(dq,q.data(),q.size()*4,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(dr,raw.data(),raw.size()*4,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(dk,keys.data(),keys.size()*sizeof(KV),cudaMemcpyHostToDevice));
@@ -40,6 +52,10 @@ template<class KV> static void check_case(int length,int count) {
     ck(cudaMemcpy(y0,baseline.data(),outputCount*4,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(y1,candidate.data(),outputCount*4,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(y2,shared.data(),outputCount*4,cudaMemcpyHostToDevice));
+    ck(cudaMemcpy(y3,plain.data(),outputCount*4,cudaMemcpyHostToDevice));
+    auto score2=[&] {chunk_scores<<<dim3((length+3)/4,16,count),128>>>(dq,dk,scores2,pos,length);};
+    auto softmax2=[&] {chunk_softmax<<<dim3(16,count),256>>>(scores2,pos,length);};
+    auto pv2=[&] {chunk_attend_pv<<<dim3(16,count),256>>>(scores2,dv,dr,y3,pos,length);};
     auto retained=[&] {
         chunk_scores<<<dim3((length+3)/4,16,count),128>>>(dq,dk,scores0,pos,length);
         chunk_attend<<<dim3(16,count),256>>>(scores0,dv,dr,y0,pos,length);
@@ -50,14 +66,14 @@ template<class KV> static void check_case(int length,int count) {
         chunk_attend_reuse4<<<dim3(16,(count+3)/4),256>>>(scores1,dv,dr,y1,pos,length,count);
     };
     auto shared2=[&] {
-        chunk_scores<<<dim3((length+3)/4,16,count),128>>>(dq,dk,scores2,pos,length);
-        chunk_softmax<<<dim3(16,count),256>>>(scores2,pos,length);
+        score2();softmax2();
         chunk_attend_shared2<<<dim3(16,(count+1)/2),512>>>(scores2,dv,dr,y2,pos,length,count);
     };
-    retained();reuse();shared2();ck(cudaGetLastError());ck(cudaDeviceSynchronize());
+    retained();reuse();shared2();pv2();ck(cudaGetLastError());ck(cudaDeviceSynchronize());
     ck(cudaMemcpy(baseline.data(),y0,outputCount*4,cudaMemcpyDeviceToHost));
     ck(cudaMemcpy(candidate.data(),y1,outputCount*4,cudaMemcpyDeviceToHost));
     ck(cudaMemcpy(shared.data(),y2,outputCount*4,cudaMemcpyDeviceToHost));
+    ck(cudaMemcpy(plain.data(),y3,outputCount*4,cudaMemcpyDeviceToHost));
     if(candidate!=baseline) {
         size_t first=0;while(first<outputCount && candidate[first]==baseline[first])first++;
         fprintf(stderr,"first mismatch length=%d count=%d kv=%zu index=%zu retained=%.9g reuse=%.9g\n",
@@ -70,10 +86,13 @@ template<class KV> static void check_case(int length,int count) {
                 length,count,sizeof(KV),first,baseline[first],shared[first]);
         throw std::runtime_error("Shared-cache query reuse changed the retained attention result");
     }
+    if(plain!=baseline)throw std::runtime_error("Separated softmax/PV changed the retained attention result");
     if(count==32 && length>=4096){
         float oldMs=median_ms(retained),newMs=median_ms(reuse),sharedMs=median_ms(shared2);
-        printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true,\"retainedMedianMs\":%.6f,\"reuseMedianMs\":%.6f,\"shared2MedianMs\":%.6f}\n",
-               length,count,sizeof(KV),oldMs,newMs,sharedMs);
+        float scoreMs=median_ms(score2),softmaxMs=median_stage_ms(score2,softmax2);
+        float pvMs=median_stage_ms([&]{score2();softmax2();},pv2);
+        printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true,\"retainedMedianMs\":%.6f,\"reuseMedianMs\":%.6f,\"shared2MedianMs\":%.6f,\"scoreMedianMs\":%.6f,\"softmaxMedianMs\":%.6f,\"pvMedianMs\":%.6f}\n",
+               length,count,sizeof(KV),oldMs,newMs,sharedMs,scoreMs,softmaxMs,pvMs);
     }else printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true}\n",length,count,sizeof(KV));
     fflush(stdout);
 }
