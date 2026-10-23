@@ -8,6 +8,18 @@ namespace DeepInfer.Tests;
 
 public sealed class DeploymentTests
 {
+    [Fact] public async Task ConnectionTelemetryRemainsSafeAfterRequestDisposal()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0); listener.Start();
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        using var client = new TcpClient();
+        Assert.False(SplitTls.IsConnected(client));
+        await client.ConnectAsync((IPEndPoint)listener.LocalEndpoint, timeout.Token);
+        using var peer = await listener.AcceptTcpClientAsync(timeout.Token);
+        Assert.True(SplitTls.IsConnected(client));
+        client.Dispose();
+        Assert.False(SplitTls.IsConnected(client));
+    }
     private static X509Certificate2 Cert(string name)
     {
         using var key = RSA.Create(2048);

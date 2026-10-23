@@ -82,7 +82,7 @@ public static class SplitService
     private sealed class Peer(TcpClient client, SslStream tls, SplitWire wire) : IDisposable
     {
         public SplitWire Wire => wire;
-        public bool Connected { get { try { return !(client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0); } catch (Exception e) when (e is ObjectDisposedException or SocketException) { return false; } } }
+        public bool Connected => SplitTls.IsConnected(client);
         public void Dispose() { tls.Dispose(); client.Dispose(); }
     }
     public static async Task RunMac(Options o, CancellationToken ct)
