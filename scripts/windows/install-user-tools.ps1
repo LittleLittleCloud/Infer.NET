@@ -31,17 +31,20 @@ if (!(Test-Path (Join-Path $dotnetRoot "sdk\$sdkVersion"))) {
 
 $python = Join-Path $pythonRoot 'python.exe'
 if (!(Test-Path $python)) {
-    $installer = Join-Path $cache "python-$PythonVersion-amd64.exe"
-    Download "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe" $installer
-    $signature = Get-AuthenticodeSignature $installer
-    if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch 'Python Software Foundation') {
-        throw "Invalid Python installer signature: $($signature.Status)"
-    }
-    $log = Join-Path $cache "python-install-$(Get-Date -Format yyyyMMdd-HHmmss).log"
-    $arguments = @('/quiet', 'InstallAllUsers=0', 'Include_launcher=0', 'Include_test=0',
-        'AssociateFiles=0', 'Shortcuts=0', 'PrependPath=0', "TargetDir=`"$pythonRoot`"", '/log', "`"$log`"")
-    $process = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
-    if ($process.ExitCode -notin 0,3010) { throw "Python install failed: $($process.ExitCode); log $log" }
+    # The official full runtime ZIP also works in SSH sessions where the MSI
+    # service is unavailable. Unlike the embeddable ZIP it supports venv/pip.
+    $manifestPath = Join-Path $cache "windows-$PythonVersion.json"
+    Download "https://www.python.org/ftp/python/$PythonVersion/windows-$PythonVersion.json" $manifestPath
+    $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    $pythonChannel = ($PythonVersion.Split('.')[0..1] -join '.')
+    $release = $manifest.versions | Where-Object {
+        $_.id -eq "pythoncore-$pythonChannel-64" -and $_.'sort-version' -eq $PythonVersion
+    } | Select-Object -First 1
+    if (!$release.url -or !$release.hash.sha256) { throw 'Python x64 release manifest entry missing.' }
+    $archive = Join-Path $cache "python-$PythonVersion-amd64.zip"
+    Download $release.url $archive
+    if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $release.hash.sha256) { throw 'Python SHA256 mismatch.' }
+    Expand-Archive -Path $archive -DestinationPath $pythonRoot -Force
 }
 
 # Preserve the existing user PATH. environment.ps1 also puts these tools first
@@ -58,5 +61,7 @@ try {
     if ($LASTEXITCODE -ne 0 -or $actual -ne $sdkVersion) { throw "Expected SDK $sdkVersion, selected $actual" }
     & python --version
     if ($LASTEXITCODE -ne 0) { throw 'Python validation failed.' }
+    & python -m ensurepip --upgrade
+    if ($LASTEXITCODE -ne 0) { throw 'Python pip setup failed.' }
     Write-Output "User tools ready: SDK $actual; Python $python"
 } finally { Pop-Location }
