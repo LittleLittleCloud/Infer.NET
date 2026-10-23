@@ -1,5 +1,18 @@
 #pragma once
 // Experimental layer-major executor, same 32-token wire chunk and FP32 state.
+struct ChunkProfile {
+    Model *model;std::vector<cudaEvent_t> events;std::vector<int> phases;
+    explicit ChunkProfile(Model *g):model(g) {if(g->profileEnabled)mark(-1);}
+    ~ChunkProfile(){for(auto event:events)cudaEventDestroy(event);}
+    void mark(int phase){
+        if(!model->profileEnabled)return;
+        cudaEvent_t event;ck(cudaEventCreate(&event));events.push_back(event);phases.push_back(phase);ck(cudaEventRecord(event));
+    }
+    void complete(){
+        if(events.empty())return;ck(cudaEventSynchronize(events.back()));
+        for(size_t i=1;i<events.size();i++){float ms;ck(cudaEventElapsedTime(&ms,events[i-1],events[i]));model->profileTotals[phases[i]]+=ms;}
+    }
+};
 static void prepare_chunk(Model *g) {
     auto &p=g->chunk;
     if(!p.prepared) {
@@ -23,7 +36,8 @@ static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const i
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
 }
 static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *trace) {
-    prepare_chunk(g);auto &p=g->chunk;int pos=g->position;
+    if(g->profileEnabled&&trace)throw std::runtime_error("Phase profiling excludes trace readbacks");
+    prepare_chunk(g);auto &p=g->chunk;int pos=g->position;ChunkProfile profile(g);
     ck(cudaMemcpy(p.tokens,tokens,count*4,cudaMemcpyHostToDevice));
     chunk_embed<<<dim3(16,count),128>>>(g->embedding,p.tokens,p.x);
     for(int l=0;l<20;l++) {
@@ -32,12 +46,14 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         chunk_mv(g,m[0],p.norm,p.qkv,count);
         if((l+1)%4) {
             chunk_mv(g,m[3],p.norm,p.z,count);chunk_mv(g,m[4],p.norm,p.a,count);chunk_mv(g,m[5],p.norm,p.b,count);
+            profile.mark(0);
             chunk_linear<<<dim3(64,count),128>>>(p.qkv,v.history,v.p,p.conv,p.a,p.b);
             prefill_delta_sequence<<<2048,64>>>(v.state,p.conv,p.a,p.b,p.attention,count);
             chunk_history<<<64,128>>>(p.qkv,v.history,count);
             chunk_delta_norm<<<dim3(32,count),128>>>(p.attention,p.z,v.p+36928,g->eps);
         } else {
             chunk_mv(g,m[1],p.norm,p.k,count);chunk_mv(g,m[2],p.norm,p.v,count);
+            profile.mark(0);
             if(g->kvBf16) {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,pos,g->eps,g->theta);
                 chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
@@ -48,14 +64,20 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
                 chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,g->capacity);
             }
         }
+        profile.mark((l+1)%4 ? 1 : 2);
         chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
+        profile.mark(3);
         chunk_mv(g,m[7],p.norm,p.router,count);chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);activation<<<count*4,128>>>(p.sg,p.su,count*512);
+        profile.mark(4);
         chunk_mv(g,m[8],p.norm,p.eg,count,p.ids,8);chunk_mv(g,m[9],p.norm,p.eu,count,p.ids,8);
         activation<<<count*32,128>>>(p.eg,p.eu,count*4096);
+        profile.mark(5);
         chunk_mv(g,m[10],p.eg,p.eo,count,p.ids,8,true);chunk_mv(g,m[13],p.sg,p.so,count);
+        profile.mark(6);
         chunk_merge<<<dim3(16,count),128>>>(p.x,p.eo,p.so,p.sr,p.prob);
+        profile.mark(7);
         if(trace)for(int t=0;t<count;t++)ck(cudaMemcpy(trace+(t*20+l)*2048,p.x+t*2048,2048*4,cudaMemcpyDeviceToHost));
     }
-    ck(cudaGetLastError());ck(cudaMemcpy(hidden,p.x,size_t(count)*2048*4,cudaMemcpyDeviceToHost));g->position+=count;
+    ck(cudaGetLastError());ck(cudaMemcpy(hidden,p.x,size_t(count)*2048*4,cudaMemcpyDeviceToHost));g->position+=count;profile.mark(8);profile.complete();
 }
