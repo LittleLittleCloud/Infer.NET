@@ -112,9 +112,9 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         probe("router",p.router,256,l);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);
         int probeLayer=0,probeTokenA=49,probeTokenB=91;
-        const char *probe=std::getenv("DEEPINFER_CUDA_ROUTE_PROBE");
-        if(probe&&std::sscanf(probe,"%d:%d",&probeLayer,&probeTokenA)==2)probeTokenB=-1;
-        if(trace && probe && l==probeLayer)for(int token:{probeTokenA,probeTokenB})if(token>=0&&pos<=token&&token<pos+count){
+        const char *routeProbe=std::getenv("DEEPINFER_CUDA_ROUTE_PROBE");
+        if(routeProbe&&std::sscanf(routeProbe,"%d:%d",&probeLayer,&probeTokenA)==2)probeTokenB=-1;
+        if(trace && routeProbe && l==probeLayer)for(int token:{probeTokenA,probeTokenB})if(token>=0&&pos<=token&&token<pos+count){
             int ids[8];float probabilities[8];int local=token-pos;
             ck(cudaMemcpy(ids,p.ids+local*8,sizeof(ids),cudaMemcpyDeviceToHost));
             ck(cudaMemcpy(probabilities,p.prob+local*8,sizeof(probabilities),cudaMemcpyDeviceToHost));
