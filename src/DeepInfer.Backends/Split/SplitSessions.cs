@@ -12,8 +12,8 @@ public sealed class MetalSplitSession : IDisposable
     private readonly QwenTokenizer tokenizer;
     public MetalSplitSession(string directory)
     {
-        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != "bf16")
-            throw new InvalidOperationException("Split sessions require DEEPINFER_METAL_KV=bf16.");
+        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != "bf16" || Environment.GetEnvironmentVariable("DEEPINFER_SPLIT_BF16") != "1")
+            throw new InvalidOperationException("Split sessions require DEEPINFER_METAL_KV=bf16 and DEEPINFER_SPLIT_BF16=1.");
         device = new();
         try
         {
@@ -31,7 +31,7 @@ public sealed class MetalSplitSession : IDisposable
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
     public int Reference(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]>? trace)
     {
-        // Match the first CUDA correctness path: <=32-token chunks, FP32 affine GEMV.
+        // Match the first CUDA correctness path: <=32-token chunks, BF16 multiplicands with FP32 accumulation.
         var next = -1;
         for (var offset = 0; offset < tokens.Length; offset += 32)
         {

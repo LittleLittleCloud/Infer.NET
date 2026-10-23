@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 namespace DeepInfer.Runtime;
 
-// Version 1 fixes geometry, dtype, little-endian layouts and model revision.
+// Version 2 fixes geometry, dtype, little-endian layouts and model revision.
 // Frames authenticate both metadata and payload; nonce-derived keys prevent replay.
 // Trusted LAN transport: authenticated/integrity-protected, NOT encrypted.
 public sealed class SplitWire(Stream stream, byte[] key, Guid request)
@@ -20,7 +20,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request)
         var secret=Encoding.UTF8.GetBytes(token); var a=new byte[32]; var b=new byte[32]; var id=new byte[16];
         if(server){RandomNumberGenerator.Fill(a);await stream.WriteAsync(a,ct);await stream.ReadExactlyAsync(b,ct);await stream.ReadExactlyAsync(id,ct);request=new Guid(id);}
         else {await stream.ReadExactlyAsync(a,ct);RandomNumberGenerator.Fill(b);id=request.ToByteArray();await stream.WriteAsync(b,ct);await stream.WriteAsync(id,ct);}
-        var challenge=a.Concat(b).Concat(id).Concat(Encoding.ASCII.GetBytes("Infer.NET/split/v1/"+Revision)).ToArray();
+        var challenge=a.Concat(b).Concat(id).Concat(Encoding.ASCII.GetBytes("Infer.NET/split/v2/"+Revision)).ToArray();
         var key=HMACSHA256.HashData(secret,challenge); var clientTag=HMACSHA256.HashData(key,"client"u8); var serverTag=HMACSHA256.HashData(key,"server"u8);
         var actual=new byte[32];
         if(server){await stream.ReadExactlyAsync(actual,ct);if(!CryptographicOperations.FixedTimeEquals(actual,clientTag))throw new InvalidDataException("Split authentication failed.");await stream.WriteAsync(serverTag,ct);}
@@ -43,7 +43,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request)
     public async Task SendAsync(Frame f,CancellationToken ct)
     {
         Validate(f); var header=new byte[92];
-        Write(header,0,0x53504944);Write(header,4,1);request.TryWriteBytes(header.AsSpan(8,16));
+        Write(header,0,0x53504944);Write(header,4,2);request.TryWriteBytes(header.AsSpan(8,16));
         int[] fields=[sent++,f.Kind,f.Layer,f.Tensor,f.Position,f.Count,f.Data.Length];for(var i=0;i<fields.Length;i++)Write(header,24+i*4,fields[i]);
         Encoding.ASCII.GetBytes(Revision,header.AsSpan(52));
         using var mac=IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256,key);mac.AppendData(header);mac.AppendData(f.Data);var tag=mac.GetHashAndReset();
@@ -52,7 +52,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request)
     public async Task<Frame> ReceiveAsync(CancellationToken ct)
     {
         var h=new byte[92];await stream.ReadExactlyAsync(h,ct);
-        if(Read(h,0)!=0x53504944||Read(h,4)!=1||new Guid(h.AsSpan(8,16))!=request||Read(h,24)!=received++||Encoding.ASCII.GetString(h,52,40)!=Revision)throw new InvalidDataException("Split protocol/request/sequence/revision mismatch.");
+        if(Read(h,0)!=0x53504944||Read(h,4)!=2||new Guid(h.AsSpan(8,16))!=request||Read(h,24)!=received++||Encoding.ASCII.GetString(h,52,40)!=Revision)throw new InvalidDataException("Split protocol/request/sequence/revision mismatch.");
         var size=Read(h,48);if(size is <0 or >32*20*2048*4)throw new InvalidDataException("Split frame exceeds bounded allocation.");
         var data=new byte[size];var tag=new byte[32];await stream.ReadExactlyAsync(data,ct);await stream.ReadExactlyAsync(tag,ct);
         using var mac=IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256,key);mac.AppendData(h);mac.AppendData(data);

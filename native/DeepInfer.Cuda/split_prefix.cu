@@ -22,14 +22,14 @@ struct Model {
 __device__ float bf(unsigned short x){return __uint_as_float(unsigned(x)<<16);}
 __device__ float sig(float x){return 1.f/(1.f+expf(-x));}
 __device__ float sil(float x){return x*sig(x);}
-__device__ float sum32(float x){for(int n=1;n<32;n*=2)x+=__shfl_xor_sync(0xffffffff,x,n);return x;}
+__device__ float sum32(float x){for(int n=16;n;n/=2)x+=__shfl_xor_sync(0xffffffff,x,n);return x;}
 __device__ float blocksum(float x){__shared__ float part[8];int t=threadIdx.x; x=sum32(x);if((t&31)==0)part[t/32]=x;__syncthreads();if(t==0){float v=0;for(int i=0;i<blockDim.x/32;i++)v+=part[i];part[0]=v;}__syncthreads();return part[0];}
 __device__ float weight(Matrix m,size_t r,int c){size_t i=r*m.cols+c,p=i/64;return float(m.w[i])*bf(m.s[p])+bf(m.b[p]);}
 __global__ void embed(Matrix m,int token,float*x){int c=blockIdx.x*blockDim.x+threadIdx.x;if(c<2048)x[c]=weight(m,token,c);}
 __global__ void norm(float*x,const float*add,const float*w,float*y,float eps,int dim){int t=threadIdx.x;float total=0;for(int d=t;d<dim;d+=blockDim.x){float v=x[d]+(add?add[d]:0);if(add)x[d]=v;total+=v*v;}float scale=rsqrtf(blocksum(total)/dim+eps);for(int d=t;d<dim;d+=blockDim.x)y[d]=x[d]*scale*w[d];}
 __global__ void gemv(Matrix m,const float*x,float*y,const int*ids,int batch){int lane=threadIdx.x&31,r=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y;if(r>=m.rows)return;int expert=ids?ids[e]:0;size_t row=size_t(expert)*m.rows+r;float val=0;
- // Match the Metal vectorized affine GEMV lane partition (8 values/lane).
- for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++)val+=weight(m,row,base+j)*x[(batch?e*m.cols:0)+base+j];
+ // Match target BF16 multiplicands with FP32 accumulation. Scalar route remains FP32.
+ for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++){float w=weight(m,row,base+j),v=x[(batch?e*m.cols:0)+base+j];if(m.rows>=32){w=__bfloat162float(__float2bfloat16_rn(w));v=__bfloat162float(__float2bfloat16_rn(v));}val+=w*v;}
  val=sum32(val);if(lane==0)y[e*m.rows+r]=val;}
 __global__ void activation(float*g,const float*u,int n){int i=blockIdx.x*blockDim.x+threadIdx.x;if(i<n)g[i]=sil(g[i])*u[i];}
 __global__ void linear(float*raw,float*history,const float*p,float*c,float*a,float*b){int t=threadIdx.x,h=blockIdx.x,d=h*128+t;const float*w=p+4096;float v=sil(history[d]*w[d*4]+history[8192+d]*w[d*4+1]+history[16384+d]*w[d*4+2]+raw[d]*w[d*4+3]);history[d]=history[8192+d];history[8192+d]=history[16384+d];history[16384+d]=raw[d];if(h<32)v*=rsqrtf(blocksum(v*v)+1e-6f)*(h<16?rsqrtf(128.f):1.f);c[d]=v;if(h==0&&t<32){float z=a[t]+p[36896+t];a[t]=expf(-expf(p[36864+t])*(z>20?z:logf(1.f+expf(z))));b[t]=sig(b[t]);}}

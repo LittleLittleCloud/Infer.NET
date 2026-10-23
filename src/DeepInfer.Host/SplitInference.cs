@@ -111,7 +111,7 @@ public static class SplitInference
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
         var result=new SplitResult(wire.Request.ToString(),SplitWire.Revision,tokens.Length,ids.ToArray(),gpu.Decode(ids.ToArray()),expected.ToArray(),
-            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),"CUDA serial-token affine8 prefix; Metal <=32-token suffix; BF16 KV; FP32 recurrent state; authenticated direct LAN; no prefix hit");
+            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),"CUDA serial-token affine8 prefix; Metal <=32-token suffix; BF16 GEMM operands and KV; FP32 accumulation/recurrent state; authenticated direct LAN; no prefix hit");
         var json=JsonSerializer.Serialize(result,SplitJson.Default.SplitResult);await File.WriteAllTextAsync(Path.Combine(output,"result.json"),json+Environment.NewLine,ct);Console.WriteLine(json);
         if(verify&&!result.Verified)throw new InvalidOperationException("Split correctness gate failed; see result.json. Do not use these timings as accepted performance.");
     }
