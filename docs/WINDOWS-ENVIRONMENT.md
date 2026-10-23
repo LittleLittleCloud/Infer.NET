@@ -34,3 +34,18 @@ The initial supplied identity could not be resolved by Windows OpenSSH. Removing
 - Measure effective network throughput and state-transfer overhead before updating the dual-host estimates.
 
 No compiler installation, repository synchronization, CUDA build, GPU inference, network throughput benchmark or model performance measurement was performed in this discovery. Issue #2 remains open.
+
+## Follow-up: user tools and managed validation
+
+Later on 2026-10-22, an independent user-owned checkout was cloned through GitHub. Mac and Windows used source commit `1022ea3e0e6503c2c7600f86b314c154dfb8dedd` on `codex/windows-environment`. Reusable installation and validation scripts are in [draft PR #6](https://github.com/LittleLittleCloud/Infer.NET/pull/6).
+
+- Installed .NET SDK **10.0.100** from the official Windows x64 archive after checking Microsoft's SHA512 release metadata. Existing system SDKs were preserved.
+- Installed **Python 3.13.17**, including pip **26.2.2**, in the user-local tools directory. The first EXE installation failed with Windows Installer error **1601**. The subsequent official full runtime ZIP passed its release-manifest SHA256 and ran successfully; the failed installation log is retained.
+- Default NuGet V3 access failed TLS negotiation with Schannel and Python/OpenSSL. The explicit per-run configuration uses the official V2 package endpoint plus `https://data.nuget.org/v3/index.json` for auditing. Both package download and vulnerability-data cache creation were verified. No certificate-validation, lock-file or vulnerability-check bypass was introduced. The original V3 connectivity issue remains unresolved.
+- Audited locked restore and Release build passed, with **0 warnings and 0 errors**; **68/68 unit tests** and **25/25 synthetic RPC checks** passed on Windows.
+- The built host's device discovery identified the RTX 4090 as **SM89**, with the driver available and CUDA inference explicitly marked unimplemented.
+- Native preflight failed with **MSVC C++ toolchain not found**. The Microsoft-signed Visual Studio 2022 Build Tools bootstrapper is prepared, but administrator installation is pending. No CUDA kernel or Native AOT executable has been validated on this host yet.
+
+Local evidence: run `setup-managed-audited-20261022` (exit 0), `setup-native-preflight-20261022` (exit 1), and the earlier installation/restore failures under `artifacts/windows/` on Windows. Private logs were also collected on the Mac; they are not published. The opt-in NuGet configuration SHA256 is `DE0969C14B59BD38DC75339106D6589F4D74A238A971AA27383EF8E7FDE17715`.
+
+Next: complete administrator Build Tools installation, then run the scripted SM89 numerical check and Native AOT RPC validation. Effective network bandwidth and dual-host inference remain unmeasured. Issue #2 stays open.
