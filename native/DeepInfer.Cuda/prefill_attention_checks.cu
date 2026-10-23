@@ -23,7 +23,7 @@ static void check_case(int length,int tokens,bool oracle){
     ck(cudaMemcpy(dk,keys.data(),keys.size()*sizeof(KV),cudaMemcpyHostToDevice));ck(cudaMemcpy(dv,values.data(),values.size()*sizeof(KV),cudaMemcpyHostToDevice));
     ck(cudaMemcpy(dy,out.data(),out.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(ref,reference.data(),reference.size()*4,cudaMemcpyHostToDevice));
     auto legacy=[&]{chunk_scores<<<dim3((length+3)/4,16,tokens),128>>>(dq,dk,scores,pos,length);chunk_attend<<<dim3(16,tokens),256>>>(scores,dv,dr,ref,pos,length);};
-    auto candidate=[&]{chunk_attention_parts<KV,Tile><<<dim3(16,tokens,partitions),256>>>(dq,dk,dv,parts,pos,partitions);chunk_attention_combine<<<dim3(16,tokens),256>>>(parts,dr,dy,pos,partitions,Tile);};
+    auto candidate=[&]{chunk_attention_parts<KV,Tile><<<dim3(16,tokens,partitions),256>>>(dq,dk,dv,parts,pos,partitions);chunk_attention_combine<<<dim3(16,tokens),256,size_t(partitions)*sizeof(float)>>>(parts,dr,dy,pos,partitions,Tile);};
     legacy();candidate();ck(cudaGetLastError());ck(cudaMemcpy(out.data(),dy,out.size()*4,cudaMemcpyDeviceToHost));ck(cudaMemcpy(reference.data(),ref,reference.size()*4,cudaMemcpyDeviceToHost));
     std::vector<double> expected(size_t(tokens)*4096);
     if(oracle){

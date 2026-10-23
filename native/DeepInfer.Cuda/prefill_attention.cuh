@@ -37,12 +37,17 @@ __global__ void chunk_attention_combine(const float *parts,const float *raw,floa
     int tid=threadIdx.x,head=blockIdx.x,seq=blockIdx.y;
     int count=(pos+seq+tile)/tile;
     const float *p=parts+(size_t(seq)*16+head)*partitions*258;
+    // One exponential per partition, shared by all256 output features.
+    extern __shared__ float scales[];
+    __shared__ float maxima[8];
     float best=-INFINITY;
-    for(int i=0;i<count;i++)best=fmaxf(best,p[size_t(i)*258+256]);
-    float total=0,value=0;
-    for(int i=0;i<count;i++){
-        float scale=expf(p[size_t(i)*258+256]-best);
-        total+=scale*p[size_t(i)*258+257];value+=scale*p[size_t(i)*258+tid];
-    }
-    output[seq*4096+head*256+tid]=(value/total)*sig(raw[seq*8192+head*512+256+tid]);
+    for(int i=tid;i<count;i+=256)best=fmaxf(best,p[size_t(i)*258+256]);
+    for(int n=16;n;n/=2)best=fmaxf(best,__shfl_xor_sync(0xffffffff,best,n));
+    if((tid&31)==0)maxima[tid/32]=best;__syncthreads();
+    if(tid==0){float b=maxima[0];for(int i=1;i<8;i++)b=fmaxf(b,maxima[i]);maxima[0]=b;}
+    __syncthreads();best=maxima[0];float total=0;
+    for(int i=tid;i<count;i+=256){float scale=expf(p[size_t(i)*258+256]-best);scales[i]=scale;total+=scale*p[size_t(i)*258+257];}
+    float den=blocksum(total);__syncthreads();
+    float value=0;for(int i=0;i<count;i++)value+=scales[i]*p[size_t(i)*258+tid];
+    output[seq*4096+head*256+tid]=(value/den)*sig(raw[seq*8192+head*512+256+tid]);
 }
