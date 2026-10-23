@@ -64,6 +64,7 @@ public static class SplitInference
             {var data=new byte[CudaPrefixSession.StateBytes(l,t,tokens.Length)];gpu.State(l,t,tokens.Length,data,false);await File.WriteAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),data,ct);}
             for(var i=0;i<max;i++)
             {expected.Add(next);if(i+1<max){next=gpu.Forward(next,tokens.Length+i,logits);await File.WriteAllBytesAsync(Path.Combine(output,$"reference-logits-{i+1}.f32"),Bytes(logits),ct);}}
+            await File.WriteAllBytesAsync(Path.Combine(output,"reference-prefix-trace.f32"),Bytes(referenceTrace),ct);
             Console.Error.WriteLine($"REFERENCE_READY promptTokens={tokens.Length} greedy={string.Join(',',expected)}");
         }
         gpu.Reset(tokens.Length+max);
@@ -82,6 +83,7 @@ public static class SplitInference
             if(verify)
             {
                 var trace=await wire.ReceiveAsync(ct);if(trace.Kind!=SplitWire.Trace||trace.Position!=offset||trace.Count!=count)throw new InvalidDataException("Incorrect trace identity.");
+                await File.WriteAllBytesAsync(Path.Combine(output,$"cuda-trace-{offset}.f32"),trace.Data,ct);
                 var actual=Floats(trace.Data);
                 for(var p=0;p<count;p++)for(var l=0;l<20;l++)checks.Add(Compare($"hidden/p{offset+p}/l{l}",referenceTrace!.AsSpan(((offset+p)*20+l)*2048,2048),actual.AsSpan((p*20+l)*2048,2048)));
             }
@@ -94,6 +96,7 @@ public static class SplitInference
             if(verify)
             {
                 var reference=await File.ReadAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),ct);
+                await File.WriteAllBytesAsync(Path.Combine(output,$"cuda-state-{l}-{t}.bin"),f.Data,ct);
                 checks.Add(Compare($"state/l{l}/t{t}",StateFloats(reference,l),StateFloats(f.Data,l)));
             }
             gpu.State(l,t,tokens.Length,f.Data,true);
@@ -103,7 +106,7 @@ public static class SplitInference
         for(var i=0;i<max;i++)
         {
             ct.ThrowIfCancellationRequested();ids.Add(nextToken);
-            if(verify)checks.Add(Compare($"logits/{i}",Floats(await File.ReadAllBytesAsync(Path.Combine(output,$"reference-logits-{i}.f32"),ct)),logits));
+            if(verify){await File.WriteAllBytesAsync(Path.Combine(output,$"split-logits-{i}.f32"),Bytes(logits),ct);checks.Add(Compare($"logits/{i}",Floats(await File.ReadAllBytesAsync(Path.Combine(output,$"reference-logits-{i}.f32"),ct)),logits));}
             if(i+1<max)nextToken=gpu.Forward(nextToken,tokens.Length+i,verify?logits:null);
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
