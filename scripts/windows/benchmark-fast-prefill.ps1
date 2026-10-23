@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory=$true)][int]$OldAgentPid,
     [Parameter(Mandatory=$true)][string]$OldAgentExe,
     [Parameter(Mandatory=$true)][string]$Config,
-    [Parameter(Mandatory=$true)][string]$RunDirectory
+    [Parameter(Mandatory=$true)][string]$RunDirectory,
+    [ValidateSet(1,5)][int]$BaselineMode = 5
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
@@ -32,20 +33,15 @@ try {
     $agent.WaitForExit()
     Start-Sleep -Seconds 3
     Write-Output 'Running full-prefix correctness and 512-token A/B'
-    & python $benchmark --weights $weights --library $library --output $result --compare-fast --kv-bytes 4 2>&1 |
+    & python $benchmark --weights $weights --library $library --output $result --compare-fast --baseline-mode $BaselineMode --kv-bytes 4 2>&1 |
         Tee-Object -FilePath (Join-Path $RunDirectory 'benchmark.log')
     if ($LASTEXITCODE -ne 0) { throw "Benchmark failed with exit code $LASTEXITCODE" }
 }
 finally {
     if ($stopped) {
-        Write-Output 'Restoring old agent'
+        Write-Output 'Restoring old agent in the foreground; keep this SSH session open'
         $log = Join-Path $RunDirectory 'restored-agent.log'
-        $stdout = Join-Path $RunDirectory 'restored-agent.stdout.log'
-        $stderr = Join-Path $RunDirectory 'restored-agent.stderr.log'
-        $restored = Start-Process -FilePath $OldAgentExe -ArgumentList @(
-            'split-agent', '--config', ('"' + $Config + '"'), '--log-file', ('"' + $log + '"')
-        ) -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-        $restored.Id | Set-Content (Join-Path $RunDirectory 'restored-agent-pid.txt')
-        Write-Output "Restored old agent PID $($restored.Id)"
+        & $OldAgentExe split-agent --config $Config --log-file $log
+        if ($LASTEXITCODE -ne 0) { throw "Restored agent exited with code $LASTEXITCODE" }
     }
 }
