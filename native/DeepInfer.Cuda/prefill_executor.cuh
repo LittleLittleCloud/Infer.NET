@@ -24,10 +24,19 @@ static void prepare_chunk(Model *g) {
 #undef CHUNK
         p.prepared=true;
     }
-    if(p.scoreCapacity<g->capacity) {
-        auto *next=g->alloc<float>(size_t(32)*16*g->capacity);
+    int scoreCapacity=g->attentionPartitionThreshold<0?g->capacity:std::min(g->capacity,std::max(1,g->attentionPartitionThreshold));
+    if(p.scoreCapacity<scoreCapacity) {
+        auto *next=g->alloc<float>(size_t(32)*16*scoreCapacity);
         if(p.scores){auto old=std::find(g->memory.begin(),g->memory.end(),p.scores);if(old!=g->memory.end())g->memory.erase(old);ck(cudaFree(p.scores));}
-        p.scores=next;p.scoreCapacity=g->capacity;
+        p.scores=next;p.scoreCapacity=scoreCapacity;
+    }
+    if(g->attentionPartitionThreshold>=0 && g->capacity>=g->attentionPartitionThreshold) {
+        int tile=g->kvBf16?256:128,partitions=(g->capacity+tile-1)/tile;
+        if(p.partitions<partitions) {
+            auto *next=g->alloc<float>(size_t(32)*16*partitions*258);
+            if(p.parts){auto old=std::find(g->memory.begin(),g->memory.end(),p.parts);if(old!=g->memory.end())g->memory.erase(old);ck(cudaFree(p.parts));}
+            p.parts=next;p.partitions=partitions;
+        }
     }
 }
 static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const int *ids=nullptr,int experts=1,bool routed=false) {
@@ -63,12 +72,22 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             profile.mark(0);
             if(g->kvBf16) {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
-                chunk_attend<<<dim3(16,count),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv,p.attention,pos,g->capacity);
+                if(g->attentionPartitionThreshold>=0 && pos+count>=g->attentionPartitionThreshold) {
+                    chunk_attention_parts<__nv_bfloat16,256><<<dim3(16,count,(pos+count+255)/256),256>>>(p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,p.parts,pos,p.partitions);
+                    chunk_attention_combine<<<dim3(16,count),256,p.partitions*sizeof(float)>>>(p.parts,p.qkv,p.attention,pos,p.partitions,256);
+                } else {
+                    chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,p.scoreCapacity);
+                    chunk_attend<<<dim3(16,count),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv,p.attention,pos,p.scoreCapacity);
+                }
             } else {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(float*)v.keys,(float*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,g->capacity);
-                chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,g->capacity);
+                if(g->attentionPartitionThreshold>=0 && pos+count>=g->attentionPartitionThreshold) {
+                    chunk_attention_parts<float,128><<<dim3(16,count,(pos+count+127)/128),256>>>(p.q,(float*)v.keys,(float*)v.values,p.parts,pos,p.partitions);
+                    chunk_attention_combine<<<dim3(16,count),256,p.partitions*sizeof(float)>>>(p.parts,p.qkv,p.attention,pos,p.partitions,128);
+                } else {
+                    chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,p.scoreCapacity);
+                    chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,p.scoreCapacity);
+                }
             }
         }
         profile.mark((l+1)%4 ? 1 : 2);

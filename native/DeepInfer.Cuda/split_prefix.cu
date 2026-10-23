@@ -27,7 +27,8 @@ struct Layer {
     void *keys = nullptr, *values = nullptr;
 };
 struct ChunkWorkspace {
-    bool prepared=false;int scoreCapacity=0;
+    bool prepared=false;int scoreCapacity=0,partitions=0;
+    float *parts=nullptr;
     float *x=nullptr,*norm=nullptr,*qkv=nullptr,*z=nullptr,*a=nullptr,*b=nullptr,*conv=nullptr,*attention=nullptr,
         *k=nullptr,*v=nullptr,*q=nullptr,*scores=nullptr,*out=nullptr,*router=nullptr,*prob=nullptr,
         *eg=nullptr,*eu=nullptr,*eo=nullptr,*sg=nullptr,*su=nullptr,*so=nullptr,*sr=nullptr;
@@ -41,6 +42,7 @@ struct Model {
     bool kvBf16 = true, batchReadback = false, layerBatch=false, bf16Projections=false;
     ChunkWorkspace chunk;
     bool profileEnabled=false,denseReuse=false,densePacked=false,expertPacked=false;double profileTotals[9]{};
+    int attentionPartitionThreshold=-1;
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
         *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
@@ -281,6 +283,7 @@ static void mv(Matrix m, float *x, float *y, int *ids = nullptr, int count = 1,
 }
 #include "prefill_batch.cuh"
 #include "prefill_chunk.cuh"
+#include "prefill_attention.cuh"
 #include "prefill_executor.cuh"
 static void read(std::ifstream &f, void *p, size_t n) {
     if (!f.read((char *)p, n))
@@ -493,6 +496,12 @@ API int di_cuda_prefix_readback_mode(void *ptr, int batched) {
 API int di_cuda_prefix_execution_mode(void *ptr,int mode) {
     auto *g=static_cast<Model*>(ptr);if(!g||mode<0||mode>5||g->position!=0)return -1;
     g->layerBatch=mode!=0;g->bf16Projections=mode==2;g->denseReuse=mode>=3;g->densePacked=mode>=4;g->expertPacked=mode==5;return 0;
+}
+// Experimental, disabled by default. Zero forces every chunk for numerical tests.
+API int di_cuda_prefix_partition_threshold(void *ptr,int threshold) {
+    auto *g=static_cast<Model*>(ptr);
+    if(!g||g->position!=0||threshold < -1||threshold>262144)return -1;
+    g->attentionPartitionThreshold=threshold;return 0;
 }
 // Diagnostic phase timing; disabled in every production session by default.
 API int di_cuda_prefix_profile_mode(void *ptr,int enabled) {
