@@ -460,21 +460,22 @@
   },
   {
     "id": "cuda-qkv-splitk",
-    "title": "CUDA QKV 分段累加：局部更准，整条路径未通过",
+    "title": "CUDA 两处投影分段累加：算子更准，整条路径未通过",
     "kind": "8bit · BF16 KV/GEMM · 失败诊断，未部署",
     "source": "docs/BF16-STAGE-PROBE-20261023.md",
-    "question": "缩短CUDA QKV的FP32 MMA累加链，能否消除首层跨后端误差并通过完整BF16数值门槛？",
-    "setup": "2026-10-23；Windows RTX4090源码5c1dea1、Mac固定数值参考；128合成token，CUDA块32、Metal块128，affine8/group64、BF16 KV/GEMM、诊断FP32路由与共享专家。独占GPU，探针读回。",
-    "change": "CUDA QKV每256输入列重置FP32 MMA累加器并汇总部分结果；环境开关和Windows诊断参数显式启用，默认关闭。",
-    "result": "CUDA QKV对CPU参考relative L2由2.676e-6降至2.251e-7，跨端QKV差由2.695e-6降至4.144e-7；但输出投影差由7.553e-6升至2.183e-5，层0由1.605e-4升至1.663e-4，完整层/状态仍仅2/60通过。",
-    "validation": "SM89 DLL构建通过；128-token候选有限、重复trace一致。Mac/CUDA 12段及20层、40份状态离线比较，CPU参考核对同输入和导出权重。旧Windows agent恢复连接，serve为Ready。没有正式吞吐、logits、真实候选RPC、128K或内存验收。",
-    "conclusion": "改进单个GEMM数值不足以让整模BF16路径通过；下游BF16输入跨舍入边界，部分层反而退化。保留默认关闭，不将诊断秒数当作提速。",
-    "next": "定位输出投影的累加与输入舍入，再判断能否减少层级误差；完整正确性通过后才测速。",
+    "question": "缩短CUDA QKV及输出投影的FP32 MMA累加链，能否消除首层跨后端误差并通过完整BF16数值门槛？",
+    "setup": "2026-10-23；Windows RTX4090源码5c1dea1/e6b119d、Mac固定数值参考；128合成token，CUDA块32、Metal块128，affine8/group64、BF16 KV/GEMM、诊断FP32路由与共享专家。独占GPU，探针读回。",
+    "change": "CUDA QKV和输出投影可分别每256输入列重置FP32 MMA累加器并汇总部分结果；分别测QKV、仅输出、两者同时启用。开关默认关闭。",
+    "result": "QKV对CPU参考误差2.676e-6→2.251e-7；输出投影对自身输入参考误差4.908e-6→约4.16e-7。但层0误差三档仍约1.60e-4，全部仅2/60层/状态检查通过。两者同时启用时输出投影跨端差仍2.112e-5，主要由上游BF16输入差引起。",
+    "validation": "SM89 DLL构建通过；各128-token候选有限、重复trace一致。Mac/CUDA 12段及20层、40份状态离线比较，CPU参考核对输入和导出权重。旧Windows agent恢复连接，serve Ready，短请求HTTP 200。没有正式吞吐、logits、真实候选RPC、128K或内存验收。",
+    "conclusion": "两处GEMM局部数值改善仍不足以让整模BF16路径通过；下游BF16输入舍入边界使整体误差未单调改善。保留默认关闭，不将诊断秒数当作提速。",
+    "next": "先量化BF16模式相对固定FP32参考的整模差距及token级路由翻转，再决定下一步kernel方案。",
     "commands": [
       "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe '' -StageProbe -SplitKQkv",
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe '' -StageProbe -SplitKOutput",
       "python3 scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON",
       "python3 scripts/split/analyze-bf16-stage-reference.py --model MODEL_DIR --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --bundle PREFIX_BUNDLE --output NEW_REFERENCE_JSON"
     ],
-    "evidence": "PR #31；artifacts/dual-host/bf16-splitk-full-compare-5c1dea1.json、stage/CPU参考和原始张量仅本机"
+    "evidence": "PR #31；artifacts/dual-host/bf16-splitk-full-compare-5c1dea1.json与e6b119d两档比较、原始张量仅本机"
   }
 ]
