@@ -384,5 +384,23 @@
       "deepinfer split-agent --config PRIVATE_WORKER_JSON --cuda-send-overlap on"
     ],
     "evidence": "site/send-overlap-summary.json; artifacts/dual-host/overlap-e2e-*"
+  },
+  {
+    "id": "cuda-bf16-prefix",
+    "title": "CUDA BF16 专家路径：算子通过，完整前段仍待跨后端参考",
+    "kind": "8bit · BF16 KV · 独立诊断，未部署",
+    "source": "docs/CUDA-BF16-PREFIX.md",
+    "question": "补齐 CUDA 专家和小投影 BF16 操作数后，布局与舍入是否正确；完整前段是否仍确定性？",
+    "setup": "2026-10-23；RTX 4090 SM89，固定 Qwen3.6-35B-A3B affine8/group64；131 合成有效 token、32-token 块、BF16 KV。单独停止旧 agent 后加载模型，试验后恢复。源码 70234e8。",
+    "change": "新原生诊断模式6：大矩阵 BF16 Tensor Core GEMM；专家和小矩阵反量化后 BF16 舍入、FP32 累加。线上 FP32 packed 模式不变。",
+    "result": "六组专家算子对双精度 BF16 参考通过，最大 relative L2 1.24e-7。131-token 完整前段可重复且有限；与 FP32 模式从第0层有差异，第9层 relative L2 最大6.29%。带 trace 读回的时间不作为吞吐基准。",
+    "validation": "仅算子参考和完整前段确定性；没有独立 BF16 完整模型参考、跨机状态/logits、128K 或正式性能验证。",
+    "conclusion": "BF16 专家 kernel 的局部数值正确，完整 BF16 路径尚未通过部署门槛，保持关闭。FP32 与 BF16 的差异不能直接判为错误或宣称质量持平。",
+    "next": "建立相同 BF16 舍入的独立参考，定位首个跨后端分歧；随后验证完整短输入与 128K。",
+    "commands": [
+      "powershell -File scripts/windows/check-prefill-bf16-experts.ps1 -OutputDirectory NEW_DIRECTORY",
+      "python scripts/split/check-bf16-prefix.py --weights PINNED_PREFIX --library BUILT_DLL --output NEW_DIRECTORY"
+    ],
+    "evidence": "site/bf16-prefix-summary.json；完整原始 JSON 仅本机"
   }
 ]

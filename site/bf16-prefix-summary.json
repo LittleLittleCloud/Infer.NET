@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-23",
+  "kind": "diagnostic-not-throughput-benchmark",
+  "source": "70234e8a6bd18472f7b892676baebaec2f9f3cfa",
+  "cudaDllSha256": "91220b0fa2d7bdb617a39e910eaf319ce043eb1ed67aa2a22047d64e57db0660",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "prefixBundleSha256": "ff5ba3ac11d26d77ea930709ff2a0489df3a00bbdaa2b5e8978a16845a50fe77",
+  "device": "Windows RTX 4090 SM89",
+  "weightBits": 8,
+  "groupSize": 64,
+  "kv": "bf16",
+  "inputTokens": 131,
+  "tokenIdsSha256": "b986b7ca7a6bf5edddfebf8d65ffc01876af57bddb6f052f99a989c234c1da3f",
+  "wireChunkTokens": 32,
+  "modes": {
+    "baseline": 5,
+    "candidate": 6
+  },
+  "operatorChecks": {
+    "cases": 6,
+    "maxRelativeL2": 1.23544603e-07,
+    "maxAbs": 7.4505806e-08,
+    "passed": true
+  },
+  "fullPrefix": {
+    "allFinite": true,
+    "candidateDeterministic": true,
+    "firstLayer": {
+      "layer": 0,
+      "relativeL2": 0.004557518551990793,
+      "maxAbs": 0.003231009002774954
+    },
+    "largestRelativeLayer": {
+      "layer": 9,
+      "relativeL2": 0.06291394967499855,
+      "maxAbs": 0.06689977645874023
+    },
+    "largestAbsoluteLayer": {
+      "layer": 15,
+      "relativeL2": 0.043927403363363836,
+      "maxAbs": 0.12691724300384521
+    },
+    "layerDrift": [
+      {
+        "layer": 0,
+        "relativeL2": 0.004557518551990793,
+        "maxAbs": 0.003231009002774954
+      },
+      {
+        "layer": 1,
+        "relativeL2": 0.011165547101910624,
+        "maxAbs": 0.009509630501270294
+      },
+      {
+        "layer": 2,
+        "relativeL2": 0.013390282139078795,
+        "maxAbs": 0.030652880668640137
+      },
+      {
+        "layer": 3,
+        "relativeL2": 0.022218458754216845,
+        "maxAbs": 0.014281965792179108
+      },
+      {
+        "layer": 4,
+        "relativeL2": 0.03234934044938396,
+        "maxAbs": 0.04133442044258118
+      },
+      {
+        "layer": 5,
+        "relativeL2": 0.038099100002523686,
+        "maxAbs": 0.05353313684463501
+      },
+      {
+        "layer": 6,
+        "relativeL2": 0.036386492212191604,
+        "maxAbs": 0.09133541584014893
+      },
+      {
+        "layer": 7,
+        "relativeL2": 0.05421434153041718,
+        "maxAbs": 0.06895780563354492
+      },
+      {
+        "layer": 8,
+        "relativeL2": 0.0628519302435983,
+        "maxAbs": 0.07082909345626831
+      },
+      {
+        "layer": 9,
+        "relativeL2": 0.06291394967499855,
+        "maxAbs": 0.06689977645874023
+      },
+      {
+        "layer": 10,
+        "relativeL2": 0.03595065163317583,
+        "maxAbs": 0.07733702659606934
+      },
+      {
+        "layer": 11,
+        "relativeL2": 0.03888791464154853,
+        "maxAbs": 0.07956260442733765
+      },
+      {
+        "layer": 12,
+        "relativeL2": 0.03915247411031546,
+        "maxAbs": 0.10214036703109741
+      },
+      {
+        "layer": 13,
+        "relativeL2": 0.04174984978259269,
+        "maxAbs": 0.11046504974365234
+      },
+      {
+        "layer": 14,
+        "relativeL2": 0.041163143443001135,
+        "maxAbs": 0.10962831974029541
+      },
+      {
+        "layer": 15,
+        "relativeL2": 0.043927403363363836,
+        "maxAbs": 0.12691724300384521
+      },
+      {
+        "layer": 16,
+        "relativeL2": 0.04403361550095462,
+        "maxAbs": 0.09450119733810425
+      },
+      {
+        "layer": 17,
+        "relativeL2": 0.04376987354181538,
+        "maxAbs": 0.0953294038772583
+      },
+      {
+        "layer": 18,
+        "relativeL2": 0.04391928615109455,
+        "maxAbs": 0.082785964012146
+      },
+      {
+        "layer": 19,
+        "relativeL2": 0.045876823301461415,
+        "maxAbs": 0.1018373966217041
+      }
+    ]
+  },
+  "rawResultSha256": "a37abe830157ed8c270eb8218248b85cce2b3c0c413d87328d9f3fc1223405cc",
+  "rawResultAvailability": "local only: artifacts/dual-host/bf16-target-70234e8/full-prefix-result.json",
+  "limitations": [
+    "No independent BF16 full-model reference",
+    "Trace readback timings are not a throughput benchmark",
+    "No network, Mac suffix, decode, or 128K request",
+    "No production deployment of mode 6"
+  ]
+}
