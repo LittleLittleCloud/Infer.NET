@@ -1,0 +1,23 @@
+# Private connection/token config arrives on stdin, never in process arguments.
+$ErrorActionPreference='Stop'
+$ProgressPreference='SilentlyContinue'
+$root=Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+Set-Location $root
+. scripts\windows\environment.ps1
+$config=[Console]::ReadLine() | ConvertFrom-Json
+if($config.runId -notmatch '^[a-zA-Z0-9_-]{1,80}$'){throw 'Invalid run ID'}
+$out=Join-Path $root ('artifacts\split\'+$config.runId)
+if(Test-Path $out){throw 'Run already exists; inspect its PID and exit status before retrying'}
+New-Item -ItemType Directory $out | Out-Null
+$env:DEEPINFER_TOKEN=$config.token
+$sha=git rev-parse HEAD
+$sha | Set-Content (Join-Path $out 'source.txt')
+$exe=Join-Path $root 'src\DeepInfer.Host\bin\Release\net10.0\deepinfer.exe'
+$bundle=Join-Path $root 'artifacts\split\prefix.bin'
+$process=Start-Process -FilePath $exe -ArgumentList @('split-worker','--weights',('"'+$bundle+'"'),'--endpoint',$config.endpoint) -PassThru -NoNewWindow -RedirectStandardOutput (Join-Path $out 'stdout.log') -RedirectStandardError (Join-Path $out 'stderr.log')
+$process.Id | Set-Content (Join-Path $out 'pid.txt')
+Remove-Item Env:DEEPINFER_TOKEN
+$process.WaitForExit()
+$process.Refresh()
+$process.ExitCode | Set-Content (Join-Path $out 'exit.txt')
+exit $process.ExitCode

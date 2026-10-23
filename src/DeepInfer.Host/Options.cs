@@ -3,7 +3,7 @@ namespace DeepInfer.Host;
 public sealed class Options
 {
     private readonly Dictionary<string, string> values = new(StringComparer.Ordinal);
-    private static readonly HashSet<string> Flags = ["allow-remote", "json", "stay", "trace-all", "prefill"];
+    private static readonly HashSet<string> Flags = ["verify", "allow-remote", "json", "stay", "trace-all", "prefill"];
     private static readonly HashSet<string> Keys = ["listen", "coordinator", "backend", "id", "capacity", "advertise",
         "token", "endpoint", "prompt", "prompt-file", "max-tokens", "model", "requests", "warmup", "workers", "base-port", "output", "weights", "tokenizer", "reference", "route-trace"];
     public string Command { get; }

@@ -12,6 +12,8 @@ public static class Commands
         var options = new Options(args);
         switch (options.Command)
         {
+            case "split-worker": await SplitInference.Worker(options, ct); break;
+            case "split-infer": await SplitInference.Coordinator(options, ct); break;
             case "coordinator": await Server.RunAsync(options, false, ct); break;
             case "worker": await Server.RunAsync(options, true, ct); break;
             case "demo": await Demo.RunAsync(options, ct); break;
