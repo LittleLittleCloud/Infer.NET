@@ -42,3 +42,37 @@ The candidate DLL SHA-256 was `ce04673d942c0a4eef298ad1a38ea1cae41ad5d8e00ba4e54
 The current deployed agent advertises `batch-fp32-packed`, which maps to mode 5. Therefore the second row is the relevant incremental comparison. Mode 5 already uses packed dense and routed expert kernels; mode 6's remaining change is principally the small shared-expert fusion. The large operator-only speedups cannot be projected onto the present service. Each run's raw `result.json`, 40 state files, traces and log are local-only under Windows `artifacts/dual-host/gemm-experts-full-ab-8c0e76c` and `gemm-experts-packed-ab-4e00cae`. Their result JSON SHA-256 values are `80f47afff7516ee092acb6031a13a027cfbd3b6c8bda26b76032a2021dca4c2a` and `cfe8492ad3a3dced50af4ebaf7bcbca678788dcbcfed3887b55ae611798d2b7e`, respectively. The 512-token timing is a diagnostic, not a target acceptance run.
 
 `batch-fp32-fast` remains opt-in. Before selecting it as default, run a real split RPC A/B with compatible builds on both hosts, verify suffix logits and complete generation, then satisfy the correctness, memory and 128K cold-prefill/long-decode gates in [the fixed target](QWEN36-8BIT-TARGETS.md). The modest mode 5 → 6 gain means the next performance work should focus on larger routed expert computation and overall chunk execution, with correctness checked at each arithmetic change.
+
+## Issue #39: opt-in routed affine metadata broadcast (unmeasured)
+
+Native execution **mode 7** is mode 5 with one experimental change: each eight-lane group in the routed packed GEMV loads its shared group64 BF16 scale/bias in one lane and broadcasts the FP32 values with warp shuffles. This reduces metadata load requests and conversions, not necessarily DRAM traffic (the old loads may already hit cache). Shuffle overhead may outweigh the savings; **no RTX 4090 timing or speedup is claimed**. The candidate targets the existing 32-token × top-8 gate/up/down launches, with no new workspace or route sorting.
+
+The byte loads, affine expression, per-lane accumulation and `sum32` order are unchanged. Row tails exclude whole warps, so all lanes named by a shuffle mask participate. Dispatch requires routed IDs and columns divisible by 256; other shapes retain the existing fallback. Mode 5's kernel remains intact in the same binary. Mode 7 does **not** enable mode 6's shared-expert fusion or the rejected large dual-accumulator gate/up fusion. There is no managed/service switch, default change, deployment update, precision/KV/wire change, dependency or system setting change.
+
+Changed implementation/testing files:
+
+- `native/DeepInfer.Cuda/prefill_chunk.cuh`: separate affine-broadcast kernel.
+- `native/DeepInfer.Cuda/prefill_executor.cuh` and `split_prefix.cu`: opt-in native mode 7, reset on every mode selection.
+- `native/DeepInfer.Cuda/prefill_reuse_checks.cu`: candidate versus mode 5 and original GEMV, byte comparisons including output guards, finite checks, independent double oracle for small shapes, and raw CUDA-event timing samples.
+- `scripts/split/benchmark-prefix-chunk.py`: `--compare-affine-broadcast` selects exactly modes 5/7.
+
+The standalone checks cover 1/3/17/31/32 tokens, partial four-row tiles, 8 routes, IDs 0 and 255, mixed and fully repeated experts, shared gate/up input and per-route down input. Expert/row/group-varying weights prevent wrong routes from being masked by periodic test data. Shapes include 512 × 2048 gate/up, 2048 × 512 down and the larger 4096 × 2048 / 2048 × 4096 stress cases. Large matrices use 16 experts to limit allocation; 256-expert route coverage uses a small matrix, so this is not a model-residency or realistic cache-distribution benchmark. Timing reports one warmup and three trials of five launches per operator, with `reuseMs` as the mode 5 baseline and `affineBroadcastMs` as the candidate. Any bit mismatch fails the checker; no non-bitwise case is accepted.
+
+### Reproduce on Windows SM89 (orchestrator)
+
+Use an isolated checkout based on `perf/cuda-gemm-experts` at `c37f939dffae9eae2a1c323ebb1d1468abdcd645`, then the candidate commit. In that checkout's PowerShell:
+
+```powershell
+& .\scripts\windows\check-prefill-reuse.ps1 -OutputDirectory artifacts\dual-host\issue39-ops
+python .\scripts\split\benchmark-prefix-chunk.py `
+  --weights $PinnedPrefixWeights `
+  --library .\native\DeepInfer.Cuda\build\deepinfer_cuda.dll `
+  --output artifacts\dual-host\issue39-prefix `
+  --kv-bytes 4 --compare-affine-broadcast
+```
+
+`$PinnedPrefixWeights` must identify the existing pinned affine8/group64 20-layer prefix. The first command builds both the isolated native DLL and operator checker with the existing SM89 build scripts; it does not install a package. The second loads the model and requires sufficient free GPU memory: the orchestrator must arrange an authorized idle test slot, not run it alongside a live model. Neither command stops a service or changes its configuration. Use fresh output directories and retain failures as well as successes, source SHA, DLL/checker hashes, device/driver conditions and raw samples.
+
+The prefix harness first requires exact hidden output, all 20 layer traces and all 40 final states over 131 synthetic token IDs in irregular 1/7/17/32-token chunks, plus incremental/final KV equality. It then alternates modes for one warmup and three measured 512-token runs each. This is only native prefix diagnostics, **not** the fixed real-prompt, RPC, Pi or 128K acceptance. A non-bitwise result rejects the candidate; leave it disabled and investigate rather than relaxing tolerances.
+
+Local validation cannot establish CUDA correctness: this Linux sandbox has no CUDA toolkit/RTX 4090. Windows native compilation, operator parity/timing, pinned full-prefix acceptance and repeatable same-input RTX 4090 median improvement remain pending. The orchestrator separately runs real split RPC and Pi workloads. Keep the candidate off if it loses, retain the negative evidence, and do not switch any defaults before those gates and [targets v2](QWEN36-8BIT-TARGETS.md) pass. This prototype belongs in a PR targeting `perf/cuda-gemm-experts`, not `main`; it is not authorization to merge or close #39 as accepted.

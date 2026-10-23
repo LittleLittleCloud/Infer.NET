@@ -38,6 +38,8 @@ static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const i
         else chunk_dense_reuse<4,true><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
     } else if(g->denseReuse && !ids && count>=4 && m.rows>=256)
         chunk_dense_reuse<4><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
+    else if(g->expertAffineBroadcast && ids && m.cols%256==0)
+        chunk_gemv_affine_broadcast<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
     else if((g->fastFp32 || g->expertPacked) && ids && m.cols%256==0)
         chunk_gemv_packed<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);

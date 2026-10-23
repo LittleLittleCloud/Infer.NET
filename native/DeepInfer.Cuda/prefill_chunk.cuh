@@ -179,6 +179,28 @@ __global__ void chunk_gemv_packed(Matrix m,const float *x,float *y,const int *id
     }
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// Experimental group64 metadata broadcast. Same lane sums as packed GEMV;
+// cols must be divisible by256 so each group starts at an eight-lane boundary.
+__global__ void chunk_gemv_affine_broadcast(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
+    if(row>=m.rows)return;
+    int expert=ids[t*n+e];size_t wr=size_t(expert)*m.rows+row;
+    const float *input=x+(size_t(t)*(routedInput?n:1)+(routedInput?e:0))*m.cols;
+    float val=0;
+    for(int base=lane*8;base<m.cols;base+=256) {
+        size_t index=wr*m.cols+base;
+        uint2 bytes=*reinterpret_cast<const uint2*>(m.w+index);
+        float scale=0,bias=0;
+        if((lane&7)==0){scale=bf(m.s[index/64]);bias=bf(m.b[index/64]);}
+        scale=__shfl_sync(0xffffffff,scale,lane&~7);
+        bias=__shfl_sync(0xffffffff,bias,lane&~7);
+        for(int j=0;j<8;j++) {
+            float w=float(((j<4?bytes.x:bytes.y)>>(8*(j&3)))&255)*scale+bias;
+            val+=w*input[base+j];
+        }
+    }
+    val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
+}
 // Gate and up projections use the same routed input. One launch and one input
 // load stream serve both matrices while retaining their separate FP32 sums.
 __global__ void chunk_expert_gate_up_packed(Matrix gate,Matrix up,const float *x,

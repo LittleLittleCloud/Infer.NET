@@ -4,7 +4,9 @@ Stop the deployed agent first; this script never stops another process.
 Synthetic valid token IDs exercise varied routes, not formal prompt throughput.
 """
 import argparse,array,math,ctypes as c,hashlib,json,pathlib,time,statistics,subprocess
-p=argparse.ArgumentParser();p.add_argument('--weights',required=True);p.add_argument('--library',required=True);p.add_argument('--output',required=True,type=pathlib.Path);p.add_argument('--kv-bytes',type=int,choices=[2,4],default=4);p.add_argument('--compare-fast',action='store_true',help='Compare a baseline FP32 mode with candidate FP32 mode 6');p.add_argument('--baseline-mode',type=int,choices=[1,5],default=1,help='FP32 baseline for --compare-fast; 5 matches batch-fp32-packed deployment');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--weights',required=True);p.add_argument('--library',required=True);p.add_argument('--output',required=True,type=pathlib.Path);p.add_argument('--kv-bytes',type=int,choices=[2,4],default=4)
+comparison=p.add_mutually_exclusive_group();comparison.add_argument('--compare-fast',action='store_true',help='Compare a baseline FP32 mode with candidate FP32 mode 6');comparison.add_argument('--compare-affine-broadcast',action='store_true',help='Compare packed FP32 mode 5 with experimental routed affine-broadcast mode 7')
+p.add_argument('--baseline-mode',type=int,choices=[1,5],default=1,help='FP32 baseline for --compare-fast; 5 matches batch-fp32-packed deployment');a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False);dll=c.CDLL(str(pathlib.Path(a.library).resolve()));err=c.create_string_buffer(2048)
 def bind(name,args,ret=c.c_int):
  f=getattr(dll,'di_cuda_prefix_'+name);f.argtypes=args;f.restype=ret;return f
@@ -20,7 +22,7 @@ tokens=[100+(i*137)%247000 for i in range(512)]
 def finite(data,bf16=False):
  values=array.array('H' if bf16 else 'f');values.frombytes(data)
  assert all((v&0x7f80)!=0x7f80 for v in values) if bf16 else all(math.isfinite(v) for v in values), 'Nonfinite tensor'
-records=[];outputs={};states={};traces={};ranges={};modes=(a.baseline_mode,6) if a.compare_fast else (0,1)
+records=[];outputs={};states={};traces={};ranges={};modes=(5,7) if a.compare_affine_broadcast else (a.baseline_mode,6) if a.compare_fast else (0,1)
 def execute(n,chunks,trace_mode=None):
  hidden=bytearray();position=0;index=0
  while position<n:
