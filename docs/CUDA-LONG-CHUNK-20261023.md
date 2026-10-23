@@ -44,4 +44,22 @@
 
 原始结果仅 Windows 本机保存于 `artifacts/dual-host/cuda-mid-{256,512}-f36e71b/result.json`；SHA-256 分别为 `d6b2e8bba5266003c55a840a0a5823700caf920ea1a8bf9b75163e664e67001b` 和 `e1d816efa56f42d4bc37c56948d1f15915c02f7950b4425b6e3b86df8e35901b`。Mac 129 项测试通过；Windows 128 项通过、1 项平台跳过，CUDA DLL 在 Windows 同源编译成功。
 
-实验结束后恢复原 `919259d` agent；Mac serve/coordinator 未换包。原 8192 输入/8 输出经真实 `cuda-metal-split` 请求返回 HTTP 200，8 个 token 的 SHA-256 为 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`，与有线对照相同；serve 与 coordinator 重新报告 agent 已连接及 worker 健康。新块尚未进行同版本双机 A/B，不能声称端到端提速，更不能替代 BF16/128K 验收。下一步须在匹配协议版本的两端包上分别测 256/512 与 32/1024 的完整请求，并记录等待、内存与输出一致性。
+原生检查结束后先恢复原 `919259d` agent；Mac serve/coordinator 未换包。原 8192 输入/8 输出经真实 `cuda-metal-split` 请求返回 HTTP 200，8 个 token 的 SHA-256 为 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`，与有线对照相同；serve 与 coordinator 重新报告 agent 已连接及 worker 健康。后续同版双机 A/B 见下节。
+
+## 同版有线完整请求：中间块未改善端到端
+
+两端从同一提交 `47fe588160fc748a8a3f0125b46308c3f03d52d3` 构建 Native AOT；打包清单的 split protocol 为 v5，权重 affine8，GEMM/KV 为 FP32。Mac serve 在五档测试期间保持同一 PID，Windows agent 每档重启并明确记录块长。链路为 Mac `en7` 1000baseT 全双工直达既有 LAN，Windows agent 实际连接该接口地址；Mac 到 Windows 的路由也走 `en7`。固定 8192 输入/8 输出、0% prefix hit、greedy、忽略 EOS，每次重置状态；每档一次完整预热、三次正式请求。顺序 256→512→32→1024→256 确认，Mac 在开始前确认 AC。正式试验未逐次记录电源、swap-out 或 GPU 峰值，不能据此通过固定资源门槛。
+
+|CUDA 计算块|prefill 三次，秒|中位 prefill|中位 CUDA 计算|中位 Mac hidden 等待|中位 Mac 后段|
+|---|---|---:|---:|---:|---:|
+|32|10.972 / 10.936 / 11.071|10.972|9.764|0.411|10.290|
+|256|11.275 / 11.281 / 11.266|11.275|9.130|0.703|10.289|
+|512|11.551 / 11.480 / 11.474|11.480|9.077|0.913|10.292|
+|1024|12.096 / 12.089 / 12.061|12.089|9.164|1.505|10.309|
+|256 确认|11.303 / 11.290 / 11.266|11.290|9.192|0.719|10.291|
+
+所有预热与正式轮次均返回同一 8-token ID 序列，SHA-256 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`。各档正式 decode 中位约 55–56 token/s，但只有 8 个输出，不能代替长 decode 验收。32 是本轮最快的完整 prefill；256 比它慢约 2.8%，512 慢约 4.6%，1024 慢约 10.2%。更大块减少 CUDA 纯计算，却增加 Mac 等首批 hidden 的时间；Mac 后段约 10.3 秒几乎不变。CUDA `sendMs` 包含 socket 反压，不等于纯网络传输时间。三项阶段时长重叠，不能直接求和。
+
+本机原始响应仅保存在 `artifacts/dual-host/midchunk-e2e-20261023T2030Z/{32,256,512,1024,256-confirm}.json`，对应 SHA-256 依次为 `e05a1ec5e78bd2b078aa83331689e982367e0d43d21c624bffa3eec138de08b1`、`1fb20715933291d49eb96a38c56513232dd9af500e7bcc6b7970e947d36a3dd5`、`686b41c4d9ccead4d53cefecf749009a441730fb3eed56131a317da2091daf89`、`a0ada66ed09d069cd99309857a3b33b462c678a6b1d6d592443620714a36bd58`、`2743a03e9e77a6bfbe98a4973c3a4dfa2105a6da9a99d3ad025b472cf8241765`。Windows 原生输入/状态文件仅本机可用，不提供为公开下载。试验结束后原 `919259d` Mac LaunchAgents 与 Windows agent 已恢复；coordinator 报告 worker healthy/Ready、agent connected，真实 8192/8 跨机请求 HTTP 200 且输出 ID 哈希保持一致。
+
+此轮不选择 256/512 为默认；默认 1024 是先前用户指定的 CUDA 计算块，并非当前有线 8K 端到端最优。需要继续改流水线发送粒度或 Mac 后段，再在 32K/128K、BF16 与长输出上重测，不能把这个短请求的速度外推为固定目标通过。
