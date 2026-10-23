@@ -197,5 +197,15 @@
       "Offline numerical artifact comparison, not product transfer or throughput",
       "No full logits, greedy, suffix, decode, 128K, or resource gate"
     ]
+  },
+  "restoredServiceSmoke": {
+    "profile": "deployed-affine8-fp32-kv-not-candidate",
+    "status": 200,
+    "inputTokens": 572,
+    "outputTokens": 2,
+    "executionPath": "cuda-metal-split",
+    "isSimulation": false,
+    "clientSecondsApprox": 1.85,
+    "notPerformanceBenchmark": true
   }
 }
