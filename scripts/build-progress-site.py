@@ -4,6 +4,7 @@ import html
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -116,10 +117,14 @@ for n in notes:
         body += '<details><summary>复现入口与前提</summary><p>先按完整报告准备固定模型、输入与数值参考；GPU 测试串行运行，保留已有服务，使用新的运行标识。汇总命令需要历史原始产物；本页面不提供这些大文件。</p><pre><code>' + esc('\n'.join(n['commands'])) + '</code></pre></details>'
     body += '<p>' + source(n['source']) + f' · <a href="{REPO}/issues/1">关联总目标 #1</a></p>'
     if n.get('evidence'):
-        body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
+        public = re.match(r'^site/([A-Za-z0-9._-]+\.json)', n['evidence'])
+        if public:
+            body += f'<p class="note"><a href="{esc(public.group(1))}">公开摘要 JSON</a>；原始日志与提示词仍保留本地。</p>'
+        else:
+            body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
