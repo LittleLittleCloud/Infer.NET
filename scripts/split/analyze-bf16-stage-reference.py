@@ -14,6 +14,7 @@ import numpy as np
 
 LAYER = "language_model.model.layers.0."
 QKV = LAYER + "linear_attn.in_proj_qkv."
+OUTPUT = LAYER + "linear_attn.out_proj."
 EXPERT = LAYER + "mlp.switch_mlp."
 ROUTE_COUNT = 8
 MODEL_REVISION = "e06a74e6236a60c8367e1a3214e83d8b61b637b0"
@@ -74,7 +75,7 @@ def dequant_bf16(packed, scales, biases):
 
 
 def verify_bundle_weights(bundle, tensors, routes):
-    """Check exported QKV and routed expert gate/up bytes against the model."""
+    """Check exported dense and routed expert bytes against the model."""
     with bundle.open("rb") as source:
         if source.read(8) != b"DIPFX001":
             raise ValueError("Unexpected prefix bundle format")
@@ -83,9 +84,11 @@ def verify_bundle_weights(bundle, tensors, routes):
             experts, rows, cols = struct.unpack("<III", source.read(12))
             if matrix_index == 0 and (experts, rows, cols) != (1, 8192, 2048):
                 raise ValueError("Unexpected QKV dimensions in prefix bundle")
+            if matrix_index == 6 and (experts, rows, cols) != (1, 2048, 4096):
+                raise ValueError("Unexpected output projection dimensions in prefix bundle")
             if matrix_index in (8, 9) and (experts, rows, cols) != (256, 512, 2048):
                 raise ValueError("Unexpected expert dimensions in prefix bundle")
-            key = {0: QKV, 8: EXPERT + "gate_proj.",
+            key = {0: QKV, 6: OUTPUT, 8: EXPERT + "gate_proj.",
                    9: EXPERT + "up_proj."}.get(matrix_index)
             for suffix, bytes_per_expert in (("weight", rows * cols),
                                              ("scales", rows * cols // 32),
@@ -93,10 +96,10 @@ def verify_bundle_weights(bundle, tensors, routes):
                 section_start = source.tell()
                 if key:
                     expected = tensors.tensor(key + suffix)
-                    selected = [0] if matrix_index == 0 else routes
+                    selected = [0] if matrix_index in (0, 6) else routes
                     for expert in selected:
                         source.seek(section_start + expert * bytes_per_expert)
-                        model_bytes = expected.tobytes() if matrix_index == 0 else expected[expert].tobytes()
+                        model_bytes = expected.tobytes() if matrix_index in (0, 6) else expected[expert].tobytes()
                         if source.read(bytes_per_expert) != model_bytes:
                             raise ValueError(f"Prefix bundle matrix {matrix_index} expert {expert} {suffix} differs")
                 source.seek(section_start + experts * bytes_per_expert)
@@ -154,6 +157,23 @@ def main():
 
     qkv_metal = stage(args.metal, "metal", "qkv", 8192)
     qkv_cuda = stage(args.cuda, "cuda", "qkv", 8192)
+    output_input_metal = round_bf16(stage(args.metal, "metal", "delta-norm", 4096)).astype(np.float64)
+    output_input_cuda = round_bf16(stage(args.cuda, "cuda", "delta-norm", 4096)).astype(np.float64)
+    output_packed = tensors.tensor(OUTPUT + "weight").view(np.uint8).reshape(2048, 4096)
+    output_scales = bf16_to_f32(tensors.tensor(OUTPUT + "scales"))
+    output_biases = bf16_to_f32(tensors.tensor(OUTPUT + "biases"))
+    output_expected_metal = np.empty(2048, np.float64)
+    output_expected_cuda = np.empty(2048, np.float64)
+    for begin in range(0, 2048, 128):
+        end = begin + 128
+        weights = dequant_bf16(output_packed[begin:end],
+                               output_scales[begin:end], output_biases[begin:end]).astype(np.float64)
+        output_expected_metal[begin:end] = weights @ output_input_metal
+        output_expected_cuda[begin:end] = weights @ output_input_cuda
+    output_metal = stage(args.metal, "metal", "output-projection", 2048)
+    output_cuda = stage(args.cuda, "cuda", "output-projection", 2048)
+    output_observed_delta = output_metal.astype(np.float64) - output_cuda.astype(np.float64)
+    output_predicted_delta = output_expected_metal - output_expected_cuda
     router_metal = stage(args.metal, "metal", "router", 256)
     router_cuda = stage(args.cuda, "cuda", "router", 256)
     routes_metal = np.argsort(-router_metal, kind="stable")[:ROUTE_COUNT]
@@ -194,13 +214,20 @@ def main():
         "kind": "isolated-token-zero-layer-zero-bf16-cpu-reference",
         "modelQuantization": "affine8/group64",
         "modelRevision": MODEL_REVISION,
-        "bundleQkvAndSelectedExpertsMatchModel": bool(args.bundle),
+        "bundleDenseAndSelectedExpertsMatchModel": bool(args.bundle),
         "qkv": {
             "inputBitIdentical": True,
             "fusedVsSeparateBf16WeightOperandDifferences": qkv_weight_round_differences,
             "metalVsReference": difference(qkv_metal, qkv_reference),
             "cudaVsReference": difference(qkv_cuda, qkv_reference),
             "metalVsCuda": difference(qkv_metal, qkv_cuda)},
+        "outputProjection": {
+            "bf16InputOperandDifferences": int(np.count_nonzero(output_input_metal != output_input_cuda)),
+            "metalVsOwnInputReference": difference(output_metal, output_expected_metal),
+            "cudaVsOwnInputReference": difference(output_cuda, output_expected_cuda),
+            "predictedInputDrift": difference(output_expected_metal, output_expected_cuda),
+            "observedDrift": difference(output_metal, output_cuda),
+            "unexplainedDrift": difference(output_observed_delta, output_predicted_delta)},
         "expertGate": {
             "routes": routes,
             "bf16InputOperandDifferences": int(np.count_nonzero(input_metal != input_cuda)),
