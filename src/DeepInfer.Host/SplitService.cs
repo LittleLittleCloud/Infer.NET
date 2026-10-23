@@ -120,7 +120,7 @@ public static class SplitService
             var error = RequestValidation.Error(input);
             if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal" || input.MaxTokens > 256)
             { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens 1..256 is supported."); return; }
-            if (!warmed) { await Fail(context, 503, "not_ready", state); return; }
+            if (!warmed || (state != "Busy" && !Status().Ready)) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
             var acquired = false;
@@ -220,17 +220,18 @@ public static class SplitService
                 while (!life.IsCancellationRequested)
                 {
                     var client = await listener.AcceptTcpClientAsync(life.Token); client.NoDelay = true;
+                    SslStream? tls = null;
                     try
                     {
                         using var handshake = CancellationTokenSource.CreateLinkedTokenSource(life.Token); handshake.CancelAfter(TimeSpan.FromSeconds(15));
-                        var tls = await SplitTls.Authenticate(client.GetStream(), certificate, o.Get("tls-peer-sha256", ""), true, handshake.Token);
+                        tls = await SplitTls.Authenticate(client.GetStream(), certificate, o.Get("tls-peer-sha256", ""), true, handshake.Token);
                         var wire = await SplitWire.ConnectAsync(tls, token, true, Guid.Empty, handshake.Token, 4);
                         var peer = new Peer(client, tls, wire);
                         if (peers.Reader.TryPeek(out var stale) && !stale.Connected && peers.Reader.TryRead(out stale)) stale.Dispose();
                         try { await peers.Writer.WriteAsync(peer, life.Token); } catch { peer.Dispose(); throw; }
                     }
                     catch (Exception ex) when (ex is IOException or System.Security.Authentication.AuthenticationException or OperationCanceledException)
-                    { client.Dispose(); if (life.IsCancellationRequested) break; Console.Error.WriteLine("Rejected data connection: " + ex.GetType().Name); }
+                    { tls?.Dispose(); client.Dispose(); if (life.IsCancellationRequested) break; Console.Error.WriteLine("Rejected data connection: " + ex.GetType().Name); }
                 }
             }
             catch (OperationCanceledException) when (life.IsCancellationRequested) { }

@@ -49,7 +49,11 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
         int[] fields=[sent++,f.Kind,f.Layer,f.Tensor,f.Position,f.Count,f.Data.Length];for(var i=0;i<fields.Length;i++)Write(header,24+i*4,fields[i]);
         Encoding.ASCII.GetBytes(Revision,header.AsSpan(52));
         using var mac=IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256,key);mac.AppendData(header);mac.AppendData(f.Data);var tag=mac.GetHashAndReset();
-        await stream.WriteAsync(header,ct);await stream.WriteAsync(f.Data,ct);await stream.WriteAsync(tag,ct);
+        await stream.WriteAsync(header,ct);
+        // End has no payload. Do not emit an empty TLS application-data record:
+        // Schannel and Apple TLS do not consistently interoperate on empty writes.
+        if (f.Data.Length != 0) await stream.WriteAsync(f.Data,ct);
+        await stream.WriteAsync(tag,ct);
     }
     public async Task<Frame> ReceiveAsync(CancellationToken ct)
     {

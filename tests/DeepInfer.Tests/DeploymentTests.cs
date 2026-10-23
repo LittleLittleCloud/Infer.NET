@@ -16,6 +16,22 @@ public sealed class DeploymentTests
         return X509CertificateLoader.LoadPkcs12(cert.Export(X509ContentType.Pkcs12), null, OperatingSystem.IsWindows() ? X509KeyStorageFlags.MachineKeySet : X509KeyStorageFlags.DefaultKeySet);
     }
     private static string Pin(X509Certificate2 cert) => Convert.ToHexString(SHA256.HashData(cert.RawData));
+    private sealed class NonemptyWrites : MemoryStream
+    {
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken ct = default)
+        {
+            Assert.False(buffer.IsEmpty);
+            return base.WriteAsync(buffer, ct);
+        }
+    }
+    [Fact]
+    public async Task EndFrameDoesNotEmitEmptyTransportWrites()
+    {
+        using var stream = new NonemptyWrites();
+        var wire = new SplitWire(stream, new byte[32], Guid.NewGuid(), 4);
+        await wire.SendAsync(new(SplitWire.End, 20, 0, 1, 0, []), CancellationToken.None);
+        Assert.Equal(124, stream.Length);
+    }
     [Fact]
     public async Task MutualTlsCarriesAuthenticatedFrames()
     {
