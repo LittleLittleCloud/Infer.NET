@@ -16,7 +16,7 @@ def show_result(directory):
     print(f'\n输入 {result["PromptTokens"]} tokens · 输出 {count} tokens（当前按指定数量生成，可能截断）',flush=True)
     print(f'状态交接就绪 {result["DecodeReadyMs"]/1000:.2f}s · 推理总耗时 {result["ElapsedMs"]/1000:.2f}s（不含模型加载）',flush=True)
     if decode_seconds>0:
-        print(f'生成阶段 {decode_seconds:.2f}s · {count/decode_seconds:.2f} tokens/s（含主机开销，非正式基准）',flush=True)
+        print(f'生成阶段 {decode_seconds:.2f}s · {max(0,count-1)/decode_seconds:.2f} tokens/s（N−1 间隔，含主机开销，非正式基准）',flush=True)
     if result['VerificationEnabled']:
         print('数值验证：'+('通过' if result['Verified'] else '未通过'),flush=True)
     else:
