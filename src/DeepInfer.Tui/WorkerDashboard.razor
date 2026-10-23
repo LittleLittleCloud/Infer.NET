@@ -1,0 +1,75 @@
+@namespace DeepInfer.Tui
+@using DeepInfer.Core
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using RazorConsole.Components
+@using Spectre.Console
+
+<Rows>
+    <PlainText Content="@($"Workers · {Workers.Count(w => w.Healthy)} live / {Workers.Length} known · heartbeat samples, refresh every 2s")" />
+    @if (Stale)
+    {
+        <PlainText Content="Coordinator unavailable · last snapshot is stale" Foreground="Color.Yellow" />
+    }
+    @if (Workers.Length == 0)
+    {
+        <PlainText Content="No registered workers yet. Start a serve and its agent." />
+    }
+    else
+    {
+        <div @onwheel="Scroll">
+            <Rows>
+                @foreach (var w in Visible())
+                {
+                    <TextButton @key="w.Registration.WorkerId" Content="@Spectre.Console.Markup.Escape(Row(w))" OnClick="() => selected = w.Registration.WorkerId" />
+                }
+            </Rows>
+        </div>
+        <Columns>
+            <TextButton Content="Previous workers" OnClick="() => Move(-1)" />
+            <TextButton Content="Next workers" OnClick="() => Move(1)" />
+        </Columns>
+        @if (Current() is { } worker)
+        {
+            <PlainText Content="@Details(worker)" />
+        }
+    }
+</Rows>
+@code {
+    [Parameter] public WorkerSnapshot[] Workers { get; set; } = [];
+    [Parameter] public bool Stale { get; set; }
+    private string? selected;
+    private int offset;
+    private int PageSize { get { try { return Math.Clamp(Console.WindowHeight - 18, 1, 8); } catch (IOException) { return 5; } } }
+    private WorkerSnapshot[] Visible() { offset = Math.Clamp(offset, 0, Math.Max(0, Workers.Length - PageSize)); return Workers.Skip(offset).Take(PageSize).ToArray(); }
+    private WorkerSnapshot? Current() => Workers.FirstOrDefault(w => w.Registration.WorkerId == selected) ?? Workers.FirstOrDefault();
+    private void Move(int direction) => offset = Math.Clamp(offset + direction * PageSize, 0, Math.Max(0, Workers.Length - PageSize));
+    private void Scroll(WheelEventArgs e) => Move(e.DeltaY < 0 ? -1 : 1);
+    private static string Clean(string text) => string.Concat(text.EnumerateRunes().Select(r => System.Text.Rune.IsControl(r) ? " " : r.ToString()));
+    private string Row(WorkerSnapshot w)
+    {
+        var t = w.Registration.Telemetry;
+        var state = Stale ? "STALE" : !w.Healthy ? "OFFLINE" : t?.State ?? "Live (state unreported)";
+        return Clean($"{(Current()?.Registration.WorkerId == w.Registration.WorkerId ? "›" : " ")} {w.Registration.WorkerId}  ·  {state}  ·  heartbeat {Math.Max(0,(DateTimeOffset.UtcNow-w.LastSeenUtc).TotalSeconds):F0}s ago");
+    }
+    private static string GiB(long bytes) => $"{bytes / 1073741824d:F2} GiB";
+    private static string Details(WorkerSnapshot w)
+    {
+        var r = w.Registration; var t = r.Telemetry; var m = t?.LastRequest;
+        var devices = string.Join(" + ", r.Devices.Select(d => $"{d.Name} ({d.Architecture})"));
+        var lines = new List<string> { $"Devices  {devices}", $"Models   {string.Join(", ", r.Models.Select(m => m.Id + (m.IsSimulation ? " [SIMULATION]" : "")))}" };
+        if (t == null) { lines.Add("Telemetry not reported by this worker · performance unavailable"); return CleanLines(lines); }
+        lines.Add($"State    {t.State} · queue {t.QueueDepth}/{t.QueueCapacity} · completed {t.CompletedRequests} · PID {t.Pid}");
+        lines.Add($"Agent    {(t.AgentConnected is { } connected ? connected ? "connected (attached, not a separate registered worker)" : "disconnected / reconnecting" : "not reported")}");
+        lines.Add($"Capacity {t.WeightBits?.ToString() ?? "?"}bit · KV {t.Kv ?? "?"} · model window {t.MaxContextTokens?.ToString() ?? "?"} · max output {t.MaxOutputTokens?.ToString() ?? "?"}");
+        if (m != null)
+        {
+            lines.Add($"Last completed request  {m.InputTokens} in / {m.OutputTokens} out · {m.CompletedAt.ToLocalTime():HH:mm:ss}");
+            lines.Add($"Pipeline prefill {m.PrefillMs:F1} ms · decode {m.DecodeTokensPerSecond:F1} tok/s · request {m.ComputeMs / 1000:F2}s");
+            lines.Add($"Last Metal allocation {GiB(m.MetalAllocatedBytes)} · KV {GiB(m.KvCacheBytes)} · GPU utilization not reported");
+        }
+        else lines.Add("No completed request yet · performance and allocation not sampled");
+        return CleanLines(lines);
+    }
+    private static string CleanLines(IEnumerable<string> lines) => string.Join("\n", lines.Select(Clean));
+}

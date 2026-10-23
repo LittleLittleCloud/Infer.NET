@@ -26,7 +26,15 @@ try
     using var client = new ClusterClient(endpoint, token);
     using IChatClient chat = new InferChatClient(endpoint, token);
     var host = Host.CreateDefaultBuilder()
-        .ConfigureServices(services => services.AddSingleton(client).AddSingleton(chat))
+        .ConfigureServices(services => {
+            services.AddSingleton(client).AddSingleton(chat);
+            services.Configure<ConsoleAppOptions>(options => {
+                options.RenderingPipeline = RazorConsoleRenderingPipeline.WidgetLayout;
+                options.EnableTerminalResizing = true;
+                options.ConsoleLiveDisplayOptions.EnableMouseEvents = true;
+                options.ConsoleLiveDisplayOptions.UseAlternateScreenBuffer = true;
+            });
+        })
         .UseRazorConsole<Dashboard>().Build();
     await host.RunAsync();
     return 0;

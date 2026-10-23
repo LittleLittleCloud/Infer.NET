@@ -33,6 +33,7 @@ public sealed class MetalSplitSession : IDisposable
     public long Submissions => device.Submissions;
     public (int Capacity, long KvBytes, long AllocatedBytes) Stats() => graph.Stats();
     public void Reset(int capacity) { graph.Reset(); graph.Reserve(capacity); }
+    public void EnsureCapacity(int tokens) { if (tokens > graph.Stats().Capacity) graph.Grow(tokens); }
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null) => graph.Suffix(tokens, hidden, final, logits);
     public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
@@ -57,7 +58,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2)
     {
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=2) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        if(CudaPrefixNative.AbiVersion()!=3) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
@@ -72,6 +73,13 @@ public sealed unsafe class CudaPrefixSession : IDisposable
         fixed (int* t = tokens) fixed (float* y = output) fixed (float* r = trace) fixed (byte* e = error)
             if (CudaPrefixNative.Run(handle, t, tokens.Length, position, y, r, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
         return output;
+    }
+    public void Reserve(int capacity)
+    {
+        ObjectDisposedException.ThrowIf(handle == 0, this);
+        var error = new byte[2048];
+        fixed (byte* e = error)
+            if (CudaPrefixNative.Reserve(handle, capacity, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
     }
     public void Reset()
     {
@@ -91,7 +99,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public static int StateBytes(int layer, int tensor, int position, int kvBytes = 2)
     {
         if (kvBytes is not (2 or 4)) throw new ArgumentException("Invalid KV width.");
-        if (layer is < 0 or >= 20 || tensor is < 0 or > 1 || position is < 1 or > 2048) throw new ArgumentException("Invalid state descriptor.");
+        if (layer is < 0 or >= 20 || tensor is < 0 or > 1 || position is < 1 or > DeepInfer.Core.Protocol.Qwen36Context) throw new ArgumentException("Invalid state descriptor.");
         return (layer+1)%4 == 0 ? position*512*kvBytes : tensor == 0 ? 32*128*128*4 : 3*8192*4;
     }
     public void Dispose() { if(handle != 0) CudaPrefixNative.Destroy(handle); handle = 0; }
@@ -104,6 +112,8 @@ internal static unsafe partial class CudaPrefixNative
     internal static partial nint Create(string path,int capacity,int kvBytes,byte* error,int errorCapacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_destroy")]
     internal static partial void Destroy(nint graph);
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_reserve")]
+    internal static partial int Reserve(nint graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_reset")]
     internal static partial int Reset(nint graph, byte* error, int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_run")]

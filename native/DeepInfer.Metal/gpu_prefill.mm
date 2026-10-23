@@ -663,17 +663,18 @@ extern "C" int di_graph_prepare_prefill(void *graph,char *error,int capacity){
 
 // Only called between requests, after reset. Grow per layer so the previous
 // full KV allocation need not coexist with the new full allocation.
-extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity) {
+static int g_reserve(void *graph,int tokens,char *error,int capacity,bool preserve) {
  @autoreleasepool {
  if(!graph||tokens<1||tokens>262144){error_text(error,capacity,@"Context must be 1..262144 tokens; no RoPE scaling is implemented");return -1;}
  auto *g=static_cast<GModel*>(graph);
- if(g->position){error_text(error,capacity,@"Reset graph before reserving context");return -1;}
+ if(g->position&&!preserve){error_text(error,capacity,@"Reset graph before reserving context");return -1;}
  if((uint32_t)tokens<=g->capacity)return 0;
  // Reserve a bounded 2K page, not the next power of two: 128K + decode must not allocate 256K.
  uint32_t target=((uint32_t(tokens)+2047)/2048)*2048;
  for(auto &l:g->layers)if(l.loaded&&!l.linear){
   auto k=g_kv_buffer(g,NSUInteger(target)*512),v=g_kv_buffer(g,NSUInteger(target)*512);
   if(!k||!v){error_text(error,capacity,@"Cannot allocate KV cache for requested context");return -1;}
+  if(preserve&&g->position){NSUInteger bytes=NSUInteger(g->position)*512*(g->kvBf16?2:4);memcpy(k.contents,l.keys.contents,bytes);memcpy(v.contents,l.values.contents,bytes);}
   l.keys=k;l.values=v;
  }
  auto scores=g_buffer(g,NSUInteger(16)*target);
@@ -684,6 +685,8 @@ extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity)
  g->scores=scores;if(legacy){g->prefill->scores=pscores;g->prefill->scoreCapacity=target;}g->attentionParts=parts;g->capacity=target;return 0;
  }
 }
+extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,false);}
+extern "C" int di_graph_grow(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,true);}
 extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64_t *allocatedBytes) {
  if(!graph||!capacity||!kvBytes||!allocatedBytes)return -1;
  auto *g=static_cast<GModel*>(graph);*capacity=g->capacity;*kvBytes=uint64_t(g->capacity)*(g->kvBf16?20480:40960);

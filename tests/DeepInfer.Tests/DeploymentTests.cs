@@ -83,7 +83,7 @@ public sealed class DeploymentTests
         using var queue = new InferenceQueue(1);
         using var running = await queue.Enter(CancellationToken.None); Assert.NotNull(running);
         using var cancel = new CancellationTokenSource(); var waiting = queue.Enter(cancel.Token);
-        Assert.Null(await queue.Enter(CancellationToken.None)); cancel.Cancel();
+        Assert.Null(await queue.Enter(CancellationToken.None)); Assert.Equal(1,queue.WaitingCount); Assert.Equal(1,queue.WaitingCapacity); cancel.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => waiting);
         var replacement = queue.Enter(CancellationToken.None); Assert.False(replacement.IsCompleted);
         running.Dispose(); using var next = await replacement; Assert.NotNull(next);

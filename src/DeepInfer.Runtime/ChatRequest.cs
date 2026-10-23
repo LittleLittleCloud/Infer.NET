@@ -63,9 +63,9 @@ public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool I
         }
         if (root.TryGetProperty("max_tokens", out _) && root.TryGetProperty("max_completion_tokens", out _)) throw new ArgumentException("Specify only one output token limit.");
         if (format == ChatFormat.Messages && !root.TryGetProperty("max_tokens", out _)) throw new ArgumentException("max_tokens is required.");
-        var max = Number(format == ChatFormat.Responses ? "max_output_tokens" : "max_completion_tokens", Number("max_tokens", 128));
-        if (max is < 1 or > 256) throw new ArgumentException("Output token limit must be 1..256.");
-        var request = new InferenceRequest("", max, model, "metal", Messages: turns.ToArray());
+        var max = Number(format == ChatFormat.Responses ? "max_output_tokens" : "max_completion_tokens", Number("max_tokens", Protocol.MaxTokens));
+        if (max is < 1 or > Protocol.MaxTokens) throw new ArgumentException($"Output token limit must be 1..{Protocol.MaxTokens}.");
+        var request = new InferenceRequest("", max, model, "metal", Messages: turns.ToArray(), UseRemainingContext: !root.TryGetProperty("max_tokens", out _) && !root.TryGetProperty("max_completion_tokens", out _) && !root.TryGetProperty("max_output_tokens", out _));
         if (RequestValidation.Error(request) is { } error) throw new ArgumentException(error);
         var stream = Boolean("stream"); var usage = false;
         if (root.TryGetProperty("stream_options", out var opts))

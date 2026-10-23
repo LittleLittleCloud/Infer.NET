@@ -1,5 +1,6 @@
 // Original resident Qwen3.6 affine8 prefix executor. Correctness-first, serial-token
 // CUDA kernels; this is NOT the tensor-core batched prefill performance path.
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -10,7 +11,7 @@
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 2; }
+API int di_cuda_prefix_abi_version() { return 3; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
@@ -192,9 +193,9 @@ __global__ void scores(const float *q, const KV *k, float *s, int pos, int capac
         s[h * capacity + t] = v / 16.f;
 }
 template <class KV>
-__global__ void attend(const float *s, const KV *v, const float *raw, float *out, int pos,
+__global__ void attend(float *s, const KV *v, const float *raw, float *out, int pos,
                        int capacity) {
-    __shared__ float prob[2048];
+    float *prob = s + blockIdx.x * capacity;
     __shared__ float parts[8];
     int h = blockIdx.x, t = threadIdx.x;
     float best = -INFINITY;
@@ -308,8 +309,8 @@ static void err(char *error, int cap, const std::exception &e) {
 API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, char *error, int cap) {
     Model *g = nullptr;
     try {
-        if ((kvBytes != 2 && kvBytes != 4) || capacity < 1 || capacity > 2048)
-            throw std::runtime_error("Initial CUDA prefix supports 1..2048 tokens");
+        if ((kvBytes != 2 && kvBytes != 4) || capacity < 1 || capacity > 262144)
+            throw std::runtime_error("CUDA prefix capacity exceeds the pinned 262144-token model window");
         cudaDeviceProp prop;
         ck(cudaGetDeviceProperties(&prop, 0));
         if (prop.major != 8 || prop.minor != 9)
@@ -423,6 +424,30 @@ API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, cha
     }
 }
 API void di_cuda_prefix_destroy(void *ptr) { delete static_cast<Model *>(ptr); }
+// Grow only between requests; model weights remain resident. Allocate transactionally.
+API int di_cuda_prefix_reserve(void *ptr, int capacity, char *error, int cap) {
+    std::vector<void *> allocated;
+    try {
+        auto *g = static_cast<Model *>(ptr);
+        if (!g || capacity < 1 || capacity > 262144 || g->position != 0)
+            throw std::runtime_error("Reset CUDA session before reserving 1..262144 tokens");
+        if (capacity <= g->capacity) return 0;
+        capacity = ((capacity + 2047) / 2048) * 2048;
+        ck(cudaDeviceSynchronize());
+        for (int i=0; i<11; ++i) {
+            void *p=nullptr; size_t bytes=i==10?size_t(16)*capacity*4:size_t(capacity)*512*(g->kvBf16?2:4);
+            ck(cudaMalloc(&p,bytes)); allocated.push_back(p); ck(cudaMemset(p,0,bytes));
+        }
+        int at=0;
+        auto replace=[&](void *old,void *next){ auto found=std::find(g->memory.begin(),g->memory.end(),old); if(found!=g->memory.end()) *found=next; cudaFree(old); };
+        for(int l=3;l<20;l+=4) {
+            replace(g->layers[l].keys,allocated[at]); g->layers[l].keys=allocated[at++];
+            replace(g->layers[l].values,allocated[at]); g->layers[l].values=allocated[at++];
+        }
+        replace(g->scores,allocated[10]); g->scores=static_cast<float *>(allocated[10]); g->capacity=capacity;
+        allocated.clear(); return 0;
+    } catch (const std::exception &e) { for(auto p:allocated) cudaFree(p); err(error,cap,e); return -1; }
+}
 API int di_cuda_prefix_reset(void *ptr, char *error, int cap) {
     try {
         auto *g = static_cast<Model *>(ptr);
@@ -616,4 +641,25 @@ API int di_cuda_prefix_selftest(double *errors, char *error, int cap) {
         err(error, cap, e);
         return -1;
     }
+}
+// Analytic long attention test; no model weights. Exercises positions beyond the old 2K boundary.
+API int di_cuda_prefix_attention_test(int length, int kvBytes, double *maxError, char *error, int cap) {
+    try {
+        if(length<1||length>16384||(kvBytes!=2&&kvBytes!=4)) throw std::runtime_error("Invalid attention check geometry");
+        Model g; std::vector<float> score(16*length), values(length*512), raw(8192,0), result(4096);
+        for(int h=0;h<16;h++)for(int i=0;i<length;i++)score[h*length+i]=float((i*7+h*3)%37-18)/8;
+        for(size_t i=0;i<values.size();i++)values[i]=float(int(i%29)-14)/16;
+        auto *ds=g.alloc<float>(score.size()),*dv=g.alloc<float>(values.size()),*dr=g.alloc<float>(raw.size()),*out=g.alloc<float>(4096);
+        ck(cudaMemcpy(ds,score.data(),score.size()*4,cudaMemcpyHostToDevice));ck(cudaMemcpy(dr,raw.data(),raw.size()*4,cudaMemcpyHostToDevice));
+        if(kvBytes==4){ck(cudaMemcpy(dv,values.data(),values.size()*4,cudaMemcpyHostToDevice));attend<<<16,256>>>(ds,dv,dr,out,length-1,length);}
+        else {std::vector<__nv_bfloat16> v(values.size());for(size_t i=0;i<v.size();i++)v[i]=__float2bfloat16(values[i]);ck(cudaMemcpy(dv,v.data(),v.size()*2,cudaMemcpyHostToDevice));attend<<<16,256>>>(ds,(__nv_bfloat16*)dv,dr,out,length-1,length);}
+        ck(cudaMemcpy(result.data(),out,4096*4,cudaMemcpyDeviceToHost));*maxError=0;
+        for(int h=0;h<16;h++){
+            double best=-INFINITY,total=0;for(int i=0;i<length;i++)best=std::max(best,double(score[h*length+i]));
+            std::vector<double> p(length);for(int i=0;i<length;i++){p[i]=std::exp(double(score[h*length+i])-best);total+=p[i];}
+            for(int d=0;d<256;d++){double expected=0;for(int i=0;i<length;i++)expected+=p[i]*values[i*512+(h/8)*256+d];expected*=.5/total;
+                *maxError=std::max(*maxError,std::abs(expected-result[h*256+d]));}
+        }
+        return 0;
+    } catch(const std::exception &e){err(error,cap,e);return -1;}
 }

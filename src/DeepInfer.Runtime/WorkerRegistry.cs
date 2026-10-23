@@ -40,7 +40,7 @@ public sealed class WorkerRegistry(TimeProvider? timeProvider = null, TimeSpan? 
     {
         lock (gate)
         {
-            var eligible = Snapshot().Workers.Where(x => x.Healthy &&
+            var eligible = Snapshot().Workers.Where(x => x.Healthy && x.Registration.Telemetry?.AcceptingRequests != false &&
                 x.Registration.Devices.Any(d => d.SupportsInference && d.Backend == request.Backend) &&
                 x.Registration.Models.Any(m => m.Id == request.Model && (request.Messages == null || m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)))).ToArray();
             if (eligible.Length == 0) return null;

@@ -45,6 +45,8 @@ public sealed class InferenceQueue(int waitingCapacity) : IDisposable
     private readonly SemaphoreSlim admitted = new(checked(waitingCapacity + 1));
     private readonly SemaphoreSlim execution = new(1);
     public bool Busy => execution.CurrentCount == 0;
+    public int WaitingCapacity => waitingCapacity;
+    public int WaitingCount => Math.Max(0, waitingCapacity + 1 - admitted.CurrentCount - (Busy ? 1 : 0));
     public async Task<IDisposable?> Enter(CancellationToken ct)
     {
         if (!await admitted.WaitAsync(0, ct)) return null;

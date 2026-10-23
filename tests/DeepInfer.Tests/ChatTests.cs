@@ -25,7 +25,7 @@ public sealed class ChatTests
     [InlineData("\"tools\":[]")]
     [InlineData("\"temperature\":0.7")]
     [InlineData("\"n\":2")]
-    [InlineData("\"max_tokens\":257")]
+    [InlineData("\"max_tokens\":262145")]
     [InlineData("\"stream\":\"true\"")]
     [InlineData("\"stop\":\"END\"")]
     [InlineData("\"model\":\"duplicate\"")]
@@ -37,6 +37,25 @@ public sealed class ChatTests
     [InlineData("[{\"role\":\"user\",\"content\":[{\"type\":\"image_url\",\"image_url\":{\"url\":\"https://example.com/image.png\"}}]}]")]
     public void RejectsInvalidHistory(string history)
     { Assert.Throws<ArgumentException>(() => Parse("{\"model\":\"qwen3.6-35b-a3b\",\"messages\":" + history + "}")); }
+    [Fact] public void AutoUsesRemainingWindowAndExplicitOutputCanExceed256()
+    {
+        var auto = Parse("""{"model":"qwen3.6-35b-a3b","messages":[{"role":"user","content":"hi"}]}""");
+        Assert.True(auto.Inference.UseRemainingContext);
+        var explicitLimit = Parse("""{"model":"qwen3.6-35b-a3b","messages":[{"role":"user","content":"hi"}],"max_tokens":4096}""");
+        Assert.False(explicitLimit.Inference.UseRemainingContext); Assert.Equal(4096, explicitLimit.Inference.MaxTokens);
+    }
+    [Fact] public void TelemetryDoesNotRouteToLoadingWorkers()
+    {
+        var registry = new WorkerRegistry();
+        var r = new WorkerRegistration(1,"w","http://localhost:5201",[new("m","metal","m","m",null,true,true,"")],[new(Protocol.Qwen36Model,"test-chat-v1",false)],1,
+            new(DateTimeOffset.UtcNow,"Warming",false,false,0,2,0,1,"build"));
+        registry.Register(r,false);
+        Assert.Single(registry.Snapshot().Workers); Assert.Null(registry.Select(new("hi",1,Protocol.Qwen36Model,"metal")));
+        registry.Register(r with { Telemetry = r.Telemetry! with { State="Ready", AcceptingRequests=true } },false);
+        Assert.NotNull(registry.Select(new("hi",1,Protocol.Qwen36Model,"metal")));
+        var json=JsonSerializer.Serialize(registry.Snapshot(), RpcJson.Default.ClusterSnapshot);
+        Assert.Equal("Ready",JsonSerializer.Deserialize(json,RpcJson.Default.ClusterSnapshot)!.Workers[0].Registration.Telemetry!.State);
+    }
     [Fact] public void NeverRoutesStructuredChatToOldWorker()
     {
         var registry = new WorkerRegistry();

@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 namespace DeepInfer.Runtime;
 
-// Version 2 fixes geometry, dtype, little-endian layouts and model revision.
+// Version 3 permits the pinned model window; old 2K peers fail authentication.
 // Frames authenticate both metadata and payload; nonce-derived keys prevent replay.
 // Trusted LAN transport: authenticated/integrity-protected, NOT encrypted.
 public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvBytes = 2)
@@ -21,7 +21,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
         var secret=Encoding.UTF8.GetBytes(token); var a=new byte[32]; var b=new byte[32]; var id=new byte[16];
         if(server){RandomNumberGenerator.Fill(a);await stream.WriteAsync(a,ct);await stream.ReadExactlyAsync(b,ct);await stream.ReadExactlyAsync(id,ct);request=new Guid(id);}
         else {await stream.ReadExactlyAsync(a,ct);RandomNumberGenerator.Fill(b);id=request.ToByteArray();await stream.WriteAsync(b,ct);await stream.WriteAsync(id,ct);}
-        var challenge=a.Concat(b).Concat(id).Concat(Encoding.ASCII.GetBytes("Infer.NET/split/v2/kv"+kvBytes+"/"+Revision)).ToArray();
+        var challenge=a.Concat(b).Concat(id).Concat(Encoding.ASCII.GetBytes("Infer.NET/split/v3/kv"+kvBytes+"/"+Revision)).ToArray();
         var key=HMACSHA256.HashData(secret,challenge); var clientTag=HMACSHA256.HashData(key,"client"u8); var serverTag=HMACSHA256.HashData(key,"server"u8);
         var actual=new byte[32];
         if(server){await stream.ReadExactlyAsync(actual,ct);if(!CryptographicOperations.FixedTimeEquals(actual,clientTag))throw new InvalidDataException("Split authentication failed.");await stream.WriteAsync(serverTag,ct);}
@@ -29,15 +29,17 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
         return new(stream,key,request,kvBytes);
     }
     public static void Validate(Frame f, int kvBytes = 2)
+        => ValidateDescriptor(f.Kind, f.Layer, f.Tensor, f.Position, f.Count, f.Data.Length, kvBytes);
+    private static void ValidateDescriptor(int kind, int layer, int tensor, int position, int count, int size, int kvBytes)
     {
         if(kvBytes is not (2 or 4)) throw new InvalidDataException("Unsupported KV profile.");
-        var valid=f.Kind switch
+        var valid=kind switch
         {
-            Start => f.Layer==20 && f.Tensor is 0 or 1 && f.Position==0 && f.Count is >=1 and <=2048 && f.Data.Length==f.Count*4,
-            Hidden => f.Layer==20 && f.Tensor==0 && f.Position>=0 && f.Count is >=1 and <=32 && f.Position+f.Count<=2048 && f.Data.Length==f.Count*2048*4,
-            Trace => f.Layer==0 && f.Tensor==0 && f.Position>=0 && f.Count is >=1 and <=32 && f.Position+f.Count<=2048 && f.Data.Length==f.Count*20*2048*4,
-            State => f.Layer is >=0 and <20 && f.Tensor is 0 or 1 && f.Position is >=1 and <=2048 && f.Count==1 && f.Data.Length==((f.Layer+1)%4==0?f.Position*512*kvBytes:f.Tensor==0?32*128*128*4:3*8192*4),
-            End => f.Layer==20 && f.Tensor==0 && f.Position is >=1 and <=2048 && f.Count==0 && f.Data.Length==0,
+            Start => layer==20 && tensor is 0 or 1 && position==0 && count is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && size==count*4,
+            Hidden => layer==20 && tensor==0 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*2048*4,
+            Trace => layer==0 && tensor==0 && position>=0 && count is >=1 and <=32 && position<=DeepInfer.Core.Protocol.Qwen36Context-count && size==count*20*2048*4,
+            State => layer is >=0 and <20 && tensor is 0 or 1 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==1 && size==((layer+1)%4==0?position*512*kvBytes:tensor==0?32*128*128*4:3*8192*4),
+            End => layer==20 && tensor==0 && position is >=1 and <=DeepInfer.Core.Protocol.Qwen36Context && count==0 && size==0,
             _ => false
         };
         if(!valid)throw new InvalidDataException("Invalid split tensor descriptor/shape/layout.");
@@ -45,7 +47,7 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
     public async Task SendAsync(Frame f,CancellationToken ct)
     {
         Validate(f,kvBytes); var header=new byte[92];
-        Write(header,0,0x53504944);Write(header,4,2);request.TryWriteBytes(header.AsSpan(8,16));
+        Write(header,0,0x53504944);Write(header,4,3);request.TryWriteBytes(header.AsSpan(8,16));
         int[] fields=[sent++,f.Kind,f.Layer,f.Tensor,f.Position,f.Count,f.Data.Length];for(var i=0;i<fields.Length;i++)Write(header,24+i*4,fields[i]);
         Encoding.ASCII.GetBytes(Revision,header.AsSpan(52));
         using var mac=IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256,key);mac.AppendData(header);mac.AppendData(f.Data);var tag=mac.GetHashAndReset();
@@ -58,8 +60,9 @@ public sealed class SplitWire(Stream stream, byte[] key, Guid request, int kvByt
     public async Task<Frame> ReceiveAsync(CancellationToken ct)
     {
         var h=new byte[92];await stream.ReadExactlyAsync(h,ct);
-        if(Read(h,0)!=0x53504944||Read(h,4)!=2||new Guid(h.AsSpan(8,16))!=request||Read(h,24)!=received++||Encoding.ASCII.GetString(h,52,40)!=Revision)throw new InvalidDataException("Split protocol/request/sequence/revision mismatch.");
-        var size=Read(h,48);if(size is <0 or >32*20*2048*4)throw new InvalidDataException("Split frame exceeds bounded allocation.");
+        if(Read(h,0)!=0x53504944||Read(h,4)!=3||new Guid(h.AsSpan(8,16))!=request||Read(h,24)!=received++||Encoding.ASCII.GetString(h,52,40)!=Revision)throw new InvalidDataException("Split protocol/request/sequence/revision mismatch.");
+        var size=Read(h,48);if(size is <0 or >DeepInfer.Core.Protocol.Qwen36Context*512*4)throw new InvalidDataException("Split frame exceeds bounded allocation.");
+        ValidateDescriptor(Read(h,28),Read(h,32),Read(h,36),Read(h,40),Read(h,44),size,kvBytes);
         var data=new byte[size];var tag=new byte[32];await stream.ReadExactlyAsync(data,ct);await stream.ReadExactlyAsync(tag,ct);
         using var mac=IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256,key);mac.AppendData(h);mac.AppendData(data);
         if(!CryptographicOperations.FixedTimeEquals(mac.GetHashAndReset(),tag))throw new InvalidDataException("Split frame integrity check failed.");

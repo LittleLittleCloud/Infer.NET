@@ -120,23 +120,51 @@ try:
      terminal.feed(data)
     except pexpect.TIMEOUT:pass
   try:
-   pump(3);before='\n'.join(screen.display);(root/'artifacts/chat/tui-before.txt').write_text(before)
-   check('Chat playground' in before and 'Ready' in before,'TUI connected')
-   child.send('\r');pump(3);after='\n'.join(screen.display);(root/'artifacts/chat/tui-after.txt').write_text(after)
+   def view():return '\n'.join(screen.display)
+   def click(label):
+    for y,line in enumerate(screen.display):
+     if label in line:
+      x=line.index(label)+max(1,len(label)//2)+1
+      child.send(f'\x1b[<0;{x};{y+1}M\x1b[<0;{x};{y+1}m');pump(.5);return
+    raise AssertionError('Missing clickable '+label+'\n'+view())
+   pump(3);before=view();(root/'artifacts/chat/tui-before.txt').write_text(before)
+   check('Worker dashboard' in before and 'Ready' in before and '1 live' in before,'TUI dashboard connected')
+   check('Telemetry not reported' in before,'TUI does not invent missing worker telemetry')
+   check('\x1b[?1006h' in ''.join(raw),'TUI enables SGR mouse tracking')
+   click('Playground');check('Chat playground' in view(),'mouse switches to Playground')
+   click('›');child.send('\r');pump(3);after=view();(root/'artifacts/chat/tui-after.txt').write_text(after)
    check('Done' in after and 'world' in after,'TUI Enter generates streaming response through IChatClient')
+   check(seen[-1]['useRemainingContext'] and seen[-1]['maxTokens']==262144,'TUI Auto uses remaining model window, not 128/256 output limit')
    check('[world]' in after and '[[world]]' not in after,'TUI preserves literal brackets')
    check(not any(c in before+after for c in '┌┐└┘│─╭╮╰╯'),'TUI has no borders')
-   child.send('remember?\r');pump(3)
-   (root/'artifacts/chat/tui-history.json').write_text(json.dumps(seen[-1],ensure_ascii=False));(root/'artifacts/chat/tui-second.txt').write_text('\n'.join(screen.display))
+   click('›');child.send('remember?');pump(.3)
+   click('Dashboard');click('Playground');check('remember?' in view() and '[world]' in view(),'tabs preserve draft and conversation')
+   click('Send');pump(3)
    check(len(seen[-1]['messages'])==4 and seen[-1]['messages'][-2]['role']=='assistant' and seen[-1]['messages'][-1]['content']=='remember?','TUI sends multi-turn history')
-   child.send('\t\t\t\r');pump(.5)
-   check('New conversation.' in '\n'.join(screen.display),'TUI new chat clears transcript')
-   child.send('\x1b[Z'*3);child.send('slow\r');pump(.8)
-   check('Streaming' in '\n'.join(screen.display),'TUI renders before completion')
-   child.send('\t\t\r');pump(.6)
-   check('Stopped' in '\n'.join(screen.display),'TUI Stop cancels generation')
-   child.send('\x1b[Z'*2);child.send('resume\r');pump(3)
+   click('New chat');check('New conversation.' in view(),'mouse New chat clears transcript')
+   click('›');child.send('slow\r');pump(.6)
+   check('Streaming' in view(),'TUI renders before completion')
+   click('Dashboard');check('generating' in view(),'generation continues while Dashboard is visible')
+   click('Playground');click('Stop');pump(.4)
+   check('Stopped' in view(),'mouse Stop cancels generation')
+   click('›');child.send('resume\r');pump(3)
    check(len(seen[-1]['messages'])==2 and seen[-1]['messages'][-1]['content']=='resume','TUI excludes cancelled history')
+   click('Settings');check('auto' in view() and 'Max output' in view(),'mouse Settings exposes Auto output limit')
+   click('Dashboard')
+   import datetime
+   stamp=datetime.datetime.now(datetime.timezone.utc).isoformat()
+   reg['telemetry']=dict(observedAt=stamp,state='Ready',acceptingRequests=True,busy=False,queueDepth=0,queueCapacity=2,completedRequests=7,pid=123,build='controlled-test',agentConnected=True,weightBits=8,kv='fp32',maxContextTokens=262144,maxOutputTokens=262144,lastRequest=dict(completedAt=stamp,inputTokens=4096,outputTokens=300,prefillMs=800,decodeTokensPerSecond=42,computeMs=9000,metalAllocatedBytes=1073741824,kvCacheBytes=1048576))
+   call('/v1/workers/register',reg,{'X-DeepInfer-Token':token,'Content-Type':'application/json'});pump(2.5)
+   check('42.0 tok/s' in view() and '4096 in / 300 out' in view() and 'Agent' in view(),'Dashboard renders reported status, attached agent and last-request telemetry')
+   for n in range(10):
+    extra=dict(reg,workerId=f'worker-{n:02d}',telemetry=dict(reg['telemetry'],state='Loading',acceptingRequests=False))
+    call('/v1/workers/register',extra,{'X-DeepInfer-Token':token,'Content-Type':'application/json'})
+   pump(2.5);click('Next workers');check('worker-09' in view(),'Dashboard mouse pagination')
+   click('worker-09');check('› worker-09' in view(),'Dashboard mouse worker selection')
+   for y,line in enumerate(screen.display):
+    if 'worker-09' in line:child.send(f'\x1b[<64;10;{y+1}M');break
+   pump(.6);check('worker-00' in view(),'Dashboard mouse wheel pages workers')
+   (root/'artifacts/chat/tui-final.txt').write_text(view())
   finally:
    keep.set();child.sendcontrol('c');child.close(force=True);(root/'artifacts/chat/tui-session.ansi').write_text(''.join(raw))
  print('Completed',checks,'chat protocol checks')

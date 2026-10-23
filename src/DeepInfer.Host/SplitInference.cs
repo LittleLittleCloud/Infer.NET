@@ -29,7 +29,7 @@ public static class SplitInference
     internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null)
     {
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
-        var tokens=Ints(start.Data);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
+        var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
         for(var offset=0;offset<tokens.Length;offset+=32)
         {
             ct.ThrowIfCancellationRequested();var count=Math.Min(32,tokens.Length-offset);
@@ -48,14 +48,14 @@ public static class SplitInference
     {
         var token=RequireToken(options);var kvBytes=KvBytes(options);var uri=new Uri(options.Get("listen","tcp://127.0.0.1:5210"));var ip=IPAddress.Parse(uri.Host);
         if(!IPAddress.IsLoopback(ip)&&!options.Flag("allow-remote"))throw new ArgumentException("Remote split listener requires --allow-remote.");
-        var verify=options.Flag("verify");var max=options.Number("max-tokens",8,1,256);
+        var verify=options.Flag("verify");var max=options.Number("max-tokens",8,1,DeepInfer.Core.Protocol.Qwen36Context);
         var output=Path.GetFullPath(options.Get("output","artifacts/split/run-"+DateTime.UtcNow.ToString("yyyyMMddTHHmmss")));
         Directory.CreateDirectory(output);
         Console.Error.WriteLine("Loading full resident Metal model...");
         using var gpu=new MetalSplitSession(options.Get("weights","models/qwen3.6-35b-a3b-8bit-mlx"),kvBytes);
         var prompt=options.Get("prompt-file","") is {Length:>0} file?await File.ReadAllTextAsync(file,ct):options.Get("prompt","用一句话介绍你自己。");
         var tokens=gpu.Tokenize(prompt,ct);
-        if(tokens.Length>2048||tokens.Length+max>2048)throw new ArgumentException("Initial split executor supports prompt + output <=2048; no long-context performance claim.");
+        if((long)tokens.Length+max>DeepInfer.Core.Protocol.Qwen36Context)throw new ArgumentException("Prompt + output exceeds the model's 262144-token window.");
         if(verify&&tokens.Length>128)throw new ArgumentException("Layer-by-layer verification is bounded to 128 prompt tokens; use --verify only for short correctness cases.");
         var expected=new List<int>();var checks=new List<SplitCheck>();float[]? referenceTrace=null;
         var logits=new float[248320];

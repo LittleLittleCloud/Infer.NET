@@ -64,6 +64,12 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             if (GraphNative.Reserve(handle, tokens, e, error.Length) != 0)
                 throw new InvalidOperationException(Message(error));
     }
+    public void Grow(int tokens)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error)
+            if (GraphNative.Grow(handle, tokens, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+    }
     public (int Capacity, long KvBytes, long AllocatedBytes) Stats()
     {
         if (GraphNative.Stats(handle, out var capacity, out var kv, out var allocated) != 0)
@@ -156,6 +162,8 @@ internal static unsafe partial class GraphNative
     internal static partial int Reset(GraphHandle graph);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_reserve")]
     internal static partial int Reserve(GraphHandle graph, int tokens, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_grow")]
+    internal static partial int Grow(GraphHandle graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_stats")]
     internal static partial int Stats(GraphHandle graph, out int capacity, out long kvBytes, out long allocatedBytes);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_forward")]

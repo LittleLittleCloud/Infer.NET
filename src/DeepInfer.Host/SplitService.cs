@@ -51,7 +51,7 @@ public static class SplitService
             if (Convert.ToHexStringLower(await SHA256.HashDataAsync(f, ct)) != SplitInference.PrefixHash) throw new InvalidDataException("Prefix bundle hash mismatch.");
         using var gpu = new CudaPrefixSession(bundle, 2048, 4);
         gpu.Run([1, 2, 3, 4], 0, null); gpu.Reset();
-        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 capacity=2048");
+        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
         while (!ct.IsCancellationRequested)
         {
             try
@@ -82,7 +82,7 @@ public static class SplitService
     private sealed class Peer(TcpClient client, SslStream tls, SplitWire wire) : IDisposable
     {
         public SplitWire Wire => wire;
-        public bool Connected => !(client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0);
+        public bool Connected { get { try { return !(client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0); } catch (Exception e) when (e is ObjectDisposedException or SocketException) { return false; } } }
         public void Dispose() { tls.Dispose(); client.Dispose(); }
     }
     public static async Task RunMac(Options o, CancellationToken ct)
@@ -97,9 +97,10 @@ public static class SplitService
         var peers = Channel.CreateBounded<Peer>(new BoundedChannelOptions(1) { SingleReader = false, SingleWriter = true });
         using var listener = new TcpListener(address, dataUri.Port);
         using var queue = new InferenceQueue(o.Number("queue-size", 2, 0, 16));
+        Peer? activePeer = null; WorkerRequestMetrics? lastRequest = null; long lastPeerSeen = 0;
         MetalSplitSession? gpu = null; var state = "Loading"; var warmed = false; var completed = 0L;
         var builder = WebApplication.CreateSlimBuilder(); builder.WebHost.UseUrls(endpoint);
-        builder.WebHost.ConfigureKestrel(k => k.Limits.MaxRequestBodySize = 1024 * 1024);
+        builder.WebHost.ConfigureKestrel(k => k.Limits.MaxRequestBodySize = Protocol.MaxRequestBytes);
         builder.Services.Configure<JsonOptions>(j => { j.SerializerOptions.TypeInfoResolverChain.Insert(0, RpcJson.Default); j.SerializerOptions.TypeInfoResolverChain.Insert(0, ServiceJson.Default); });
         builder.Logging.ClearProviders(); var app = builder.Build();
         app.Use(async (context, next) =>
@@ -108,18 +109,30 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && peers.Reader.TryPeek(out var peer) && peer.Connected, Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", 2048, 256, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && peers.Reader.TryPeek(out var peer) && peer.Connected, Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
-            [new("metal-split", "metal", "Metal + CUDA split prefill", "M5/SM89", null, true, true, "affine8, FP32 KV, 2K")],
+            [new("metal-split", "metal", "Mac split-serve", "M5", null, true, true, "Full model; suffix prefill + decode"),
+             new("cuda-agent", "cuda", "Windows split-agent (attached)", "SM89", null, true, false, "Prefix prefill; attached to this worker")],
             [new(Protocol.Qwen36Model, "mlx-qwen36-affine-chat-v1", false)], 1);
-        app.MapGet("/v1/capabilities", () => Results.Json(registration, RpcJson.Default.WorkerRegistration));
+        WorkerRegistration Advertisement()
+        {
+            var connected = (Volatile.Read(ref activePeer)?.Connected ?? false) || (peers.Reader.TryPeek(out var peer) && peer.Connected);
+            if (connected) Interlocked.Exchange(ref lastPeerSeen, Stopwatch.GetTimestamp());
+            var recentPeer = Interlocked.Read(ref lastPeerSeen);
+            var accepting = warmed && (connected || queue.Busy || (recentPeer != 0 && Stopwatch.GetElapsedTime(recentPeer).TotalSeconds < 5));
+            var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : "WaitingForAgent";
+            return registration with { Telemetry = new(DateTimeOffset.UtcNow, currentState, accepting,
+                queue.Busy, queue.WaitingCount, queue.WaitingCapacity, Interlocked.Read(ref completed), Environment.ProcessId,
+                Build, connected, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
+        }
+        app.MapGet("/v1/capabilities", () => Results.Json(Advertisement(), RpcJson.Default.WorkerRegistration));
         async Task Handle(InferenceRequest input, HttpContext context, bool streaming)
         {
             var error = RequestValidation.Error(input);
-            if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal" || input.MaxTokens > 256)
-            { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens 1..256 is supported."); return; }
+            if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal")
+            { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens within the model window is supported."); return; }
             if (!warmed) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
@@ -128,7 +141,8 @@ public static class SplitService
                 using var slot = await queue.Enter(timeout.Token);
                 if (slot is null) { await Fail(context, 429, "queue_full", "Request queue is full."); return; }
                 var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
-                if (ids.Length + input.MaxTokens > 2048) { await Fail(context, 400, "context_length", "Prompt plus output must fit 2048 tokens; no silent truncation."); return; }
+                var maxTokens = input.UseRemainingContext ? Protocol.Qwen36Context - ids.Length : input.MaxTokens;
+                if (maxTokens < 1 || (long)ids.Length + maxTokens > Protocol.Qwen36Context) { await Fail(context, 400, "context_length", $"Prompt plus output exceeds the model's {Protocol.Qwen36Context}-token window; no silent truncation."); return; }
                 Peer peer;
                 // Short EOS responses can finish before the agent's next authenticated connection.
                 // Wait inside the bounded queue, without retrying or starting any GPU work.
@@ -141,7 +155,8 @@ public static class SplitService
                 }
                 using (peer)
                 {
-                    gpu.Reset(ids.Length + input.MaxTokens);
+                    Volatile.Write(ref activePeer, peer);
+                    gpu.Reset(ids.Length + Math.Min(maxTokens, 32));
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     await peer.Wire.SendAsync(new(SplitWire.Start, 20, 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
                     var next = -1;
@@ -165,7 +180,7 @@ public static class SplitService
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
-                    for (var i = 0; i < input.MaxTokens; i++)
+                    for (var i = 0; i < maxTokens; i++)
                     {
                         timeout.Token.ThrowIfCancellationRequested();
                         if (gpu.IsEnd(next) && !input.BenchmarkIgnoreEos) { finish = "eos"; break; }
@@ -176,9 +191,10 @@ public static class SplitService
                             var length = decoder.GetChars(bytes, chars, false);
                             await Event(context, "token", new ServiceEvent(new string(chars, 0, length), next, null, null, ids.Length), timeout.Token);
                         }
-                        if (i + 1 < input.MaxTokens)
+                        if (i + 1 < maxTokens)
                         {
                             var before = timer.Elapsed.TotalMilliseconds; var beforeGpu = gpu.GpuMilliseconds;
+                            gpu.EnsureCapacity(ids.Length + i + 1);
                             next = gpu.Forward(next, ids.Length + i);
                             var ms = timer.Elapsed.TotalMilliseconds - before;
                             if (input.Profile) windows.Add(new(i + 2, i + 2, ids.Length + i + 1, ms, ms > 0 ? 1000 / ms : 0));
@@ -197,6 +213,8 @@ public static class SplitService
                         output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart);
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
+                    Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
+                        timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes));
                     Interlocked.Increment(ref completed);
                 }
             }
@@ -204,8 +222,8 @@ public static class SplitService
             catch (OperationCanceledException) { await Fail(context, 504, "deadline", "Request deadline exceeded."); }
             catch (Exception ex) when (ex is IOException or SocketException)
             { Console.Error.WriteLine("HANDOFF_ERROR " + ex); await Fail(context, 502, "handoff_failed", "State transfer failed; request state discarded."); }
-            catch (InvalidOperationException)
-            { state = "Faulted"; warmed = false; life.Cancel(); throw; }
+            catch (InvalidOperationException ex)
+            { state = "Faulted"; warmed = false; await Fail(context, 503, "gpu_unavailable", ex.Message); life.Cancel(); }
         }
         app.MapPost("/v1/infer", (InferenceRequest r, HttpContext c) => Handle(r, c, false));
         app.MapPost("/v1/infer/stream", (InferenceRequest r, HttpContext c) => Handle(r, c, true));
@@ -221,7 +239,7 @@ public static class SplitService
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }
                 gpu.Reset(2048); warmed = true; state = "Ready"; listener.Start(1);
-                Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv=fp32 capacity=2048");
+                Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
                 while (!life.IsCancellationRequested)
                 {
                     var client = await listener.AcceptTcpClientAsync(life.Token); client.NoDelay = true;
@@ -232,6 +250,7 @@ public static class SplitService
                         tls = await SplitTls.Authenticate(client.GetStream(), certificate, o.Get("tls-peer-sha256", ""), true, handshake.Token);
                         var wire = await SplitWire.ConnectAsync(tls, token, true, Guid.Empty, handshake.Token, 4);
                         var peer = new Peer(client, tls, wire);
+                        Interlocked.Exchange(ref lastPeerSeen, Stopwatch.GetTimestamp());
                         if (peers.Reader.TryPeek(out var stale) && !stale.Connected && peers.Reader.TryRead(out stale)) stale.Dispose();
                         try { await peers.Writer.WriteAsync(peer, life.Token); } catch { peer.Dispose(); throw; }
                     }
@@ -247,7 +266,7 @@ public static class SplitService
             using var rpc = new ClusterClient(o.Get("coordinator", "http://127.0.0.1:5200"), token, TimeSpan.FromSeconds(3));
             while (!life.IsCancellationRequested)
             {
-                try { if (Status().Ready || queue.Busy) await rpc.RegisterAsync(registration, life.Token); }
+                try { await rpc.RegisterAsync(Advertisement(), life.Token); }
                 catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException) { }
                 await Task.Delay(2000, life.Token);
             }

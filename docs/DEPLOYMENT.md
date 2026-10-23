@@ -1,13 +1,13 @@
 # Infer.NET 双机部署
 
-本入口用于 Qwen3.6-35B-A3B **8bit 权重、FP32 KV**，当前上限为输入加输出 2048 tokens、每次输出最多 256 tokens。它提供常驻执行与服务生命周期；BF16、128K 和性能目标仍需另行验收。代码位于部署实现分支，未自动合并上游 PR。
+本入口用于 Qwen3.6-35B-A3B **8bit 权重、FP32 KV**，候选版本移除 2048 context / 256 output 人为上限，模型窗口为输入加输出 262144 tokens，实际请求仍受内存和 deadline 约束。长窗口整模可用性与吞吐需要独立实测，不由上限声明保证。它提供常驻执行与服务生命周期；BF16、128K 和性能目标仍需另行验收。代码位于部署实现分支，未自动合并上游 PR。
 
 ## 进程与网络
 
 - Mac coordinator：loopback HTTP 5200，CLI/TUI 的统一入口，不加载模型。
 - Mac `split-serve`：loopback HTTP 5201 + LAN TCP 5210。持有唯一完整模型；负责后 20 层 prefill、接收前 20 层状态、全部 decode。
 - Windows `split-agent`：主动连接 Mac 5210，前 20 层权重常驻。无需开放新的 Windows 入站端口。
-- TCP 5210 强制双向 TLS + 固定证书 SHA256 校验，内部继续使用 SplitWire v2 身份/布局/位置/序号/HMAC 检查。客户端逐 token 输出走本地 HTTP SSE。
+- TCP 5210 强制双向 TLS + 固定证书 SHA256 校验，内部继续使用 SplitWire v3 身份/布局/位置/序号/HMAC 检查。客户端逐 token 输出走本地 HTTP SSE。v3 不兼容旧 v2，CUDA 原生 ABI 也升至 3；升级时两端必须一起切换，旧包保留供成对回退。
 - API 默认只对 Mac 本机开放；其他设备不能直接把它当作安全公网 API。跨机数据通道已经加密；HTTP 的远程 TLS 网关不在本版本安装器范围。
 
 每台机器只允许一个部署 worker 持有相应配置的独占锁。不要同时运行旧 demo、单机模型或另一份完整模型来做正式性能验收。历史 demo 的 Qwen3.6 默认权重已改为 8bit。

@@ -21,10 +21,10 @@ while True:
  except (OSError,ValueError):pass
  if time.monotonic()-started>600:raise TimeoutError('Deployment did not become ready')
  time.sleep(2)
-pid=ready['pid'];check('readiness advertises 8bit FP32 2K',ready['weightBits']==8 and ready['kv']=='fp32' and ready['maxContextTokens']==2048)
+pid=ready['pid'];check('readiness advertises 8bit FP32 model window',ready['weightBits']==8 and ready['kv']=='fp32' and ready['maxContextTokens']==262144)
 check('API rejects wrong authentication',request('/v1/infer',base,auth='wrong')[0]==401)
-check('output limit rejected',request('/v1/infer',dict(base,maxTokens=257))[0]==400)
-check('context overflow rejected without truncation',request('/v1/infer',dict(base,prompt='hello '*2200))[0]==400)
+check('output limit rejected',request('/v1/infer',dict(base,maxTokens=262145))[0]==400)
+check('context overflow rejected without truncation',request('/v1/infer',dict(base,maxTokens=262144))[0]==400)
 results=[]
 for i in range(3):
  status,result=request('/v1/infer',base);(out/('response-'+str(i)+'.json')).write_text(json.dumps({'status':status,'result':result},ensure_ascii=False));check('resident request '+str(i),status==200 and len(result['tokenIds'])==32)

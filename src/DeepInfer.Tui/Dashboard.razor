@@ -3,6 +3,7 @@
 @using DeepInfer.Core
 @using DeepInfer.Runtime
 @using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.AI
 @using RazorConsole.Components
 @using Spectre.Console
@@ -11,15 +12,26 @@
 @inject IChatClient Chat
 
 <Rows>
-    <PlainText Content="@DisplayText($"Infer.NET  ·  Chat playground  ·  {endpoint}")" Foreground="Color.Cyan1" />
-    <PlainText Content="@DisplayText(status)" Foreground="@(ready ? Color.Green : Color.Yellow)" />
-    <PlainText Content="@DisplayText(Transcript())" />
+    <PlainText Content="@DisplayText($"Infer.NET  ·  {(playground ? "Chat playground" : "Worker dashboard")}  ·  {endpoint}")" Foreground="Color.Cyan1" />
+    <Columns>
+        <TextButton Content="Dashboard" FocusOrder="0" BackgroundColor="@(!playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = false" />
+        <TextButton Content="Playground" FocusOrder="1" BackgroundColor="@(playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = true" />
+    </Columns>
+    <PlainText Content="@DisplayText(status + (busy ? " · generating" : ""))" Foreground="@(ready ? Color.Green : Color.Yellow)" />
+    @if (!playground)
+    {
+        <WorkerDashboard Workers="@workers" Stale="@stale" />
+        <PlainText Content="Click a worker for details · wheel pages workers · Tab / Enter also work" Foreground="Color.Grey" />
+    }
+    else
+    {
+    <div @onwheel="ScrollHistory"><PlainText Content="@DisplayText(Transcript())" /></div>
     @if (settings)
     {
         <TextInput Label="System" @bind-Value="system" BorderStyle="BoxBorder.None" Disabled="@busy" />
-        <TextInput Label="Max output (1–256)" @bind-Value="limit" BorderStyle="BoxBorder.None" Disabled="@busy" />
+        <TextInput Label="Max output (auto = until EOS / model window)" @bind-Value="limit" BorderStyle="BoxBorder.None" Disabled="@busy" />
     }
-    <TextInput @key="composerVersion" FocusOrder="0" Label="›" @bind-Value="prompt" BorderStyle="BoxBorder.None" OnSubmit="Submit" />
+    <TextInput @key="composerVersion" FocusOrder="2" Label="›" @bind-Value="prompt" BorderStyle="BoxBorder.None" OnSubmit="Submit" />
     <Columns>
         <TextButton Content="Send" OnClick="Send" />
         <TextButton Content="Stop" OnClick="Cancel" />
@@ -29,19 +41,21 @@
         <TextButton Content="Latest" OnClick="Latest" />
     </Columns>
     <PlainText Content="@DisplayText(info)" Foreground="Color.Grey" />
-    <PlainText Content="Enter send · Tab focus · Stop cancels · History is resent each turn · Ctrl+C quit" Foreground="Color.Grey" />
+    <PlainText Content="Click / Enter send · wheel scrolls history · Tab focus · Ctrl+C quit" Foreground="Color.Grey" />
+    }
 </Rows>
 
 @code {
     private string? prompt = "你好";
     private string? system = "You are a helpful assistant.";
-    private string? limit = "128";
-    private string endpoint = "", status = "Connecting…", info = "Text chat · greedy · context 2048 tokens", partial = "", pending = "";
+    private string? limit = "auto";
+    private string endpoint = "", status = "Connecting…", info = "Text chat · greedy · Auto output until EOS or model window", partial = "", pending = "";
     private readonly List<ChatMessage> history = new();
     private readonly CancellationTokenSource stop = new();
     private CancellationTokenSource? request;
     private Task? poll, generation;
-    private bool busy, ready, settings;
+    private bool busy, ready, settings, playground, stale;
+    private WorkerSnapshot[] workers = [];
     private int older, composerVersion;
     protected override async Task OnInitializedAsync()
     {
@@ -67,7 +81,7 @@
             }
             rows.Add(b.ToString());
         }
-        var height = Math.Max(3, SafeHeight() - (settings ? 11 : 9));
+        var height = Math.Max(3, SafeHeight() - (settings ? 12 : 10));
         older = Math.Min(older, Math.Max(0, rows.Count - height));
         return string.Join("\n", rows.Skip(Math.Max(0, rows.Count - height - older)).Take(height));
     }
@@ -82,11 +96,13 @@
     {
         try
         {
-            var snapshot = await Client.StatusAsync(stop.Token);
-            ready = snapshot.Workers.Any(w => w.Healthy && w.Registration.Models.Any(m => m.Id == Protocol.Qwen36Model && m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)));
-            status = (ready ? "Ready" : "Waiting for chat worker") + " · " + Protocol.Qwen36Model + " · 8bit · " + (busy ? "generating" : $"{history.Count(m => m.Role == ChatRole.User)} turns");
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stop.Token); timeout.CancelAfter(TimeSpan.FromSeconds(3));
+            var snapshot = await Client.StatusAsync(timeout.Token);
+            workers = snapshot.Workers; stale = false;
+            ready = workers.Any(w => w.Healthy && w.Registration.Telemetry?.AcceptingRequests != false && w.Registration.Models.Any(m => m.Id == Protocol.Qwen36Model && m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)));
+            status = (ready ? "Ready" : "Waiting for chat worker") + " · " + Protocol.Qwen36Model + $" · {history.Count(m => m.Role == ChatRole.User)} turns";
         }
-        catch (Exception e) when (e is HttpRequestException or RpcException or OperationCanceledException) { ready = false; status = "Connection: " + e.Message; }
+        catch (Exception e) when (e is HttpRequestException or RpcException or OperationCanceledException) { ready = false; stale = true; status = "Connection: " + e.Message; }
     }
     private Task Submit(string? _) => Send();
     private Task Send()
@@ -94,17 +110,22 @@
         if (busy) return Task.CompletedTask;
         if (!ready) { info = "No compatible chat worker is ready."; return Task.CompletedTask; }
         if (string.IsNullOrWhiteSpace(prompt)) return Task.CompletedTask;
-        if (!int.TryParse(limit, out var max) || max is < 1 or > 256) { info = "Max output must be 1–256."; return Task.CompletedTask; }
-        pending = prompt; prompt = ""; composerVersion++; partial = ""; older = 0; busy = true;
+        int? max = null;
+        if (!string.IsNullOrWhiteSpace(limit) && !limit.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!int.TryParse(limit, out var value) || value < 1) { info = "Max output must be auto or a positive integer."; return Task.CompletedTask; }
+            max = value;
+        }
+        info = "Waiting for first token…"; pending = prompt; prompt = ""; composerVersion++; partial = ""; older = 0; busy = true;
         request = CancellationTokenSource.CreateLinkedTokenSource(stop.Token);
         var messages = new List<ChatMessage>();
         if (!string.IsNullOrWhiteSpace(system)) messages.Add(new(ChatRole.System, system));
         messages.AddRange(history); messages.Add(new(ChatRole.User, pending));
         generation = Generate(messages, max, request.Token); return Task.CompletedTask;
     }
-    private async Task Generate(List<ChatMessage> messages, int max, CancellationToken ct)
+    private async Task Generate(List<ChatMessage> messages, int? max, CancellationToken ct)
     {
-        var clock = System.Diagnostics.Stopwatch.StartNew(); double? first = null; long output = 0;
+        var clock = System.Diagnostics.Stopwatch.StartNew(); double? first = null; long output = 0; ChatFinishReason? finish = null;
         try
         {
             await foreach (var update in Chat.GetStreamingResponseAsync(messages, new ChatOptions { ModelId = Protocol.Qwen36Model, MaxOutputTokens = max }, ct))
@@ -112,12 +133,13 @@
                 await InvokeAsync(() => {
                     if (update.Text.Length > 0) { first ??= clock.Elapsed.TotalMilliseconds; partial += update.Text; }
                     foreach (var usage in update.Contents.OfType<UsageContent>()) output = usage.Details.OutputTokenCount ?? 0;
+                    finish = update.FinishReason ?? finish;
                     info = $"Streaming · {clock.Elapsed.TotalSeconds:F1}s · {partial.Length} chars"; StateHasChanged();
                 });
             }
             await InvokeAsync(() => {
                 history.Add(new(ChatRole.User, pending)); history.Add(new(ChatRole.Assistant, partial)); pending = ""; partial = "";
-                info = $"Done · first text {first.GetValueOrDefault():F0} ms · {output} output tokens · total {clock.Elapsed.TotalSeconds:F2}s";
+                info = $"Done · {finish?.Value ?? "stop"} · first text {first.GetValueOrDefault():F0} ms · {output} output tokens · total {clock.Elapsed.TotalSeconds:F2}s";
             });
         }
         catch (OperationCanceledException) { await InvokeAsync(() => info = "Stopped · partial output kept on screen, excluded from conversation history."); }
@@ -128,6 +150,7 @@
     private void Cancel() => request?.Cancel();
     private void Clear() { if (busy) { info = "Stop generation before starting a new chat."; return; } history.Clear(); pending = partial = ""; older = 0; info = "New conversation."; }
     private void ToggleSettings() => settings = !settings;
+    private void ScrollHistory(WheelEventArgs e) { older = Math.Max(0, older + (e.DeltaY < 0 ? 3 : -3)); }
     private void Older() => older += 5;
     private void Latest() => older = 0;
     public async ValueTask DisposeAsync() { stop.Cancel(); request?.Cancel(); if (generation != null) await generation; if (poll != null) await poll; stop.Dispose(); }

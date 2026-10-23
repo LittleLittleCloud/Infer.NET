@@ -9,7 +9,8 @@ public static class Protocol
     public const string Qwen3BModel = "qwen2.5-3b-instruct";
     public const string Qwen7BModel = "qwen2.5-7b-instruct";
     public const string Qwen36Model = "qwen3.6-35b-a3b";
-    public const int MaxTokens = 32768;
+    public const int Qwen36Context = 262144;
+    public const int MaxTokens = Qwen36Context;
     public const int MaxPromptChars = 32768;
     public const int MaxLongPromptChars = 8 * 1024 * 1024;
     public const int MaxRequestBytes = 64 * 1024 * 1024;
@@ -21,13 +22,20 @@ public sealed record ModelInfo(string Id, string Format, bool IsSimulation);
 public sealed record ChatTurn(string Role, string Content);
 public sealed record InferenceRequest(string Prompt, int MaxTokens = 16,
     string Model = Protocol.SyntheticModel, string Backend = "simulation",
-    bool Profile = false, bool BenchmarkIgnoreEos = false, ChatTurn[]? Messages = null);
+    bool Profile = false, bool BenchmarkIgnoreEos = false, ChatTurn[]? Messages = null, bool UseRemainingContext = false);
 public sealed record InferenceResult(string RequestId, string WorkerId, string Model, string Backend,
     string Text, string[] Tokens, bool IsSimulation, double ComputeMs,
     int[]? TokenIds = null, int PromptTokens = 0, string? FinishReason = null,
     long GpuDispatches = 0, double GpuComputeMs = 0, InferenceTimings? Timings = null, long GpuSubmissions = 0);
 public sealed record WorkerRegistration(int ProtocolVersion, string WorkerId, string Endpoint,
-    DeviceInfo[] Devices, ModelInfo[] Models, int Capacity);
+    DeviceInfo[] Devices, ModelInfo[] Models, int Capacity, WorkerTelemetry? Telemetry = null);
+// Heartbeat sample, never a claim of instantaneous GPU utilization. Old workers omit it.
+public sealed record WorkerTelemetry(DateTimeOffset ObservedAt, string State, bool AcceptingRequests,
+    bool Busy, int QueueDepth, int QueueCapacity, long CompletedRequests, int Pid, string Build,
+    bool? AgentConnected = null, int? WeightBits = null, string? Kv = null,
+    int? MaxContextTokens = null, int? MaxOutputTokens = null, WorkerRequestMetrics? LastRequest = null);
+public sealed record WorkerRequestMetrics(DateTimeOffset CompletedAt, int InputTokens, int OutputTokens,
+    double PrefillMs, double DecodeTokensPerSecond, double ComputeMs, long MetalAllocatedBytes, long KvCacheBytes);
 public sealed record WorkerSnapshot(WorkerRegistration Registration, DateTimeOffset LastSeenUtc, bool Healthy);
 public sealed record ClusterSnapshot(int ProtocolVersion, WorkerSnapshot[] Workers);
 public sealed record HealthInfo(string Role, string Status, int ProtocolVersion);
@@ -48,7 +56,7 @@ public static class RequestValidation
             if (request.Model != Protocol.Qwen36Model) return "Structured chat is supported only by Qwen3.6 chat workers.";
             if (messages.Length is < 1 or > 256 || messages.Any(m => m is null || m.Content is null || m.Role is not ("system" or "user" or "assistant"))) return "Invalid text conversation.";
             if (messages[^1].Role != "user") return "Conversation must end with a user message.";
-            if (messages.Sum(m => (long)m.Content.Length) > Protocol.MaxPromptChars) return "Conversation exceeds character limit.";
+            if (messages.Sum(m => (long)m.Content.Length) > Protocol.MaxLongPromptChars) return "Conversation exceeds character limit.";
         }
         else if (string.IsNullOrWhiteSpace(request.Prompt)) return "Prompt is required.";
         var moe = request.Model == Protocol.Qwen36Model;

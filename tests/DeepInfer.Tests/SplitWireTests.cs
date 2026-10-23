@@ -38,6 +38,15 @@ public sealed class SplitWireTests
         var bytes=stream.ToArray();bytes[index]^=1;using var bad=new MemoryStream(bytes);
         await Assert.ThrowsAsync<InvalidDataException>(()=>new SplitWire(bad,key,id).ReceiveAsync(default));
     }
+    [Fact] public async Task RejectsImpossiblePayloadSizeBeforeReadingPayload()
+    {
+        var id=Guid.NewGuid();using var output=new MemoryStream();
+        await new SplitWire(output,new byte[32],id).SendAsync(new(SplitWire.End,20,0,1,0,[]),default);
+        var header=output.ToArray()[..92];
+        System.Buffers.Binary.BinaryPrimitives.WriteInt32LittleEndian(header.AsSpan(48,4),512*1024*1024);
+        using var bad=new MemoryStream(header);
+        await Assert.ThrowsAsync<InvalidDataException>(()=>new SplitWire(bad,new byte[32],id).ReceiveAsync(default));
+    }
     [Fact] public async Task RejectsDuplicateFrameAndTruncation()
     {
         var id=Guid.NewGuid();using var output=new MemoryStream();await new SplitWire(output,new byte[32],id).SendAsync(new(SplitWire.End,20,0,1,0,[]),default);
@@ -48,7 +57,10 @@ public sealed class SplitWireTests
     [Fact] public void RejectsWrongStateShapeAndUnsupportedContext()
     {
         Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.State,3,0,128,1,new byte[128*512*4])));
-        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Start,20,0,0,2049,new byte[2049*4])));
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Start,20,0,0,262145,new byte[262145*4])));
+        SplitWire.Validate(new(SplitWire.Start,20,0,0,8192,new byte[8192*4]));
+        SplitWire.Validate(new(SplitWire.State,3,0,4097,1,new byte[4097*512*4]),4);
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Hidden,20,0,int.MaxValue,32,new byte[32*8192])));
         SplitWire.Validate(new(SplitWire.State,0,0,128,1,new byte[32*128*128*4]));
         SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*2]));
         SplitWire.Validate(new(SplitWire.State,3,1,128,1,new byte[128*512*4]),4);

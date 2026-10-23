@@ -13,7 +13,7 @@ internal static class CompatibleChat
         foreach (var (path, format) in new[] { ("/v1/chat/completions", ChatFormat.Completions), ("/v1/messages", ChatFormat.Messages), ("/v1/responses", ChatFormat.Responses) })
             app.MapPost(path, (HttpContext c) => Handle(c, registry, token, format));
         app.MapGet("/v1/models", async (HttpContext c) => {
-            var models = registry.Snapshot().Workers.Where(w => w.Healthy).SelectMany(w => w.Registration.Models).Where(m => m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)).Select(m => m.Id).Distinct();
+            var models = registry.Snapshot().Workers.Where(w => w.Healthy && w.Registration.Telemetry?.AcceptingRequests != false).SelectMany(w => w.Registration.Models).Where(m => m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)).Select(m => m.Id).Distinct();
             await Json(c, new JsonObject { ["object"] = "list", ["data"] = new JsonArray(models.Select(m => (JsonNode)new JsonObject { ["id"] = m, ["object"] = "model", ["created"] = 0, ["owned_by"] = "infer.net" }).ToArray()) });
         });
     }
@@ -43,7 +43,7 @@ internal static class CompatibleChat
         try
         {
             var limit = c.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature>();
-            if (limit is { IsReadOnly: false }) limit.MaxRequestBodySize = 1024 * 1024;
+            if (limit is { IsReadOnly: false }) limit.MaxRequestBodySize = Protocol.MaxRequestBytes;
             using var doc = await JsonDocument.ParseAsync(c.Request.Body, new JsonDocumentOptions { MaxDepth = 32 }, c.RequestAborted);
             var input = ChatRequest.Parse(doc.RootElement, format);
             var worker = registry.Select(input.Inference);

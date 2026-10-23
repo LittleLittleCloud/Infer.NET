@@ -35,7 +35,7 @@ public sealed class InferChatClient : IChatClient
             if (m.Contents.Any(c => c is not TextContent) || m.AuthorName != null) throw new NotSupportedException("Only unnamed text messages are supported.");
             history.Add((JsonNode)new JsonObject { ["role"] = m.Role.Value, ["content"] = m.Text });
         }
-        return new(new JsonObject { ["model"] = options?.ModelId ?? Protocol.Qwen36Model, ["messages"] = history, ["max_completion_tokens"] = options?.MaxOutputTokens ?? 128,
+        return new(new JsonObject { ["model"] = options?.ModelId ?? Protocol.Qwen36Model, ["messages"] = history, ["max_completion_tokens"] = options?.MaxOutputTokens,
             ["temperature"] = options?.Temperature ?? 0, ["top_p"] = options?.TopP ?? 1, ["stream"] = stream,
             ["stream_options"] = stream ? new JsonObject { ["include_usage"] = true } : null
         }.WithoutNulls().ToJsonString(), Encoding.UTF8, "application/json");
