@@ -1,5 +1,23 @@
 [
   {
+    "id": "cuda-dense-reuse",
+    "kind": "2026-10-23 · 完整双机对照",
+    "title": "复用CUDA权重读取，保持FP32运算结果",
+    "question": "减少重复读取和反量化，能否让真实双机prefill更快？",
+    "setup": "8b5e3bd同包A/B，8bit/FP32，CUDA32/Metal128，8K/32K输入与4096长输出，预热1＋正式3。",
+    "change": "跨4/8token复用稠密权重；向量读取8个量化值，复用scale/bias；专家读取也采用向量路径。",
+    "result": "8K prefill 14.319→11.348秒；32K 66.929→52.908秒；32K/4096新包整次143.482秒。",
+    "validation": "原生整段hidden/40状态逐位一致；跨机1748项数值检查、124 Mac测试、Windows123＋1跳过、双端AOT、CI通过。完整输出IDs与保留基线一致。",
+    "conclusion": "算子、原生前段和完整双机耗时分开报告；正式BF16/128K目标仍未通过。",
+    "next": "继续验证长上下文注意力与BF16执行精度。",
+    "commands": [
+      "--cuda-prefill batch-fp32",
+      "--cuda-prefill batch-fp32-packed"
+    ],
+    "source": "docs/CUDA-DENSE-REUSE.md",
+    "evidence": "site/dense-reuse-summary.json"
+  },
+  {
     "id": "cuda-prefix-diagnostics",
     "kind": "2026-10-23 · 分阶段诊断与失败实验",
     "title": "CUDA前段瓶颈在投影和专家；BF16求和改动未通过",

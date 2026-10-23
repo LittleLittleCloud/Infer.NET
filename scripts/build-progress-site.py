@@ -61,12 +61,13 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
 body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p><h1>从单机基线，<br>走向双机推理。</h1>
-<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机短请求已跑通：4090 前 20 层、Mac 后 20 层与完整状态接管。FP32 KV 诊断通过，BF16 目标精度与 128K 性能仍未验收。</p>
-<div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机短请求已验证</span><span>无前缀缓存</span></div></section>
+<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过，BF16 目标精度与 128K 性能仍未验收。</p>
+<div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机8K/32K已验证</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
+<div class="notice"><strong>CUDA权重复用：8K prefill 14.32→11.35秒</strong><p>同包对照，32K输入66.93→52.91秒；32K＋4096输出整次143.48秒，decode45.48token/s。全部输出一致；仍为8bit/FP32诊断，BF16/128K未通过。<a href="experiments.html#cuda-dense-reuse">完整A/B →</a> · <a href="dense-reuse-summary.json">逐次JSON</a></p></div>
 <div class="notice"><strong>8K 双机 prefill：14.35 秒，累计约 3.66 倍</strong><p>KV 分段交接再减少 14.79%；完整请求 16.62 秒，decode 约 56 token/s。84-token 数值对照、真实取消恢复通过。仍为 8bit / FP32 诊断；128K / BF16 目标未通过。<a href="experiments.html#kv-streaming">A/B 与数值检查 →</a> · <a href="kv-streaming-summary.json">逐次 JSON</a></p></div>
 <div class="notice"><strong>8K 输入 + 4096 输出：55.05 token/s</strong><p>末尾 1024 个 token 仍为 53.90 token/s，4 轮输出一致，零新增 swap-out。三次正式请求中位 91.15 秒（上一版 2760e44）；32K 新内核已测：35.10→45.43 token/s（+29.45%），4096输出整次156.77秒；BF16/128K仍未验收。<a href="experiments.html#decode-attention-fp32">新内核对照 →</a><a href="experiments.html#sustained-decode">持续解码记录 →</a> · <a href="long-output-summary.json">逐次 JSON</a></p></div>
 <div class="notice"><strong>8K 双机 prefill：52.50s → 18.64s</strong><p>CUDA 按层批量执行，端到端请求由 54.78s 降至 20.93s；decode 约 56 token/s，8 次输出 token 一致。8bit / FP32 KV，128K 与 BF16 正式目标仍未通过。<a href="experiments.html#cuda-chunk">完整对照 →</a> · <a href="cuda-chunk-summary.json">逐次结果 JSON</a></p></div>
@@ -76,7 +77,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
 <li><span class="status done">基线完成</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>工具链、68 项单测、两组 25 项 RPC 和 SM89 数值检查通过。Mac Wi-Fi ↔ Windows 千兆网口已实测：128K 前 20 层状态，4090 → Mac 中位 24.66 秒，反向 41.20 秒；40 次传输校验全部通过。合成 GPU 状态传输不代表模型状态恢复。<a href="experiments.html#kv-sync-lan">实验记录 →</a></p></div></li>
-<li><span class="status pending">诊断通过</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>FP32 KV：8K/128 A/B 与 8K/4096 持续输出通过；分段状态齐备后接管 decode。BF16 与 128K 正式目标未通过，最新代码见未合并 <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/20">PR #20</a>。<a href="experiments.html#split-prefill-mvp">实验记录 →</a> · <a href="split-prefill-summary.json">数值摘要 JSON</a></p></div></li>
+<li><span class="status pending">诊断通过</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>FP32 KV：8K/128 A/B 与 8K/4096 持续输出通过；分段状态齐备后接管 decode。BF16 与 128K 正式目标未通过，最新代码见未合并 <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/23">PR #23</a>。<a href="experiments.html#split-prefill-mvp">实验记录 →</a> · <a href="split-prefill-summary.json">数值摘要 JSON</a></p></div></li>
 <li><span class="status pending">候选已测</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/9">常驻服务与部署 #9</a></h3><p>真实模型 15 项验收通过：连续请求、SSE、取消恢复、EOS 与限流；双向 TLS，8bit/FP32 KV，已扩大上下文并实测8K长输出。Mac由LaunchAgent托管，Windows仍为SSH控制的前台进程，SCM待管理员安装；首请求优化见上方实测。<a href="experiments.html#persistent-deployment">完整记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/10">PR #10</a></p></div></li>
 <li><span class="status done">已接入</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/11">Chat API 与 TUI #11</a></h3><p>Microsoft.Extensions.AI.IChatClient、真实流式、多轮历史、取消恢复；三格式官方 SDK 互通。8bit/FP32 KV；上下文与Auto输出已扩展，实际验证长度见最新实验。<a href="experiments.html#chat-playground">验收记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/12">PR #12</a></p></div></li>
 <li><span class="status done">已接入</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/13">鼠标 Dashboard / 上下文 #13</a></h3><p>真实 worker 状态、性能和 Playground；Auto 输出与按需 KV 扩容。<a href="experiments.html#tui-dashboard">实验记录 →</a></p></div></li>
@@ -118,7 +119,7 @@ for n in notes:
         body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
