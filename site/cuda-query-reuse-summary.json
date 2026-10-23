@@ -16,7 +16,21 @@
     {"keys": 131072, "kv": "fp32", "retainedMedianMs": 83.603394, "reuseMedianMs": 95.932030},
     {"keys": 131072, "kv": "bf16", "retainedMedianMs": 23.510015, "reuseMedianMs": 37.660671}
   ],
-  "outcome": "rejected: every measured case was slower; not integrated or deployed",
+  "sharedTwoFollowup": {
+    "sourceCommit": "0cef04d3bd2c5d2d22aa10068437248d8bc6d8a7",
+    "correctness": "40/40 FP32/BF16 KV cases bitwise equal to retained operator",
+    "measurements": [
+      {"keys": 4096, "kv": "fp32", "retainedMedianMs": 0.733984, "sharedTwoMedianMs": 0.929792},
+      {"keys": 4096, "kv": "bf16", "retainedMedianMs": 0.635904, "sharedTwoMedianMs": 0.908288},
+      {"keys": 32768, "kv": "fp32", "retainedMedianMs": 5.956608, "sharedTwoMedianMs": 7.627424},
+      {"keys": 32768, "kv": "bf16", "retainedMedianMs": 4.796256, "sharedTwoMedianMs": 7.035904},
+      {"keys": 131072, "kv": "fp32", "retainedMedianMs": 84.803581, "sharedTwoMedianMs": 88.776703},
+      {"keys": 131072, "kv": "bf16", "retainedMedianMs": 23.548897, "sharedTwoMedianMs": 33.427361}
+    ],
+    "localRawResultsSha256": "C443B8613C6E9225ACF2477BD8F02FBF5F762486E32E0DF2A2691DCAB13F2ECF",
+    "localCheckerExeSha256": "9457DF9B0C31321942D2D27BB2113165EF1482360CBA45199E85BEA2BDD3832C"
+  },
+  "outcome": "rejected: both reuse candidates were slower in every measured case; neither is integrated or deployed",
   "limitations": "Operator-only hot data with the deployed agent resident but idle; not full-model 128K throughput or formal acceptance.",
   "localRawResultsSha256": "F8F1B33DD27FE1498F3BDB2C1D20BEC37DB7C59B815FCB69F84F08B1B4B8659E",
   "localCheckerExeSha256": "AE05D18580E0AC7BE444BA8F90ED6D6C6CA0013918BA659EF5CF082FE2EB9791"
