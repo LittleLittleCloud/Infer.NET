@@ -15,7 +15,7 @@ Push-Location $out
 try {
  & nvcc -std=c++17 -arch=sm_89 -O2 --shared (Join-Path $root 'native\DeepInfer.Cuda\split_prefix.cu') -o deepinfer_cuda.dll
  if($LASTEXITCODE -ne 0){throw 'CUDA prefix build failed'}
- (Get-FileHash (Join-Path $root 'native\DeepInfer.Cuda\split_prefix.cu') -Algorithm SHA256).Hash | Set-Content deepinfer_cuda.source.sha256
+ (& (Join-Path $PSScriptRoot 'cuda-source-hash.ps1')) | Set-Content deepinfer_cuda.source.sha256
  Get-FileHash deepinfer_cuda.dll -Algorithm SHA256
 } finally {
  Pop-Location

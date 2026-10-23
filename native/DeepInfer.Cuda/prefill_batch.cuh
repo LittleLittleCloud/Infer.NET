@@ -1,3 +1,4 @@
+#pragma once
 // Original SM89 prefill primitives. Experimental: not connected to the executor yet.
 // BF16 operands, FP32 accumulation; affine8 weights remain packed in global memory.
 #include <mma.h>

@@ -26,12 +26,20 @@ struct Layer {
     float *p = nullptr, *state = nullptr, *history = nullptr;
     void *keys = nullptr, *values = nullptr;
 };
+struct ChunkWorkspace {
+    bool prepared=false;int scoreCapacity=0;
+    float *x=nullptr,*norm=nullptr,*qkv=nullptr,*z=nullptr,*a=nullptr,*b=nullptr,*conv=nullptr,*attention=nullptr,
+        *k=nullptr,*v=nullptr,*q=nullptr,*scores=nullptr,*out=nullptr,*router=nullptr,*prob=nullptr,
+        *eg=nullptr,*eu=nullptr,*eo=nullptr,*sg=nullptr,*su=nullptr,*so=nullptr,*sr=nullptr;
+    int *ids=nullptr,*tokens=nullptr;
+};
 struct Model {
     std::vector<void *> memory;
     Matrix embedding;
     Layer layers[20];
     int position = 0, capacity;
-    bool kvBf16 = true, batchReadback = false;
+    bool kvBf16 = true, batchReadback = false, layerBatch=false, bf16Projections=false;
+    ChunkWorkspace chunk;
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
         *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
@@ -270,6 +278,9 @@ static void mv(Matrix m, float *x, float *y, int *ids = nullptr, int count = 1,
                bool batch = false) {
     gemv<<<dim3((m.rows + 3) / 4, count), 128>>>(m, x, y, ids, batch);
 }
+#include "prefill_batch.cuh"
+#include "prefill_chunk.cuh"
+#include "prefill_executor.cuh"
 static void read(std::ifstream &f, void *p, size_t n) {
     if (!f.read((char *)p, n))
         throw std::runtime_error("Truncated prefix bundle");
@@ -478,6 +489,10 @@ API int di_cuda_prefix_readback_mode(void *ptr, int batched) {
     if(!g || (batched!=0 && batched!=1)) return -1;
     g->batchReadback=batched!=0;return 0;
 }
+API int di_cuda_prefix_execution_mode(void *ptr,int mode) {
+    auto *g=static_cast<Model*>(ptr);if(!g||mode<0||mode>2||g->position!=0)return -1;
+    g->layerBatch=mode!=0;g->bf16Projections=mode==2;return 0;
+}
 API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position, float *hidden,
                            float *trace, char *error, int cap) {
     try {
@@ -488,6 +503,7 @@ API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position
         for (int i = 0; i < count; i++)
             if (tokens[i] < 0 || tokens[i] >= 248320)
                 throw std::runtime_error("Invalid token");
+        if(g->layerBatch){run_chunk(g,tokens,count,hidden,trace);return 0;}
         for (int i = 0; i < count; i++) {
             int pos = g->position;
             embed<<<16, 128>>>(g->embedding, tokens[i], g->x);

@@ -12,7 +12,7 @@ New-Item -ItemType Directory $out | Out-Null
 $env:DEEPINFER_TOKEN=$config.token
 $sha=git rev-parse HEAD
 $sha | Set-Content (Join-Path $out 'source.txt')
-if((Get-FileHash (Join-Path $root 'native\DeepInfer.Cuda\split_prefix.cu')).Hash -ne (Get-Content (Join-Path $root 'native\DeepInfer.Cuda\build\deepinfer_cuda.source.sha256')).Trim()){throw 'Native CUDA build does not match current source'}
+if((& (Join-Path $PSScriptRoot 'cuda-source-hash.ps1')) -ne (Get-Content (Join-Path $root 'native\DeepInfer.Cuda\build\deepinfer_cuda.source.sha256')).Trim()){throw 'Native CUDA build does not match current source'}
 $exe=Join-Path $root 'src\DeepInfer.Host\bin\Release\net10.0\deepinfer.exe'
 if($config.native){$exe=Join-Path $root 'artifacts\split\native-windows-final\deepinfer.exe'}
 if((Get-FileHash (Join-Path (Split-Path $exe) 'deepinfer_cuda.dll')).Hash -ne (Get-FileHash (Join-Path $root 'native\DeepInfer.Cuda\build\deepinfer_cuda.dll')).Hash){throw 'Runtime CUDA DLL differs from native build; rebuild Host before running'}
