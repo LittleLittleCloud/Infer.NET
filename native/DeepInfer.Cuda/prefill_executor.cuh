@@ -75,7 +75,7 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
         profile.mark(3);
         chunk_mv(g,m[7],p.norm,p.router,count);
-        if(g->expertPacked && m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
+        if(m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
             chunk_expert_gate_up_packed<<<dim3((m[11].rows+3)/4,1,count),128>>>(m[11],m[12],p.norm,p.sg,p.su,nullptr);
         else {chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);}
         chunk_mv(g,m[14],p.norm,p.sr,count);

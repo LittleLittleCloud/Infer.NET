@@ -109,8 +109,13 @@ static void fused_expert_case(int tokens,int rows,int cols,int routes=8) {
     const int *routeIds=routes==1?nullptr:deviceIds;
     auto fused=[&]{chunk_expert_gate_up_packed<<<dim3((rows+3)/4,routes,tokens),128>>>(gate,up,input,gateOut,upOut,routeIds);};
     auto separate=[&]{
-        chunk_gemv_packed<<<dim3((rows+3)/4,routes,tokens),128>>>(gate,input,gateRef,routeIds,0);
-        chunk_gemv_packed<<<dim3((rows+3)/4,routes,tokens),128>>>(up,input,upRef,routeIds,0);
+        if(routes==1) {
+            chunk_gemv<<<dim3((rows+3)/4,routes,tokens),128>>>(gate,input,gateRef,routeIds,0);
+            chunk_gemv<<<dim3((rows+3)/4,routes,tokens),128>>>(up,input,upRef,routeIds,0);
+        } else {
+            chunk_gemv_packed<<<dim3((rows+3)/4,routes,tokens),128>>>(gate,input,gateRef,routeIds,0);
+            chunk_gemv_packed<<<dim3((rows+3)/4,routes,tokens),128>>>(up,input,upRef,routeIds,0);
+        }
     };
     fused();separate();ck(cudaGetLastError());
     ck(cudaMemcpy(actual.data(),gateOut,actual.size()*4,cudaMemcpyDeviceToHost));
@@ -120,7 +125,7 @@ static void fused_expert_case(int tokens,int rows,int cols,int routes=8) {
     ck(cudaMemcpy(reference.data(),upRef,reference.size()*4,cudaMemcpyDeviceToHost));
     if(actual!=reference)throw std::runtime_error("Fused up differs from separate packed GEMV");
     auto oldTimes=timings(separate,5),newTimes=timings(fused,5);
-    printf("{\"op\":\"affine8-fp32-fused-expert-gate-up\",\"tokens\":%d,\"rows\":%d,\"cols\":%d,\"routes\":%d,\"bitwiseEqual\":true,",tokens,rows,cols,routes);
+    printf("{\"op\":\"affine8-fp32-fused-expert-gate-up\",\"tokens\":%d,\"rows\":%d,\"cols\":%d,\"routes\":%d,\"reference\":\"%s\",\"bitwiseEqual\":true,",tokens,rows,cols,routes,routes==1?"production-simt":"packed-simt");
     print_times("separate",oldTimes);printf(",");print_times("fused",newTimes);puts("}");fflush(stdout);
 }
 int main(){try {
