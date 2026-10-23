@@ -67,7 +67,9 @@ internal static class CompatibleChat
                 var update = JsonSerializer.Deserialize(line[6..], ServiceJson.Default.ServiceEvent) ?? throw new IOException("Invalid worker stream.");
                 if (update.Error != null) throw new IOException(update.Error.Message);
                 if (!started) { await writer.Start(update.PromptTokens ?? update.Result?.PromptTokens ?? throw new IOException("Missing prompt usage metadata.")); started = true; }
-                if (update.Text is { Length: > 0 } text) await writer.Delta(text);
+                // Tool-enabled requests are buffered until the model has finished so
+                // Qwen's XML call is never leaked as plain assistant text.
+                if (input.Tools == null && update.Text is { Length: > 0 } text) await writer.Delta(text);
                 if (update.Result is { } result) { await writer.End(result); completed = true; break; }
             }
             if (!completed) throw new IOException("Worker stream ended without completion; partial output is not retried.");
@@ -98,11 +100,19 @@ internal static class CompatibleChat
             ["parallel_tool_calls"] = false, ["tool_choice"] = "none", ["tools"] = new JsonArray(), ["store"] = false,
             ["temperature"] = 0, ["top_p"] = 1, ["metadata"] = new JsonObject(), ["max_output_tokens"] = input.Inference.MaxTokens
         };
-        public JsonObject Complete(InferenceResult r) => format switch {
-            ChatFormat.Completions => new() { ["id"] = id, ["object"] = "chat.completion", ["created"] = created, ["model"] = Model, ["choices"] = new JsonArray(new JsonObject { ["index"] = 0, ["message"] = new JsonObject { ["role"] = "assistant", ["content"] = r.Text, ["refusal"] = null }, ["finish_reason"] = r.FinishReason == "eos" ? "stop" : "length", ["logprobs"] = null }), ["usage"] = Usage(r, true) },
+        private (string Text, ChatToolCall[] Calls) Parsed(InferenceResult r) => input.Tools is { } tools ? ChatTools.ParseOutput(r.Text, tools) : (r.Text, []);
+        private static JsonArray ToolCalls(ChatToolCall[] calls) => new(calls.Select(call => (JsonNode)new JsonObject {
+            ["id"] = call.Id, ["type"] = "function", ["function"] = new JsonObject { ["name"] = call.Name, ["arguments"] = call.Arguments }
+        }).ToArray());
+        public JsonObject Complete(InferenceResult r)
+        {
+            var (text, calls) = Parsed(r);
+            return format switch {
+            ChatFormat.Completions => new() { ["id"] = id, ["object"] = "chat.completion", ["created"] = created, ["model"] = Model, ["choices"] = new JsonArray(new JsonObject { ["index"] = 0, ["message"] = new JsonObject { ["role"] = "assistant", ["content"] = calls.Length > 0 && text.Length == 0 ? null : text, ["tool_calls"] = calls.Length > 0 ? ToolCalls(calls) : null, ["refusal"] = null }, ["finish_reason"] = calls.Length > 0 ? "tool_calls" : r.FinishReason == "eos" ? "stop" : "length", ["logprobs"] = null }), ["usage"] = Usage(r, true) },
             ChatFormat.Messages => new() { ["id"] = id, ["type"] = "message", ["role"] = "assistant", ["model"] = Model, ["content"] = new JsonArray(new JsonObject { ["type"] = "text", ["text"] = r.Text }), ["stop_reason"] = r.FinishReason == "eos" ? "end_turn" : "max_tokens", ["stop_sequence"] = null, ["usage"] = new JsonObject { ["input_tokens"] = r.PromptTokens, ["output_tokens"] = Count(r) } },
             _ => Response(r.FinishReason == "eos" ? "completed" : "incomplete", r)
-        };
+            };
+        }
         private Task Event(string name, JsonObject data)
         { data["type"] = name; if (format == ChatFormat.Responses) { data["sequence_number"] = sequence++; c.Items["chat-sequence"] = sequence; } return Sse(c, data, name); }
         private JsonObject Chunk(JsonObject delta, string? finish = null) => new() { ["id"] = id, ["object"] = "chat.completion.chunk", ["created"] = created, ["model"] = Model, ["choices"] = new JsonArray(new JsonObject { ["index"] = 0, ["delta"] = delta, ["finish_reason"] = finish, ["logprobs"] = null }) };
@@ -132,7 +142,20 @@ internal static class CompatibleChat
         {
             if (format == ChatFormat.Completions)
             {
-                await Sse(c, Chunk(new(), r.FinishReason == "eos" ? "stop" : "length"));
+                var (text, calls) = Parsed(r);
+                if (input.Tools != null)
+                {
+                    if (text.Length > 0) await Delta(text);
+                    for (var index = 0; index < calls.Length; index++)
+                    {
+                        var call = calls[index];
+                        await Sse(c, Chunk(new() { ["tool_calls"] = new JsonArray(new JsonObject {
+                            ["index"] = index, ["id"] = call.Id, ["type"] = "function",
+                            ["function"] = new JsonObject { ["name"] = call.Name, ["arguments"] = call.Arguments }
+                        }) }));
+                    }
+                }
+                await Sse(c, Chunk(new(), calls.Length > 0 ? "tool_calls" : r.FinishReason == "eos" ? "stop" : "length"));
                 if (input.IncludeUsage) { var usage = Chunk(new()); usage["choices"] = new JsonArray(); usage["usage"] = Usage(r, true); await Sse(c, usage); }
                 await c.Response.WriteAsync("data: [DONE]\n\n", c.RequestAborted); await c.Response.Body.FlushAsync(c.RequestAborted);
             }

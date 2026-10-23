@@ -75,6 +75,8 @@ python3 /RELEASE/deploy/install-macos.py --executable /RELEASE/deepinfer --confi
 
 登录后启动、异常退出重启；退出登录/休眠不是无人值守可用性保证。停用使用相同参数加 `--uninstall`，只操作 `com.infernet.coordinator` 与 `com.infernet.metal`。日志在配置目录 `logs/`；应按保留周期归档，当前安装脚本不做自动日志轮转。
 
+只更新兼容的 coordinator 时可传 `--service coordinator`，该选项同时适用于旧包卸载和新包安装，保留 Metal worker 与模型进程；默认 `--service both`。切换前仍需排空请求、保存旧安装路径，并核对新旧协议兼容性。
+
 Windows 使用专用标准本地账号。先停止开发前台 agent，再在**管理员 PowerShell**执行：
 
 ```powershell

@@ -21,8 +21,9 @@ class Worker(http.server.BaseHTTPRequestHandler):
   else:raw=self.rfile.read(int(self.headers['Content-Length']))
   q=json.loads(raw);seen.append(q)
   assert self.headers['X-DeepInfer-Token']==token
-  text='你好 [world]';r=dict(requestId='test',workerId='test',model=q['model'],backend='metal',text=text,tokens=[],isSimulation=True,computeMs=1,tokenIds=[1,2],promptTokens=23,finishReason='eos')
   last=q['messages'][-1]['content']
+  text='<tool_call>\n<function=bash>\n<parameter=command>\nls -la\n</parameter>\n</function>\n</tool_call>' if last=='call-tool' else '<bash>\n<parameter=command>\nls -la\n</parameter>\n</function>\n</tool_call>' if last=='call-tool-shorthand' else '你好 [world]'
+  r=dict(requestId='test',workerId='test',model=q['model'],backend='metal',text=text,tokens=[],isSimulation=True,computeMs=1,tokenIds=[1,2],promptTokens=23,finishReason='eos')
   if last=='busy':self.send_response(429);self.end_headers();self.wfile.write(b'{"error":"busy"}');return
   self.send_response(200);self.send_header('Content-Type','text/event-stream' if self.path.endswith('/stream') else 'application/json');self.end_headers()
   if not self.path.endswith('/stream'):self.wfile.write(json.dumps(r).encode());return
@@ -101,6 +102,24 @@ try:
    with sdk.messages.stream(**args) as stream:
     text=''.join(stream.text_stream);final=stream.get_final_message()
     check(text=='你好 [world]' and final.usage.input_tokens==23 and final.usage.output_tokens==2,'Anthropic SDK stream accumulator')
+ tools=[{'type':'function','function':{'name':'bash','description':'Run a command','parameters':{'type':'object','properties':{'command':{'type':'string'}},'required':['command']}}}]
+ tool_body={'model':'qwen3.6-35b-a3b','messages':[{'role':'user','content':'call-tool'}],'tools':tools,'tool_choice':'auto','max_tokens':128}
+ code,s,_=call('/v1/chat/completions',tool_body)
+ tool_response=json.loads(s)['choices'][0]
+ check(code==200 and tool_response['finish_reason']=='tool_calls' and tool_response['message']['tool_calls'][0]['function']['arguments']=='{"command":"ls -la"}','nonstream function call is structured')
+ check(seen[-1]['messages'][0]['role']=='system' and '<tools>' in seen[-1]['messages'][0]['content'],'model receives tool definitions')
+ tool_body['messages']=[{'role':'user','content':'call-tool-shorthand'}]
+ code,s,_=call('/v1/chat/completions',tool_body)
+ check(code==200 and json.loads(s)['choices'][0]['message']['tool_calls'][0]['function']['arguments']=='{"command":"ls -la"}','observed Qwen shorthand is structured')
+ tool_body['messages']=[{'role':'user','content':'call-tool'}]
+ tool_body['stream']=True;tool_body['stream_options']={'include_usage':True}
+ code,s,_=call('/v1/chat/completions',tool_body)
+ events=[json.loads(x[6:]) for x in s.splitlines() if x.startswith('data: ') and x!='data: [DONE]']
+ deltas=[x['choices'][0]['delta'] for x in events if x['choices']]
+ check(code==200 and any('tool_calls' in x for x in deltas) and events[-2]['choices'][0]['finish_reason']=='tool_calls' and s.endswith('data: [DONE]\n\n'),'stream function call is structured')
+ tool_body['messages']=[{'role':'user','content':'call-tool'},tool_response['message'],{'role':'tool','tool_call_id':tool_response['message']['tool_calls'][0]['id'],'content':'file.txt'}]
+ code,s,_=call('/v1/chat/completions',tool_body)
+ check(code==200 and '<tool_response>' in seen[-1]['messages'][-1]['content'] and seen[-1]['messages'][-1]['role']=='user','tool result round trips into Qwen history')
  if a.tui:
   import pexpect,pyte
   # Refresh the short worker lease throughout terminal interaction.

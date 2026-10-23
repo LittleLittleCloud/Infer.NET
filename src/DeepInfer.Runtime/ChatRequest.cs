@@ -3,14 +3,14 @@ using DeepInfer.Core;
 namespace DeepInfer.Runtime;
 
 public enum ChatFormat { Completions, Messages, Responses }
-public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool IncludeUsage)
+public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool IncludeUsage, ChatTool[]? Tools = null)
 {
     public static ChatRequest Parse(JsonElement root, ChatFormat format)
     {
         if (root.ValueKind != JsonValueKind.Object) throw new ArgumentException("Request must be an object.");
         var allowed = new HashSet<string>(["model", "stream", "temperature", "top_p"]);
         allowed.UnionWith(format switch {
-            ChatFormat.Completions => ["messages", "max_tokens", "max_completion_tokens", "n", "stream_options"],
+            ChatFormat.Completions => ["messages", "max_tokens", "max_completion_tokens", "n", "stream_options", "tools", "tool_choice", "parallel_tool_calls"],
             ChatFormat.Messages => ["messages", "system", "max_tokens"],
             _ => new[] { "input", "instructions", "max_output_tokens", "store" }
         });
@@ -42,6 +42,17 @@ public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool I
         var model = root.TryGetProperty("model", out var m) ? String(m) : throw new ArgumentException("model is required.");
         if (model != Protocol.Qwen36Model) throw new ArgumentException("Only " + Protocol.Qwen36Model + " supports these chat APIs.");
         var turns = new List<ChatTurn>();
+        ChatTool[]? tools = null;
+        if (root.TryGetProperty("tools", out var definitions)) tools = ChatTools.ParseDefinitions(definitions);
+        if (root.TryGetProperty("tool_choice", out var choice))
+        {
+            if (tools == null || choice.ValueKind != JsonValueKind.String || choice.GetString() is not ("auto" or "required" or "none"))
+                throw new ArgumentException("tool_choice must be auto, required or none with declared tools.");
+            if (choice.GetString() == "none") tools = null;
+        }
+        if (root.TryGetProperty("parallel_tool_calls", out var parallel) && parallel.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+            throw new ArgumentException("parallel_tool_calls must be boolean.");
+        if (tools != null) turns.Add(new("system", ChatTools.Prompt(definitions)));
         var systemField = format == ChatFormat.Messages ? "system" : "instructions";
         if (root.TryGetProperty(systemField, out var system)) turns.Add(new("system", Text(system)));
         var field = format == ChatFormat.Responses ? "input" : "messages";
@@ -52,13 +63,29 @@ public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool I
             if (input.ValueKind != JsonValueKind.Array) throw new ArgumentException(field + " must be an array.");
             foreach (var item in input.EnumerateArray())
             {
-                if (item.ValueKind != JsonValueKind.Object || !item.TryGetProperty("role", out var r) || !item.TryGetProperty("content", out var content)) throw new ArgumentException("Messages require role and content.");
-                if (item.EnumerateObject().Any(p => p.Name is not ("role" or "content" or "type" or "id" or "status"))) throw new ArgumentException("Unsupported message parameter.");
+                if (item.ValueKind != JsonValueKind.Object || !item.TryGetProperty("role", out var r)) throw new ArgumentException("Messages require role.");
+                if (item.EnumerateObject().Any(p => p.Name is not ("role" or "content" or "type" or "id" or "status" or "tool_calls" or "tool_call_id" or "name" or "refusal"))) throw new ArgumentException("Unsupported message parameter.");
+                if (item.TryGetProperty("refusal", out var refusal) && refusal.ValueKind != JsonValueKind.Null) throw new ArgumentException("Refusal history is unsupported.");
                 if (item.TryGetProperty("type", out var type) && type.GetString() != "message") throw new ArgumentException("Only message items are supported.");
                 var role = String(r);
                 if (format == ChatFormat.Messages && role is not ("user" or "assistant")) throw new ArgumentException("Messages API uses the top-level system field.");
                 if (role == "developer") role = "system";
-                turns.Add(new(role, Text(content)));
+                if (role == "tool")
+                {
+                    if (format != ChatFormat.Completions || !item.TryGetProperty("tool_call_id", out var callId) || callId.ValueKind != JsonValueKind.String || !item.TryGetProperty("content", out var result))
+                        throw new ArgumentException("Tool results require content and tool_call_id.");
+                    turns.Add(new("user", "<tool_response>\n" + Text(result) + "\n</tool_response>"));
+                }
+                else if (role == "assistant" && item.TryGetProperty("tool_calls", out var calls))
+                {
+                    var body = item.TryGetProperty("content", out var content) && content.ValueKind != JsonValueKind.Null ? Text(content) : "";
+                    turns.Add(new("assistant", body + (body.Length == 0 ? "" : "\n") + ChatTools.SerializeHistory(calls)));
+                }
+                else
+                {
+                    if (!item.TryGetProperty("content", out var content)) throw new ArgumentException("Messages require content.");
+                    turns.Add(new(role, Text(content)));
+                }
             }
         }
         if (root.TryGetProperty("max_tokens", out _) && root.TryGetProperty("max_completion_tokens", out _)) throw new ArgumentException("Specify only one output token limit.");
@@ -73,6 +100,6 @@ public sealed record ChatRequest(InferenceRequest Inference, bool Stream, bool I
             if (!stream || opts.ValueKind != JsonValueKind.Object || opts.EnumerateObject().Any(p => p.Name != "include_usage")) throw new ArgumentException("Only stream_options.include_usage is supported with stream=true.");
             if (opts.TryGetProperty("include_usage", out var u)) usage = u.ValueKind is JsonValueKind.True or JsonValueKind.False ? u.GetBoolean() : throw new ArgumentException("include_usage must be boolean.");
         }
-        return new(request, stream, usage);
+        return new(request, stream, usage, tools);
     }
 }

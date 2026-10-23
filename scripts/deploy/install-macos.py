@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Install user LaunchAgents; no root required. --uninstall stops these two agents only."""
 import argparse,os,pathlib,plistlib,subprocess
-p=argparse.ArgumentParser();p.add_argument('--executable',required=True);p.add_argument('--config-dir',required=True);p.add_argument('--uninstall',action='store_true');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--executable',required=True);p.add_argument('--config-dir',required=True);p.add_argument('--uninstall',action='store_true');p.add_argument('--service',choices=['coordinator','metal','both'],default='both');a=p.parse_args()
 exe=pathlib.Path(a.executable).resolve();config=pathlib.Path(a.config_dir).resolve();target=pathlib.Path.home()/'Library/LaunchAgents';target.mkdir(exist_ok=True)
 logs=config/'logs';logs.mkdir(exist_ok=True);domain='gui/'+str(os.getuid())
 if not a.uninstall and not exe.is_file():raise SystemExit('Executable is missing')
 for name,command,filename in [('coordinator','coordinator','coordinator.json'),('metal','split-serve','worker.json')]:
+ if a.service!='both' and name!=a.service:continue
  label='com.infernet.'+name;path=target/(label+'.plist')
  if a.uninstall:
   subprocess.run(['launchctl','bootout',domain+'/'+label],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
