@@ -59,16 +59,17 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
     private readonly int kvBytes;
-    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false)
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false, bool scoreReuse = false)
     {
         if(packedWeights && !layerBatch) throw new ArgumentException("Packed weights require layer-major prefill.");
+        if(scoreReuse && !packedWeights) throw new ArgumentException("CUDA score reuse requires packed layer-major prefill.");
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
         if(CudaPrefixNative.AbiVersion()!=6) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
         if (handle == 0) throw new InvalidOperationException(Message(error));
-        if (CudaPrefixNative.ExecutionMode(handle, packedWeights ? 5 : layerBatch ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA prefill configuration rejected."); }
+        if (CudaPrefixNative.ExecutionMode(handle, scoreReuse ? 6 : packedWeights ? 5 : layerBatch ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA prefill configuration rejected."); }
         if (CudaPrefixNative.ReadbackMode(handle, batchReadback ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA readback configuration rejected."); }
     }
     private static string Message(byte[] e) => System.Text.Encoding.UTF8.GetString(e).TrimEnd('\0');

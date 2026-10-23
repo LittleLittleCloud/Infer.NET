@@ -23,6 +23,7 @@ public class QuantizedTests
     public void PackedCudaWeightsRejectSerialExecutionBeforeLoadingNativeLibrary()
     {
         Assert.Throws<ArgumentException>(() => new DeepInfer.Backends.Split.CudaPrefixSession("unused", 32, layerBatch: false, packedWeights: true));
+        Assert.Throws<ArgumentException>(() => new DeepInfer.Backends.Split.CudaPrefixSession("unused", 32, scoreReuse: true));
     }
 
     [ResidencyFact]
