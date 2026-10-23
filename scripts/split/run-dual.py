@@ -21,7 +21,7 @@ with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as s:s.connect((peer,22));l
 secret=secrets.token_hex(32);env=os.environ.copy()
 for k in list(env):
     if k.startswith('DEEPINFER_'):del env[k]
-env.update(DEEPINFER_TOKEN=secret,DEEPINFER_METAL_KV='bf16',DEEPINFER_METAL_PREFILL_CHUNK='32',DEEPINFER_METAL_PREFILL_DELTA='sequential',DEEPINFER_METAL_PREFILL_GEMM='fp32')
+env.update(DEEPINFER_TOKEN=secret,DEEPINFER_METAL_KV='bf16',DEEPINFER_METAL_PREFILL_CHUNK='32',DEEPINFER_METAL_PREFILL_DELTA='sequential',DEEPINFER_METAL_PREFILL_GEMM='fp32',DEEPINFER_METAL_PREFILL_MATRIX='0')
 # The verification configuration intentionally matches the serial CUDA precision path.
 command=['dotnet',str(root/'src/DeepInfer.Host/bin/Release/net10.0/deepinfer.dll'),'split-infer','--allow-remote','--listen',f'tcp://{local}:{a.port}','--output',str(out),'--max-tokens',str(a.max_tokens),'--prompt',a.prompt]
 if a.verify:command.append('--verify')
