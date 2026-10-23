@@ -1,5 +1,23 @@
 [
   {
+    "id": "bf16-independent-oracle",
+    "kind": "2026-10-23 · 独立正确性参考",
+    "title": "独立FP32参考：两条FP32路径20/20，BF16候选0/20",
+    "question": "双设备FP32相互吻合是否也吻合独立模型参考；BF16 GEMM候选在固定参考上首层偏差多少？",
+    "setup": "Qwen3.6 35B A3B affine8；128个固定合成token；MLX仅作独立FP32数值参考、逐token执行；保留的两端产品轨迹同源码1f42e6f，CUDA候选BF16 GEMM/FP32 KV；无真实RPC或吞吐计时。",
+    "change": "新增逐token独立参考与离线三路比较器；最初批量参考因无法通过FP32控制被保留为无效实验并被比较器拒绝。",
+    "result": "Metal FP32和CUDA FP32各20/20层通过独立参考，最差相对L2为9.134e-7和6.739e-7；CUDA BF16 GEMM/FP32 KV为0/20，第0层相对L2 0.009914。",
+    "validation": "128个输入ID相同；模型revision固定；参考与比较JSON有SHA-256，离线复算逐字节一致；原919259d服务恢复Ready且agent连接。",
+    "conclusion": "FP32跨设备对齐也得到独立参考支持；当前BF16乘法输入的首层偏差是真实的数值验收失败。批量MLX参考无效，不能算产品回归。",
+    "next": "定位满足BF16乘法输入约束的补偿方案，随后扩展到独立状态/logits、真实双机BF16 KV及128K验收。",
+    "commands": [
+      "artifacts/baselines/mlx-env/bin/python scripts/split/reference-prefix-mlx.py --model MODEL_DIR --output NEW_ORACLE_DIRECTORY",
+      "artifacts/baselines/mlx-env/bin/python scripts/split/compare-prefix-oracle.py --oracle NEW_ORACLE_DIRECTORY --metal METAL_FP32_DIRECTORY --cuda CUDA_FP32KV_DIRECTORY --output NEW_REPORT.json"
+    ],
+    "source": "docs/BF16-INDEPENDENT-ORACLE-20261023.md",
+    "evidence": "site/bf16-independent-oracle-summary.json"
+  },
+  {
     "id": "bf16-fp32kv-control",
     "kind": "2026-10-23 · 同精度正确性诊断",
     "title": "4090前20层FP32同精度对照：20层与40状态通过",

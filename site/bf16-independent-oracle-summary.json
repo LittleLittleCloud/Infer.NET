@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-23",
+  "kind": "independent-fp32-prefix-oracle-layer-comparison-not-e2e",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "tokens": 128,
+  "tokensSha256": "8894963a38fa5ac5efc5991b5eb193536d712234d434a83cf8dc3cc47072f0e7",
+  "productSource": "1f42e6fab4d58a683c66a3d009a8465521ad4403",
+  "oracleScriptSource": "7d4d8f6ea34ffd5d7bf4560123a8131e9cf87f22",
+  "profile": "independent MLX FP32 serial oracle; Metal FP32 GEMM/KV; CUDA FP32 GEMM/KV and BF16 GEMM/FP32 KV",
+  "metalFp32": {
+    "passingLayers": 20,
+    "totalLayers": 20,
+    "layer0RelativeL2": 3.8394924457662367e-07,
+    "worstRelativeL2": 9.133929565513362e-07,
+    "maxAbs": 7.62939453125e-06
+  },
+  "cudaFp32": {
+    "passingLayers": 20,
+    "totalLayers": 20,
+    "layer0RelativeL2": 3.3356843814056923e-07,
+    "worstRelativeL2": 6.738760417913809e-07,
+    "maxAbs": 5.7220458984375e-06
+  },
+  "cudaBf16GemmFp32Kv": {
+    "passingLayers": 0,
+    "totalLayers": 20,
+    "layer0RelativeL2": 0.009913724462158642,
+    "layer0MaxAbs": 0.005644975230097771,
+    "worstRelativeL2": 0.07461339692151549,
+    "maxAbs": 0.15071821212768555
+  },
+  "invalidBatchControl": {
+    "status": "excluded",
+    "metalLayer0RelativeL2": 0.005998307478834303,
+    "passingMetalLayers": 0,
+    "totalLayers": 20
+  },
+  "serialOracleResultLocalSha256": "de590f41b1f3afbaf8a260338a17eba6728a25b10052a6389bbf86230906cfa0",
+  "serialComparisonLocalSha256": "0c4a132ce2cb9d1e2864e0d59a0b4a9ae6c47dd2360204ebea205ec261072d34",
+  "invalidBatchComparisonLocalSha256": "65780290f19af67dfe0e8e4e6c9d999048d773c81c12d4359fbd34f25cc1707d",
+  "validation": "Both FP32 paths pass 20 independent layers; serial comparison repeated with identical SHA; invalid batch oracle rejected; original serve and agent restored Ready and connected",
+  "correctnessAcceptance": false,
+  "performanceAcceptance": false,
+  "limitations": [
+    "No independent KV/Delta state or product logits comparison",
+    "Candidate KV is FP32, not target BF16",
+    "No suffix, greedy output, real RPC, 128K, memory or throughput gate",
+    "Raw tensor files retained locally only"
+  ]
+}
