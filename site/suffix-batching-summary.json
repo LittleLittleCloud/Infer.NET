@@ -1,0 +1,484 @@
+{
+  "source": "a8ce0250b959b9279be8ccce99e9922c07f47f22",
+  "date": "2026-10-23",
+  "model": "Qwen3.6-35B-A3B",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "groupSize": 64,
+  "kv": "fp32",
+  "gemm": "fp32",
+  "scratchTokens": 512,
+  "cudaWireChunk": 32,
+  "cudaPrefill": "batch-fp32",
+  "inputTokens": 8192,
+  "outputTokens": 128,
+  "warmups": 1,
+  "measuredTrials": 3,
+  "cacheHit": 0,
+  "ignoreEos": true,
+  "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+  "all128OutputTokensEqualAcross16ValidRequests": true,
+  "runs": [
+    {
+      "runId": "suffix-e2e-32-20261023T081727Z",
+      "suffixChunk": 32,
+      "confirmation": false,
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 18.1124673,
+          "ttftSeconds": 18.144601583000004,
+          "clientSeconds": 20.440079792000006,
+          "decodeTokensPerSecond": 55.30614323655299,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 18.125156,
+          "ttftSeconds": 18.135304833000006,
+          "clientSeconds": 20.411710541000005,
+          "decodeTokensPerSecond": 55.78655239237996,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 18.4020537,
+          "ttftSeconds": 18.413952917000003,
+          "clientSeconds": 20.68240025,
+          "decodeTokensPerSecond": 55.982728755127525,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 18.4077247,
+          "ttftSeconds": 18.418250834000006,
+          "clientSeconds": 20.688483917,
+          "decodeTokensPerSecond": 55.93536056880356,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "median": {
+        "prefillSeconds": 18.4020537,
+        "ttftSeconds": 18.413952917000003,
+        "clientSeconds": 20.68240025,
+        "decodeTokensPerSecond": 55.93536056880356
+      },
+      "stages": [
+        {
+          "hiddenWaitMs": 163.871,
+          "suffixMs": 14985.171,
+          "stateWaitMs": 2923.088,
+          "importMs": 21.966
+        },
+        {
+          "hiddenWaitMs": 474.874,
+          "suffixMs": 14979.44,
+          "stateWaitMs": 2629.559,
+          "importMs": 18.66
+        },
+        {
+          "hiddenWaitMs": 559.622,
+          "suffixMs": 14973.212,
+          "stateWaitMs": 2828.404,
+          "importMs": 18.827
+        },
+        {
+          "hiddenWaitMs": 406.286,
+          "suffixMs": 14988.588,
+          "stateWaitMs": 2975.087,
+          "importMs": 13.427
+        }
+      ],
+      "windowsWholeGpuPeakMiB": 19524.0,
+      "footprintAtEnd": [
+        "Physical footprint:         35.3G",
+        "Physical footprint (peak):  35.6G"
+      ],
+      "rawSummarySha256": "24086296adf2c23182e0899374e912590d8c4b752c79c5d0a6f029a0e212a49f"
+    },
+    {
+      "runId": "suffix-e2e-128-20261023T082142Z",
+      "suffixChunk": 128,
+      "confirmation": false,
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 17.222114,
+          "ttftSeconds": 17.245481041999998,
+          "clientSeconds": 19.522348708,
+          "decodeTokensPerSecond": 55.76442332538891,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 17.313662700000002,
+          "ttftSeconds": 17.323813625,
+          "clientSeconds": 19.602644958,
+          "decodeTokensPerSecond": 55.726917044340865,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 17.1336015,
+          "ttftSeconds": 17.144447624999998,
+          "clientSeconds": 19.415135874999997,
+          "decodeTokensPerSecond": 55.92112215638891,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 17.1679656,
+          "ttftSeconds": 17.180958583,
+          "clientSeconds": 19.457420915999997,
+          "decodeTokensPerSecond": 55.782494653774975,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "median": {
+        "prefillSeconds": 17.1679656,
+        "ttftSeconds": 17.180958583,
+        "clientSeconds": 19.457420915999997,
+        "decodeTokensPerSecond": 55.782494653774975
+      },
+      "stages": [
+        {
+          "hiddenWaitMs": 3550.223,
+          "suffixMs": 10829.754,
+          "stateWaitMs": 2794.352,
+          "importMs": 22.643
+        },
+        {
+          "hiddenWaitMs": 3523.549,
+          "suffixMs": 10844.544,
+          "stateWaitMs": 2901.945,
+          "importMs": 16.794
+        },
+        {
+          "hiddenWaitMs": 3511.261,
+          "suffixMs": 10857.87,
+          "stateWaitMs": 2723.069,
+          "importMs": 17.315
+        },
+        {
+          "hiddenWaitMs": 3491.853,
+          "suffixMs": 10822.097,
+          "stateWaitMs": 2814.211,
+          "importMs": 15.843
+        }
+      ],
+      "windowsWholeGpuPeakMiB": 19524.0,
+      "footprintAtEnd": [
+        "Physical footprint:         35.4G",
+        "Physical footprint (peak):  35.6G"
+      ],
+      "rawSummarySha256": "dbb7ccb2852f6bea6998c06d3dc5ca10a3c8c50a3a19dfd3448bdeb050fd3c2c"
+    },
+    {
+      "runId": "suffix-e2e-512-20261023T082422Z",
+      "suffixChunk": 512,
+      "confirmation": false,
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 17.4036829,
+          "ttftSeconds": 17.424224708,
+          "clientSeconds": 19.695717125,
+          "decodeTokensPerSecond": 55.88634846564025,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 17.535580000000003,
+          "ttftSeconds": 17.545963917,
+          "clientSeconds": 19.829028041999997,
+          "decodeTokensPerSecond": 55.73304800353254,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 17.9780635,
+          "ttftSeconds": 17.987281957999997,
+          "clientSeconds": 20.256272916999997,
+          "decodeTokensPerSecond": 55.966564604805555,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 17.6206767,
+          "ttftSeconds": 17.631804083999995,
+          "clientSeconds": 19.904404709000005,
+          "decodeTokensPerSecond": 55.857248225652675,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "median": {
+        "prefillSeconds": 17.6206767,
+        "ttftSeconds": 17.631804083999995,
+        "clientSeconds": 19.904404709000005,
+        "decodeTokensPerSecond": 55.857248225652675
+      },
+      "stages": [
+        {
+          "hiddenWaitMs": 6520.588,
+          "suffixMs": 8120.536,
+          "stateWaitMs": 2707.788,
+          "importMs": 24.759
+        },
+        {
+          "hiddenWaitMs": 6616.534,
+          "suffixMs": 8111.442,
+          "stateWaitMs": 2759.203,
+          "importMs": 19.041
+        },
+        {
+          "hiddenWaitMs": 6747.025,
+          "suffixMs": 8116.309,
+          "stateWaitMs": 3069.822,
+          "importMs": 16.74
+        },
+        {
+          "hiddenWaitMs": 6746.107,
+          "suffixMs": 8117.226,
+          "stateWaitMs": 2711.11,
+          "importMs": 16.437
+        }
+      ],
+      "windowsWholeGpuPeakMiB": 19524.0,
+      "footprintAtEnd": [
+        "Physical footprint:         35.3G",
+        "Physical footprint (peak):  35.6G"
+      ],
+      "rawSummarySha256": "1bcb7089d5f8d519fee4438153fb93b652bfb48688c38cf6bdd3952525428cfa"
+    },
+    {
+      "runId": "suffix-e2e-128-20261023T082851Z",
+      "suffixChunk": 128,
+      "confirmation": true,
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 17.5326074,
+          "ttftSeconds": 17.552076875,
+          "clientSeconds": 19.820410499999998,
+          "decodeTokensPerSecond": 55.99082420609418,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 17.355096699999997,
+          "ttftSeconds": 17.366400166,
+          "clientSeconds": 19.627930915999997,
+          "decodeTokensPerSecond": 56.16025110972883,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 17.141728999999998,
+          "ttftSeconds": 17.151461625000003,
+          "clientSeconds": 19.429705665999997,
+          "decodeTokensPerSecond": 55.740562530245846,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 17.4031485,
+          "ttftSeconds": 17.422079042,
+          "clientSeconds": 19.696922125000007,
+          "decodeTokensPerSecond": 55.8217172149165,
+          "metalAllocatedBytes": 37572984832,
+          "swapOutBytes": 0
+        }
+      ],
+      "median": {
+        "prefillSeconds": 17.355096699999997,
+        "ttftSeconds": 17.366400166,
+        "clientSeconds": 19.627930915999997,
+        "decodeTokensPerSecond": 55.8217172149165
+      },
+      "stages": [
+        {
+          "hiddenWaitMs": 3718.279,
+          "suffixMs": 10850.835,
+          "stateWaitMs": 2922.365,
+          "importMs": 16.838
+        },
+        {
+          "hiddenWaitMs": 3666.033,
+          "suffixMs": 10829.792,
+          "stateWaitMs": 2818.582,
+          "importMs": 16.66
+        },
+        {
+          "hiddenWaitMs": 3627.509,
+          "suffixMs": 10823.485,
+          "stateWaitMs": 2652.637,
+          "importMs": 14.704
+        },
+        {
+          "hiddenWaitMs": 3543.124,
+          "suffixMs": 10845.372,
+          "stateWaitMs": 2979.122,
+          "importMs": 13.005
+        }
+      ],
+      "windowsWholeGpuPeakMiB": 19585.0,
+      "footprintAtEnd": [
+        "Physical footprint:         35.4G",
+        "Physical footprint (peak):  35.5G"
+      ],
+      "rawSummarySha256": "d826cf4334339a6f46e0cd16087f226968eee22d2f00a26fb36c617080331c76"
+    }
+  ],
+  "correctness": [
+    {
+      "runId": "suffix-check-9d3304b",
+      "tokens": 234,
+      "configurations": [
+        {
+          "chunk": 32,
+          "comparisons": 4688,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "chunk": 128,
+          "comparisons": 4688,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 7.389328831207791e-06,
+          "maxAbs": 3.4332275390625e-05
+        },
+        {
+          "chunk": 512,
+          "comparisons": 4688,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 7.389328831207791e-06,
+          "maxAbs": 3.4332275390625e-05
+        }
+      ]
+    },
+    {
+      "runId": "suffix-check-a8ce025",
+      "tokens": 714,
+      "configurations": [
+        {
+          "chunk": 32,
+          "comparisons": 14288,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "chunk": 128,
+          "comparisons": 14288,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 1.1783110727394976e-05,
+          "maxAbs": 3.457069396972656e-05
+        },
+        {
+          "chunk": 512,
+          "comparisons": 14288,
+          "failed": 0,
+          "greedyEqual": true,
+          "maxRelativeL2": 1.1783110727394976e-05,
+          "maxAbs": 3.457069396972656e-05
+        }
+      ]
+    }
+  ],
+  "packages": {
+    "mac": {
+      "source": "a8ce0250b959b9279be8ccce99e9922c07f47f22",
+      "rid": "osx-arm64",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "splitProtocol": 3,
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "requiredPlatform": "macOS 26+ / Apple M5",
+      "files": {
+        "deepinfer": "5ebc757393a78cbe52d525b89e3ab057b2376437f3e241303e6a597b2f6d27e2",
+        "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+        "deploy/acceptance.py": "b9adcd2d036c7abcb1d7d7c79c126b0ccc5033554d25618800a71b7f75bea771",
+        "deploy/install-macos.py": "5c603465deb586739b835fe9a72a6195af1f04e739dcb665adeee8e6f9a33310",
+        "deploy/install-windows.ps1": "4224c38d0d82bb73ab9e824973185733f4286f7c07de5df0484b493ca83db092",
+        "deploy/package.py": "f9965d8652475c2be205fe912cb76286a65bb50c0867c8d7781387760385d991",
+        "deploy/prepare.py": "f979dc106f2be9dd677dbb0fd6c0c7eb0d79a312698bc41cb5034460124eaebd",
+        "deploy/verify-package.py": "1730da5c0668aac357a645decc6d51e416ea068db69edba1b9ff7f0308b5b518",
+        "libdeepinfer_metal.dylib": "aa9d1d18992a0160388e61ed7172239f355009283930d93dc952aa3e7593762d"
+      }
+    },
+    "windows": {
+      "source": "a8ce0250b959b9279be8ccce99e9922c07f47f22",
+      "rid": "win-x64",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "splitProtocol": 3,
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "requiredPlatform": "Windows x64 / RTX 4090 SM89 / CUDA 13 compatible driver",
+      "files": {
+        "deepinfer.exe": "5191523b6c5168d13257e12b50537bb71fc465881b4c83cafdad2440a82e93e0",
+        "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+        "deepinfer_cuda.dll": "63385e023ba41ccbcc312b896c391cf6c700a38830a5bf15456e3b2ae9c619d8",
+        "deploy\\acceptance.py": "788e33ef0cf2952c2161c4791dfacc0d8b1406ad306c6a3d5e4f42a67ef5cc79",
+        "deploy\\install-macos.py": "db42dda9a82e0ab42b8442384b458e059a52a900c2173cca8482ce965424e0cc",
+        "deploy\\install-windows.ps1": "68ec7f5b85906d4b4f194a6c5e378109d13999e7dfb636c0a5da57672706a340",
+        "deploy\\package.py": "7361d92e5d5d21eeddc0cd92fbd628806eb4b1430b8d83911b2e1b5548273f38",
+        "deploy\\prepare.py": "a4ef50156f2f0a9d213c598dc6c3ffae80d6c60669ba0c2947ac5dad81c95a85",
+        "deploy\\verify-package.py": "0f0825fafae67db191a05e2054fd2eabc274c1855e3f0848e736d9202bed8115",
+        "source.txt": "d101d833a5fc089af6b6ff5f3a6aad01dc886aedac2446896832d16b23537a44"
+      }
+    }
+  },
+  "excluded": [
+    {
+      "runId": "suffix-e2e-128-20261023T082656Z",
+      "reason": "Potential overlap with physical GPU unit test; entire cohort excluded, fresh exclusive confirmation run performed."
+    }
+  ],
+  "limits": [
+    "FP32 8K diagnostic, not BF16/128K/4096-output acceptance",
+    "32 then128 then512 then128 confirmation, not randomized",
+    "Whole GPU peak sampled every500ms; process footprint collected at end",
+    "Worker prefill and client TTFT, formal coordinator t2-t1 remains pending"
+  ]
+}
