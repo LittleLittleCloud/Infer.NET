@@ -18,7 +18,7 @@ internal static class SuffixChecks
         using var gpu = new MetalSplitSession(o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx"), 4, residency: true, prefillScratchTokens: 512);
         var prompt = o.Get("prompt-file", "") is { Length: > 0 } file ? await File.ReadAllTextAsync(file, ct) : o.Get("prompt", "Explain causal attention.");
         var tokens = gpu.Tokenize(prompt, ct);
-        if (tokens.Length is < 1 or > 512) throw new ArgumentException("Suffix correctness input is limited to 512 tokens including template.");
+        if (tokens.Length is < 1 or > 1024) throw new ArgumentException("Suffix correctness input is limited to 1024 tokens including template.");
         const int generated = 8;
         var reference = new float[tokens.Length * 40 * 2048];
         var expectedIds = new int[generated]; var expectedLogits = new float[generated][];
