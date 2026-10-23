@@ -5,6 +5,8 @@ param(
     [ValidateSet('bf16','fp32')][string]$Shared='fp32',
     [string]$RouteProbe='1',
     [switch]$StageProbe,
+    [ValidateRange(0,31)][int]$StageToken=0,
+    [switch]$CompareStageModes,
     [switch]$SaveRoutes,
     [switch]$SplitKQkv,
     [switch]$SplitKOutput
@@ -18,7 +20,12 @@ if(-not (Test-Path $dll)){throw 'Build the current CUDA prefix DLL first'}
 $env:DEEPINFER_CUDA_ROUTER_FP32=if($Router -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_SHARED_FP32=if($Shared -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_ROUTE_PROBE=$RouteProbe
-if($StageProbe){$env:DEEPINFER_CUDA_STAGE_DIR=$Output}
+if($CompareStageModes -and -not $StageProbe){throw '-CompareStageModes requires -StageProbe'}
+if($StageProbe){
+    $env:DEEPINFER_CUDA_STAGE_DIR=$Output
+    $env:DEEPINFER_CUDA_STAGE_TOKEN=[string]$StageToken
+    $env:DEEPINFER_CUDA_STAGE_COMPARE=if($CompareStageModes){'1'}else{'0'}
+}
 if($SaveRoutes){$env:DEEPINFER_CUDA_ROUTE_TRACE=Join-Path $Output 'routes-all.i32'}
 else{Remove-Item Env:DEEPINFER_CUDA_ROUTE_TRACE -ErrorAction SilentlyContinue}
 $env:DEEPINFER_CUDA_QKV_SPLIT_K=if($SplitKQkv){'1'}else{'0'}

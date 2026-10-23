@@ -57,6 +57,14 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
     prepare_chunk(g);auto &p=g->chunk;int pos=g->position;ChunkProfile profile(g);
     const char *stageDir=trace&&pos==0?std::getenv("DEEPINFER_CUDA_STAGE_DIR"):nullptr;
     const bool stageProbe=stageDir&&*stageDir;
+    const char *stageTokenText=stageProbe?std::getenv("DEEPINFER_CUDA_STAGE_TOKEN"):nullptr;
+    int stageToken=0;
+    if(stageTokenText&&std::sscanf(stageTokenText,"%d",&stageToken)!=1)
+        throw std::runtime_error("Invalid CUDA stage probe token");
+    if(stageProbe&&(stageToken<0||stageToken>=count))
+        throw std::runtime_error("CUDA stage probe token must be in the first chunk");
+    const char *compareStage=stageProbe?std::getenv("DEEPINFER_CUDA_STAGE_COMPARE"):nullptr;
+    const bool compareStageModes=compareStage&&std::strcmp(compareStage,"1")==0;
     const char *routeTracePath=trace?std::getenv("DEEPINFER_CUDA_ROUTE_TRACE"):nullptr;
     std::ofstream routeTrace;
     if(routeTracePath&&*routeTracePath) {
@@ -64,7 +72,11 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         if(!routeTrace)throw std::runtime_error("Cannot open CUDA route trace output");
     }
     auto probe=[&](const char *stage,const float *device,size_t floats,int layer){
-        if(stageProbe&&layer==0)chunk_stage_probe(stageDir,stage,device,floats);
+        if(stageProbe&&layer==0) {
+            std::string name=compareStageModes?(g->bf16AllProjections?"mode6-":"mode5-"):"";
+            name+=stage;
+            chunk_stage_probe(stageDir,name.c_str(),device+size_t(stageToken)*floats,floats);
+        }
     };
     ck(cudaMemcpy(p.tokens,tokens,count*4,cudaMemcpyHostToDevice));
     chunk_embed<<<dim3(16,count),128>>>(g->embedding,p.tokens,p.x);

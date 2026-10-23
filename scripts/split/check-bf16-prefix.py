@@ -116,6 +116,8 @@ try:
             'bundleSha256':weight_sha.hexdigest(),'weightBits':8,'kv':'bf16',
             'candidateRouterProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_ROUTER_FP32')=='1' else 'bf16',
             'candidateSharedProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_SHARED_FP32')=='1' else 'bf16',
+            'stageProbeToken':int(os.environ.get('DEEPINFER_CUDA_STAGE_TOKEN','0')) if os.environ.get('DEEPINFER_CUDA_STAGE_DIR') else None,
+            'stageCompareModes':os.environ.get('DEEPINFER_CUDA_STAGE_COMPARE')=='1',
             'tokens':len(tokens),'tokensSha256':hashlib.sha256(json.dumps(tokens).encode()).hexdigest(),
             'baseline':baseline,'candidate':candidate,'repeat':repeat,'layerDrift':layers,
             'passed':'finite-and-deterministic-only',
