@@ -407,7 +407,7 @@ static bool p_create(GModel *g,char *error,int capacity) {
   auto lib=[g->compute.device newLibraryWithSource:[source stringByAppendingString:prefill_expanded_source] options:options error:&failure];
   if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   p->expandedWeight=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(8192)*2048/2);p->expandedUp=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(512)*2048/2);
-  p->expandedInput=g_buffer(g,(p->expandedExperts||p->packedExperts)?NSUInteger((p->maxTokens*8+63)/64+256)*64*2048/2:NSUInteger(p->maxTokens)*4096/2);
+  p->expandedInput=g_buffer(g,(p->expandedExperts||p->packedExperts)?NSUInteger((p->maxTokens*8+63)/64+256)*64*2048/2:NSUInteger(std::max(64u,p->maxTokens))*4096/2);
   if(!p->expandedWeight||!p->expandedUp||!p->expandedInput){error_text(error,capacity,@"Cannot allocate bounded BF16 expansion workspace");delete p;return false;}
   NSArray<NSString*> *names=@[@"expanded_weights",@"expanded_pack",@"expanded_matrix",@"expanded_gate"];
   for(int i=0;i<4;i++){p->expandedPs[i]=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:names[i]] error:&failure];if(!p->expandedPs[i]){error_text(error,capacity,failure.localizedDescription);delete p;return false;}}
