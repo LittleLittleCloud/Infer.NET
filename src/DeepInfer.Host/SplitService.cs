@@ -120,7 +120,7 @@ public static class SplitService
             var error = RequestValidation.Error(input);
             if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal" || input.MaxTokens > 256)
             { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens 1..256 is supported."); return; }
-            if (!warmed || (!queue.Busy && !Status().Ready)) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
+            if (!warmed) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
             try
@@ -129,11 +129,19 @@ public static class SplitService
                 if (slot is null) { await Fail(context, 429, "queue_full", "Request queue is full."); return; }
                 var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
                 if (ids.Length + input.MaxTokens > 2048) { await Fail(context, 400, "context_length", "Prompt plus output must fit 2048 tokens; no silent truncation."); return; }
-                gpu.Reset(ids.Length + input.MaxTokens);
                 Peer peer;
-                do { peer = await peers.Reader.ReadAsync(timeout.Token); if (peer.Connected) break; peer.Dispose(); } while (true);
+                // Short EOS responses can finish before the agent's next authenticated connection.
+                // Wait inside the bounded queue, without retrying or starting any GPU work.
+                using (var reconnect = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token))
+                {
+                    reconnect.CancelAfter(TimeSpan.FromSeconds(5));
+                    try { do { peer = await peers.Reader.ReadAsync(reconnect.Token); if (peer.Connected) break; peer.Dispose(); } while (true); }
+                    catch (OperationCanceledException) when (!timeout.IsCancellationRequested)
+                    { await Fail(context, 503, "not_ready", "CUDA peer unavailable after reconnect grace period."); return; }
+                }
                 using (peer)
                 {
+                    gpu.Reset(ids.Length + input.MaxTokens);
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     await peer.Wire.SendAsync(new(SplitWire.Start, 20, 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
                     var next = -1;
