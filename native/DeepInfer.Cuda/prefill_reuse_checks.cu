@@ -134,7 +134,7 @@ int main(){try {
         reuse_case<2>(v[0],v[1],v[2],oracle);reuse_case<4>(v[0],v[1],v[2],oracle);reuse_case<8>(v[0],v[1],v[2],oracle);
         reuse_case<4,true>(v[0],v[1],v[2],oracle);reuse_case<8,true>(v[0],v[1],v[2],oracle);
     }
-    for(auto v:std::vector<std::vector<int>>{{1,13,256},{3,33,512},{17,512,2048},{32,2048,512}})for(bool routed:{false,true})expert_case(v[0],v[1],v[2],routed);
+    for(auto v:std::vector<std::vector<int>>{{1,13,256},{3,33,512},{17,512,2048},{32,2048,512},{32,4096,2048},{32,2048,4096}})for(bool routed:{false,true})expert_case(v[0],v[1],v[2],routed);
     for(auto v:std::vector<std::vector<int>>{{1,13,256},{17,33,512},{32,512,2048},{32,4096,2048}})fused_expert_case(v[0],v[1],v[2]);
     fused_expert_case(32,512,2048,1);
     puts("{\"passed\":true}");return 0;
