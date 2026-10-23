@@ -39,6 +39,24 @@
     "Metal control from earlier source, not same-full-commit dual-host formal acceptance",
     "No independent KV/state oracle or suffix/logits/greedy",
     "No real RPC, 128K, memory or formal serving-throughput result",
-    "Raw tensors local only"
-  ]
+    "Raw tensors local only",
+    "Full BF16-KV independent oracle was interrupted before first token due system memory pressure; no numerical result"
+  ],
+  "kvRounding": {
+    "layer": 3,
+    "keyWords": 65536,
+    "valueWords": 65536,
+    "bothExactRoundToNearestEven": true,
+    "keyRelativeL2VsFp32": 0.0016626019507342351,
+    "valueRelativeL2VsFp32": 0.0016549781730388945,
+    "localResultSha256": "8307d2df4e076c10aad05a3ee568c232da469dfaab4947194e116eda40b572e8"
+  },
+  "independentBf16KvAttempt": {
+    "resultProduced": false,
+    "reason": "Full MLX model loading caused severe Mac system-wide swap-out before first reference token; verified oracle PID stopped and deployed serve restored",
+    "observedSystemSwapoutGiBInApprox34s": 9.375,
+    "localAbortRecordSha256": "db45a7355dae4ac29425cd050784e4a7f12fd70a33e4c3b3478b254b7336ebc9",
+    "serviceRestoredReadyConnected": true,
+    "realSplitSmokeHttpStatus": 200
+  }
 }
