@@ -37,7 +37,7 @@ def page(title, body, active):
 <a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
 <nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-22 · 新增驻留 A/B：空闲首步等待改善；128K 性能及 Windows SCM 仍待完成</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 短请求首字与空闲首步等待改善；128K 性能及 Windows SCM 仍待完成</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -67,6 +67,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
+<div class="notice"><strong>你好首字：820ms → 91ms</strong><p>短输入在驻留 Mac 完成 prefill，避免固定双机交接；六组输入共 48 次输出 token 一致。长输入仍走 4090→Mac。CUDA 合并读回反而慢约 4%，已保留较快的原默认。<a href="experiments.html#short-prefill">路由与失败实验 →</a> · <a href="short-prefill-summary.json">逐次结果 JSON</a></p></div>
 <div class="notice"><strong>空闲首步 decode：约 200ms → 25ms</strong><p>同版本开启/关闭 Metal 权重驻留，2/10/60 秒空闲各三次。24 次正式短请求输出一致、无新增整机 swap-out；高内存压力与 128K 长请求仍待验收。<a href="experiments.html#metal-residency">A/B 记录 →</a> · <a href="residency-summary.json">逐次结果 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/15">PR #15</a></p></div>
 <div class="notice"><strong>鼠标 Dashboard 与 Auto 输出已接入</strong><p>TUI 默认 5200，Dashboard / Playground 分页，鼠标选 worker、滚轮、真实状态与最近性能。部署取消旧 2K context / 256 output 上限；本轮实测 1962 + 300、3012 + 32 tokens，262K 整模仍未验收。双端各 106 单测、59 受控检查，真实 API/TUI/上下文 45 项及断连恢复通过。<a href="experiments.html#tui-dashboard">验收记录 →</a> · <a href="dashboard-acceptance-summary.json">摘要 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/14">PR #14</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
@@ -114,7 +115,7 @@ for n in notes:
         body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')

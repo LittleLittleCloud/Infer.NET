@@ -314,5 +314,23 @@
       "python3 scripts/benchmark-idle-latency.py --help"
     ],
     "evidence": "site/residency-summary.json；原始日志仅本机"
+  },
+  {
+    "id": "short-prefill",
+    "title": "短输入本地 prefill：你好首字 820ms → 91ms",
+    "kind": "8bit · 路由 A/B + CUDA 失败实验",
+    "source": "docs/SHORT-PREFILL.md",
+    "question": "短请求是否值得支付完整双机交接成本；减少 CUDA 同步读回是否更快？",
+    "setup": "a13e0a1 同版本路由开关；六个输入，每种路由预热一次 + 三次正式请求；8bit / FP32 KV。",
+    "change": "<=128 模板/历史 tokens 由驻留 Mac 完成全量 prefill；长输入保留 4090→Mac。CUDA 合并读回另做独立 A/B。",
+    "result": "你好 TTFT 820→91ms；其余短输入 812–1066→148–209ms。48 次输出 token 一致；351-token 对照继续走双机，约 2.6s。",
+    "validation": "107 Mac 测试、30 集成、65 SDK/TUI 检查通过；Windows 数值测试及 AOT 通过。CUDA 两种读回的隐藏/40 份状态逐字节一致，但 batch 慢 3.55–3.95%，不作为默认。",
+    "conclusion": "已减少短请求交接开销，未实现 CUDA 批量 GEMM。修正默认读回的 2109a06 已部署；长上下文性能目标未验收。",
+    "next": "实现 CUDA 批量 GEMM/Delta，并解决目标 BF16 跨后端一致性。",
+    "commands": [
+      "python3 scripts/benchmark-short-route.py --help",
+      "python3 scripts/split/benchmark-readback.py --help"
+    ],
+    "evidence": "site/short-prefill-summary.json；完整事件与原始状态检查仅本机"
   }
 ]
