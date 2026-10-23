@@ -44,22 +44,39 @@ static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const i
         chunk_gemv_packed<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
 }
+static void chunk_stage_probe(const char *directory,const char *stage,const float *device,size_t floats) {
+    std::vector<float> values(floats);
+    ck(cudaMemcpy(values.data(),device,floats*sizeof(float),cudaMemcpyDeviceToHost));
+    std::ofstream file(std::string(directory)+"/cuda-"+stage+".f32",std::ios::binary|std::ios::trunc);
+    if(!file)throw std::runtime_error("Cannot open CUDA stage probe output");
+    file.write(reinterpret_cast<const char*>(values.data()),std::streamsize(floats*sizeof(float)));
+    if(!file)throw std::runtime_error("Cannot write CUDA stage probe output");
+}
 static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *trace) {
     if(g->profileEnabled&&trace)throw std::runtime_error("Phase profiling excludes trace readbacks");
     prepare_chunk(g);auto &p=g->chunk;int pos=g->position;ChunkProfile profile(g);
+    const char *stageDir=trace&&pos==0?std::getenv("DEEPINFER_CUDA_STAGE_DIR"):nullptr;
+    const bool stageProbe=stageDir&&*stageDir;
+    auto probe=[&](const char *stage,const float *device,size_t floats,int layer){
+        if(stageProbe&&layer==0)chunk_stage_probe(stageDir,stage,device,floats);
+    };
     ck(cudaMemcpy(p.tokens,tokens,count*4,cudaMemcpyHostToDevice));
     chunk_embed<<<dim3(16,count),128>>>(g->embedding,p.tokens,p.x);
+    probe("embedding",p.x,2048,0);
     for(int l=0;l<20;l++) {
         auto &v=g->layers[l];auto *m=v.m;
         chunk_norm<<<count,256>>>(p.x,nullptr,v.p,p.norm,g->eps,2048);
+        probe("embedding-norm",p.norm,2048,l);
         chunk_mv(g,m[0],p.norm,p.qkv,count);
         if((l+1)%4) {
             chunk_mv(g,m[3],p.norm,p.z,count);chunk_mv(g,m[4],p.norm,p.a,count);chunk_mv(g,m[5],p.norm,p.b,count);
+            probe("qkv",p.qkv,8192,l);
             profile.mark(0);
             chunk_linear<<<dim3(64,count),128>>>(p.qkv,v.history,v.p,p.conv,p.a,p.b);
             prefill_delta_sequence<<<2048,64>>>(v.state,p.conv,p.a,p.b,p.attention,count);
             chunk_history<<<64,128>>>(p.qkv,v.history,count);
             chunk_delta_norm<<<dim3(32,count),128>>>(p.attention,p.z,v.p+36928,g->eps);
+            probe("delta-norm",p.attention,4096,l);
         } else {
             chunk_mv(g,m[1],p.norm,p.k,count);chunk_mv(g,m[2],p.norm,p.v,count);
             profile.mark(0);
@@ -74,7 +91,10 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             }
         }
         profile.mark((l+1)%4 ? 1 : 2);
-        chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
+        chunk_mv(g,m[6],p.attention,p.out,count);
+        probe("output-projection",p.out,2048,l);
+        chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
+        probe("residual-norm",p.norm,2048,l);
         profile.mark(3);
         if(g->bf16AllProjections&&std::getenv("DEEPINFER_CUDA_ROUTER_FP32")&&
            std::strcmp(std::getenv("DEEPINFER_CUDA_ROUTER_FP32"),"1")==0)
@@ -89,6 +109,7 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         }else{
             chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
         }
+        probe("router",p.router,256,l);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);
         int probeLayer=0,probeTokenA=49,probeTokenB=91;
         const char *probe=std::getenv("DEEPINFER_CUDA_ROUTE_PROBE");
@@ -113,13 +134,17 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             }
         }
         activation<<<count*4,128>>>(p.sg,p.su,count*512);
+        probe("shared-gate",p.sg,512,l);
         profile.mark(4);
         chunk_mv(g,m[8],p.norm,p.eg,count,p.ids,8);chunk_mv(g,m[9],p.norm,p.eu,count,p.ids,8);
         activation<<<count*32,128>>>(p.eg,p.eu,count*4096);
+        probe("expert-gate",p.eg,4096,l);
         profile.mark(5);
         chunk_mv(g,m[10],p.eg,p.eo,count,p.ids,8,true);chunk_mv(g,m[13],p.sg,p.so,count);
+        probe("expert-down",p.eo,16384,l);probe("shared-down",p.so,2048,l);
         profile.mark(6);
         chunk_merge<<<dim3(16,count),128>>>(p.x,p.eo,p.so,p.sr,p.prob);
+        probe("merge",p.x,2048,l);
         profile.mark(7);
         if(trace)for(int t=0;t<count;t++)ck(cudaMemcpy(trace+(t*20+l)*2048,p.x+t*2048,2048*4,cudaMemcpyDeviceToHost));
     }

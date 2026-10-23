@@ -653,14 +653,33 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  bool profiling=std::getenv("DEEPINFER_METAL_PREFILL_PROFILE")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_PROFILE"),"1")==0&&g->position==4096;
  double profileMs=0;int profileDispatches=0;
  const char *routeSpec=std::getenv("DEEPINFER_METAL_ROUTE_PROBE");
+ const char *stageDir=std::getenv("DEEPINFER_METAL_STAGE_DIR");
  int routeLayer=0,routeTokenA=49,routeTokenB=91;
  if(routeSpec&&std::sscanf(routeSpec,"%d:%d",&routeLayer,&routeTokenA)==2)routeTokenB=-1;
  auto checkpoint=[&](const char *stage)->bool {
   bool routeProbe=trace&&routeSpec&&shape.layer==uint32_t(routeLayer)&&strcmp(stage,"routing")==0;
-  if(!profiling&&!routeProbe)return true;
+  bool stageProbe=trace&&stageDir&&*stageDir&&begin==0&&g->position==0&&shape.layer==0;
+  if(!profiling&&!routeProbe&&!stageProbe)return true;
   [e endEncoding];double interval=0;if(!q_complete(command,&interval,error,capacity))return false;
   p->submissions++;profileMs+=interval;
   if(profiling)fprintf(stderr,"PREFILL_STAGE {\"position\":%u,\"tokens\":%d,\"layer\":%u,\"stage\":\"%s\",\"gpuMs\":%.6f,\"kernels\":%d}\n",g->position,count,shape.layer,stage,interval,g->dispatches-profileDispatches);
+  if(stageProbe){
+   auto save=[&](const char *name,id<MTLBuffer> buffer,NSUInteger floats)->bool {
+    NSString *file=[[NSString stringWithUTF8String:stageDir] stringByAppendingPathComponent:[NSString stringWithFormat:@"metal-%s.f32",name]];
+    NSData *bytes=[NSData dataWithBytes:buffer.contents length:floats*sizeof(float)];
+    if(![bytes writeToFile:file atomically:YES]){error_text(error,capacity,@"Cannot write Metal stage probe");return false;}
+    return true;
+   };
+   if(strcmp(stage,"embedding-norm")==0){if(!save("embedding",p->x,2048)||!save("embedding-norm",p->norm,2048))return false;}
+   else if(strcmp(stage,"linear-projections")==0){if(!save("qkv",p->qkv,8192))return false;}
+   else if(strcmp(stage,"delta-norm")==0){if(!save("delta-norm",p->attention,4096))return false;}
+   else if(strcmp(stage,"output-projection")==0){if(!save("output-projection",p->out,2048))return false;}
+   else if(strcmp(stage,"residual-norm")==0){if(!save("residual-norm",p->norm,2048))return false;}
+   else if(strcmp(stage,"router-shared-gate")==0){if(!save("router",p->router,256)||!save("shared-gate",p->sharedAct,512))return false;}
+   else if(strcmp(stage,"expert-gate")==0){if(!save("expert-gate",p->expertAct,4096))return false;}
+   else if(strcmp(stage,"expert-shared-down")==0){if(!save("expert-down",p->expertOut,16384)||!save("shared-down",p->sharedOut,2048))return false;}
+   else if(strcmp(stage,"merge")==0){if(!save("merge",p->x,2048))return false;}
+  }
   if(routeProbe)for(int token:{routeTokenA,routeTokenB})if(token>=0&&g->position<=uint32_t(token)&&uint32_t(token)<g->position+count){
    auto *ids=(uint32_t*)p->ids.contents;auto *prob=(float*)p->prob.contents;
    int local=token-int(g->position);fprintf(stderr,"METAL_ROUTE token=%d layer=%u",token,shape.layer);
