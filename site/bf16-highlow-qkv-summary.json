@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-23",
+  "kind": "isolated-bf16-highlow-qkv-same-source-ab-not-e2e",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "source": "720105fb191e49fac4eefee2b06ea58bb5064129",
+  "cudaDllSha256": "ea43e25f05997b47356e3014f9087a6e243b3a7f74317c2ab31a5da87dcb7bac",
+  "tokens": 128,
+  "kv": "fp32",
+  "candidate": "three BF16 Tensor Core products for QKV only; FP32 accumulation; default off",
+  "cpuToken16QkvRelativeL2": {
+    "oneProduct": 0.0009929711558128197,
+    "twoProducts": 0.0006524601182797182,
+    "threeProducts": 1.4823208181362487e-06,
+    "fourProducts": 9.744163499117713e-07
+  },
+  "matchedGpu": {
+    "defaultToken16QkvRelativeL2": 0.0009920090458514425,
+    "highlowToken16QkvRelativeL2": 8.010989654157845e-06,
+    "defaultLayer0VsIndependentFp32": 0.009913724462158642,
+    "highlowLayer0VsIndependentFp32": 0.007039658563631923,
+    "defaultPassingLayers": 0,
+    "highlowPassingLayers": 0,
+    "defaultExpertSetChanges": 695,
+    "highlowExpertSetChanges": 542,
+    "defaultLayer0ExpertSetChanges": 5,
+    "highlowLayer0ExpertSetChanges": 2
+  },
+  "correctnessAcceptance": false,
+  "performanceAcceptance": false,
+  "defaultResultLocalSha256": "9411b5e674c5887f7cd97ea4654eba0deec81976ce0b7b4b519c38bda8136d9a",
+  "highlowResultLocalSha256": "a4d9854b027d8de810fd4fcc46953da9c44896162eafcc08339990b7da162128",
+  "highlowOracleComparisonLocalSha256": "aeacc0ca3bbef93b802ca9e3fad103b3fd392163ba9acfcbb6b926abcafa61d0",
+  "validation": "SM89 build passed; same-source matched switch-off/on probes finite and deterministic; switch-off hashes match previous default; old agent and Mac serve restored Ready/connected",
+  "limitations": [
+    "KV was FP32, not target BF16",
+    "QKV-only correction fails layer/state gate",
+    "Probe readbacks invalidate serving-throughput claims",
+    "No suffix/logits/greedy, 128K, real RPC, memory or formal performance result",
+    "Raw tensors are local only"
+  ]
+}

@@ -1,5 +1,24 @@
 [
   {
+    "id": "bf16-highlow-qkv",
+    "kind": "2026-10-23 · BF16 数值补偿 A/B",
+    "title": "QKV三项BF16补偿：局部误差降低，整层仍失败",
+    "question": "BF16高低位三项Tensor Core乘积能否在维持BF16乘法输入的条件下消除首层及MoE路由误差？",
+    "setup": "Qwen3.6 35B A3B affine8；Windows RTX4090 SM89；同源码720105f和同DLL的开关关/开对照；128个固定合成token，FP32 KV与诊断FP32 router/shared，读回探针；无正式吞吐计时。",
+    "change": "仅QKV增加默认关闭的BF16高低位三乘积补偿，权重仍常驻8bit；先用token16离线CPU算理论数值，再跑两档CUDA与独立FP32层参考、路由比对。",
+    "result": "token16 QKV相对内部FP32从9.920e-4降至8.011e-6；首层对独立FP32从0.009914降至0.007040，仍0/20层和0/60层/状态通过。首层换专家集合从5降至2，全2560次决策从695降至542。",
+    "validation": "Windows SM89编译通过；同源码开关关/开均有限且确定；关闭档trace和40状态哈希与旧默认一致；原919259d agent和Mac serve恢复Ready/connected。",
+    "conclusion": "QKV局部补偿不足以通过整层数值门槛，后续Delta normalization与路由仍有明显偏差；诊断秒数不能证明服务性能。保持开关默认关闭，未部署。",
+    "next": "衡量更广泛BF16补偿的计算成本与目标兼容性，之后再测完整BF16 KV、独立状态/logits和真实128K。",
+    "commands": [
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_DEFAULT_DIRECTORY -Kv fp32 -Router fp32 -Shared fp32 -StageProbe -StageToken 16 -CompareStageModes -SaveRoutes",
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_HIGHLOW_DIRECTORY -Kv fp32 -Router fp32 -Shared fp32 -StageProbe -StageToken 16 -CompareStageModes -SaveRoutes -HighLowQkv",
+      "python3 scripts/split/analyze-bf16-route-gap.py --cuda NEW_HIGHLOW_DIRECTORY --output NEW_REPORT.json --include-activation"
+    ],
+    "source": "docs/BF16-HIGHLOW-QKV-20261023.md",
+    "evidence": "site/bf16-highlow-qkv-summary.json"
+  },
+  {
     "id": "bf16-independent-oracle",
     "kind": "2026-10-23 · 独立正确性参考",
     "title": "独立FP32参考：两条FP32路径20/20，BF16候选0/20",
