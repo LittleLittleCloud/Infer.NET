@@ -25,7 +25,10 @@ env.update(DEEPINFER_TOKEN=secret,DEEPINFER_METAL_KV='bf16',DEEPINFER_METAL_PREF
 # The verification configuration intentionally matches the serial CUDA precision path.
 command=['dotnet',str(root/'src/DeepInfer.Host/bin/Release/net10.0/deepinfer.dll'),'split-infer','--allow-remote','--listen',f'tcp://{local}:{a.port}','--output',str(out),'--max-tokens',str(a.max_tokens),'--prompt',a.prompt]
 if a.verify:command.append('--verify')
-(out/'run.json').write_text(json.dumps(dict(source=sha,run=run,verify=a.verify,promptSha256=hashlib.sha256(a.prompt.encode()).hexdigest(),maxTokens=a.max_tokens,topology='Mac Wi-Fi -> home router -> Windows Ethernet',precision='affine8 / BF16 KV / FP32 recurrent and GEMV',startedUtc=datetime.datetime.now(datetime.timezone.utc).isoformat()),indent=2))
+def digest(path):
+    with path.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+artifacts={str(f.relative_to(root)):digest(f) for f in [root/'src/DeepInfer.Host/bin/Release/net10.0/deepinfer.dll',root/'src/DeepInfer.Backends/bin/Release/net10.0/DeepInfer.Backends.dll',root/'native/DeepInfer.Metal/build/libdeepinfer_metal.dylib']}
+(out/'run.json').write_text(json.dumps(dict(source=sha,artifacts=artifacts,run=run,verify=a.verify,promptSha256=hashlib.sha256(a.prompt.encode()).hexdigest(),maxTokens=a.max_tokens,topology='Mac Wi-Fi -> home router -> Windows Ethernet',precision='affine8 / BF16 KV / FP32 recurrent and GEMV',startedUtc=datetime.datetime.now(datetime.timezone.utc).isoformat()),indent=2))
 with (out/'mac.stdout.log').open('w') as stdout,(out/'mac.stderr.log').open('w') as stderr:
     mac=subprocess.Popen(command,env=env,stdout=stdout,stderr=stderr)
     (out/'mac.pid').write_text(str(mac.pid));deadline=time.monotonic()+600

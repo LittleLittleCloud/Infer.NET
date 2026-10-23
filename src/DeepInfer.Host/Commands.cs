@@ -61,6 +61,10 @@ public static class Commands
                                [--coordinator http://127.0.0.1:5100] [--backend simulation|cpu|metal|cuda]
                                [--capacity 1] [--advertise http://127.0.0.1:5101]
                                [--weights models/stories15M.bin --tokenizer models/tokenizer.bin --model stories15m]
+                  split-infer  --weights MODEL_DIR --listen tcp://MAC_INTERFACE:5210 --allow-remote
+                               [--verify] [--max-tokens 8] [--output RUN_DIRECTORY]
+                  split-worker --weights PREFIX_BUNDLE --endpoint tcp://MAC_INTERFACE:5210
+                               experimental resident 20/20 handoff, <=2048 total tokens
                   devices      probe hardware and available compute backends
                   verify-qwen  [--weights models/qwen2.5-3b-instruct] [--reference artifacts/qwen-reference.json]
                   verify-qwen36 [--weights models/qwen3.6-35b-a3b-5bit-mlx]
