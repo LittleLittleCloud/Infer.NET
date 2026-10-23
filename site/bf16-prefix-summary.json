@@ -150,5 +150,52 @@
     "Trace readback timings are not a throughput benchmark",
     "No network, Mac suffix, decode, or 128K request",
     "No production deployment of mode 6"
-  ]
+  ],
+  "crossBackend128": {
+    "source": "4f974a0e6d8006fc78d9909de89ca26487e419a8",
+    "routeProbeSource": "39c629f3393641caac38462004ba8006b6412d5e",
+    "inputTokens": 128,
+    "chunkTokens": {
+      "metal": 128,
+      "cuda": 32
+    },
+    "metalTraceSha256": "782d78d36f23369e1fc83a45f53ef2dd8484951c2ad041b4ece5f85e59a3be82",
+    "cudaTraceSha256": "659c3ffc92273abcdb3651076d2f60355c71dcbc283174a65145c8b2b17c73ed",
+    "checksPassed": 2,
+    "checksTotal": 60,
+    "firstFailed": {
+      "name": "layer-0",
+      "finite": true,
+      "relativeL2": 0.004831553008544669,
+      "maxAbs": 0.004812106257304549,
+      "pass": false
+    },
+    "worstRelative": {
+      "name": "state-15-1",
+      "finite": true,
+      "relativeL2": 0.08883945347320946,
+      "maxAbs": 0.630859375,
+      "pass": false
+    },
+    "routeBoundaryExamples": [
+      {
+        "token": 49,
+        "rank": 8,
+        "metalExpert": 161,
+        "cudaExpert": 137
+      },
+      {
+        "token": 91,
+        "rank": 8,
+        "metalExpert": 34,
+        "cudaExpert": 241
+      }
+    ],
+    "rawComparisonSha256": "f49d0b5c8cc8cfa1b22577d9842f3aad0bebb8be92b1babfb761542eb612e3e4",
+    "passed": false,
+    "limits": [
+      "Offline numerical artifact comparison, not product transfer or throughput",
+      "No full logits, greedy, suffix, decode, 128K, or resource gate"
+    ]
+  }
 }

@@ -393,14 +393,14 @@
     "question": "补齐 CUDA 专家和小投影 BF16 操作数后，布局与舍入是否正确；完整前段是否仍确定性？",
     "setup": "2026-10-23；RTX 4090 SM89，固定 Qwen3.6-35B-A3B affine8/group64；131 合成有效 token、32-token 块、BF16 KV。单独停止旧 agent 后加载模型，试验后恢复。源码 70234e8。",
     "change": "新原生诊断模式6：大矩阵 BF16 Tensor Core GEMM；专家和小矩阵反量化后 BF16 舍入、FP32 累加。线上 FP32 packed 模式不变。",
-    "result": "六组专家算子对双精度 BF16 参考通过，最大 relative L2 1.24e-7。131-token 完整前段可重复且有限；与 FP32 模式从第0层有差异，第9层 relative L2 最大6.29%。带 trace 读回的时间不作为吞吐基准。",
-    "validation": "仅算子参考和完整前段确定性；没有独立 BF16 完整模型参考、跨机状态/logits、128K 或正式性能验证。",
-    "conclusion": "BF16 专家 kernel 的局部数值正确，完整 BF16 路径尚未通过部署门槛，保持关闭。FP32 与 BF16 的差异不能直接判为错误或宣称质量持平。",
-    "next": "建立相同 BF16 舍入的独立参考，定位首个跨后端分歧；随后验证完整短输入与 128K。",
+    "result": "六组专家算子对双精度 BF16 参考通过，最大 relative L2 1.24e-7。131-token 前段确定性；独立 Metal/CUDA 128-token BF16 比较仅 2/60 项通过，第0层开始失败。token 49/91 的第八专家分别选成161/137与34/241。",
+    "validation": "Metal/CUDA 同源128-token诊断逐层和40份状态比较；首个失败第0层 relative L2 0.00483。两端路由探针未改变各自trace。尚无完整 logits/greedy、真实跨机请求、128K与正式性能验证。",
+    "conclusion": "BF16 专家 kernel 局部数值正确，但两端的近阈值专家路由在第0层分歧，完整BF16路径未通过固定正确性门槛，保持关闭。",
+    "next": "定位路由输入、投影和top-8首个算术差异，再重测全部状态、logits与真实短请求。",
     "commands": [
       "powershell -File scripts/windows/check-prefill-bf16-experts.ps1 -OutputDirectory NEW_DIRECTORY",
       "python scripts/split/check-bf16-prefix.py --weights PINNED_PREFIX --library BUILT_DLL --output NEW_DIRECTORY"
     ],
-    "evidence": "site/bf16-prefix-summary.json；完整原始 JSON 仅本机"
+    "evidence": "site/bf16-prefix-summary.json；完整128-token比较JSON仅本机"
   }
 ]
