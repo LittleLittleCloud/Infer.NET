@@ -12,7 +12,7 @@ def ok(result):
  if result:raise RuntimeError(err.value.decode())
 create=bind('create',[c.c_char_p,c.c_int,c.c_int,c.c_char_p,c.c_int],c.c_void_p)
 destroy=bind('destroy',[c.c_void_p],None);reset=bind('reset',[c.c_void_p,c.c_char_p,c.c_int]);mode=bind('readback_mode',[c.c_void_p,c.c_int]);run=bind('run',[c.c_void_p,c.POINTER(c.c_int),c.c_int,c.c_int,c.POINTER(c.c_float),c.POINTER(c.c_float),c.c_char_p,c.c_int]);state=bind('state',[c.c_void_p,c.c_int,c.c_int,c.c_int,c.c_void_p,c.c_int,c.c_char_p,c.c_int])
-assert bind('abi_version',[])()==6
+assert bind('abi_version',[])()==7
 h=create(a.weights.encode(),512,a.kv_bytes,err,len(err))
 if not h:raise RuntimeError(err.value.decode())
 tokens=[100+(i*137)%247000 for i in range(512)]

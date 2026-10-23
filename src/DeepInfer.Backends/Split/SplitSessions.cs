@@ -59,23 +59,27 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
     private readonly int kvBytes;
-    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false)
+    private readonly int prefillChunkTokens;
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false, int prefillChunkTokens = 32)
     {
         if(packedWeights && !layerBatch) throw new ArgumentException("Packed weights require layer-major prefill.");
+        if(prefillChunkTokens is not (32 or 1024 or 2048) || (!layerBatch && prefillChunkTokens != 32))
+            throw new ArgumentException("Long CUDA chunks require layer-major prefill.");
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=6) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
-        this.kvBytes = kvBytes;
+        if(CudaPrefixNative.AbiVersion()!=7) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        this.kvBytes = kvBytes; this.prefillChunkTokens = prefillChunkTokens;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
         if (handle == 0) throw new InvalidOperationException(Message(error));
         if (CudaPrefixNative.ExecutionMode(handle, packedWeights ? 5 : layerBatch ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA prefill configuration rejected."); }
+        if (CudaPrefixNative.ChunkMode(handle, prefillChunkTokens) != 0) { Dispose(); throw new InvalidOperationException("CUDA chunk length rejected."); }
         if (CudaPrefixNative.ReadbackMode(handle, batchReadback ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA readback configuration rejected."); }
     }
     private static string Message(byte[] e) => System.Text.Encoding.UTF8.GetString(e).TrimEnd('\0');
     public float[] Run(int[] tokens, int position, float[]? trace)
     {
         ObjectDisposedException.ThrowIf(handle == 0, this);
-        if (tokens.Length is < 1 or > 32 || (trace is not null && trace.Length != tokens.Length*20*2048)) throw new ArgumentException("Invalid CUDA prefix geometry.");
+        if (tokens.Length < 1 || tokens.Length > prefillChunkTokens || (trace is not null && trace.Length != tokens.Length*20*2048)) throw new ArgumentException("Invalid CUDA prefix geometry.");
         var output = new float[tokens.Length*2048]; var error = new byte[2048];
         fixed (int* t = tokens) fixed (float* y = output) fixed (float* r = trace) fixed (byte* e = error)
             if (CudaPrefixNative.Run(handle, t, tokens.Length, position, y, r, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
@@ -106,7 +110,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public byte[] KvRange(int layer, int tensor, int position, int count)
     {
         ObjectDisposedException.ThrowIf(handle == 0, this);
-        if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count is < 1 or > 32)
+        if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count < 1 || count > prefillChunkTokens)
             throw new ArgumentException("Invalid KV range descriptor.");
         var data = new byte[count*512*kvBytes]; var error = new byte[2048];
         fixed (byte* d = data) fixed (byte* e = error)
@@ -126,6 +130,8 @@ internal static unsafe partial class CudaPrefixNative
 {
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_execution_mode")]
     internal static partial int ExecutionMode(nint graph, int mode);
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_chunk_mode")]
+    internal static partial int ChunkMode(nint graph, int tokens);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_readback_mode")]
     internal static partial int ReadbackMode(nint graph, int batched);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_abi_version")]
