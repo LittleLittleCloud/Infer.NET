@@ -6,7 +6,7 @@ internal static class WindowsLifetime
     {
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("Windows service mode requires Windows.");
         var builder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder();
-        builder.Services.AddWindowsService(o => o.ServiceName = "Infer.NET CUDA");
+        builder.Services.AddWindowsService(o => o.ServiceName = "InferNetCuda");
         builder.Services.AddSingleton(new Options(args));
         builder.Services.AddHostedService<Agent>();
         using var host = builder.Build(); await host.RunAsync(); return Environment.ExitCode;
@@ -21,7 +21,7 @@ internal static class WindowsLifetime
                 await SplitService.RunAgent(options, stoppingToken);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) { }
-            catch (Exception ex) { logger.LogError(ex, "CUDA service failed"); Environment.ExitCode = 1; }
+            catch (Exception ex) { logger.LogError(ex, "CUDA service failed"); Environment.Exit(1); }
             finally { lifetime.StopApplication(); }
         }
     }
