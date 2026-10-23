@@ -438,5 +438,23 @@
       "python3 scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON"
     ],
     "evidence": "PR #31；完整比较JSON与原始trace仅本机"
+  },
+  {
+    "id": "bf16-first-stage-probe",
+    "title": "BF16 首层逐段探针：差异始于 QKV",
+    "kind": "8bit · BF16 KV/GEMM · 独立数值诊断，未部署",
+    "source": "docs/BF16-STAGE-PROBE-20261023.md",
+    "question": "Metal/CUDA 在 token 0、第 0 层的首个算术差异出现在哪里；MoE 路由是否已翻转？",
+    "setup": "2026-10-23；两端同源 9f43459；M5 Pro 和 RTX 4090 独占加载固定 affine8/group64 模型；128 合成 token、BF16 KV/GEMM、FP32 诊断路由与共享专家；CUDA 块 32、Metal 块 128。每段读回，非正式吞吐。",
+    "change": "新增两端可选的首 token/首层分段读回和同源比较；修复 CUDA 探针构建时的局部变量重名；线上模式不变。",
+    "result": "Embedding 与归一化完全相同。首个不相同输出为 QKV，relative L2=2.695e-6；expert-gate 为1.951e-4，merge 为3.951e-4。token 0 的 top-8 专家两端一致；2048 个 MoE 输入中15个值落在不同 BF16 舍入结果。",
+    "validation": "Mac Metal 原生与 .NET Release 构建通过；Windows SM89 DLL 构建通过；CUDA 候选重复 trace 哈希一致。两端服务恢复 Ready，短真实请求 HTTP 200。仍无完整 BF16 logits/greedy、长上下文、内存和正式性能验证；此前完整层/状态仅2/60项通过。",
+    "conclusion": "首个算术偏差在 MoE 之前的 QKV；首个超过1e-4诊断线的中间段是专家门控。路由未翻转，需用相同 BF16 输入重放专家算子来区分输入漂移与 kernel 差异。不能部署或声称提速。",
+    "next": "重放相同 BF16 输入，排查 QKV 投影；随后复测全部层、状态、logits、真实双机请求，再进行128K正式测量。",
+    "commands": [
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_CUDA_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe 1:93 -StageProbe",
+      "python3 scripts/split/compare-bf16-stages.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON"
+    ],
+    "evidence": "PR #31；artifacts/dual-host/bf16-stage-compare-9f43459.json 与原始张量仅本机"
   }
 ]
