@@ -161,6 +161,20 @@ __global__ void chunk_gemv(Matrix m,const float *x,float *y,const int *ids,int r
     for(int base=lane*8;base<m.cols;base+=256)for(int j=0;j<8;j++)val+=weight(m,wr,base+j)*input[base+j];
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// Diagnostic BF16-operand path for routed and small dense projections. Keep
+// affine8 weights packed; round each dequantized weight and activation exactly
+// once before an FP32 product/accumulation, including expert gate/up/down.
+__global__ void chunk_gemv_bf16(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
+    if(row>=m.rows)return;
+    int expert=ids?ids[t*n+e]:0;size_t wr=size_t(expert)*m.rows+row;
+    const float *input=x+(size_t(t)*(routedInput?n:1)+(routedInput?e:0))*m.cols;
+    float val=0;
+    for(int base=lane*8;base<m.cols;base+=256)
+        for(int j=0;j<8 && base+j<m.cols;j++)
+            val+=prefill_bf16(weight(m,wr,base+j))*prefill_bf16(input[base+j]);
+    val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
+}
 // cols must be divisible by256: eight bytes share one affine group and are aligned.
 __global__ void chunk_gemv_packed(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
     int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
