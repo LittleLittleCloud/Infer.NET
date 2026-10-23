@@ -32,3 +32,16 @@
 两端 managed build 均为 `45a51a1`；Mac `deepinfer.dll` SHA-256 `256dd325ca4eba12c94cbe019b4de2017a986f8d0670ed9b9309c411c5da86e4`、Metal dylib `1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef`；Windows `deepinfer.dll` `8fc82e57c246f66478e9e78cb308668a9dcb3a24ba261c6b166b55b844d7488a`、CUDA DLL `f0b938ac60d671c950217061d195e3d2f002742b87e8a21032b6ce492c51023c`。Mac 129 项测试通过；Windows 128 通过、1 项 Metal 专属测试跳过。
 
 下一步是保留 32 对照，在更长输入与连续输出下验证容量、峰值内存、swap-out 与持续 decode；BF16 路由差异要继续从更早的算术点定位。128K 门槛、完整 logits 与长状态检查目前均未通过或未执行。
+
+## 256/512 计算块的原生候选
+
+有线 1024 块缩短了 CUDA 计算，却增加了 Mac 等待，因此提交 `f36e71bf1f49986e1efea949b4875dcb8fda9288` 增加可选的 256/512 块，默认 1024 不变。它们继续按 128-token hidden/KV 帧发送，权重、FP32 算术及状态布局不变。以下是 Windows SM89 上、8bit 权重/FP32 KV、mode 5 的**独占原生前段诊断**，每档与 32 对照交替运行，预热 1 次、正式 3 次；不包含网络、Mac 后段或客户端时延。
+
+|合成输入|32 块正式中位|候选正式中位|前段改善|hidden 与 40 份最终状态|
+|---|---:|---:|---:|---|
+|256 tokens|0.271698 s|0.246584 s|约 9.24%|逐字节一致|
+|512 tokens|0.547551 s|0.491736 s|约 10.19%|逐字节一致|
+
+原始结果仅 Windows 本机保存于 `artifacts/dual-host/cuda-mid-{256,512}-f36e71b/result.json`；SHA-256 分别为 `d6b2e8bba5266003c55a840a0a5823700caf920ea1a8bf9b75163e664e67001b` 和 `e1d816efa56f42d4bc37c56948d1f15915c02f7950b4425b6e3b86df8e35901b`。Mac 129 项测试通过；Windows 128 项通过、1 项平台跳过，CUDA DLL 在 Windows 同源编译成功。
+
+实验结束后恢复原 `919259d` agent；Mac serve/coordinator 未换包。原 8192 输入/8 输出经真实 `cuda-metal-split` 请求返回 HTTP 200，8 个 token 的 SHA-256 为 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`，与有线对照相同；serve 与 coordinator 重新报告 agent 已连接及 worker 健康。新块尚未进行同版本双机 A/B，不能声称端到端提速，更不能替代 BF16/128K 验收。下一步须在匹配协议版本的两端包上分别测 256/512 与 32/1024 的完整请求，并记录等待、内存与输出一致性。
