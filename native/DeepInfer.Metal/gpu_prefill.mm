@@ -561,11 +561,16 @@ static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatri
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:0 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?64:128):256,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
 }
-extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int classifier,float *logits,float *trace,
+extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
  int *nextToken,int *dispatches,double *ms,char *error,int capacity) {
  @autoreleasepool {
- if(!graph||!tokens||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
+ if(!graph||!tokens||!((begin==0&&end==40)||(begin==20&&end==40&&hidden))||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
  auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
+ if(begin==0&&g->splitActive){error_text(error,capacity,@"Reset split graph before full prefill");return -1;}
+ if(begin==20){if(!g->kvBf16){error_text(error,capacity,@"Split handoff requires BF16 KV");return -1;}
+  if(!g->splitActive){if(g->position){error_text(error,capacity,@"Reset before split prefill");return -1;}g->splitActive=true;}
+  g->splitMissing=(1ull<<40)-1;
+ }
  for(int t=0;t<count;t++)if(tokens[t]<0||tokens[t]>=248320){error_text(error,capacity,@"Invalid prefill token");return -1;}
  if(!g->prefill&&!p_create(g,error,capacity))return -1;auto *p=g->prefill;
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
@@ -587,11 +592,13 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
  };
 
 
+ if(begin==0){
  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->tokens,3);g_bind(e,p->x,4);[e setBytes:&g->embedding.bits length:4 atIndex:5];
  p_run(g,e,PEmbed,MTLSizeMake(16,count,1),128);g_barrier(e);
- g_bind(e,p->x,0);g_bind(e,g->layers[0].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
+ }else memcpy(p->x.contents,hidden,NSUInteger(count)*2048*4);
+ g_bind(e,p->x,0);g_bind(e,g->layers[begin].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
  if(!checkpoint("embedding-norm"))return -1;
- for(int index=0;index<40;index++) {
+ for(int index=begin;index<end;index++) {
   shape.layer=index;auto &l=g->layers[index];auto &m=l.m;
   p_gemv(g,e,m[GQ],p->norm,p->qkv,shape);
   if(l.linear){p_gemv(g,e,m[GZ],p->norm,p->z,shape);p_gemv(g,e,m[GA],p->norm,p->a,shape);p_gemv(g,e,m[GB],p->norm,p->b,shape);g_barrier(e);if(!checkpoint("linear-projections"))return -1;
@@ -645,6 +652,7 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
  [e endEncoding];double finalMs=0;if(!q_complete(command,&finalMs,error,capacity))return -1;p->submissions++;if(ms)*ms=profileMs+finalMs;
  *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
  if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);if(trace)memcpy(trace,p->trace.contents,count*40*2048*4);
+ if(output)memcpy(output,p->x.contents,NSUInteger(count)*2048*4);
  *dispatches=g->dispatches;g->position+=count;return 0;
  }
 }
@@ -683,3 +691,23 @@ extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64
 }
 
 extern "C" int di_graph_prefill_submissions(void *graph){auto *g=static_cast<GModel*>(graph);return g&&g->prefill?g->prefill->submissions:0;}
+
+// Existing full-model ABI remains unchanged.
+extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int classifier,float *logits,float *trace,
+ int *nextToken,int *dispatches,double *ms,char *error,int capacity){
+ return di_graph_prefill_range(graph,tokens,count,classifier,0,40,nullptr,nullptr,logits,trace,nextToken,dispatches,ms,error,capacity);
+}
+// Synchronous shared-memory copy after completed GPU submissions. State layout is
+// [position,kv-head,dimension] BF16, or [value-head,value-dim,key-dim] FP32.
+extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position,void *data,int bytes,int importState){
+ if(!graph||!data||layer<0||layer>=20||kind<0||kind>1||position<1)return -1;
+ auto *g=static_cast<GModel*>(graph);if(!g->kvBf16||g->position!=(uint32_t)position)return -1;
+ auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*2;
+ if(bytes!=expected)return -1;
+ uint64_t bit=1ull<<(layer*2+kind);
+ if(importState&&(!g->splitActive||!(g->splitMissing&bit)))return -1;
+ auto buffer=l.linear?(kind?l.history:l.state):(kind?l.values:l.keys);
+ if(importState){memcpy(buffer.contents,data,bytes);g->splitMissing&=~bit;}
+ else memcpy(data,buffer.contents,bytes);
+ return 0;
+}

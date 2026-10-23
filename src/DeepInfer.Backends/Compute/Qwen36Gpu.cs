@@ -114,6 +114,24 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         }
         return next;
     }
+    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits)
+    {
+        if (tokens.Length is < 1 or > 32 || hidden.Length != tokens.Length * 2048) throw new ArgumentException("Invalid split hidden geometry.");
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (int* ids = tokens) fixed (float* h = hidden) fixed (float* y = logits) fixed (byte* e = error)
+        {
+            if (GraphNative.Range(handle, ids, tokens.Length, final ? 1 : 0, 20, 40, h, null, y, null,
+                out var next, out var dispatches, out var ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+            device.Count(ms, dispatches, GraphNative.PrefillSubmissions(handle));
+            return next;
+        }
+    }
+    public void PrefixState(int layer, int kind, int position, byte[] data, bool import)
+    {
+        fixed (byte* p = data)
+            if (GraphNative.PrefixState(handle, layer, kind, position, p, data.Length, import ? 1 : 0) != 0)
+                throw new InvalidOperationException("State import/export rejected (identity, position, precision, size or duplicate).");
+    }
     public void Dispose() => handle.Dispose();
 }
 internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
@@ -124,6 +142,11 @@ internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
 }
 internal static unsafe partial class GraphNative
 {
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefill_range")]
+    internal static partial int Range(GraphHandle graph, int* tokens, int count, int classifier, int begin, int end,
+        float* hidden, float* output, float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_state")]
+    internal static partial int PrefixState(GraphHandle graph, int layer, int kind, int position, byte* data, int bytes, int importState);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create")]
     internal static partial nint Create(QuantHandle context, QuantHandle embedding, QuantHandle classifier,
         float* norm, float epsilon, float theta, byte* error, int capacity);
