@@ -194,5 +194,22 @@
       "python3 scripts/split/run-dual.py --native --verify --kv fp32 --max-tokens 8"
     ],
     "evidence": null
+  },
+  {
+    "id": "split-decode-cold",
+    "title": "双机 decode 9 t/s 的冷启动诊断与部署设计",
+    "kind": "8bit · 单轮诊断 · 非性能验收",
+    "source": "docs/SPLIT-DECODE-DIAGNOSIS.md",
+    "question": "为什么同一短提示的 split decode 比既有单机慢？如何部署常驻服务？",
+    "setup": "2026-10-22；两端 Native AOT，同为 affine8 / FP32 KV；19 输入、256 输出，现有家庭网络。Mac 插电、High Power，保留旧服务。",
+    "change": "与用户未预热运行比较，新诊断先执行完整 Mac 参考推理，再执行双机并做数值校验；没有修改 GPU kernel。",
+    "result": "未预热运行 27.947 s / 9.12 t/s；参考预运行后的双机 decode 4.391 s / 58.07 t/s（255 个间隔）。整次诊断新增整机 swap-out 7.84 GiB；包围 decode 的约 8 秒采样窗口中 swap-out 为 0。",
+    "validation": "256/256 greedy tokens 一致，676 项数值检查与 5 项交接保护通过，两端退出 0。",
+    "conclusion": "强烈支持首次 GPU 使用/驻留与预热不足方向。decode 没有逐 token 网络通信；尚不能分解原慢运行的首步停顿。两次 FP32 精度相同，但环境与预运行存在差异，不能算正式 A/B 或资源验收。",
+    "next": "增加逐 token wall/GPU 计时，验证相同条件冷/热与单机/双机；设计常驻 worker、Ready 预热门槛、流式 API 和版本化发布。",
+    "commands": [
+      "python3 scripts/split/run-dual.py --native --kv fp32 --verify --prompt \"解释一下存算分离推理架构\" --max-tokens 256"
+    ],
+    "evidence": "artifacts/split/split-diagnose-20261023T024150/ + split-diagnose-20261023T024150-monitor/"
   }
 ]
