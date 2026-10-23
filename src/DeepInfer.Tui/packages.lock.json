@@ -107,6 +107,11 @@
         "resolved": "8.0.0",
         "contentHash": "OmuSztiZMitRTYlbMNDkBk3BinSsVcOApSNBAsrw+KYNJh6ALarPhWLlKdtvMgrKzpyCY06xtLAjTmQLURHSlQ=="
       },
+      "Microsoft.Extensions.AI.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.10.0",
+        "contentHash": "frBHj2ckpevA+KdDLikxv8oxGPrJiyTvaiblYp+vtVEt0q6J73XP5m2SICm86nFK6rl+L1GCKxIy4S5Lb3p2kQ=="
+      },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
         "resolved": "10.0.0",
@@ -378,7 +383,8 @@
       "deepinfer.runtime": {
         "type": "Project",
         "dependencies": {
-          "DeepInfer.Core": "[0.1.0, )"
+          "DeepInfer.Core": "[0.3.0, )",
+          "Microsoft.Extensions.AI.Abstractions": "[10.10.0, )"
         }
       }
     }

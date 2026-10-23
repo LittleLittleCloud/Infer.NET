@@ -11,18 +11,24 @@ public sealed unsafe class QuantizedMetal : IDisposable
     public long Submissions { get; private set; }
     public double GpuMilliseconds { get; private set; }
     public bool BatchSubmissions { get; }
-    public QuantizedMetal(bool batchSubmissions = true)
+    public QuantizedMetal(bool batchSubmissions = true, bool? residency = null, int residencyRefreshMilliseconds = 1000)
     {
+        if (residencyRefreshMilliseconds is < 0 or > 60000) throw new ArgumentOutOfRangeException(nameof(residencyRefreshMilliseconds));
         BatchSubmissions = batchSubmissions;
         if (!OperatingSystem.IsMacOS()) throw new PlatformNotSupportedException("Quantized Metal requires macOS.");
         var error = new byte[2048];
         fixed (byte* e = error)
         {
-            var p = QuantNative.Create(e, error.Length);
+            var p = residency is bool enabled
+                ? QuantNative.CreateConfigured(enabled ? 1 : 0, residencyRefreshMilliseconds, e, error.Length)
+                : QuantNative.Create(e, error.Length);
             if (p == 0) throw new InvalidOperationException(Error(error));
             Context = new(p, 0);
         }
     }
+    // Call after weight uploads, before readiness; the native manager owns the idle refresh.
+    public ulong ResidencyBytes => QuantNative.ResidencyBytes(Context);
+    public void PrepareResidency() => QuantNative.PrepareResidency(Context);
     public QuantMatrix Allocate(int experts, int rows, int columns, int bits, int group = 64)
     {
         ObjectDisposedException.ThrowIf(Context.IsClosed, this);
@@ -235,6 +241,12 @@ internal sealed class QuantHandle : SafeHandleZeroOrMinusOneIsInvalid
 }
 internal static unsafe partial class QuantNative
 {
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_quant_create_configured")]
+    internal static partial nint CreateConfigured(int enabled, int refreshMilliseconds, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_quant_residency_bytes")]
+    internal static partial ulong ResidencyBytes(QuantHandle context);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_quant_residency_prepare")]
+    internal static partial void PrepareResidency(QuantHandle context);
     [StructLayout(LayoutKind.Sequential)]
     internal struct Job
     {

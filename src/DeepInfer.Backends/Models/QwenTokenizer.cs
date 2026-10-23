@@ -88,6 +88,22 @@ public sealed partial class QwenTokenizer : IModelTokenizer
         return output.ToArray();
     }
     public bool IsEnd(int token) => token == endOfText || token == messageEnd;
+    public int[] EncodeMessages(DeepInfer.Core.ChatTurn[] messages, CancellationToken ct)
+    {
+        if (!qwen36) throw new NotSupportedException("Structured chat requires Qwen3.6.");
+        var result = new List<int>();
+        foreach (var message in messages)
+        {
+            result.Add(messageStart);
+            result.AddRange(EncodeText(message.Role + "\n", ct));
+            result.AddRange(EncodeText(message.Content, ct));
+            result.Add(messageEnd); result.AddRange(EncodeText("\n", ct));
+        }
+        result.Add(messageStart); result.AddRange(EncodeText("assistant\n", ct));
+        result.Add(248068); result.AddRange(EncodeText("\n\n", ct));
+        result.Add(248069); result.AddRange(EncodeText("\n\n", ct));
+        return result.ToArray();
+    }
     public byte[] DecodePiece(int previous, int token) => IsEnd(token) ? [] : pieces.TryGetValue(token, out var value) ? value :
         throw new InvalidDataException($"Model produced unknown tokenizer ID {token}.");
     public string Decode(ReadOnlySpan<int> tokens, int previous = 1)

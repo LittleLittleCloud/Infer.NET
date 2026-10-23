@@ -1,0 +1,100 @@
+@namespace DeepInfer.Tui
+@using DeepInfer.Core
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using RazorConsole.Components
+@using RazorConsole.Core.Renderables
+@using Spectre.Console
+
+<Flex Direction="FlexDirection.Column" Width="@Width" Height="@Height">
+    <PlainText Content="@($"Workers · {Workers.Count(w => w.Healthy)} live / {Workers.Length} known{(Stale ? " · STALE snapshot" : " · refresh 2s")}")" Foreground="@(Stale ? Color.Yellow : Color.Grey)" />
+    <Box Height="1" />
+    @if (Workers.Length == 0)
+    {
+        <PlainText Content="No registered workers yet. Start a serve and its agent." />
+    }
+    else
+    {
+        <Flex Direction="@(Wide ? FlexDirection.Row : FlexDirection.Column)" Gap="@(Wide ? 3 : 1)" FillWidth="true">
+            <Flex Direction="FlexDirection.Column" Width="@(Wide ? 32 : Width)">
+                <div @onwheel="Scroll">
+                    <Rows>
+                        @foreach (var w in Visible())
+                        {
+                            <TextButton @key="w.Registration.WorkerId" Content="@Spectre.Console.Markup.Escape(Row(w))" OnClick="() => selected = w.Registration.WorkerId" />
+                        }
+                    </Rows>
+                </div>
+                @if (Workers.Length > PageSize)
+                {
+                    <Flex Direction="FlexDirection.Row" Gap="2">
+                        <TextButton Content="Previous workers" OnClick="() => Move(-1)" />
+                        <TextButton Content="Next workers" OnClick="() => Move(1)" />
+                    </Flex>
+                }
+            </Flex>
+            @if (Current() is { } worker)
+            {
+                <Box Width="@(Wide ? Width - 35 : Width)" Height="@(Wide ? Math.Max(1, Height - 2) : Math.Max(1, Height - PageSize * 2 - 4))" Border="BoxBorder.None">
+                    <PlainText Content="@Details(worker)" />
+                </Box>
+            }
+        </Flex>
+    }
+</Flex>
+@code {
+    [Parameter] public WorkerSnapshot[] Workers { get; set; } = [];
+    [Parameter] public bool Stale { get; set; }
+    [Parameter] public int Width { get; set; } = 100;
+    [Parameter] public int Height { get; set; } = 21;
+    private bool Wide => Width >= 100;
+    private string? selected;
+    private int offset;
+    private int PageSize => Wide ? Math.Clamp((Height - 4) / 2, 1, 8) : 1;
+    private WorkerSnapshot[] Visible() { offset = Math.Clamp(offset, 0, Math.Max(0, Workers.Length - PageSize)); return Workers.Skip(offset).Take(PageSize).ToArray(); }
+    private WorkerSnapshot? Current() => Workers.FirstOrDefault(w => w.Registration.WorkerId == selected) ?? Workers.FirstOrDefault();
+    private void Move(int direction) => offset = Math.Clamp(offset + direction * PageSize, 0, Math.Max(0, Workers.Length - PageSize));
+    private void Scroll(WheelEventArgs e) => Move(e.DeltaY < 0 ? -1 : 1);
+    private static string Clean(string text) => string.Concat(text.EnumerateRunes().Select(r => System.Text.Rune.IsControl(r) ? " " : r.ToString()));
+    private string Row(WorkerSnapshot w)
+    {
+        var t = w.Registration.Telemetry;
+        var state = Stale ? "STALE" : !w.Healthy ? "OFFLINE" : t?.State ?? "Live (state unreported)";
+        return Clean($"{(Current()?.Registration.WorkerId == w.Registration.WorkerId ? "›" : " ")} {w.Registration.WorkerId}")
+            + "\n  " + Clean($"{state} · heartbeat {Math.Max(0,(DateTimeOffset.UtcNow-w.LastSeenUtc).TotalSeconds):F0}s");
+    }
+    private static string GiB(long bytes) => $"{bytes / 1073741824d:F2} GiB";
+    private string Details(WorkerSnapshot w)
+    {
+        var r = w.Registration; var t = r.Telemetry; var m = t?.LastRequest;
+        var devices = string.Join(" + ", r.Devices.Select(d => d.Architecture));
+        var lines = new List<string> { $"Devices  {devices}", $"Models   {string.Join(", ", r.Models.Select(m => m.Id + (m.IsSimulation ? " [SIMULATION]" : "")))}" };
+        if (t == null) { lines.Add("Telemetry not reported by this worker · performance unavailable"); return CleanLines(lines); }
+        lines.Add($"State    {t.State} · queue {t.QueueDepth}/{t.QueueCapacity} · completed {t.CompletedRequests} · PID {t.Pid}");
+        lines.Add($"Agent    {(t.AgentConnected is { } connected ? connected ? "connected · attached to serve" : "disconnected / reconnecting" : "not reported")}");
+        lines.Add($"Capacity {t.WeightBits?.ToString() ?? "?"}bit · KV {t.Kv ?? "?"} · model window {t.MaxContextTokens?.ToString() ?? "?"}");
+        if (m != null)
+        {
+            lines.Add($"Last completed request  {m.InputTokens} in / {m.OutputTokens} out · {m.CompletedAt.ToLocalTime():HH:mm:ss}");
+            var path = m.ExecutionPath == "metal-local" ? "Mac local" : "4090 → Mac · includes handoff";
+            lines.Add($"Prefill  {m.PrefillMs / 1000:F2}s · {path}");
+            if (m.PrefillStages is { } stages)
+            {
+                if (m.ExecutionPath == "metal-local")
+                    lines.Add($"Mac prefill  {stages.MacSuffixMs / 1000:F2}s · other {stages.MacOtherMs / 1000:F2}s");
+                else
+                {
+                    lines.Add($"4090 compute  {(stages.CudaComputeMs + stages.CudaStateExportMs) / 1000:F2}s · stage wall {stages.CudaElapsedMs / 1000:F2}s");
+                    lines.Add($"Transfer  send/write {stages.CudaSendMs / 1000:F2}s · Mac waits {(stages.MacHiddenWaitMs + stages.MacStateWaitMs) / 1000:F2}s · {GiB(stages.WirePayloadBytes)}");
+                    lines.Add($"Mac takeover  suffix {stages.MacSuffixMs / 1000:F2}s · state import {stages.MacStateImportMs / 1000:F2}s · other {stages.MacOtherMs / 1000:F2}s");
+                    lines.Add("Stages overlap; Mac waits include remote compute and network.");
+                }
+            }
+            lines.Add($"Decode   {m.DecodeTokensPerSecond:F1} tok/s · worker {m.ComputeMs / 1000:F2}s");
+            lines.Add($"Last Metal allocation {GiB(m.MetalAllocatedBytes)} · KV {GiB(m.KvCacheBytes)}");
+        }
+        else lines.Add("No completed request yet · performance and allocation not sampled");
+        return CleanLines(lines);
+    }
+    private static string CleanLines(IEnumerable<string> lines) => string.Join("\n", lines.Select(Clean));
+}

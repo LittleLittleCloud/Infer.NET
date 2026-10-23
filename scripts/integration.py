@@ -3,6 +3,7 @@
 import argparse, concurrent.futures, json, os, pathlib, signal, socket, subprocess, tempfile, time
 import urllib.request, urllib.error
 import http.client
+import http.server, threading
 from contextlib import closing
 from urllib.parse import urlsplit
 
@@ -63,6 +64,11 @@ def registration(id, endpoint, version=1):
         'models':[{'id':'synthetic-v1','format':'synthetic','isSimulation':True}]}
 
 try:
+    option = subprocess.run([exe, 'version', '--metal-residency', 'off', '--residency-refresh-ms', '0', '--short-prefill-tokens', '128', '--cuda-readback', 'batch', '--cuda-prefill', 'batch-fp32-packed'], capture_output=True, text=True, timeout=10)
+    check(option.returncode == 0, 'residency A/B CLI options are accepted')
+    for arguments, expected in [(['--metal-scratch-tokens', '256'], 'metal-scratch-tokens must be 128 or 512'), (['--metal-scratch-tokens', '128', '--suffix-chunk-tokens', '512'], 'metal-scratch-tokens must cover suffix-chunk-tokens'), (['--metal-residency', 'invalid'], 'metal-residency must be on or off'), (['--residency-refresh-ms', '-1'], 'residency-refresh-ms must be 0..60000'), (['--short-prefill-tokens', '129'], 'short-prefill-tokens must be 0..128'), (['--cuda-readback', 'invalid'], 'cuda-readback must be batch or token'), (['--cuda-prefill', 'invalid'], 'cuda-prefill must be serial, batch-fp32 or batch-fp32-packed'), (['--suffix-chunk-tokens', '64'], 'suffix-chunk-tokens must be 32, 128 or 512'), (['--suffix-receive-overlap', 'invalid'], 'suffix-receive-overlap must be on or off'), (['--cuda-send-overlap', 'invalid'], 'cuda-send-overlap must be on or off'), (['--kv-transfer', 'invalid'], '--kv-transfer must be final or incremental'), (['--decode-attention', 'invalid'], '--decode-attention must be legacy or fused-fp32')]:
+        option = subprocess.run([exe, 'split-serve', *arguments], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and expected in option.stdout + option.stderr, 'residency invalid policy rejected before model load: ' + arguments[0])
     origin = f'http://127.0.0.1:{port()}'
     start('coordinator', '--listen', origin)
     wait_for(lambda: rpc(origin, '/health', token='')[0] == 200)
@@ -116,6 +122,26 @@ try:
     workers[1][0].kill(); workers[1][0].wait(timeout=5)
     wait_for(lambda: not any(w['healthy'] and w['registration']['workerId']=='two' for w in rpc(origin,'/v1/workers')[1]['workers']),timeout=11)
     check(rpc(origin,'/v1/infer',request)[0] == 503, 'no live implemented model returns 503')
+    # A locally ready split worker can still lack the CUDA peer for a long prompt.
+    # Preserve its explicit unavailable/timeout status, distinct from a dead socket.
+    class UnavailableWorker(http.server.BaseHTTPRequestHandler):
+        status = 503
+        def do_POST(self):
+            # Deliberately reject before consuming the body (HttpClient may stream chunked).
+            body = json.dumps({'code':'not_ready','message':'CUDA peer unavailable'}).encode()
+            self.send_response(self.status); self.send_header('Content-Type','application/json')
+            self.send_header('Content-Length',str(len(body))); self.send_header('Connection','close')
+            self.end_headers(); self.wfile.write(body); self.close_connection = True
+        def log_message(self, *args): pass
+    with http.server.ThreadingHTTPServer(('127.0.0.1',0), UnavailableWorker) as unavailable:
+        thread = threading.Thread(target=unavailable.serve_forever, daemon=True); thread.start()
+        try:
+            endpoint = f'http://127.0.0.1:{unavailable.server_port}'
+            check(rpc(origin,'/v1/workers/register',registration('unavailable',endpoint))[0] == 204, 'register locally ready worker fixture')
+            for status in (503,504):
+                UnavailableWorker.status = status
+                check(rpc(origin,'/v1/infer',request)[0] == status, f'coordinator preserves worker {status}')
+        finally: unavailable.shutdown(); thread.join(timeout=5)
     coordinator = processes[0]
     coordinator.send_signal(signal.SIGTERM); coordinator.wait(timeout=5)
     rejoin_endpoint = f'http://127.0.0.1:{port()}'

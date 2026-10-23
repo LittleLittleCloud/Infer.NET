@@ -234,6 +234,11 @@ struct GModel {
         sharedOut,expertAct,expertOut,scores,logits,zero,trace;
     float epsilon,theta;
     uint32_t position=0,capacity=2048;
+    uint64_t splitMissing=0; // Two state tensors per prefix layer; decode requires all 40.
+    bool splitActive=false;
+    bool decodeFusedFp32=false;
+    uint32_t splitTarget=0;
+    std::array<uint32_t,40> splitKvWritten{};
     id<MTLBuffer> attentionParts;
     int dispatches=0;
     id<MTLCounterSampleBuffer> counters;
@@ -384,12 +389,13 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {
         if(!graph||token<0||token>=248320||position<0||position>=262144||!nextToken) {error_text(error,capacity,@"Invalid graph input");return -1;}
         auto *g=static_cast<GModel*>(graph);
+        if(g->splitMissing){error_text(error,capacity,@"Split prefix state is incomplete");return -1;}
         if((uint32_t)position>=g->capacity){error_text(error,capacity,@"Reserve graph context before execution");return -1;}
         if((uint32_t)position!=g->position){error_text(error,capacity,@"Graph token positions must be contiguous; reset between requests");return -1;}
         if(g->forcedRoutes&&(uint32_t)position>=g->forcedPositions){error_text(error,capacity,@"Diagnostic route sequence exhausted");return -1;}

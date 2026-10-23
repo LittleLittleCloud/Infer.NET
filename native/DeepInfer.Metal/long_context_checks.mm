@@ -68,6 +68,12 @@ int main(){@autoreleasepool {
   int capacity=0;uint64_t kv=0,allocated=0;
   if(di_graph_stats(&reserve,&capacity,&kv,&allocated)!=0||capacity!=6144||kv!=uint64_t(6144)*40960||!allocated)return 1;
   checks++;
+  // Grow during decode and preserve already-written KV. Linear state is not reallocated.
+  reserve.position=7;auto oldKeys=reserve.layers[3].keys,oldValues=reserve.layers[3].values;
+  for(int i=0;i<7*512;i++){((float*)oldKeys.contents)[i]=float(i%17)/17;((float*)oldValues.contents)[i]=float(i%23)/23;}
+  if(di_graph_grow(&reserve,8192,error,sizeof(error))||reserve.capacity!=8192||reserve.position!=7)return 1;
+  if(memcmp(oldKeys.contents,reserve.layers[3].keys.contents,7*512*4)||memcmp(oldValues.contents,reserve.layers[3].values.contents,7*512*4))return 1;
+  reserve.position=0;checks++;
   for(int requested:{131072,131073,135168,262144}){
    uint32_t expected=(uint32_t(requested)+2047)/2048*2048;
    if(di_graph_reserve(&reserve,requested,error,sizeof(error))||reserve.capacity!=expected||reserve.layers[3].keys.length!=NSUInteger(expected)*512*4)return 1;
@@ -75,5 +81,5 @@ int main(){@autoreleasepool {
    checks++;
   }
  }
- delete c;printf("PASS: %d long-context hardware checks (28 analytic legacy/fused attention cases, including final context position 262143; 9 reservation/statistics guards)\n",checks);return 0;
+ delete c;printf("PASS: %d long-context hardware checks (28 analytic legacy/fused attention cases, including final context position 262143; 10 reservation/statistics/grow guards)\n",checks);return 0;
 }}

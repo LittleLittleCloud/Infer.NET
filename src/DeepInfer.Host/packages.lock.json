@@ -8,16 +8,35 @@
         "resolved": "10.0.0",
         "contentHash": "f9u8fMRROe2lS5MOOLutK6iSNTK9pC3kqd90FIn8Sk29fbZ0QDjZrBbwUkhouk/8dppC71SIEQaag0lGRTxvfA=="
       },
+      "Microsoft.Extensions.Hosting.WindowsServices": {
+        "type": "Direct",
+        "requested": "[10.0.0, )",
+        "resolved": "10.0.0",
+        "contentHash": "4jFNSKTrGd2bHjIHY+TMqcB56gtIm91fNwfqWp2SMvVAvuweAnUMDWiai1CN4boM2s0zi4xVU9rWDLjIA58tDQ==",
+        "dependencies": {
+          "System.ServiceProcess.ServiceController": "10.0.0"
+        }
+      },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
         "requested": "[10.0.0, )",
         "resolved": "10.0.0",
         "contentHash": "kICGrGYEzCNI3wPzfEXcwNHgTvlvVn9yJDhSdRK+oZQy4jvYH529u7O0xf5ocQKzOMjfS07+3z9PKRIjrFMJDA=="
       },
+      "Microsoft.Extensions.AI.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.10.0",
+        "contentHash": "frBHj2ckpevA+KdDLikxv8oxGPrJiyTvaiblYp+vtVEt0q6J73XP5m2SICm86nFK6rl+L1GCKxIy4S5Lb3p2kQ=="
+      },
+      "System.ServiceProcess.ServiceController": {
+        "type": "Transitive",
+        "resolved": "10.0.0",
+        "contentHash": "PaFmFQXX/qL1vl0CfdJUMPMYT8TOEHlcdEiOZtd4LV2rcaS/WDQM4bpECcbRM4BrD+DWkWd/jtb6iPOqAX9TWA=="
+      },
       "deepinfer.backends": {
         "type": "Project",
         "dependencies": {
-          "DeepInfer.Core": "[0.1.0, )"
+          "DeepInfer.Core": "[0.3.0, )"
         }
       },
       "deepinfer.core": {
@@ -26,7 +45,8 @@
       "deepinfer.runtime": {
         "type": "Project",
         "dependencies": {
-          "DeepInfer.Core": "[0.1.0, )"
+          "DeepInfer.Core": "[0.3.0, )",
+          "Microsoft.Extensions.AI.Abstractions": "[10.10.0, )"
         }
       }
     }

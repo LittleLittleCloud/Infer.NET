@@ -1,115 +1,176 @@
 @namespace DeepInfer.Tui
+@using System.Text.Json
 @using DeepInfer.Core
 @using DeepInfer.Runtime
 @using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.AI
 @using RazorConsole.Components
+@using RazorConsole.Core.Renderables
+@using RazorConsole.Core.Rendering
+@using RazorConsole.Core.Input
 @using Spectre.Console
 @implements IAsyncDisposable
 @inject ClusterClient Client
+@inject IChatClient Chat
+@inject ITerminalViewport Viewport
 
-<Rows>
-    <Panel Title="DeepInfer.NET / v0.3" BorderColor="Color.Cyan1">
-        <Rows>
-            <Markup Content="DISTRIBUTED INFERENCE LAB" Foreground="Color.Cyan1" Decoration="Decoration.Bold" />
-            <Markup Content="@mode" Foreground="Color.Yellow" />
-            <Markup Content="@status" />
-        </Rows>
-    </Panel>
-    <Panel Title="Worker processes · live leases" BorderColor="Color.Grey">
-        <Rows>
-            @if (snapshot is null || snapshot.Workers.Length == 0)
+<Flex Direction="FlexDirection.Column" Width="@Viewport.Width" Height="@Viewport.Height">
+    <Flex Direction="FlexDirection.Column" Height="4" FillWidth="true">
+        <PlainText Content="@DisplayText($"Infer.NET  ·  {(playground ? "Chat playground" : "Worker dashboard")}")" Foreground="Color.Cyan1" />
+        <Flex Direction="FlexDirection.Row" Gap="3" Height="1">
+            <TextButton Content=" Dashboard " FocusOrder="0" BackgroundColor="@(!playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = false" />
+            <TextButton Content=" Playground " FocusOrder="1" BackgroundColor="@(playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = true" />
+        </Flex>
+        <Box Height="1" FillWidth="true"><PlainText Content="@DisplayText(status + (busy ? " · generating" : ""))" Foreground="@(ready ? Color.Green : Color.Yellow)" /></Box>
+        <Box Height="1" />
+    </Flex>
+    <Box Height="@BodyHeight" FillWidth="true" Border="BoxBorder.None">
+        @if (!playground)
+        {
+            <WorkerDashboard Workers="@workers" Stale="@stale" Width="@Viewport.Width" Height="@BodyHeight" />
+        }
+        else
+        {
+            <div @onwheel="ScrollHistory"><PlainText Content="@DisplayText(Transcript())" /></div>
+        }
+    </Box>
+    <Flex Direction="FlexDirection.Column" Height="@FooterHeight" FillWidth="true">
+        <Box Height="1" />
+        @if (playground)
+        {
+            @if (settings)
             {
-                <Markup Content="No registered workers. Start a coordinator and a worker with model weights." />
+                <Box Height="1" FillWidth="true"><TextInput Label="System" @bind-Value="system" BorderStyle="BoxBorder.None" Disabled="@busy" /></Box>
+                <Box Height="1" FillWidth="true"><TextInput Label="Max output (auto)" @bind-Value="limit" BorderStyle="BoxBorder.None" Disabled="@busy" /></Box>
             }
-            else
-            {
-                @foreach (var worker in snapshot.Workers)
-                {
-                    <Markup Content="@WorkerLine(worker)" Foreground="@(worker.Healthy ? Color.Green : Color.Red)" />
-                }
-            }
-        </Rows>
-    </Panel>
-    <TextInput Label="Prompt" @bind-Value="prompt" />
-    <Columns>
-        <TextButton Content="Generate" OnClick="Infer" />
-        <TextButton Content="Refresh workers" OnClick="Refresh" />
-    </Columns>
-    <Panel Title="RPC result" BorderColor="Color.Green">
-        <Markup Content="@result" />
-    </Panel>
-    <Markup Content="Tab: focus · Enter: activate · Ctrl+C: quit · Refresh: every 2 seconds" Foreground="Color.Grey" />
-</Rows>
+            <Box Height="1" FillWidth="true"><TextInput @key="composerVersion" FocusOrder="2" Label="›" @bind-Value="prompt" BorderStyle="BoxBorder.None" OnSubmit="Submit" Expand="true" /></Box>
+            <Flex Direction="FlexDirection.Row" Gap="2" Height="1">
+                <TextButton Content="Send" OnClick="Send" />
+                <TextButton Content="Stop" OnClick="Cancel" />
+                <TextButton Content="New chat" OnClick="Clear" />
+                <TextButton Content="Settings" OnClick="ToggleSettings" />
+                <TextButton Content="Older" OnClick="Older" />
+                <TextButton Content="Latest" OnClick="Latest" />
+            </Flex>
+        }
+        <Box Height="1" FillWidth="true"><PlainText Content="@DisplayText(playground ? info : "Select worker · wheel scrolls · Tab focus · Ctrl+C quit")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Chat Completions  {ApiBase}/v1/chat/completions")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Responses         {ApiBase}/v1/responses")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Claude Code base  {ApiBase}  · Messages /v1/messages")" Foreground="Color.Grey" /></Box>
+    </Flex>
+</Flex>
 
 @code {
-    private string? prompt = "用一句话介绍你自己。";
-    private string mode = "Waiting for a loaded model…";
-    private string model = Protocol.SyntheticModel;
-    private string backend = "simulation";
-    private string status = "Connecting…";
-    private string result = "Ready. Requests go through the coordinator to a separate worker process.";
-    private ClusterSnapshot? snapshot;
+    private string? prompt = "你好";
+    private string? system = "You are a helpful assistant.";
+    private string? limit = "auto";
+    private string endpoint = "", status = "Connecting…", info = "Text chat · greedy · Auto output until EOS or model window", partial = "", pending = "";
+    private readonly List<ChatMessage> history = new();
     private readonly CancellationTokenSource stop = new();
-    private Task? poll;
-    private bool busy;
+    private CancellationTokenSource? request;
+    private Task? poll, generation;
+    private bool busy, ready, settings, playground, stale;
+    private WorkerSnapshot[] workers = [];
+    private int older, composerVersion;
+    private string ApiBase => endpoint.TrimEnd('/');
+    private int FooterHeight => 5 + (playground ? 2 + (settings ? 2 : 0) : 0);
+    private int BodyHeight => Math.Max(1, Viewport.Height - 4 - FooterHeight);
+    private void Resize() => _ = InvokeAsync(StateHasChanged);
     protected override async Task OnInitializedAsync()
     {
-        await Refresh();
-        poll = Poll();
+        endpoint = (Chat.GetService(typeof(ChatClientMetadata)) as ChatClientMetadata)?.ProviderUri?.ToString() ?? "";
+        Viewport.OnResized += Resize;
+        await Refresh(); poll = Poll();
+    }
+    private static string DisplayText(string text) => string.Concat(text.EnumerateRunes().Select(r => System.Text.Rune.IsControl(r) && r.Value is not (10 or 9) ? "�" : r.ToString()));
+    private string Transcript()
+    {
+        var all = string.Join("\n\n", history.Where(m => m.Role != ChatRole.System).Select(m => (m.Role == ChatRole.User ? "You  " : "Qwen  ") + m.Text));
+        if (pending.Length > 0) all += "\n\nYou  " + pending + "\n\nQwen  " + (partial.Length > 0 ? partial : busy ? "…" : "(no output)");
+        if (all.Length == 0) return "Start a conversation. System prompt and output limit are in Settings.";
+        // Bound rendered rows while retaining the complete message history sent to IChatClient.
+        var width = Math.Max(20, Viewport.Width); var rows = new List<string>();
+        foreach (var line in all.Split('\n'))
+        {
+            var b = new System.Text.StringBuilder(); var cells = 0;
+            foreach (var rune in line.EnumerateRunes())
+            {
+                var size = TextSelectionState.CellWidth(rune.ToString());
+                if (cells + size > width) { rows.Add(b.ToString()); b.Clear(); cells = 0; }
+                b.Append(rune); cells += size;
+            }
+            rows.Add(b.ToString());
+        }
+        var height = BodyHeight;
+        older = Math.Min(older, Math.Max(0, rows.Count - height));
+        return string.Join("\n", rows.Skip(Math.Max(0, rows.Count - height - older)).Take(height));
     }
     private async Task Poll()
     {
-        try
-        {
-            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
-            while (await timer.WaitForNextTickAsync(stop.Token))
-                await InvokeAsync(async () => { await Refresh(); StateHasChanged(); });
-        }
+        try { using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2)); while (await timer.WaitForNextTickAsync(stop.Token)) await InvokeAsync(async () => { await Refresh(); StateHasChanged(); }); }
         catch (OperationCanceledException) { }
     }
     private async Task Refresh()
     {
         try
         {
-            snapshot = await Client.StatusAsync(stop.Token);
-            var loaded = snapshot.Workers.Where(w => w.Healthy)
-                .SelectMany(w => w.Registration.Models.Select(m => (Worker: w.Registration, Model: m)))
-                .OrderBy(x => x.Model.IsSimulation).ThenBy(x => x.Worker.Devices.Any(d => d.Backend == "metal") ? 0 : 1).FirstOrDefault();
-            if (loaded.Model is not null)
-            {
-                if (model != loaded.Model.Id && loaded.Model.Id == Protocol.TinyStoriesModel) prompt = "Once upon a time";
-                model = loaded.Model.Id;
-                backend = loaded.Worker.Devices.First(d => d.SupportsInference).Backend;
-                mode = loaded.Model.IsSimulation ? "SIMULATION ONLY · synthetic output" :
-                    $"REAL MODEL · {model} · {(model == Protocol.Qwen36Model ? "Own Metal MoE engine · FP32 state" : backend == "metal" ? "Metal GEMV + CPU attention" : "CPU transformer")}";
-            }
-            else mode = "No loaded model is currently available.";
-            status = $"Protocol v{snapshot.ProtocolVersion} · {snapshot.Workers.Count(w => w.Healthy)} live workers · {DateTime.Now:T}";
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stop.Token); timeout.CancelAfter(TimeSpan.FromSeconds(3));
+            var snapshot = await Client.StatusAsync(timeout.Token);
+            workers = snapshot.Workers; stale = false;
+            ready = workers.Any(w => w.Healthy && w.Registration.Telemetry?.AcceptingRequests != false && w.Registration.Models.Any(m => m.Id == Protocol.Qwen36Model && m.Format.EndsWith("-chat-v1", StringComparison.Ordinal)));
+            status = (ready ? "Ready" : "Waiting for chat worker") + " · " + Protocol.Qwen36Model + $" · {history.Count(m => m.Role == ChatRole.User)} turns";
         }
-        catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException)
-        { snapshot = null; status = $"Coordinator unavailable: {ex.Message}"; }
+        catch (Exception e) when (e is HttpRequestException or RpcException or OperationCanceledException) { ready = false; stale = true; status = "Connection: " + e.Message; }
     }
-    private async Task Infer()
+    private Task Submit(string? _) => Send();
+    private Task Send()
     {
-        if (busy) return;
-        busy = true; result = "Dispatching RPC…";
+        if (busy) return Task.CompletedTask;
+        if (!ready) { info = "No compatible chat worker is ready."; return Task.CompletedTask; }
+        if (string.IsNullOrWhiteSpace(prompt)) return Task.CompletedTask;
+        int? max = null;
+        if (!string.IsNullOrWhiteSpace(limit) && !limit.Equals("auto", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!int.TryParse(limit, out var value) || value < 1) { info = "Max output must be auto or a positive integer."; return Task.CompletedTask; }
+            max = value;
+        }
+        info = "Waiting for first token…"; pending = prompt; prompt = ""; composerVersion++; partial = ""; older = 0; busy = true;
+        request = CancellationTokenSource.CreateLinkedTokenSource(stop.Token);
+        var messages = new List<ChatMessage>();
+        if (!string.IsNullOrWhiteSpace(system)) messages.Add(new(ChatRole.System, system));
+        messages.AddRange(history); messages.Add(new(ChatRole.User, pending));
+        generation = Generate(messages, max, request.Token); return Task.CompletedTask;
+    }
+    private async Task Generate(List<ChatMessage> messages, int? max, CancellationToken ct)
+    {
+        var clock = System.Diagnostics.Stopwatch.StartNew(); double? first = null; long output = 0; ChatFinishReason? finish = null;
         try
         {
-            var response = await Client.InferAsync(new(prompt ?? "", 48, model, backend), stop.Token);
-            result = $"{response.Text.Replace("[SIMULATION]", "SIMULATION")}\nWorker: {response.WorkerId} · Backend: {response.Backend} · Compute: {response.ComputeMs:F1} ms · GPU dispatches: {response.GpuDispatches}" +
-                (response.Timings is null ? "" : $"\nPrefill: {response.Timings.PrefillMs:F0} ms · Decode: {response.Timings.DecodeTokensPerSecond:F2} tokens/s");
+            await foreach (var update in Chat.GetStreamingResponseAsync(messages, new ChatOptions { ModelId = Protocol.Qwen36Model, MaxOutputTokens = max }, ct))
+            {
+                await InvokeAsync(() => {
+                    if (update.Text.Length > 0) { first ??= clock.Elapsed.TotalMilliseconds; partial += update.Text; }
+                    foreach (var usage in update.Contents.OfType<UsageContent>()) output = usage.Details.OutputTokenCount ?? 0;
+                    finish = update.FinishReason ?? finish;
+                    info = $"Streaming · {clock.Elapsed.TotalSeconds:F1}s · {partial.Length} chars"; StateHasChanged();
+                });
+            }
+            await InvokeAsync(() => {
+                history.Add(new(ChatRole.User, pending)); history.Add(new(ChatRole.Assistant, partial)); pending = ""; partial = "";
+                info = $"Done · {finish?.Value ?? "stop"} · first text {first.GetValueOrDefault():F0} ms · {output} output tokens · total {clock.Elapsed.TotalSeconds:F2}s";
+            });
         }
-        catch (Exception ex) when (ex is HttpRequestException or RpcException or OperationCanceledException)
-        { result = ex.Message; }
-        finally { busy = false; }
+        catch (OperationCanceledException) { await InvokeAsync(() => info = "Stopped · partial output kept on screen, excluded from conversation history."); }
+        catch (Exception e) when (e is HttpRequestException or RpcException or IOException or JsonException or ArgumentException or NotSupportedException)
+        { await InvokeAsync(() => info = "Error: " + e.Message); }
+        finally { await InvokeAsync(() => { busy = false; request?.Dispose(); request = null; StateHasChanged(); }); }
     }
-    private static string WorkerLine(WorkerSnapshot worker) =>
-        $"{(worker.Healthy ? "LIVE" : "EXPIRED")} · {worker.Registration.WorkerId} · {worker.Registration.Endpoint} · " +
-            string.Join(", ", worker.Registration.Devices.Select(d => $"{d.Backend}: {d.Name} ({(d.SupportsInference ? "compute ready" : "compute unavailable")})"));
-    public async ValueTask DisposeAsync()
-    {
-        stop.Cancel();
-        if (poll is not null) await poll;
-        stop.Dispose();
-    }
+    private void Cancel() => request?.Cancel();
+    private void Clear() { if (busy) { info = "Stop generation before starting a new chat."; return; } history.Clear(); pending = partial = ""; older = 0; info = "New conversation."; }
+    private void ToggleSettings() => settings = !settings;
+    private void ScrollHistory(WheelEventArgs e) { older = Math.Max(0, older + (e.DeltaY < 0 ? 3 : -3)); }
+    private void Older() => older += 5;
+    private void Latest() => older = 0;
+    public async ValueTask DisposeAsync() { Viewport.OnResized -= Resize; stop.Cancel(); request?.Cancel(); if (generation != null) await generation; if (poll != null) await poll; stop.Dispose(); }
 }

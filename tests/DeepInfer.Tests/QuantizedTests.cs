@@ -4,8 +4,48 @@ using DeepInfer.Backends.Models;
 using Xunit;
 namespace DeepInfer.Tests;
 
+// Hosted macOS can expose a paravirtual GPU that executes GEMV but cannot create
+// MTLResidencySet. Keep this hardware test mandatory on physical Macs; don't hide
+// a real residency allocation failure with a catch-and-return in the test body.
+public sealed class ResidencyFactAttribute : FactAttribute
+{
+    public ResidencyFactAttribute()
+    {
+        if (!OperatingSystem.IsMacOS()) Skip = "Metal residency requires a physical macOS GPU.";
+        else if (new DeepInfer.Backends.MetalBackend().DiscoverDevices().Any(d => d.Name.Contains("Paravirtual", StringComparison.OrdinalIgnoreCase)))
+            Skip = "Paravirtual Metal GPU does not implement residency sets; validated separately on physical M5 Pro.";
+    }
+}
+
 public class QuantizedTests
 {
+    [Fact]
+    public void PackedCudaWeightsRejectSerialExecutionBeforeLoadingNativeLibrary()
+    {
+        Assert.Throws<ArgumentException>(() => new DeepInfer.Backends.Split.CudaPrefixSession("unused", 32, layerBatch: false, packedWeights: true));
+    }
+
+    [ResidencyFact]
+    public void ExplicitResidencyCrossesManagedNativeBoundaryAndReleasesWeights()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+        using var enabled = new QuantizedMetal(residency: true, residencyRefreshMilliseconds: 20);
+        using var disabled = new QuantizedMetal(residency: false);
+        using var ordinary = disabled.Allocate(1, 64, 64, 8);
+        Assert.Equal(0UL, disabled.ResidencyBytes);
+        using (var matrix = enabled.Allocate(1, 64, 64, 8))
+        {
+            Assert.True(enabled.ResidencyBytes >= 4096);
+            enabled.PrepareResidency(); enabled.PrepareResidency();
+            Populate(matrix, 3); Populate(ordinary, 3);
+            float[] input = Enumerable.Repeat(.125f, 64).ToArray(), a = new float[64], b = new float[64];
+            matrix.MultiplyExperts(input, a, [0], false);
+            ordinary.MultiplyExperts(input, b, [0], false);
+            Assert.Equal(b, a);
+        }
+        Assert.Equal(0UL, enabled.ResidencyBytes);
+    }
+
     [Theory]
     [InlineData(5, 512, true)] [InlineData(8, 512, false)]
     [InlineData(5, 2048, false)] [InlineData(8, 2048, true)]

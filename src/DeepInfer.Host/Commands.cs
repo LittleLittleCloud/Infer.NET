@@ -12,6 +12,12 @@ public static class Commands
         var options = new Options(args);
         switch (options.Command)
         {
+            case "version": Console.WriteLine(typeof(Commands).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion); break;
+            case "split-check-suffix": await SuffixChecks.Run(options, ct); break;
+            case "split-serve": await SplitService.RunMac(options, ct); break;
+            case "split-agent": await SplitService.RunAgent(options, ct); break;
+            case "split-worker": await SplitInference.Worker(options, ct); break;
+            case "split-infer": await SplitInference.Coordinator(options, ct); break;
             case "coordinator": await Server.RunAsync(options, false, ct); break;
             case "worker": await Server.RunAsync(options, true, ct); break;
             case "demo": await Demo.RunAsync(options, ct); break;
@@ -30,6 +36,7 @@ public static class Commands
                 using (var client = Client(options)) Console.WriteLine(JsonSerializer.Serialize(await client.StatusAsync(ct), RpcJson.Default.ClusterSnapshot));
                 break;
             case "infer":
+                if (options.Flag("stream")) { await ServiceStreaming.Client(options, ct); break; }
                 using (var client = Client(options))
                 {
                     var result = await client.InferAsync(new(options.Get("prompt", "用一句话介绍你自己。"),
@@ -59,6 +66,14 @@ public static class Commands
                                [--coordinator http://127.0.0.1:5100] [--backend simulation|cpu|metal|cuda]
                                [--capacity 1] [--advertise http://127.0.0.1:5101]
                                [--weights models/stories15M.bin --tokenizer models/tokenizer.bin --model stories15m]
+                  split-serve  --config PRIVATE_MAC_WORKER_JSON   persistent Metal worker + API
+                  split-agent  --config PRIVATE_WINDOWS_JSON      persistent CUDA agent
+                  infer        --endpoint http://127.0.0.1:5200 --token-file FILE --stream
+                  version      print build version and source commit
+                  split-infer  --weights MODEL_DIR --listen tcp://MAC_INTERFACE:5210 --allow-remote
+                               [--verify] [--max-tokens 8] [--output RUN_DIRECTORY]
+                  split-worker --weights PREFIX_BUNDLE --endpoint tcp://MAC_INTERFACE:5210
+                               experimental resident 20/20 handoff, <=2048 total tokens
                   devices      probe hardware and available compute backends
                   verify-qwen  [--weights models/qwen2.5-3b-instruct] [--reference artifacts/qwen-reference.json]
                   verify-qwen36 [--weights models/qwen3.6-35b-a3b-5bit-mlx]

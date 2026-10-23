@@ -12,7 +12,7 @@ public static class Demo
         var model = options.Get("model", backend == "simulation" ? Protocol.SyntheticModel : Protocol.Qwen3BModel);
         var count = options.Number("workers", model is Protocol.Qwen3BModel or Protocol.Qwen7BModel or Protocol.Qwen36Model ? 1 : 2, 1, 8);
         var endpoint = $"http://127.0.0.1:{port}";
-        var weights = options.Get("weights", model == Protocol.Qwen36Model ? "models/qwen3.6-35b-a3b-5bit-mlx" : model == Protocol.Qwen7BModel ? "models/qwen2.5-7b-instruct" : model == Protocol.Qwen3BModel ? "models/qwen2.5-3b-instruct" : "models/stories15M.bin");
+        var weights = options.Get("weights", model == Protocol.Qwen36Model ? "models/qwen3.6-35b-a3b-8bit-mlx" : model == Protocol.Qwen7BModel ? "models/qwen2.5-7b-instruct" : model == Protocol.Qwen3BModel ? "models/qwen2.5-3b-instruct" : "models/stories15M.bin");
         var tokenizer = options.Get("tokenizer", model is Protocol.Qwen3BModel or Protocol.Qwen7BModel or Protocol.Qwen36Model ? Path.Combine(weights, "tokenizer.json") : "models/tokenizer.bin");
         var children = new List<Process>();
         var logs = new List<Task>();

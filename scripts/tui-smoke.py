@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""macOS/Linux PTY smoke test: native or managed RazorConsole renders and calls real RPC."""
+"""macOS/Linux PTY smoke test: RazorConsole renders live worker dashboard RPC."""
 import argparse, errno, fcntl, json, os, pathlib, pty, re, select, signal, socket, struct, subprocess, termios, time, urllib.request
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser()
@@ -50,7 +50,7 @@ try:
     if child==0:
         os.execve(str(a.tui.resolve()),[str(a.tui.resolve()),f'http://127.0.0.1:{base}'],env)
     fcntl.ioctl(master,termios.TIOCSWINSZ,struct.pack('HHHH',40,140,0,0))
-    deadline=time.monotonic()+30;clicked=False
+    deadline=time.monotonic()+30
     while time.monotonic()<deadline:
         if select.select([master],[],[],.2)[0]:
             try:data=os.read(master,65536)
@@ -62,17 +62,15 @@ try:
             # Answer common cursor-position queries made by terminal UI libraries.
             if b'\x1b[6n' in data:os.write(master,b'\x1b[1;1R')
         text=output.decode(errors='replace')
-        if 'Ready. Requests' in text and not clicked:
-            os.write(master,b'\t\r');clicked=True
-        if ('Backend: metal' if (a.real or a.qwen) else 'Backend: simulation') in text and 'Worker:' in text and (not a.qwen or 'Decode:' in text):break
+        expected='Workers · 1 live / 1 known' if a.qwen else 'Workers · 2 live / 2 known'
+        if expected in text and 'Dashboard' in text and 'Playground' in text and 'Devices' in text:break
     text=output.decode(errors='replace')
     artifact=ROOT/'artifacts/tui-smoke.txt';artifact.parent.mkdir(exist_ok=True)
     artifact.write_text(re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',text))
-    assert ('REAL MODEL' if (a.real or a.qwen) else 'SIMULATION ONLY') in text, f'TUI banner was not rendered; see {artifact}'
-    assert ('Backend: metal' if (a.real or a.qwen) else 'Backend: simulation') in text and 'Worker:' in text, f'TUI RPC result missing; see {artifact}'
-    if a.real: assert 'little girl named Lily' in text, 'TUI did not display real model text'
-    if a.qwen: assert ('Qwen' in text or '阿里' in text or '通义' in text) and 'Decode:' in text, 'TUI did not display Qwen text and decode timing'
-    print('PASS: RazorConsole PTY -> coordinator -> separate worker -> ' + ('real Metal model text' if (a.real or a.qwen) else 'synthetic result'))
+    assert 'Infer.NET' in text and 'Dashboard' in text and 'Playground' in text, f'TUI tabs were not rendered; see {artifact}'
+    assert expected in text and 'Devices' in text and 'Models' in text, f'TUI worker RPC result missing; see {artifact}'
+    assert ('synthetic-v1 [SIMULATION]' if not (a.real or a.qwen) else 'metal') in text, f'TUI worker type missing; see {artifact}'
+    print('PASS: RazorConsole PTY -> coordinator -> live worker dashboard')
 finally:
     if child:
         try:os.kill(child,signal.SIGINT)
