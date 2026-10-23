@@ -22,7 +22,7 @@ if a.output.exists():raise SystemExit('Use a fresh output file')
 metal=json.loads((a.metal/'result.json').read_text())
 cuda=json.loads((a.cuda/'result.json').read_text())
 tokens=metal['tokens']
-assert tokens==cuda['tokens']==128 and cuda['kv']=='bf16'
+assert tokens==cuda['tokens']==128 and cuda['kv'] in ('bf16','fp32')
 if a.metal_fp32:
     assert metal['kv']=='fp32' and metal['gemm']=='fp32' and metal['routerProjection']=='fp32', 'Metal FP32 control profile mismatch'
     assert cuda.get('candidateRouterProjection')=='fp32-diagnostic' and cuda.get('candidateSharedProjection')=='fp32-diagnostic', 'CUDA diagnostic profile mismatch'
@@ -62,7 +62,7 @@ for layer in range(20):
 for layer in range(20):
     for kind in range(2):
         metal_bf16=(layer+1)%4==0 and not a.metal_fp32
-        cuda_bf16=(layer+1)%4==0
+        cuda_bf16=(layer+1)%4==0 and cuda['kv']=='bf16'
         checks.append(compare(f'state-{layer}-{kind}',
             values(a.metal/f'state-{layer}-{kind}.bin',metal_bf16),
             values(a.cuda/f'candidate-state-{layer}-{kind}.bin',cuda_bf16)))
@@ -84,9 +84,21 @@ if a.metal_fp32:
         for token in range(tokens):
             start=(token*20+layer)*2048
             e.extend(ref[start:start+2048]);o.extend(baseline[start:start+2048])
-        control.append(compare(f'fp32-control-layer-{layer}',e,o))
-    result['cudaFp32ControlTraceSha256']=hashlib.sha256(baseline_path.read_bytes()).hexdigest()
-    result['fp32ControlLayerChecks']=control
+        control.append(compare(f'mode5-control-layer-{layer}',e,o))
+    result['cudaMode5TraceSha256']=hashlib.sha256(baseline_path.read_bytes()).hexdigest()
+    control_key='fp32ControlLayerChecks' if cuda['kv']=='fp32' else 'mixedKvControlLayerChecks'
+    result[control_key]=control
+    result['controlProfile']='CUDA FP32 GEMM / '+cuda['kv'].upper()+' KV versus Metal FP32 GEMM / FP32 KV'
+    if cuda['kv']=='bf16':
+        result['limitations'].append('CUDA mode 5 retains BF16 KV; later-layer drift cannot be attributed to a pure FP32 cross-device mismatch')
+    if cuda['kv']=='fp32':
+        state_control=[]
+        for layer in range(20):
+            for kind in range(2):
+                state_control.append(compare(f'fp32-control-state-{layer}-{kind}',
+                    values(a.metal/f'state-{layer}-{kind}.bin'),
+                    values(a.cuda/f'baseline-state-{layer}-{kind}.bin')))
+        result['fp32ControlStateChecks']=state_control
 a.output.write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps({'checks':len(checks),'passed':result['passed'],
                   'firstFailed':next((x for x in checks if not x['pass']),None),

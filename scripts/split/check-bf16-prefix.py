@@ -20,9 +20,11 @@ p.add_argument('--weights',required=True)
 p.add_argument('--library',required=True)
 p.add_argument('--output',required=True,type=pathlib.Path)
 p.add_argument('--tokens',type=int,choices=(128,131),default=131)
+p.add_argument('--kv',choices=('bf16','fp32'),default='bf16',help='KV storage precision; mode 5 changes GEMM only')
 p.add_argument('--save-trace',action='store_true',help='Save the 20-layer CUDA trace for offline numerical comparison')
 p.add_argument('--save-routes',action='store_true',help='Save selected expert IDs for each token/layer in all three runs')
 a=p.parse_args()
+kv_bytes=2 if a.kv=='bf16' else 4
 a.output.mkdir(parents=True,exist_ok=False)
 route_path=a.output/'routes-all.i32'
 if a.save_routes:
@@ -71,7 +73,7 @@ def execute(handle,mode_id,route_label):
     states=[]
     for layer in range(20):
         for kind in range(2):
-            size=(len(tokens)*512*2 if (layer+1)%4==0 else
+            size=(len(tokens)*512*kv_bytes if (layer+1)%4==0 else
                   32*128*128*4 if kind==0 else 3*8192*4)
             data=c.create_string_buffer(size)
             ok(state(handle,layer,kind,len(tokens),data,size,err,len(err)))
@@ -79,6 +81,8 @@ def execute(handle,mode_id,route_label):
             if a.save_trace and mode_id==6:
                 path=a.output/f'candidate-state-{layer}-{kind}.bin'
                 if not path.exists():path.write_bytes(data.raw)
+            if a.save_trace and mode_id==5:
+                (a.output/f'baseline-state-{layer}-{kind}.bin').write_bytes(data.raw)
     values=array.array('f');values.frombytes(trace)
     if not all(math.isfinite(v) for v in values):raise RuntimeError('Nonfinite layer trace')
     if a.save_trace and mode_id==5:
@@ -89,7 +93,7 @@ def execute(handle,mode_id,route_label):
         run_result['routesSha256']=hashlib.sha256(route_bytes).hexdigest()
     return run_result,values
 
-handle=create(a.weights.encode(),256,2,err,len(err))
+handle=create(a.weights.encode(),256,kv_bytes,err,len(err))
 if not handle:raise RuntimeError(err.value.decode())
 try:
     baseline,reference=execute(handle,5,'baseline')
@@ -113,7 +117,8 @@ try:
                        'maxAbs':max_abs})
     result={'source':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
             'librarySha256':hashlib.sha256(pathlib.Path(a.library).read_bytes()).hexdigest(),
-            'bundleSha256':weight_sha.hexdigest(),'weightBits':8,'kv':'bf16',
+            'bundleSha256':weight_sha.hexdigest(),'weightBits':8,'kv':a.kv,
+            'baselineGemm':'fp32','candidateGemm':'bf16',
             'candidateRouterProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_ROUTER_FP32')=='1' else 'bf16',
             'candidateSharedProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_SHARED_FP32')=='1' else 'bf16',
             'stageProbeToken':int(os.environ.get('DEEPINFER_CUDA_STAGE_TOKEN','0')) if os.environ.get('DEEPINFER_CUDA_STAGE_DIR') else None,

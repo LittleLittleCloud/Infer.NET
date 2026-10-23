@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$Output,
     [ValidateSet('bf16','fp32')][string]$Router='fp32',
     [ValidateSet('bf16','fp32')][string]$Shared='fp32',
+    [ValidateSet('bf16','fp32')][string]$Kv='bf16',
     [string]$RouteProbe='1',
     [switch]$StageProbe,
     [ValidateRange(0,31)][int]$StageToken=0,
@@ -31,7 +32,7 @@ else{Remove-Item Env:DEEPINFER_CUDA_ROUTE_TRACE -ErrorAction SilentlyContinue}
 $env:DEEPINFER_CUDA_QKV_SPLIT_K=if($SplitKQkv){'1'}else{'0'}
 $env:DEEPINFER_CUDA_OUTPUT_SPLIT_K=if($SplitKOutput){'1'}else{'0'}
 Set-Location $root
-$runArgs=@('--weights',$model,'--library',$dll,'--output',$Output,'--tokens','128','--save-trace')
+$runArgs=@('--weights',$model,'--library',$dll,'--output',$Output,'--tokens','128','--kv',$Kv,'--save-trace')
 if($SaveRoutes){$runArgs+='--save-routes'}
 python (Join-Path $root 'scripts\split\check-bf16-prefix.py') @runArgs
 if($LASTEXITCODE -ne 0){throw "BF16 prefix diagnostic failed with code $LASTEXITCODE"}
