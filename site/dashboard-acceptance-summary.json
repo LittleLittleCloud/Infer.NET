@@ -1,0 +1,127 @@
+{
+  "source": "506481445d3670d129ff3d101251f96357efb971",
+  "date": "2026-10-22",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "kv": "fp32",
+  "splitProtocol": 3,
+  "modelWindowTokens": 262144,
+  "fullModelMaxInputTestedThisRun": 3012,
+  "fixedOutputTestedThisRun": 300,
+  "unitChecksPerHost": 106,
+  "controlledChecks": 59,
+  "metalHardwareChecks": 38,
+  "cudaAttentionChecks": 8,
+  "realChecks": {
+    "legacy": 15,
+    "chat": 15,
+    "tui": 8,
+    "context": 7
+  },
+  "reconnect": {
+    "stateReportedDisconnected": true,
+    "modelWithdrawnWithoutAgent": true,
+    "tokenIdsMatchAfterReconnect": true,
+    "macPidUnchanged": true,
+    "source": "0.3.0+506481445d3670d129ff3d101251f96357efb971"
+  },
+  "observations": [
+    {
+      "name": "cross-2k-growth",
+      "elapsedSeconds": 19.14160175,
+      "promptTokens": 1962,
+      "outputTokens": 300,
+      "timings": {
+        "prefillMs": 12136.3386,
+        "firstTokenMs": 12136.3607,
+        "decodeMs": 6973.847400000001,
+        "decodeTokens": 299,
+        "decodeTokensPerSecond": 42.87446840319448,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37772705792
+      },
+      "tokenIdsSha256": "3c979c8b28fcd5de5604a267ef6601e0488984892cbed214f955d2c4d56d568c"
+    },
+    {
+      "name": "same-preallocated",
+      "elapsedSeconds": 17.401020790999997,
+      "promptTokens": 1962,
+      "outputTokens": 300,
+      "timings": {
+        "prefillMs": 11879.1009,
+        "firstTokenMs": 11879.1017,
+        "decodeMs": 5514.179100000001,
+        "decodeTokens": 299,
+        "decodeTokensPerSecond": 54.22384630198173,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37772705792
+      },
+      "tokenIdsSha256": "3c979c8b28fcd5de5604a267ef6601e0488984892cbed214f955d2c4d56d568c"
+    },
+    {
+      "name": "over-2k-prefill",
+      "elapsedSeconds": 19.189331417,
+      "promptTokens": 3012,
+      "outputTokens": 32,
+      "timings": {
+        "prefillMs": 18185.8152,
+        "firstTokenMs": 18185.8162,
+        "decodeMs": 995.3797999999988,
+        "decodeTokens": 31,
+        "decodeTokensPerSecond": 31.143891005222365,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37772705792
+      },
+      "tokenIdsSha256": "a081038c31588a8b2ed849055133b3c4923e0a5bccac6e4c568178239103b444"
+    },
+    {
+      "name": "short-reset",
+      "elapsedSeconds": 1.4308406660000017,
+      "promptTokens": 17,
+      "outputTokens": 32,
+      "timings": {
+        "prefillMs": 978.1354,
+        "firstTokenMs": 978.1365,
+        "decodeMs": 437.4742,
+        "decodeTokens": 31,
+        "decodeTokensPerSecond": 70.86132165051104,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37772705792
+      },
+      "tokenIdsSha256": "64062696d8d9d6be39d78dc192aaeb80837d6ed43d99b1becc012037bc6d9936"
+    }
+  ],
+  "scope": "Functional acceptance, not a controlled throughput benchmark; 128K/262K full-model requests not tested in this run.",
+  "artifacts": {
+    "mac": {
+      "deepinfer": "357ea4b13192e3cbbba7068ef7582f08ec2dc829ebc9a0e3b93abfb557a9b6a6",
+      "libdeepinfer_metal.dylib": "2a0bfdc7649041b17346eeb722da45164f055142e8828afd77f88ea6dc5fec92"
+    },
+    "windows": {
+      "deepinfer.exe": "bc3ea90946bae1b5d568865516f919eb5f130544c3493f66a1dfca3a4c3e3a7b",
+      "deepinfer_cuda.dll": "19b757c982616a2112f1128915b9da5323104fa81e7fc35624d5b5abeac17c8c"
+    }
+  },
+  "rawEvidence": [
+    {
+      "localPath": "artifacts/chat/dashboard-real-legacy-final/summary.json",
+      "sha256": "359896ef0968e30e85d0ff4b3e2288c2ef77f130de444883d7bd98f7728ddef1"
+    },
+    {
+      "localPath": "artifacts/chat/dashboard-real-chat-final/summary.json",
+      "sha256": "1e5b6fb9463847592f54c2b4150d99e1fa74ab57e2d23a060bd9866b1f736b5f"
+    },
+    {
+      "localPath": "artifacts/chat/dashboard-real-tui-final/summary.json",
+      "sha256": "f8991d6d22439b68f63bb195d24d89c885d07fdbe2533d10342742c69578acf7"
+    },
+    {
+      "localPath": "artifacts/chat/dashboard-long-final/summary.json",
+      "sha256": "f98d13d2160dace4e73426b5f016239368da5c3dd1b3ddd67085a3c360b28294"
+    }
+  ]
+}
