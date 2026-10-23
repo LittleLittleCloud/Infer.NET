@@ -246,5 +246,23 @@
       "python scripts/chat-acceptance.py --token-file /PRIVATE/mac/token.txt --output artifacts/chat/real-UNIQUE"
     ],
     "evidence": "artifacts/chat/real-public-final/summary.json + real-legacy-final/summary.json + real-tui-final/summary.json"
+  },
+  {
+    "id": "tui-dashboard",
+    "title": "鼠标 Dashboard 与 Auto / 长上下文边界",
+    "kind": "8bit · 双机功能实测 · 非性能基准",
+    "source": "docs/TUI-DASHBOARD-ACCEPTANCE.md",
+    "question": "让 TUI 显示真实 worker 状态并支持鼠标，解除固定输出和 2K 上下文限制。",
+    "setup": "2026-10-22；双端 Native AOT 506481445d3670d129ff3d101251f96357efb971；8bit / FP32 KV，家庭 LAN。",
+    "change": "Dashboard/Playground tabs、鼠标、心跳与性能；Auto 输出；CUDA 动态容量、Metal KV 保留扩容、SplitWire v3。",
+    "result": "1962 输入 + 300 输出跨过旧边界，两次全部 token ID 一致；3012 输入 + 32 输出完成。旧 API 15、Chat 15、真实 TUI 8、上下文 7 项通过；agent 断开/恢复验证通过。",
+    "validation": "双端各 106 单测、59 受控 API/SDK/PTY 检查、38 Metal 硬件检查、8 CUDA attention 案例通过；最终源码 CI 通过。",
+    "conclusion": "部署已更新；不再人为限制 2K/256。262144 是模型窗口上限，不是本轮整模实测长度。修复并保留了已释放连接导致心跳停止的失败记录。",
+    "next": "BF16 精度、128K 双机性能及 Windows SCM 验收仍未完成。",
+    "commands": [
+      "dotnet run --project src/DeepInfer.Tui -c Release",
+      "python3 scripts/chat-integration.py --sdk --tui"
+    ],
+    "evidence": "site/dashboard-acceptance-summary.json（原始日志仅本地）"
   }
 ]
