@@ -49,3 +49,29 @@ Later on 2026-10-22, an independent user-owned checkout was cloned through GitHu
 Local evidence: run `setup-managed-audited-20261022` (exit 0), `setup-native-preflight-20261022` (exit 1), and the earlier installation/restore failures under `artifacts/windows/` on Windows. Private logs were also collected on the Mac; they are not published. The opt-in NuGet configuration SHA256 is `DE0969C14B59BD38DC75339106D6589F4D74A238A971AA27383EF8E7FDE17715`.
 
 Next: complete administrator Build Tools installation, then run the scripted SM89 numerical check and Native AOT RPC validation. Effective network bandwidth and dual-host inference remain unmeasured. Issue #2 stays open.
+
+## Follow-up: native toolchain validated
+
+After the user completed administrator installation on 2026-10-22, validation resumed from the same clean source commit on Mac and Windows: `bfb363fab08d49cc2b2c57d9857802a8df9f4db2`. This supersedes the pending native-validation status above; the earlier failure remains part of the record.
+
+- Visual Studio 2022 Build Tools **MSVC 14.44.35207** was discovered and activated, including `cl.exe` and `link.exe`. CUDA **13.4.59** compiled explicitly for **SM89**.
+- The RTX 4090 executed the FP32 GEMM environment check: **851/851 output elements passed**, maximum absolute error **5.96756026e-07** against a CPU double-precision reference (tolerance `1e-5`). The dimensions were M=37, N=23, K=53, including tile tails. This is a compiler/runtime correctness check, not a model kernel benchmark.
+- Windows **win-x64 Native AOT publish passed**, followed by **25/25 independent-process RPC checks** using the native executable. These exercise synthetic inference and explicit rejection of unavailable GPU inference; they do not validate a CUDA model backend.
+- Both checkouts were clean after validation. The prior managed result remains 68/68 unit tests and 25/25 managed RPC checks at `1022ea3e0e6503c2c7600f86b314c154dfb8dedd`; those tests were not repeated during this native-only stage.
+
+Reproduce from the repository root in Windows PowerShell, using a new run identifier:
+
+```powershell
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File scripts\windows\verify-environment.ps1 -Stage Native -RunId unique-native-run -NuGetConfigPath scripts\windows\NuGet.v2.config
+```
+
+Evidence run: `setup-native-after-msvc-20261022`, exit **0**, with `result.json` and `validation.log` under the Windows checkout's `artifacts/windows/` directory. Copies are retained locally on the Mac. Raw logs contain private filesystem information and are not published.
+
+| Artifact | SHA256 |
+| --- | --- |
+| CUDA environment-check executable | `438A851428CB139416E07BF8C6EF484228E3D8050F6E93069924A9712BBF8B19` |
+| Native AOT host executable | `25BB7C1DB22A8CB1A22C8B0C0F0FBC10B84823D44634AA3B7FFE70FD436B6C82` |
+| Validation transcript | `a70afe21f65a20990169b3863b039694b020b9fc3547e58096f23067a98159c7` |
+| Result JSON | `c59b02bd62dbabb717637e6d4458a027284814d423e951faa3d8b2a32ead2d50` |
+
+The Windows development environment is ready. [PR #6](https://github.com/LittleLittleCloud/Infer.NET/pull/6) contains the reproducible setup and validation scripts. Next are effective link/state-transfer measurements and the actual 8bit CUDA front-stage implementation. Issue #2 remains open for its unmeasured network acceptance item; model inference and dual-host performance are not claimed by this environment check.
