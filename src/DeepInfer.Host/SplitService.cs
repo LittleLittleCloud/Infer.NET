@@ -46,7 +46,6 @@ public static class SplitService
         if (o.Get("metal-scratch-tokens", "512") is not ("128" or "512")) throw new ArgumentException("metal-scratch-tokens must be 128 or 512.");
         if (o.Number("metal-scratch-tokens", 512, 128, 512) < o.Number("suffix-chunk-tokens", 128, 32, 512))
             throw new ArgumentException("metal-scratch-tokens must cover suffix-chunk-tokens.");
-        if (o.Get("suffix-receive-overlap", "off") is not ("on" or "off")) throw new ArgumentException("suffix-receive-overlap must be on or off.");
         if (o.Get("cuda-send-overlap", "on") is not ("on" or "off")) throw new ArgumentException("cuda-send-overlap must be on or off.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("cuda-prefill must be serial, batch-fp32 or batch-fp32-packed.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
@@ -197,33 +196,41 @@ public static class SplitService
                     {
                         requestId = peer!.Wire.Request;
                         await peer.Wire.SendAsync(new(SplitWire.Start, 20, incrementalKv ? 2 : 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
-                        var receiveBatches = SplitSuffixBatches.Read(peer.Wire.ReceiveAsync, ids.Length, suffixChunk, incrementalKv, timeout.Token);
-                        var waitingSince = Stopwatch.GetTimestamp();
-                        ValueTask Consume(SplitSuffixBatch batch, CancellationToken cancel)
+                        for (var offset = 0; offset < ids.Length; offset += suffixChunk)
                         {
-                            cancel.ThrowIfCancellationRequested();
-                            hiddenWaitMs += Stopwatch.GetElapsedTime(waitingSince).TotalMilliseconds;
-                            var phase = Stopwatch.GetTimestamp();
-                            next = gpu.Suffix(ids.AsSpan(batch.Position, batch.Count).ToArray(), batch.Hidden, batch.Position + batch.Count == ids.Length);
-                            suffixMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
-                            if (batch.Kv is not null)
+                            var count = Math.Min(suffixChunk, ids.Length - offset);
+                            var hidden = new float[count * 2048];
+                            var kv = incrementalKv ? Enumerable.Range(0,10).Select(_ => new byte[count*512*4]).ToArray() : null;
+                            for (var at = 0; at < count; at += 32)
                             {
-                                phase = Stopwatch.GetTimestamp();
-                                for (var layer = 3; layer < 20; layer += 4) for (var tensor = 0; tensor < 2; tensor++)
+                                var receiving = Stopwatch.GetTimestamp();
+                                var frame = await peer.Wire.ReceiveAsync(timeout.Token);
+                                hiddenWaitMs += Stopwatch.GetElapsedTime(receiving).TotalMilliseconds;
+                                if (frame.Kind != SplitWire.Hidden || frame.Position != offset + at || frame.Count != Math.Min(32, count - at)) throw new InvalidDataException("Noncontiguous hidden stream.");
+                                MemoryMarshal.Cast<byte, float>(frame.Data).CopyTo(hidden.AsSpan(at * 2048));
+                                if(kv is not null)for(var layer=3;layer<20;layer+=4)for(var tensor=0;tensor<2;tensor++)
                                 {
-                                    var data = batch.Kv[(layer / 4) * 2 + tensor];
-                                    gpu.KvRange(layer, tensor, batch.Position, batch.Count, ids.Length, data);
-                                    stateBytes += data.Length;
+                                    receiving=Stopwatch.GetTimestamp();
+                                    var range=await peer.Wire.ReceiveAsync(timeout.Token);
+                                    hiddenWaitMs+=Stopwatch.GetElapsedTime(receiving).TotalMilliseconds;
+                                    if(range.Kind!=SplitWire.KvRange||range.Layer!=layer||range.Tensor!=tensor||range.Position!=offset+at||range.Count!=frame.Count)
+                                        throw new InvalidDataException("Noncontiguous KV range stream.");
+                                    range.Data.CopyTo(kv[(layer/4)*2+tensor],at*512*4);
+                                    stateBytes+=range.Data.Length;
                                 }
-                                importMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                             }
-                            waitingSince = Stopwatch.GetTimestamp();
-                            return ValueTask.CompletedTask;
+                            if (hidden.Any(x => !float.IsFinite(x))) throw new InvalidDataException("Nonfinite hidden.");
+                            var phase = Stopwatch.GetTimestamp();
+                            next = gpu.Suffix(ids.AsSpan(offset, count).ToArray(), hidden, offset + count == ids.Length);
+                            suffixMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
+                            if(kv is not null)
+                            {
+                                phase=Stopwatch.GetTimestamp();
+                                for(var layer=3;layer<20;layer+=4)for(var tensor=0;tensor<2;tensor++)
+                                    gpu.KvRange(layer,tensor,offset,count,ids.Length,kv[(layer/4)*2+tensor]);
+                                importMs+=Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
+                            }
                         }
-                        if (o.Get("suffix-receive-overlap", "off") == "on")
-                            await SplitReceivePump.Run(receiveBatches, Consume, timeout.Token);
-                        else
-                            await foreach (var batch in receiveBatches) await Consume(batch, timeout.Token);
                         for (var layer = 0; layer < 20; layer++) for (var tensor = 0; tensor < 2; tensor++)
                         {
                             if(incrementalKv&&(layer+1)%4==0)continue;
@@ -247,7 +254,6 @@ public static class SplitService
                             agentTiming?.SendMs ?? 0, agentTiming?.ElapsedMs ?? 0, agentTiming?.SentBytes ?? 0,
                             hiddenWaitMs, suffixMs, stateWaitMs, importMs, otherMs)
                         : null;
-                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} decodeAttention={o.Get("decode-attention", "legacy")} receiveOverlap={o.Get("suffix-receive-overlap", "off")} incrementalKv={incrementalKv} resetMs={resetMs:F3} cudaComputeMs={agentTiming?.ComputeMs:F3} cudaExportMs={agentTiming?.StateExportMs:F3} cudaSendMs={agentTiming?.SendMs:F3} cudaElapsedMs={agentTiming?.ElapsedMs:F3} wireBytes={agentTiming?.SentBytes} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} otherMs={otherMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < maxTokens; i++)
