@@ -242,6 +242,20 @@
     "rawComparisonSha256": "59d3f284df3773c26b8e49d0646f2a814a7c56a98e016e5e2713fa95cd91a661",
     "passed": false
   },
+  "routeValueProbe": {
+    "source": "92f24b5de288c056973e331ea25ae401c3d1d71f",
+    "layer": 1,
+    "token": 93,
+    "previousLayerOutputRelativeL2": 0.00010033943032059565,
+    "routerInputRelativeL2": 0.0005487676698186835,
+    "routerLogitsRelativeL2": 0.00006671822825891186,
+    "routerLogitsMaxAbs": 0.0012960400000001648,
+    "metalLogitMarginExpert167Minus54": 0.0017242400000001545,
+    "cudaLogitMarginExpert167Minus54": -0.00018668000000010565,
+    "layerOutputRelativeL2": 0.03768587814618038,
+    "traceHashesUnchangedByProbe": true,
+    "finding": "Near-threshold top-8 routing amplifies earlier cross-backend activation drift; its first arithmetic source remains unisolated."
+  },
   "restoredServiceSmoke": {
     "profile": "deployed-affine8-fp32-kv-not-candidate",
     "status": 200,
