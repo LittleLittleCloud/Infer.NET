@@ -105,6 +105,50 @@ __global__ void chunk_attend(float *s, const KV *v, const float *raw, float *out
     out[h * 256 + t] = result * sig(raw[h * 512 + 256 + t]);
 }
 
+// Keep the original per-query softmax and key-order accumulation while sharing
+// each value-cache read across up to four neighboring queries. This is separate
+// from the retained path until full-model route parity is established.
+__global__ void chunk_softmax(float *s, int pos, int capacity) {
+    int seq=blockIdx.y;s+=size_t(seq)*16*capacity;pos+=seq;
+    float *prob=s+blockIdx.x*capacity;
+    __shared__ float parts[8];
+    int t=threadIdx.x;
+    float best=-INFINITY;
+    for(int i=t;i<=pos;i+=256)best=fmaxf(best,prob[i]);
+    for(int n=16;n;n/=2)best=fmaxf(best,__shfl_xor_sync(0xffffffff,best,n));
+    if((t&31)==0)parts[t/32]=best;
+    __syncthreads();
+    if(t==0){float m=parts[0];for(int i=1;i<8;i++)m=fmaxf(m,parts[i]);parts[0]=m;}
+    __syncthreads();
+    best=parts[0];
+    float total=0;
+    for(int i=t;i<=pos;i+=256){prob[i]=expf(prob[i]-best);total+=prob[i];}
+    float den=blocksum(total);
+    for(int i=t;i<=pos;i+=256)prob[i]/=den;
+}
+template <class KV>
+__global__ void chunk_attend_reuse4(const float *s,const KV *v,const float *raw,
+                                    float *out,int pos,int capacity,int count) {
+    int h=blockIdx.x,first=blockIdx.y*4,d=threadIdx.x;
+    float result[4]={0,0,0,0};
+    int last=min(first+3,count-1),lastPos=pos+last;
+    for(int i=0;i<=lastPos;i++){
+        float value=float(v[size_t(i)*512+(h/8)*256+d]);
+        #pragma unroll
+        for(int j=0;j<4;j++){
+            int seq=first+j;
+            if(seq<count && i<=pos+seq)
+                result[j]+=s[(size_t(seq)*16+h)*capacity+i]*value;
+        }
+    }
+    #pragma unroll
+    for(int j=0;j<4;j++){
+        int seq=first+j;
+        if(seq<count)out[size_t(seq)*4096+h*256+d]=
+            result[j]*sig(raw[size_t(seq)*8192+h*512+256+d]);
+    }
+}
+
 __global__ void chunk_top8(const float *logits, int *ids, float *prob) {
     logits+=blockIdx.x*256;ids+=blockIdx.x*8;prob+=blockIdx.x*8;
 
