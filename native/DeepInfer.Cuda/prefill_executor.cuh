@@ -74,12 +74,14 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         profile.mark((l+1)%4 ? 1 : 2);
         chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
         profile.mark(3);
-        chunk_mv(g,m[7],p.norm,p.router,count);chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
+        chunk_mv(g,m[7],p.norm,p.router,count);
+        if(g->expertPacked && m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
+            chunk_expert_gate_up_packed<<<dim3((m[11].rows+3)/4,1,count),128>>>(m[11],m[12],p.norm,p.sg,p.su,nullptr);
+        else {chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);}
+        chunk_mv(g,m[14],p.norm,p.sr,count);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);activation<<<count*4,128>>>(p.sg,p.su,count*512);
         profile.mark(4);
-        if(g->expertPacked && m[8].rows==m[9].rows && m[8].cols==m[9].cols && m[8].cols%256==0)
-            chunk_expert_gate_up_dispatch<<<dim3((m[8].rows+3)/4,16,count),128>>>(m[8],m[9],p.norm,p.eg,p.eu,p.ids,8);
-        else {chunk_mv(g,m[8],p.norm,p.eg,count,p.ids,8);chunk_mv(g,m[9],p.norm,p.eu,count,p.ids,8);}
+        chunk_mv(g,m[8],p.norm,p.eg,count,p.ids,8);chunk_mv(g,m[9],p.norm,p.eu,count,p.ids,8);
         activation<<<count*32,128>>>(p.eg,p.eu,count*4096);
         profile.mark(5);
         chunk_mv(g,m[10],p.eg,p.eo,count,p.ids,8,true);chunk_mv(g,m[13],p.sg,p.so,count);
