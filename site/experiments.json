@@ -384,5 +384,23 @@
       "deepinfer split-agent --config PRIVATE_WORKER_JSON --cuda-send-overlap on"
     ],
     "evidence": "site/send-overlap-summary.json; artifacts/dual-host/overlap-e2e-*"
+  },
+  {
+    "id": "cuda-score-reuse",
+    "title": "CUDA QK 复用：算子更快，双机 prefill 未提速",
+    "kind": "8bit · FP32 KV · 双机 A/B 未采用",
+    "source": "docs/CUDA-SCORE-REUSE.md",
+    "question": "两条 query 共享读取 K，保持逐位结果，能否加速真实 20/20 双机 prefill？",
+    "setup": "2026-10-23；同源码 1905767 的 Mac M5 Pro 与 Windows RTX 4090；8192/32768 输入、16 固定输出、0% 缓存、Mac AC；各模式预热 1、正式 3。",
+    "change": "可选 batch-fp32-score-reuse 对照 batch-fp32-packed；只改 CUDA 前段 QK score kernel。",
+    "result": "32K native 前20层单轮 49.976→46.541 秒；双机 prefill 中位 52.709→52.931 秒（变慢0.42%）。8K 中位 11.120→11.114 秒（差0.05%）。",
+    "validation": "40组算子逐位一致；131-token 完整前段层迹与32K hidden/状态逐位一致；双机每档16个输出 token 跨模式一致。正式轮整机新增swap-out为0；未采4090设备峰值。",
+    "conclusion": "CUDA 计算分项确有下降，Mac 后段约51.25秒且整条 CUDA 流水线耗时未降；不设为默认，原部署已恢复并真实请求通过。BF16/128K/4096目标仍未验收。",
+    "next": "先处理 Mac 后段和交接等待，再复查 CUDA score 优化的端到端价值。",
+    "commands": [
+      "python3 scripts/split/check-score-reuse.py --help",
+      "python3 scripts/split/benchmark-score-reuse-e2e.py --help"
+    ],
+    "evidence": "site/cuda-score-reuse-summary.json；原始 JSON 仅本机"
   }
 ]
