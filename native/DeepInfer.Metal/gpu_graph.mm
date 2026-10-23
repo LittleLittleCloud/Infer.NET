@@ -236,6 +236,7 @@ struct GModel {
     uint32_t position=0,capacity=2048;
     uint64_t splitMissing=0; // Two state tensors per prefix layer; decode requires all 40.
     bool splitActive=false;
+    bool decodeFusedFp32=false;
     uint32_t splitTarget=0;
     std::array<uint32_t,40> splitKvWritten{};
     id<MTLBuffer> attentionParts;

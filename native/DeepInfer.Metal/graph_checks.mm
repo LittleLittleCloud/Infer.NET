@@ -15,6 +15,14 @@ int main(){@autoreleasepool {
             fprintf(stderr,"Explicit prefill scratch configuration failed\n");delete c;return 1;
         }
     }
+    {
+        GModel configured{};configured.compute=*c;
+        if(di_graph_decode_fused_fp32(&configured,1)==0 || di_graph_decode_fused_fp32(&configured,3)==0 ||
+           di_graph_prepare_prefill_scratch(&configured,32,error,sizeof(error)) || di_graph_decode_fused_fp32(&configured,1) || !configured.decodeFusedFp32)return 1;
+        configured.position=1;if(di_graph_decode_fused_fp32(&configured,0)==0)return 1;
+        configured.position=0;configured.kvBf16=true;if(di_graph_decode_fused_fp32(&configured,1)==0)return 1;
+        if(di_graph_decode_fused_fp32(&configured,0) || configured.decodeFusedFp32)return 1;
+    }
     // KV handoff uses exact shared-memory bytes and strictly contiguous ranges.
     for(bool bf16:{false,true}) {
         GModel g{};g.compute=*c;g.kvBf16=bf16;g.capacity=16;g.position=4;g.splitActive=true;g.splitMissing=(1ull<<40)-1;

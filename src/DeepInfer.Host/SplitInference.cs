@@ -90,6 +90,7 @@ public static class SplitInference
             Console.Error.WriteLine($"REFERENCE_READY promptTokens={tokens.Length} greedy={string.Join(',',expected)}");
         }
         gpu.Reset(tokens.Length+max);
+        gpu.ConfigureFusedFp32Decode(FusedDecode(options));
         using var listener=new TcpListener(ip,uri.Port);listener.Start(1);
         Console.Error.WriteLine($"SPLIT_LISTENING promptTokens={tokens.Length}");
         using var client=await listener.AcceptTcpClientAsync(ct);client.NoDelay=true;listener.Stop();
@@ -163,10 +164,12 @@ public static class SplitInference
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
         var result=new SplitResult(wire.Request.ToString(),SplitWire.Revision,tokens.Length,ids.ToArray(),gpu.Decode(ids.ToArray()),expected.ToArray(),
-            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),guards.ToArray(),$"CUDA layer-major affine8 prefix; Metal <=32-token suffix; incrementalKV={incremental}; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
+            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),guards.ToArray(),$"CUDA layer-major affine8 prefix; Metal <=32-token suffix; incrementalKV={incremental}; decodeAttention={options.Get("decode-attention","legacy")}; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
         var json=JsonSerializer.Serialize(result,SplitJson.Default.SplitResult);await File.WriteAllTextAsync(Path.Combine(output,"result.json"),json+Environment.NewLine,ct);Console.WriteLine(json);
         if(verify&&!result.Verified)throw new InvalidOperationException("Split correctness gate failed; see result.json. Do not use these timings as accepted performance.");
     }
+    internal static bool FusedDecode(Options o)=>o.Get("decode-attention","legacy") switch
+    { "fused-fp32"=>true,"legacy"=>false,_=>throw new ArgumentException("--decode-attention must be legacy or fused-fp32.") };
     internal static bool IncrementalKv(Options o)=>o.Get("kv-transfer","final") switch
     { "incremental"=>true,"final"=>false,_=>throw new ArgumentException("--kv-transfer must be final or incremental.") };
     private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };

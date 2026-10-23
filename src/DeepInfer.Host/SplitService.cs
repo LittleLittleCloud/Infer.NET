@@ -39,6 +39,7 @@ public static class SplitService
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         _ = o.Number("short-prefill-tokens", 128, 0, 128);
         _ = SplitInference.IncrementalKv(o);
+        _ = SplitInference.FusedDecode(o);
         if (o.Get("suffix-chunk-tokens", "128") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
         if (o.Get("cuda-send-overlap", "on") is not ("on" or "off")) throw new ArgumentException("cuda-send-overlap must be on or off.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32")) throw new ArgumentException("cuda-prefill must be serial or batch-fp32.");
@@ -240,7 +241,7 @@ public static class SplitService
                         await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     }
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
-                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} incrementalKv={incrementalKv} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
+                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} decodeAttention={o.Get("decode-attention", "legacy")} incrementalKv={incrementalKv} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < maxTokens; i++)
@@ -297,7 +298,7 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
-                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: 512);
+                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: 512, fusedFp32Decode: SplitInference.FusedDecode(o));
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

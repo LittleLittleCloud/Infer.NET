@@ -146,6 +146,11 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             if (GraphNative.PrefixKvRange(handle, layer, kind, position, count, total, p, data.Length) != 0)
                 throw new InvalidOperationException("KV range import rejected (identity, position, precision, size, target or duplicate).");
     }
+    public void ConfigureFusedFp32Decode(bool enabled)
+    {
+        if (GraphNative.DecodeFusedFp32(handle, enabled ? 1 : 0) != 0)
+            throw new InvalidOperationException("FP32 decode attention configuration rejected; reset and use FP32 KV/prepared scratch.");
+    }
     public void Dispose() => handle.Dispose();
 }
 internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
@@ -161,6 +166,8 @@ internal static unsafe partial class GraphNative
         float* hidden, float* output, float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_kv_range")]
     internal static partial int PrefixKvRange(GraphHandle graph, int layer, int kind, int position, int count, int total, byte* data, int bytes);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_decode_fused_fp32")]
+    internal static partial int DecodeFusedFp32(GraphHandle graph, int enabled);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_state")]
     internal static partial int PrefixState(GraphHandle graph, int layer, int kind, int position, byte* data, int bytes, int importState);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create")]
