@@ -100,6 +100,17 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             fprintf(stderr,"CUDA_ROUTE token=%d layer=%d",token,l);
             for(int i=0;i<8;i++)fprintf(stderr," %d:%.9g",ids[i],probabilities[i]);
             fputc('\n',stderr);
+            if(probeTokenB<0){
+                float norm[2048],logits[256];
+                ck(cudaMemcpy(norm,p.norm+local*2048,sizeof(norm),cudaMemcpyDeviceToHost));
+                ck(cudaMemcpy(logits,p.router+local*256,sizeof(logits),cudaMemcpyDeviceToHost));
+                fprintf(stderr,"CUDA_ROUTE_NORM token=%d layer=%d",token,l);
+                for(float value:norm)fprintf(stderr," %.9g",value);
+                fputc('\n',stderr);
+                fprintf(stderr,"CUDA_ROUTE_LOGITS token=%d layer=%d",token,l);
+                for(float value:logits)fprintf(stderr," %.9g",value);
+                fputc('\n',stderr);
+            }
         }
         activation<<<count*4,128>>>(p.sg,p.su,count*512);
         profile.mark(4);

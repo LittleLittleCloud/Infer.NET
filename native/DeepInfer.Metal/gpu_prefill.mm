@@ -666,6 +666,15 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
    int local=token-int(g->position);fprintf(stderr,"METAL_ROUTE token=%d layer=%u",token,shape.layer);
    for(int i=0;i<8;i++)fprintf(stderr," %u:%.9g",ids[local*8+i],prob[local*8+i]);
    fputc('\n',stderr);
+   if(routeTokenB<0){
+    auto *norm=(float*)p->norm.contents+local*2048,*logits=(float*)p->router.contents+local*256;
+    fprintf(stderr,"METAL_ROUTE_NORM token=%d layer=%u",token,shape.layer);
+    for(int i=0;i<2048;i++)fprintf(stderr," %.9g",norm[i]);
+    fputc('\n',stderr);
+    fprintf(stderr,"METAL_ROUTE_LOGITS token=%d layer=%u",token,shape.layer);
+    for(int i=0;i<256;i++)fprintf(stderr," %.9g",logits[i]);
+    fputc('\n',stderr);
+   }
   }
   profileDispatches=g->dispatches;
   command=[g->compute.queue commandBuffer];e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
