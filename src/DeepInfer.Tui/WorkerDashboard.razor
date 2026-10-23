@@ -75,7 +75,6 @@
         lines.Add($"Capacity {t.WeightBits?.ToString() ?? "?"}bit · KV {t.Kv ?? "?"} · model window {t.MaxContextTokens?.ToString() ?? "?"}");
         if (m != null)
         {
-            if (Wide) lines.Add("");
             lines.Add($"Last completed request  {m.InputTokens} in / {m.OutputTokens} out · {m.CompletedAt.ToLocalTime():HH:mm:ss}");
             var path = m.ExecutionPath == "metal-local" ? "Mac local" : "4090 → Mac · includes handoff";
             lines.Add($"Prefill  {m.PrefillMs / 1000:F2}s · {path}");
