@@ -384,5 +384,23 @@
       "deepinfer split-agent --config PRIVATE_WORKER_JSON --cuda-send-overlap on"
     ],
     "evidence": "site/send-overlap-summary.json; artifacts/dual-host/overlap-e2e-*"
+  },
+  {
+    "id": "cuda-long-chunk-20261023",
+    "title": "CUDA 1024/2048 分块：前段更快，1GbE 流水线仍待优化",
+    "kind": "8bit · FP32 KV · 有线双机 A/B",
+    "source": "docs/CUDA-LONG-CHUNK-20261023.md",
+    "question": "扩大 CUDA 按层 prefill 外层块，在保持逐字节状态一致时能否提升计算和完整双机请求？",
+    "setup": "2026-10-23；同源码 45a51a1，Mac M5 Pro AC/High Power ↔ Windows RTX 4090，Mac 有线 1GbE；8192 输入/8 输出；每档预热1、正式3，0% prefix cache。",
+    "change": "CUDA 原生支持 1024/2048 块；按128-token 帧交接，按整块入有界发送队列；split-agent 默认1024，保留32/2048显式对照。",
+    "result": "原生1024-token前段相对32快10.8%，hidden/40状态逐字节一致。有线端到端prefill中位：32为11.526s、1024为12.255s、2048为13.392s；1024的CUDA compute 9.728→9.088s，但Mac等待0.612→1.470s。",
+    "validation": "有线连接在Mac 1GbE接口实际建立；各档8个输出token ID一致。Mac 129项测试通过；Windows 128通过、1项Metal专属跳过。BF16跨后端门槛及128K仍未通过/未测。",
+    "conclusion": "当前有线1GbE下1024计算更快，但大块降低流水线重叠，整段慢约6.3%。按CUDA计算目标选1024默认，不宣称端到端加速；2048更慢。",
+    "next": "保留32对照，测试更长上下文、内存/swap和持续decode；继续定位BF16路由前的算术差值。",
+    "commands": [
+      "python3 scripts/split/check-cuda-long-chunk.py --help",
+      "python3 scripts/split/bench-live-chunk.py --help"
+    ],
+    "evidence": "site/cuda-long-chunk-summary.json；原始有线JSON仅本地，SHA-256见完整记录"
   }
 ]

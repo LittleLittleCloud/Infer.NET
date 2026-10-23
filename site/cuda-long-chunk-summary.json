@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-23",
+  "source": "45a51a1669d43b401c806342cebf3f1647d80080",
+  "model": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "precision": "affine 8bit weights, FP32 KV diagnostic",
+  "inputTokens": 8192,
+  "outputTokens": 8,
+  "promptSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+  "trials": "one warmup, three formal per configuration; zero prefix cache",
+  "payloadBytes": 267812864,
+  "network": "Mac 1GbE full-duplex to LAN; Windows Ethernet; direct authenticated TCP/TLS; no SSH tunnel",
+  "wiredResults": [
+    {"cudaChunkTokens": 32, "prefillSeconds": [11.2962, 11.7606, 11.5260], "medianPrefillSeconds": 11.5260, "medianCudaComputeSeconds": 9.7283, "medianMacHiddenWaitSeconds": 0.6117},
+    {"cudaChunkTokens": 1024, "prefillSeconds": [12.1516, 12.4072, 12.2549], "medianPrefillSeconds": 12.2549, "medianCudaComputeSeconds": 9.0884, "medianMacHiddenWaitSeconds": 1.4704},
+    {"cudaChunkTokens": 2048, "prefillSeconds": [13.5475, 13.2981, 13.3919], "medianPrefillSeconds": 13.3919, "medianCudaComputeSeconds": 9.0797, "medianMacHiddenWaitSeconds": 2.4825}
+  ],
+  "correctness": "All 8 output token IDs matched across all wired rounds; native 1024/2048 hidden and 40 states were byte-exact against 32-token path. BF16 cross-backend gate remains failed.",
+  "status": "1024 selected as split-agent default for CUDA compute; no wired end-to-end gain; 128K and resource gates untested",
+  "rawEvidence": "Local ignored artifacts/dual-host/cuda-long-chunk-927a254/; hashes in docs/CUDA-LONG-CHUNK-20261023.md"
+}
