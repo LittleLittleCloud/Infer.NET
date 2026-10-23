@@ -28,6 +28,22 @@ struct QuantJob {
     const uint32_t *experts;
     int32_t count, batched;
 };
+// Diagnostic parity experiment: match CUDA's explicit XOR reduction order.
+// The production default retains Metal's built-in reduction.
+static NSString *q_math_source(NSString *source) {
+    const char *mode=getenv("DEEPINFER_METAL_MATH");
+    if(!mode||strcmp(mode,"ordered")!=0)return source;
+    return [@R"metal(
+#include <metal_stdlib>
+using namespace metal;
+template<typename T> inline T di_ordered_sum(T value) {
+    for(uint offset=16;offset>0;offset/=2)
+        value += simd_shuffle_xor(value,offset);
+    return value;
+}
+#define simd_sum di_ordered_sum
+)metal" stringByAppendingString:source];
+}
 static NSString *quant_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
@@ -246,7 +262,7 @@ void *di_quant_create_configured(int resident,int refresh,char *error,int capaci
         NSError *failure=nil; MTLCompileOptions *options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe;
         const char *vector=std::getenv("DEEPINFER_METAL_VECTOR_QUANT");
         NSString *source=!vector||strcmp(vector,"0")!=0?[@"#define VECTOR_QUANT\n" stringByAppendingString:quant_source]:quant_source;
-        id<MTLLibrary> library=[d newLibraryWithSource:source options:options error:&failure];
+        id<MTLLibrary> library=[d newLibraryWithSource:q_math_source(source) options:options error:&failure];
         if(!library){error_text(error,capacity,failure.localizedDescription);return nullptr;}
         id<MTLComputePipelineState> gemv=[d newComputePipelineStateWithFunction:[library newFunctionWithName:@"quant_gemv"] error:&failure];
         id<MTLComputePipelineState> delta=[d newComputePipelineStateWithFunction:[library newFunctionWithName:@"delta_step"] error:&failure];

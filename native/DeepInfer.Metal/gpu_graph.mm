@@ -342,7 +342,7 @@ void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const flo
             g->kvBf16=strcmp(kv,"bf16")==0;
         }
         if(g->kvBf16){if(@available(macOS 15.0,*)){options.languageVersion=MTLLanguageVersion3_1;}}
-        auto library=[g->compute.device newLibraryWithSource:g_kv_source(g) options:options error:&failure];
+        auto library=[g->compute.device newLibraryWithSource:q_math_source(g_kv_source(g)) options:options error:&failure];
         if(!library){error_text(error,capacity,failure.localizedDescription);delete g;return nullptr;}
         NSArray<NSString*> *names=@[@"graph_embedding",@"graph_norm",@"graph_add_norm",@"graph_merge_norm",@"graph_linear_prepare",@"graph_delta_norm",@"graph_head_prepare",@"graph_attention_scores",@"graph_attention_output",@"graph_top8",@"graph_debug_router",@"graph_force_route",@"graph_argmax_blocks",@"graph_argmax_final",@"graph_attention_split",@"graph_attention_combine"];
         for(int i=0;i<GPCount;i++) {
