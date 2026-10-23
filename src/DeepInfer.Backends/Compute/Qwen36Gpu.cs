@@ -3,6 +3,10 @@ using DeepInfer.Backends.Models;
 using Microsoft.Win32.SafeHandles;
 namespace DeepInfer.Backends.Compute;
 
+public sealed record MetalExecutionProfile(int KvElementBytes, bool Bf16Gemm, bool Matrix, bool ChunkedDelta,
+    bool GroupedExperts, bool PackedExperts, bool ExpandedGemm, bool DeviceDelta, int ScratchTokens,
+    bool FusedAttention, bool FusedAllAttention, int AttentionFeatures, int AttentionBatchTokens, int MatrixRows);
+
 // Own Metal executor; the native graph retains references to all weight buffers.
 internal sealed unsafe class Qwen36Gpu : IDisposable
 {
@@ -10,7 +14,7 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
     private readonly QuantizedMetal device;
     private readonly int prefillChunk = Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK") switch
     { "32" => 32, "64" => 64, "128" => 128, "256" => 256, "512" => 512, "1024" => 1024, _ => 2048 };
-    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights)
+    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights, int prefillScratchTokens = 0)
     {
         this.device = device;
         Span<byte> error = stackalloc byte[2048]; error.Clear();
@@ -46,7 +50,8 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             }
             if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL") != "0")
                 fixed (byte* e = error)
-                    if (GraphNative.PreparePrefill(handle, e, error.Length) != 0)
+                    if ((prefillScratchTokens == 0 ? GraphNative.PreparePrefill(handle, e, error.Length)
+                        : GraphNative.PreparePrefillScratch(handle, prefillScratchTokens, e, error.Length)) != 0)
                         throw new InvalidOperationException(Message(error));
             Reset();
         }
@@ -64,11 +69,25 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             if (GraphNative.Reserve(handle, tokens, e, error.Length) != 0)
                 throw new InvalidOperationException(Message(error));
     }
+    public void Grow(int tokens)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error)
+            if (GraphNative.Grow(handle, tokens, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+    }
     public (int Capacity, long KvBytes, long AllocatedBytes) Stats()
     {
         if (GraphNative.Stats(handle, out var capacity, out var kv, out var allocated) != 0)
             throw new InvalidOperationException("Cannot read GPU graph allocation statistics.");
         return (capacity, kv, allocated);
+    }
+    public MetalExecutionProfile ExecutionProfile()
+    {
+        var v = stackalloc int[14];
+        if (GraphNative.ExecutionProfile(handle, v, 14) != 0)
+            throw new InvalidOperationException("Cannot read native Metal execution profile.");
+        return new(v[0], v[1] != 0, v[2] != 0, v[3] != 0, v[4] != 0, v[5] != 0, v[6] != 0,
+            v[7] != 0, v[8], v[9] != 0, v[10] != 0, v[11], v[12], v[13]);
     }
     public int Forward(int token, int position, bool classifier, float[] logits, Action<int, int, float[]>? trace, bool fullLogits)
     {
@@ -114,6 +133,36 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         }
         return next;
     }
+    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits, float[]? trace = null)
+    {
+        if (tokens.Length is < 1 or > 512 || hidden.Length != tokens.Length * 2048 ||
+            trace is not null && trace.Length != tokens.Length * 40 * 2048) throw new ArgumentException("Invalid split hidden geometry.");
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (int* ids = tokens) fixed (float* h = hidden) fixed (float* y = logits) fixed (float* t = trace) fixed (byte* e = error)
+        {
+            if (GraphNative.Range(handle, ids, tokens.Length, final ? 1 : 0, 20, 40, h, null, y, t,
+                out var next, out var dispatches, out var ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+            device.Count(ms, dispatches, GraphNative.PrefillSubmissions(handle));
+            return next;
+        }
+    }
+    public void PrefixState(int layer, int kind, int position, byte[] data, bool import)
+    {
+        fixed (byte* p = data)
+            if (GraphNative.PrefixState(handle, layer, kind, position, p, data.Length, import ? 1 : 0) != 0)
+                throw new InvalidOperationException("State import/export rejected (identity, position, precision, size or duplicate).");
+    }
+    public void PrefixKvRange(int layer, int kind, int position, int count, int total, byte[] data)
+    {
+        fixed (byte* p = data)
+            if (GraphNative.PrefixKvRange(handle, layer, kind, position, count, total, p, data.Length) != 0)
+                throw new InvalidOperationException("KV range import rejected (identity, position, precision, size, target or duplicate).");
+    }
+    public void ConfigureFusedFp32Decode(bool enabled)
+    {
+        if (GraphNative.DecodeFusedFp32(handle, enabled ? 1 : 0) != 0)
+            throw new InvalidOperationException("FP32 decode attention configuration rejected; reset and use FP32 KV/prepared scratch.");
+    }
     public void Dispose() => handle.Dispose();
 }
 internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
@@ -124,6 +173,15 @@ internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
 }
 internal static unsafe partial class GraphNative
 {
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefill_range")]
+    internal static partial int Range(GraphHandle graph, int* tokens, int count, int classifier, int begin, int end,
+        float* hidden, float* output, float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_kv_range")]
+    internal static partial int PrefixKvRange(GraphHandle graph, int layer, int kind, int position, int count, int total, byte* data, int bytes);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_decode_fused_fp32")]
+    internal static partial int DecodeFusedFp32(GraphHandle graph, int enabled);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_state")]
+    internal static partial int PrefixState(GraphHandle graph, int layer, int kind, int position, byte* data, int bytes, int importState);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create")]
     internal static partial nint Create(QuantHandle context, QuantHandle embedding, QuantHandle classifier,
         float* norm, float epsilon, float theta, byte* error, int capacity);
@@ -133,8 +191,12 @@ internal static unsafe partial class GraphNative
     internal static partial int Reset(GraphHandle graph);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_reserve")]
     internal static partial int Reserve(GraphHandle graph, int tokens, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_grow")]
+    internal static partial int Grow(GraphHandle graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_stats")]
     internal static partial int Stats(GraphHandle graph, out int capacity, out long kvBytes, out long allocatedBytes);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_execution_profile")]
+    internal static partial int ExecutionProfile(GraphHandle graph, int* values, int count);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_forward")]
     internal static partial int Forward(GraphHandle graph, int token, int position, int classifier,
         float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);
@@ -145,6 +207,8 @@ internal static unsafe partial class GraphNative
     internal static partial int PrefillSubmissions(GraphHandle graph);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill")]
     internal static partial int PreparePrefill(GraphHandle graph, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill_scratch")]
+    internal static partial int PreparePrefillScratch(GraphHandle graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_destroy")]
     internal static partial void Destroy(nint graph);
 }

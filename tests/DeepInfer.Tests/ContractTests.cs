@@ -62,7 +62,7 @@ public sealed class ContractTests
         var request = new InferenceRequest(new string('a', 40000), 16384, Protocol.Qwen36Model, "metal", true, true);
         Assert.Null(RequestValidation.Error(request));
         Assert.Equal(request, JsonSerializer.Deserialize(JsonSerializer.Serialize(request, RpcJson.Default.InferenceRequest), RpcJson.Default.InferenceRequest));
-        Assert.NotNull(RequestValidation.Error(request with { MaxTokens = 32769 }));
+        Assert.NotNull(RequestValidation.Error(request with { MaxTokens = Protocol.MaxTokens + 1 }));
         Assert.NotNull(RequestValidation.Error(request with { Model = Protocol.Qwen3BModel }));
         Assert.NotNull(RequestValidation.Error(new("hello", BenchmarkIgnoreEos: true)));
     }

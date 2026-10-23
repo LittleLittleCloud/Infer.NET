@@ -10,6 +10,14 @@
 
 ## 直接启动
 
+实验双机入口已在 `codex/split-prefill` 分支实现（[PR #8](https://github.com/LittleLittleCloud/Infer.NET/pull/8)）：4090 常驻前 20 层，Mac 执行后 20 层，接收完整状态后接管 decode。8bit 权重、**FP32 KV 诊断模式**的 17/8、61/32 和双端 Native AOT 验证通过；BF16 目标路径尚未通过严格数值门槛，当前输入加输出最多 2K，尚未接入 TUI。准备两端环境与权重后，在 Mac 执行：
+
+```sh
+python3 scripts/split/run-dual.py --native --verify --kv fp32
+```
+
+完整前提、构建、证据和失败记录见 [双机实验说明](docs/SPLIT-PREFILL.md)。这不是 128K 性能验收。
+
 在这台 M5 Pro 48GB 上双击 **`DeepInfer.command`**，或：
 
 ```sh
@@ -147,7 +155,7 @@ python3 scripts/tui-smoke.py --qwen --host artifacts/native/osx-arm64/deepinfer 
   --tui artifacts/tui-native/osx-arm64/deepinfer-tui
 ```
 
-发布时把 `libdeepinfer_metal.dylib` 与 `deepinfer` 放在一起，构建会自动复制。普通 Release 构建无警告；原生 TUI 保留一条上游 IL2104 裁剪警告，使用到的组件已实际验证。Linux、Windows、NVIDIA GPU 和真实多机网络尚未在本机验证。
+发布时把 `libdeepinfer_metal.dylib` 与 `deepinfer` 放在一起，构建会自动复制。普通 Release 构建无警告；原生 TUI 保留一条上游 IL2104 裁剪警告，使用到的组件已实际验证。Linux 由 CI 验证；Windows Native AOT、RTX 4090 前段和真实双机短请求验证见双机实验说明。
 
 ## 基准与限制
 
@@ -159,10 +167,20 @@ deepinfer bench --requests 3 --warmup 1 --max-tokens 48 --output artifacts/bench
 
 RPC 默认等待上限为 5 分钟，以容纳 3B 模型。心跳间隔 2 秒、租约 8 秒；过载返回 429，无可用模型返回 503，失联 Worker 返回 502。不会把 CUDA 请求回退到其他后端。服务器默认仅监听本机；跨主机必须显式使用 `--allow-remote` 与统一的 `DEEPINFER_TOKEN`。HTTP 未加密，应使用可信私网/VPN 或 TLS 终止。
 
-Qwen2.5-3B 使用 **Qwen Research License**，不是 Apache/MIT；下载器保留 [上游许可证](models/qwen2.5-3b-instruct/LICENSE) 和 [固定版本/摘要](models/qwen2.5-3b-instruct/provenance.json)。实际权重不提交 Git。Qwen3.6 检查点保留其 Apache-2.0 许可证。CUDA 推理、其他 Qwen3 变体、GGUF、持久多轮会话和跨设备模型分片尚未实现。
+Qwen2.5-3B 使用 **Qwen Research License**，不是 Apache/MIT；下载器保留 [上游许可证](models/qwen2.5-3b-instruct/LICENSE) 和 [固定版本/摘要](models/qwen2.5-3b-instruct/provenance.json)。实际权重不提交 Git。Qwen3.6 检查点保留其 Apache-2.0 许可证。通用 CUDA 完整模型 Worker、其他 Qwen3 变体、GGUF、持久多轮会话和通用 rank 通信尚未实现；实验 20/20 分层执行使用独立 CLI。
 
 TinyStories 15M 仍保留为小模型回归：`demo --backend metal --model stories15m --weights models/stories15M.bin --tokenizer models/tokenizer.bin`。纯模拟测试须显式使用 `demo --backend simulation` 或 `infer --backend simulation --model synthetic-v1`。
 
 Metal BF16 matrix operands and 16-bit KV are available as an opt-in M5 path; precision boundaries, measurements and commands are documented in [BF16 Metal](docs/BF16-METAL.md).
 
 The M5 MoE launcher selects the measured hybrid GEMM, packed expert input and fused BF16 attention profile. See [current tuning and matched MLX measurements](docs/PREFILL-TUNING.md).
+
+## Persistent 8bit deployment
+
+The `split-serve` / `split-agent` commands keep Metal and CUDA weights loaded across requests, warm the complete Mac graph before readiness, reset request state, and use pinned mutual TLS for cross-host state transfer. The local coordinator exposes both complete and streamed responses; CLI and TUI share it. Current limits: affine8 weights, FP32 KV, 2048 total tokens and 256 output tokens, one active request plus a bounded queue. BF16/128K performance acceptance remains open.
+
+See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Native AOT packaging, Mac LaunchAgents, Windows Service installation, upgrade/rollback and real-model acceptance. Windows Service installation requires administrator PowerShell; the foreground SSH runner is only for development.
+
+## Chat playground 与 HTTP 兼容接口
+
+TUI 默认连接当前 5200 coordinator，支持 Microsoft.Extensions.AI 流式多轮对话、无边框紧凑布局。HTTP 提供 Chat Completions、Claude Messages 和 Responses 的文本流式/非流式格式。用法、鉴权与明确的能力边界见 [Chat API / TUI](docs/CHAT-API.md)。

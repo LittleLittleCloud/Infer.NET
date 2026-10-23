@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-23",
+  "binarySourceCommit": "1905767cf466f26415708da3b8a9b6469c72e78d",
+  "issue": 3,
+  "deviceTopology": "M5 Pro 48 GiB full-model serve and RTX 4090 SM89 front-20 prefix agent over the existing home LAN",
+  "model": "Qwen3.6-35B-A3B affine8/group64",
+  "kv": "fp32",
+  "gemm": "fp32",
+  "prefixCacheHitPercent": 0,
+  "outputsPerRequest": 16,
+  "warmupsPerModeAndInput": 1,
+  "measuredRequestsPerModeAndInput": 3,
+  "comparisons": [
+    {
+      "inputTokens": 8192,
+      "controlPrefillSeconds": [11.0991155, 11.1198139, 11.1626674],
+      "reusePrefillSeconds": [11.0624419, 11.1138879, 11.1503853],
+      "controlMedianSeconds": 11.1198139,
+      "reuseMedianSeconds": 11.1138879,
+      "outputTokenIdsEqual": true,
+      "wirePayloadBytes": 267812864
+    },
+    {
+      "inputTokens": 32768,
+      "controlPrefillSeconds": [52.7088902, 52.6296793, 52.7528482],
+      "reusePrefillSeconds": [53.2431516, 52.7412587, 52.9306717],
+      "controlMedianSeconds": 52.7088902,
+      "reuseMedianSeconds": 52.9306717,
+      "outputTokenIdsEqual": true,
+      "wirePayloadBytes": 972455936
+    }
+  ],
+  "correctness": "40/40 operator cases bitwise; 131-token full front-20 layer traces and 32768-token hidden/final states bitwise; same-length dual-host output token IDs equal",
+  "outcome": "opt-in only; no demonstrated dual-host prefill gain; previous 919259d deployment restored and a real split request passed",
+  "limitations": "FP32 KV, 16 outputs, no RTX peak sample; does not meet BF16/131072+4096 formal gate. Raw results are local-only."
+}

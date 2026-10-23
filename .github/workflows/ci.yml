@@ -10,6 +10,8 @@ jobs:
             rid: linux-x64
           - os: macos-26
             rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +42,17 @@ jobs:
           test "${sdk_version%%.*}" -ge 26
       - run: dotnet restore DeepInfer.slnx --locked-mode
       - run: dotnet build DeepInfer.slnx -c Release --no-restore
+      - name: Record actual GPU capabilities
+        run: dotnet run --project src/DeepInfer.Host -c Release --no-build -- devices
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build
+      - run: python3 scripts/chat-integration.py
       - run: python3 scripts/integration.py
       - run: dotnet publish src/DeepInfer.Host -c Release -r ${{ matrix.rid }} -o artifacts/native
-      - run: python3 scripts/integration.py --executable artifacts/native/deepinfer
+      - if: runner.os != 'Windows'
+        run: python3 scripts/integration.py --executable artifacts/native/deepinfer
+      - if: runner.os == 'Windows'
+        run: python scripts/integration.py --executable artifacts/native/deepinfer.exe
+      - if: runner.os != 'Windows'
+        run: python3 scripts/chat-integration.py --executable artifacts/native/deepinfer
+      - if: runner.os == 'Windows'
+        run: python scripts/chat-integration.py --executable artifacts/native/deepinfer.exe

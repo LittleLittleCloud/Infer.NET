@@ -1,0 +1,11 @@
+@namespace DeepInfer.Tui
+@using Microsoft.AspNetCore.Components
+@using Spectre.Console
+
+@* data-text is rendered as Spectre.Text: preserve literal brackets in generated text. *@
+<span data-text="true" data-content="@Content" data-style="@Style" />
+@code {
+    [Parameter, EditorRequired] public string Content { get; set; } = "";
+    [Parameter] public Color Foreground { get; set; } = Color.Default;
+    private string Style => new Spectre.Console.Style(Foreground).ToMarkup();
+}

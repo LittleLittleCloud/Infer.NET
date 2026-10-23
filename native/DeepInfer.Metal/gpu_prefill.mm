@@ -321,10 +321,68 @@ kernel void prefill_fused_attention(device const float *q [[buffer(0)]],device c
         if(t<s.tokens){uint at=((t*16+h)*s.partitions+part)*258;parts[at]=maxima[tid];parts[at+1]=sums[tid];}}
 
 }
+// One decode query: four SIMD groups split key columns for QK, then output
+// feature columns for PV. All eight GQA heads are useful (no padded queries).
+kernel void decode_fused_attention(device const float *q [[buffer(0)]],device const DIKV *keys [[buffer(1)]],
+ device const DIKV *values [[buffer(2)]],device float *parts [[buffer(3)]],constant AttentionShape &s [[buffer(4)]],
+ uint3 group [[threadgroup_position_in_grid]],uint tid [[thread_index_in_threadgroup]],
+ uint lane [[thread_index_in_simdgroup]],uint sg [[simdgroup_index_in_threadgroup]]) {
+    uint part=group.x,kh=group.y,start=part*128,end=min(start+128,s.position+1);
+    threadgroup float temp[16*256],scores[8*32],scales[8*8],maxima[8],sums[8],alpha[8];
+    simdgroup_float8x8 accumulated[8];
+    #pragma clang loop unroll(full)
+    for(uint j=0;j<8;j++)accumulated[j]=simdgroup_float8x8(0.0f);
+    if(tid<8){maxima[tid]=-INFINITY;sums[tid]=0;}
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint block=start;block<end;block+=32) {
+        simdgroup_float8x8 dots(0.0f);
+        for(uint dim=0;dim<256;dim+=32) {
+            for(uint i=tid;i<8*32;i+=128)temp[i]=q[(kh*8+i/32)*256+dim+i%32];
+            for(uint i=tid;i<32*32;i+=128){uint key=block+i%32;temp[256+i]=key<end?float(keys[key*512+kh*256+dim+i/32]):0;}
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+            for(uint inner=0;inner<4;inner++) {
+                simdgroup_float8x8 a,b;simdgroup_load(a,temp+inner*8,32);
+                simdgroup_load(b,temp+256+inner*8*32+sg*8,32);simdgroup_multiply_accumulate(dots,a,b,dots);
+            }
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+        }
+        simdgroup_store(dots,scores+sg*8,32);
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        for(uint row=sg;row<8;row+=4) {
+            float value=block+lane<end?scores[row*32+lane]/16.0f:-INFINITY;
+            float next=max(maxima[row],simd_max(value));
+            float scale=maxima[row]==-INFINITY?0:exp(maxima[row]-next);
+            float prob=value==-INFINITY?0:exp(value-next),total=simd_sum(prob);
+            scores[row*32+lane]=prob;
+            if(lane==0){maxima[row]=next;sums[row]=sums[row]*scale+total;alpha[row]=scale;}
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(tid<64)scales[tid]=alpha[tid/8];
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        simdgroup_float8x8 rescale;simdgroup_load(rescale,scales,8);
+        #pragma clang loop unroll(full)
+        for(uint j=0;j<8;j++)accumulated[j].thread_elements()*=rescale.thread_elements();
+        // Two 16-key value tiles keep total threadgroup memory below 18 KiB.
+        for(uint keyHalf=0;keyHalf<32;keyHalf+=16) {
+            for(uint i=tid;i<16*256;i+=128){uint key=block+keyHalf+i/256;temp[i]=key<end?float(values[key*512+kh*256+i%256]):0;}
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+            for(uint inner=0;inner<16;inner+=8) {
+                simdgroup_float8x8 a,b;simdgroup_load(a,scores+keyHalf+inner,32);
+                #pragma clang loop unroll(full)
+                for(uint j=0;j<8;j++){simdgroup_load(b,temp+inner*256+sg*64+j*8,256);simdgroup_multiply_accumulate(accumulated[j],a,b,accumulated[j]);}
+            }
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+        }
+    }
+    device float *out=parts+(kh*8*s.partitions+part)*258+2+sg*64;
+    #pragma clang loop unroll(full)
+    for(uint j=0;j<8;j++)simdgroup_store(accumulated[j],out+j*8,s.partitions*258);
+    if(tid<8){uint at=((kh*8+tid)*s.partitions+part)*258;parts[at]=maxima[tid];parts[at+1]=sums[tid];}
+}
 
 )metal";
 struct PShape {uint32_t rows,columns,tokens,position,layer,trace;float epsilon,theta;uint32_t capacity=2048,bits=5;};
-enum PP {PQ5,PQ8,PShared,PExperts,PExperts8,PDown,PEmbed,PNorm,PAdd,PMerge,PTop,PLinear,PDelta,PDeltaNorm,PHead,PScores,PAttention,PMatrix85,PMatrix88,PMatrix165,PMatrix168,PMatrix245,PMatrix248,PMatrix5,PMatrix8,PFusedAttention,PBuildGroups,PGroupDispatch,PGroupedGate,PGroupedDown,PDeltaPrepare,PDeltaApply,PPCount};
+enum PP {PQ5,PQ8,PShared,PExperts,PExperts8,PDown,PEmbed,PNorm,PAdd,PMerge,PTop,PLinear,PDelta,PDeltaNorm,PHead,PScores,PAttention,PMatrix85,PMatrix88,PMatrix165,PMatrix168,PMatrix245,PMatrix248,PMatrix5,PMatrix8,PFusedAttention,PDecodeAttention,PBuildGroups,PGroupDispatch,PGroupedGate,PGroupedDown,PDeltaPrepare,PDeltaApply,PPCount};
 struct GPrefill {
  std::array<id<MTLComputePipelineState>,PPCount> ps;
  id<MTLBuffer> x,norm,out,qkv,z,a,b,q,k,v,attention,conv,router,ids,prob,sharedAct,sharedRoute,sharedOut,expertAct,expertOut,scores,tokens,trace;
@@ -338,7 +396,7 @@ struct GPrefill {
  bool matrix=true,fusedAttention=true,fusedAll=false;uint32_t matrixRows=64,matrixTokens=0,scoreCapacity=2048,attentionFeatures=256,maxTokens=2048;
 };
 static void g_prefill_destroy(GPrefill *p){delete p;}
-static bool p_create(GModel *g,char *error,int capacity) {
+static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0) {
  auto *p=new GPrefill{};
  p->groupedExperts=!std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS"),"grouped")==0;
  p->chunkedDelta=!std::getenv("DEEPINFER_METAL_PREFILL_DELTA")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_DELTA"),"chunked")==0;
@@ -349,6 +407,7 @@ static bool p_create(GModel *g,char *error,int capacity) {
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_ATTENTION")){p->fusedAttention=strcmp(v,"legacy")!=0;p->fusedAll=strcmp(v,"fused-all")==0;}
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_ATTENTION_FEATURES")){if(strcmp(v,"64")==0)p->attentionFeatures=64;else if(strcmp(v,"128")==0)p->attentionFeatures=128;}
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_CHUNK"))for(uint32_t n:{32u,64u,128u,256u,512u,1024u,2048u})if(std::string(v)==std::to_string(n))p->maxTokens=n;
+ if(scratchTokens)p->maxTokens=scratchTokens;
  if(const char *gemm=std::getenv("DEEPINFER_METAL_PREFILL_GEMM"))if(strcmp(gemm,"fp32")&&strcmp(gemm,"bf16-nax")){error_text(error,capacity,@"DEEPINFER_METAL_PREFILL_GEMM must be fp32 or bf16-nax");delete p;return false;}
  p->bf16Gemm=std::getenv("DEEPINFER_METAL_PREFILL_GEMM")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_GEMM"),"bf16-nax")==0;
  if(const char *impl=std::getenv("DEEPINFER_METAL_PREFILL_GEMM_IMPL")){
@@ -390,7 +449,7 @@ static bool p_create(GModel *g,char *error,int capacity) {
  NSString *attentionSource=[[NSString stringWithFormat:@"#define PREFILL_ATTENTION_FEATURES %u\n",p->attentionFeatures] stringByAppendingString:[g_kv_source(g) stringByAppendingString:prefill_graph_source]];
  auto glib=[g->compute.device newLibraryWithSource:[attentionSource stringByAppendingString:[[NSString stringWithFormat:@"\n#define DELTA_DEVICE %d\n",p->deviceDelta?1:0] stringByAppendingString:prefill_delta_source]] options:options error:&failure];
  if(!qlib||!glib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
- NSArray<NSString*> *names=@[@"prefill_gemv5",@"prefill_gemv8",@"prefill_shared",@"prefill_experts5",@"prefill_experts8",@"prefill_expert_down",@"prefill_embedding",@"prefill_norm",@"prefill_add_norm",@"prefill_merge",@"prefill_top8",@"prefill_linear",@"prefill_delta",@"prefill_delta_norm",@"prefill_head",@"prefill_scores",@"prefill_attention",@"prefill_matrix5_8",@"prefill_matrix8_8",@"prefill_matrix5_16",@"prefill_matrix8_16",@"prefill_matrix5_24",@"prefill_matrix8_24",@"prefill_matrix5_32",@"prefill_matrix8_32",@"prefill_fused_attention",@"prefill_build_groups",@"prefill_group_dispatch",@"prefill_grouped_gate",@"prefill_grouped_down",@"prefill_delta_prepare",@"prefill_delta_apply"];
+ NSArray<NSString*> *names=@[@"prefill_gemv5",@"prefill_gemv8",@"prefill_shared",@"prefill_experts5",@"prefill_experts8",@"prefill_expert_down",@"prefill_embedding",@"prefill_norm",@"prefill_add_norm",@"prefill_merge",@"prefill_top8",@"prefill_linear",@"prefill_delta",@"prefill_delta_norm",@"prefill_head",@"prefill_scores",@"prefill_attention",@"prefill_matrix5_8",@"prefill_matrix8_8",@"prefill_matrix5_16",@"prefill_matrix8_16",@"prefill_matrix5_24",@"prefill_matrix8_24",@"prefill_matrix5_32",@"prefill_matrix8_32",@"prefill_fused_attention",@"decode_fused_attention",@"prefill_build_groups",@"prefill_group_dispatch",@"prefill_grouped_gate",@"prefill_grouped_down",@"prefill_delta_prepare",@"prefill_delta_apply"];
  for(int i=0;i<PPCount;i++){p->ps[i]=[g->compute.device newComputePipelineStateWithFunction:[(i<6||(i>=PMatrix85&&i<PFusedAttention)||(i>=PBuildGroups&&i<PDeltaPrepare)?qlib:glib) newFunctionWithName:names[i]] error:&failure];
  if(!p->ps[i]||p->ps[i].threadExecutionWidth!=32||p->ps[i].maxTotalThreadsPerThreadgroup<256){error_text(error,capacity,failure.localizedDescription ?: @"Unsupported prefill pipeline");delete p;return false;}}
  if(p->bf16Gemm){
@@ -406,7 +465,7 @@ static bool p_create(GModel *g,char *error,int capacity) {
   auto lib=[g->compute.device newLibraryWithSource:[source stringByAppendingString:prefill_expanded_source] options:options error:&failure];
   if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   p->expandedWeight=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(8192)*2048/2);p->expandedUp=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(512)*2048/2);
-  p->expandedInput=g_buffer(g,(p->expandedExperts||p->packedExperts)?NSUInteger((p->maxTokens*8+63)/64+256)*64*2048/2:NSUInteger(p->maxTokens)*4096/2);
+  p->expandedInput=g_buffer(g,(p->expandedExperts||p->packedExperts)?NSUInteger((p->maxTokens*8+63)/64+256)*64*2048/2:NSUInteger(std::max(64u,p->maxTokens))*4096/2);
   if(!p->expandedWeight||!p->expandedUp||!p->expandedInput){error_text(error,capacity,@"Cannot allocate bounded BF16 expansion workspace");delete p;return false;}
   NSArray<NSString*> *names=@[@"expanded_weights",@"expanded_pack",@"expanded_matrix",@"expanded_gate"];
   for(int i=0;i<4;i++){p->expandedPs[i]=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:names[i]] error:&failure];if(!p->expandedPs[i]){error_text(error,capacity,failure.localizedDescription);delete p;return false;}}
@@ -507,8 +566,19 @@ static void p_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuf
  [e setComputePipelineState:g->ps[GAttentionCombine]];
  [e dispatchThreadgroups:MTLSizeMake(16,count,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
 }
+static void p_decode_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuffer> q,id<MTLBuffer> keys,
+ id<MTLBuffer> values,id<MTLBuffer> raw,id<MTLBuffer> out) {
+ AttentionShape shape{g->position,1,g->capacity,(g->position+128)/128};
+ g_bind(e,q,0);g_bind(e,keys,1);g_bind(e,values,2);g_bind(e,g->attentionParts,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];
+ p_run(g,e,PDecodeAttention,MTLSizeMake(shape.partitions,2,1),128);g_barrier(e);
+ g_bind(e,g->attentionParts,0);g_bind(e,raw,1);g_bind(e,out,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];
+ [e setComputePipelineState:g->ps[GAttentionCombine]];
+ [e dispatchThreadgroups:MTLSizeMake(16,1,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
+}
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer){
- if(!g->prefill||!g->prefill->attentionBf16)return false;
+ if(!g->prefill)return false;
+ if(g->decodeFusedFp32){p_decode_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention);return true;}
+ if(!g->prefill->attentionBf16)return false;
  if(const char *v=std::getenv("DEEPINFER_METAL_DECODE_ATTENTION"))if(strcmp(v,"legacy")==0)return false;
  p_fused_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention,1);return true;
 }
@@ -561,11 +631,17 @@ static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatri
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:0 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?64:128):256,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
 }
-extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int classifier,float *logits,float *trace,
+extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
  int *nextToken,int *dispatches,double *ms,char *error,int capacity) {
  @autoreleasepool {
- if(!graph||!tokens||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
+ if(!graph||!tokens||!((begin==0&&end==40)||(begin==20&&end==40&&hidden))||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
  auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
+ if(begin==0&&g->splitActive){error_text(error,capacity,@"Reset split graph before full prefill");return -1;}
+ if(begin==20){
+  if(g->splitTarget&&g->position+count>g->splitTarget){error_text(error,capacity,@"Split prefix target exceeded");return -1;}
+  if(!g->splitActive){if(g->position){error_text(error,capacity,@"Reset before split prefill");return -1;}g->splitActive=true;}
+  g->splitMissing=(1ull<<40)-1;
+ }
  for(int t=0;t<count;t++)if(tokens[t]<0||tokens[t]>=248320){error_text(error,capacity,@"Invalid prefill token");return -1;}
  if(!g->prefill&&!p_create(g,error,capacity))return -1;auto *p=g->prefill;
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
@@ -587,11 +663,13 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
  };
 
 
+ if(begin==0){
  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->tokens,3);g_bind(e,p->x,4);[e setBytes:&g->embedding.bits length:4 atIndex:5];
  p_run(g,e,PEmbed,MTLSizeMake(16,count,1),128);g_barrier(e);
- g_bind(e,p->x,0);g_bind(e,g->layers[0].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
+ }else memcpy(p->x.contents,hidden,NSUInteger(count)*2048*4);
+ g_bind(e,p->x,0);g_bind(e,g->layers[begin].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
  if(!checkpoint("embedding-norm"))return -1;
- for(int index=0;index<40;index++) {
+ for(int index=begin;index<end;index++) {
   shape.layer=index;auto &l=g->layers[index];auto &m=l.m;
   p_gemv(g,e,m[GQ],p->norm,p->qkv,shape);
   if(l.linear){p_gemv(g,e,m[GZ],p->norm,p->z,shape);p_gemv(g,e,m[GA],p->norm,p->a,shape);p_gemv(g,e,m[GB],p->norm,p->b,shape);g_barrier(e);if(!checkpoint("linear-projections"))return -1;
@@ -645,6 +723,7 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
  [e endEncoding];double finalMs=0;if(!q_complete(command,&finalMs,error,capacity))return -1;p->submissions++;if(ms)*ms=profileMs+finalMs;
  *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
  if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);if(trace)memcpy(trace,p->trace.contents,count*40*2048*4);
+ if(output)memcpy(output,p->x.contents,NSUInteger(count)*2048*4);
  *dispatches=g->dispatches;g->position+=count;return 0;
  }
 }
@@ -652,20 +731,31 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
 extern "C" int di_graph_prepare_prefill(void *graph,char *error,int capacity){
  @autoreleasepool {if(!graph){error_text(error,capacity,@"Invalid graph");return -1;}auto *g=static_cast<GModel*>(graph);return g->prefill||p_create(g,error,capacity)?0:-1;}
 }
+extern "C" int di_graph_prepare_prefill_scratch(void *graph,int tokens,char *error,int capacity){
+ @autoreleasepool {
+  if(!graph||(tokens!=32&&tokens!=64&&tokens!=128&&tokens!=256&&tokens!=512&&tokens!=1024&&tokens!=2048)){
+   error_text(error,capacity,@"Invalid prefill scratch capacity");return -1;
+  }
+  auto *g=static_cast<GModel*>(graph);
+  if(g->prefill){error_text(error,capacity,@"Prefill scratch already configured");return -1;}
+  return p_create(g,error,capacity,uint32_t(tokens))?0:-1;
+ }
+}
 
 // Only called between requests, after reset. Grow per layer so the previous
 // full KV allocation need not coexist with the new full allocation.
-extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity) {
+static int g_reserve(void *graph,int tokens,char *error,int capacity,bool preserve) {
  @autoreleasepool {
  if(!graph||tokens<1||tokens>262144){error_text(error,capacity,@"Context must be 1..262144 tokens; no RoPE scaling is implemented");return -1;}
  auto *g=static_cast<GModel*>(graph);
- if(g->position){error_text(error,capacity,@"Reset graph before reserving context");return -1;}
+ if(g->position&&!preserve){error_text(error,capacity,@"Reset graph before reserving context");return -1;}
  if((uint32_t)tokens<=g->capacity)return 0;
  // Reserve a bounded 2K page, not the next power of two: 128K + decode must not allocate 256K.
  uint32_t target=((uint32_t(tokens)+2047)/2048)*2048;
  for(auto &l:g->layers)if(l.loaded&&!l.linear){
   auto k=g_kv_buffer(g,NSUInteger(target)*512),v=g_kv_buffer(g,NSUInteger(target)*512);
   if(!k||!v){error_text(error,capacity,@"Cannot allocate KV cache for requested context");return -1;}
+  if(preserve&&g->position){NSUInteger bytes=NSUInteger(g->position)*512*(g->kvBf16?2:4);memcpy(k.contents,l.keys.contents,bytes);memcpy(v.contents,l.values.contents,bytes);}
   l.keys=k;l.values=v;
  }
  auto scores=g_buffer(g,NSUInteger(16)*target);
@@ -676,6 +766,17 @@ extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity)
  g->scores=scores;if(legacy){g->prefill->scores=pscores;g->prefill->scoreCapacity=target;}g->attentionParts=parts;g->capacity=target;return 0;
  }
 }
+extern "C" int di_graph_reserve(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,false);}
+extern "C" int di_graph_grow(void *graph,int tokens,char *error,int capacity){return g_reserve(graph,tokens,error,capacity,true);}
+// Read the effective native settings, not the managed environment cache. Version 1 is 14 ints.
+extern "C" int di_graph_execution_profile(void *graph,int *values,int count) {
+ if(!graph||!values||count!=14)return -1;
+ auto *g=static_cast<GModel*>(graph);auto *p=g->prefill;if(!p)return -1;
+ const int actual[]={g->kvBf16?2:4,p->bf16Gemm,p->matrix,p->chunkedDelta,p->groupedExperts,
+  p->packedExperts,p->expandedGemm,p->deviceDelta,int(p->maxTokens),p->fusedAttention,
+  p->fusedAll,int(p->attentionFeatures),int(p->attentionBatchTokens),int(p->matrixRows)};
+ memcpy(values,actual,sizeof(actual));return 0;
+}
 extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64_t *allocatedBytes) {
  if(!graph||!capacity||!kvBytes||!allocatedBytes)return -1;
  auto *g=static_cast<GModel*>(graph);*capacity=g->capacity;*kvBytes=uint64_t(g->capacity)*(g->kvBf16?20480:40960);
@@ -683,3 +784,48 @@ extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64
 }
 
 extern "C" int di_graph_prefill_submissions(void *graph){auto *g=static_cast<GModel*>(graph);return g&&g->prefill?g->prefill->submissions:0;}
+
+// Existing full-model ABI remains unchanged.
+extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int classifier,float *logits,float *trace,
+ int *nextToken,int *dispatches,double *ms,char *error,int capacity){
+ return di_graph_prefill_range(graph,tokens,count,classifier,0,40,nullptr,nullptr,logits,trace,nextToken,dispatches,ms,error,capacity);
+}
+// Synchronous shared-memory copy after completed GPU submissions. State layout is
+// [position,kv-head,dimension] BF16, or [value-head,value-dim,key-dim] FP32.
+extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position,void *data,int bytes,int importState){
+ if(!graph||!data||layer<0||layer>=20||kind<0||kind>1||position<1)return -1;
+ auto *g=static_cast<GModel*>(graph);if(g->position!=(uint32_t)position)return -1;
+ auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*(g->kvBf16?2:4);
+ if(bytes!=expected)return -1;
+ uint64_t bit=1ull<<(layer*2+kind);
+ if(importState&&(!g->splitActive||!(g->splitMissing&bit)||(!l.linear&&g->splitKvWritten[layer*2+kind]!=0)))return -1;
+ auto buffer=l.linear?(kind?l.history:l.state):(kind?l.values:l.keys);
+ if(importState){memcpy(buffer.contents,data,bytes);g->splitMissing&=~bit;}
+ else memcpy(data,buffer.contents,bytes);
+ return 0;
+}
+
+// Ordered, lossless KV slices, imported only after the corresponding suffix
+// submission completes. Final recurrent states remain mandatory before decode.
+extern "C" int di_graph_prefix_kv_range(void *graph,int layer,int kind,int position,int count,int total,const void *data,int bytes){
+ if(!graph||!data||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||position<0||count<1||count>512||
+    total<1||total>262144||position>total-count)return -1;
+ auto *g=static_cast<GModel*>(graph);auto &l=g->layers[layer];auto index=layer*2+kind;uint64_t bit=1ull<<index;
+ if(!g->splitActive||!l.loaded||l.linear||!(g->splitMissing&bit)||(uint32_t)total>g->capacity||
+    (uint32_t)(position+count)>g->position||g->splitKvWritten[index]!=(uint32_t)position||
+    (g->splitTarget&&g->splitTarget!=(uint32_t)total)||bytes!=count*512*(g->kvBf16?2:4))return -1;
+ auto buffer=kind?l.values:l.keys;if(!buffer)return -1;
+ g->splitTarget=uint32_t(total);
+ memcpy(static_cast<unsigned char*>(buffer.contents)+size_t(position)*512*(g->kvBf16?2:4),data,bytes);
+ g->splitKvWritten[index]+=uint32_t(count);
+ if(g->splitKvWritten[index]==g->splitTarget)g->splitMissing&=~bit;
+ return 0;
+}
+
+// Explicit configuration avoids relying on managed environment changes reaching libc.
+extern "C" int di_graph_decode_fused_fp32(void *graph,int enabled){
+ if(!graph||(enabled!=0&&enabled!=1))return -1;
+ auto *g=static_cast<GModel*>(graph);
+ if(g->position||g->splitActive||(enabled&&(!g->prefill||g->kvBf16||g->prefill->attentionBf16)))return -1;
+ g->decodeFusedFp32=enabled!=0;return 0;
+}

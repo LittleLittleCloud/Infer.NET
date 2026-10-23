@@ -28,11 +28,20 @@ public static class Server
         var app = builder.Build();
         app.Use(async (context, next) =>
         {
+            var supplied = context.Request.Headers["X-DeepInfer-Token"].ToString();
+            var compatible = !worker && CompatibleChat.IsPath(context.Request.Path);
+            if (compatible)
+            {
+                var bearer = context.Request.Headers.Authorization.ToString();
+                var apiKey = context.Request.Headers["x-api-key"].ToString();
+                if (supplied.Length == 0) supplied = bearer.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? bearer[7..] : apiKey;
+            }
             if (context.Request.Path != "/health" && !string.IsNullOrEmpty(token) &&
                 !CryptographicOperations.FixedTimeEquals(
-                    SHA256.HashData(Encoding.UTF8.GetBytes(context.Request.Headers["X-DeepInfer-Token"].ToString())),
+                    SHA256.HashData(Encoding.UTF8.GetBytes(supplied)),
                     SHA256.HashData(Encoding.UTF8.GetBytes(token))))
             {
+                if (compatible) { await CompatibleChat.Error(context, context.Request.Path == "/v1/messages" ? ChatFormat.Messages : ChatFormat.Completions, 401, "A valid API key is required."); return; }
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsJsonAsync(new RpcError("unauthorized", "A valid cluster token is required."), RpcJson.Default.RpcError);
                 return;
@@ -77,6 +86,7 @@ public static class Server
             app.MapGet("/v1/capabilities", () => registration);
             app.MapPost("/v1/infer", async (InferenceRequest request, HttpContext context) =>
             {
+                if (request.Messages != null) return Failure(501, "unsupported_chat", "Use a chat-v1 split worker for structured messages.");
                 var error = RequestValidation.Error(request);
                 if (error != null) return Failure(400, "invalid_request", error);
                 if (model is null || request.Model != model.Info.Id || request.Backend != backend.Kind)
@@ -111,7 +121,9 @@ public static class Server
         else
         {
             var registry = new WorkerRegistry();
+            CompatibleChat.Map(app, registry, token);
             app.MapGet("/v1/workers", () => registry.Snapshot());
+            app.MapPost("/v1/infer/stream", (InferenceRequest request, HttpContext context) => ServiceStreaming.Proxy(request, context, registry, token));
             app.MapPost("/v1/workers/register", (WorkerRegistration registration) =>
             {
                 try { registry.Register(registration, allowRemote); return Results.NoContent(); }
@@ -125,7 +137,7 @@ public static class Server
                 if (target is null) return Failure(503, "no_eligible_worker", "No live worker implements the requested model/backend. Check model/backend advertisements and loaded weights.");
                 using var rpc = new ClusterClient(target.Endpoint, token, TimeSpan.FromHours(24));
                 try { return Results.Json(await rpc.InferAsync(request, context.RequestAborted), RpcJson.Default.InferenceResult); }
-                catch (RpcException ex) { return Failure(ex.StatusCode is 400 or 429 or 501 ? ex.StatusCode : 502, "worker_error", ex.Message); }
+                catch (RpcException ex) { return Failure(ex.StatusCode is 400 or 429 or 501 or 503 or 504 ? ex.StatusCode : 502, "worker_error", ex.Message); }
                 catch (HttpRequestException) { return Failure(502, "worker_unreachable", $"Worker '{target.WorkerId}' is unreachable."); }
                 catch (OperationCanceledException) when (!context.RequestAborted.IsCancellationRequested)
                 { return Failure(504, "worker_timeout", $"Worker '{target.WorkerId}' exceeded the RPC deadline."); }

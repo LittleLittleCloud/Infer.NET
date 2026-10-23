@@ -1,6 +1,6 @@
 # Suffix receive overlap: no stable gain — 2026-10-23
 
-An opt-in bounded reader lets hidden/KV data arrive while Metal executes the previous suffix batch. It passed correctness and lifecycle tests, but **did not improve current end-to-end prefill consistently**. Keep `suffix-receive-overlap=off`. The earlier hypothesis that the exposed receive wait could simply be removed was not supported.
+An opt-in bounded reader let hidden/KV data arrive while Metal executed the previous suffix batch. It passed correctness and lifecycle tests, but **did not improve current end-to-end prefill consistently**. The integration branch removes the option and reader code while retaining this experiment and its evidence. The earlier hypothesis that the exposed receive wait could simply be removed was not supported.
 
 Same source on both hosts: `638a45319a24f5f41a807b45c26f3c257e315813`. Affine8/group64, FP32 GEMM/KV, CUDA32/Metal128, incremental KV, CUDA send overlap on, fused FP32 decode, fixed inputs,128 output tokens, no cache, AC, one warmup plus three measured trials. All outputs agree with the retained baseline.
 
@@ -23,4 +23,4 @@ Mac123/123 tests passed; Windows122 passed and1 platform skip. Both Native AOT p
 
 Live prefill cancellation recovered in3.172s with the same model PIDs and matching next request. Fifteen deployment checks passed. Stopping the exact Windows agent during prefill returned502, Mac local inference stayed usable, a fresh agent reconnected, and the next128-token split output matched with the same Mac PID.
 
-Public per-trial evidence: `site/receive-overlap-summary.json`; raw events, power, GPU samples, stage logs and input/result hashes remain local under the recorded run IDs. [PR22](https://github.com/LittleLittleCloud/Infer.NET/pull/22) stays a draft experiment. The formal BF16/128K performance gates remain open. Next work measures CUDA attention partitioning and BF16 arithmetic parity; neither is an accepted speedup yet.
+Public per-trial evidence: `site/receive-overlap-summary.json`; raw events, power, GPU samples, stage logs and input/result hashes remain local under the recorded run IDs. [PR22](https://github.com/LittleLittleCloud/Infer.NET/pull/22) preserves the original implementation and discussion. The formal Q8/128K performance gates remain open.
