@@ -40,7 +40,7 @@ prompts = {
 }
 jobs = [(n,128,a.warmup,a.trials) for n in a.lengths]
 if 131072 in a.lengths and not a.skip_long_output:
-    jobs.append((131072,a.long_output,a.warmup,1))
+    jobs.append((131072,a.long_output,a.warmup,a.trials))
 for n,output,warmup,trials in jobs:
     chunk = a.long_chunk if n >= 131072 else a.chunk
     if output > 128:
