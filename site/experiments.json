@@ -420,5 +420,23 @@
       "python scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON"
     ],
     "evidence": "site/bf16-prefix-summary.json；完整比较JSON与原始trace仅本机"
+  },
+  {
+    "id": "bf16-ordered-reduction",
+    "title": "BF16 求和顺序对照：首层差异仍在",
+    "kind": "8bit · BF16 KV/GEMM · 失败诊断，未部署",
+    "source": "docs/BF16-PARITY-INVESTIGATION.md",
+    "question": "Metal 的 SIMD 求和顺序与 CUDA 不同，是否造成 BF16 前段最早的跨后端误差？",
+    "setup": "2026-10-23；M5 Pro 与 RTX 4090；固定 affine8 模型及 128 合成 token，BF16 KV/GEMM、FP32 诊断路由；Metal chunk128，CUDA chunk32。隔离加载模型；固定 CUDA trace，Metal 仅切换求和顺序。源码 2e064a7，记录见 PR #31。",
+    "change": "Metal 原生 shader 临时启用与 CUDA 相同的显式 XOR reduction；生产默认不变。",
+    "result": "第0层 relative L2：默认0.000160545，显式顺序0.000160687；两者均仅2/60项层输出/状态检查通过。第0层81/128个 token 超过1e-4，包含 token 0。后续状态有改善也有退化。",
+    "validation": "Metal 图、BF16 dense/专家和69项 fused attention 数值检查通过；托管及原生构建通过。使用同一比较脚本、同一 CUDA trace 重算对照。未做128K、完整logits、真实RPC或正式吞吐测试。线上旧FP32 KV服务恢复Ready并附有agent。",
+    "conclusion": "求和顺序不是首层差异的主要修复点；最早算术偏差仍未定位，BF16 正确性门槛未通过。",
+    "next": "比较 token 0 在第一个 BF16 投影、Delta recurrence、MoE merge 前后的中间激活。",
+    "commands": [
+      "DEEPINFER_METAL_MATH=ordered bash scripts/check-metal-graph.sh",
+      "python3 scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON"
+    ],
+    "evidence": "PR #31；完整比较JSON与原始trace仅本机"
   }
 ]
