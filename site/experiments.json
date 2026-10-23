@@ -350,5 +350,22 @@
       "python scripts/split/benchmark-prefix-chunk.py --help"
     ],
     "evidence": "site/cuda-chunk-summary.json; artifacts/dual-host/chunk-e2e-*"
+  },
+  {
+    "id": "suffix-batching",
+    "title": "Mac 后段合批：选择128，512没有继续提速",
+    "kind": "8bit · FP32 KV · 双机实测",
+    "source": "docs/SUFFIX-BATCHING.md",
+    "question": "把多个32-token传输块合成更大的Mac计算块，能否改善整次流水线？",
+    "setup": "a8ce025同包；8192输入/128输出，0%cache，Mac AC/High Power；各预热1、正式3，再做128确认。",
+    "change": "后段32/128/512可选，显式512-token scratch，减少约403MiB分配。",
+    "result": "同包prefill中位：32为18.402s，128为17.168s，512为17.621s；128独占确认17.355s。decode约56 token/s。",
+    "validation": "234/714输入全部后段层trace、8步logits与greedy通过。16次有效完整请求的128个输出全部一致；每次swap-out增量0。",
+    "conclusion": "128减少约6%的整次prefill；512虽然纯计算更快，流水线等待更长。保留被排除的测试重叠确认轮，并另行独占复测。",
+    "next": "CUDA计算与网络发送重叠，随后优化最终KV交接。BF16和128K目标仍未通过。",
+    "commands": [
+      "deepinfer split-check-suffix --weights MODEL_DIR --prompt-file PUBLIC_PROMPT --output NEW_DIRECTORY"
+    ],
+    "evidence": "site/suffix-batching-summary.json; artifacts/dual-host/suffix-e2e-*"
   }
 ]

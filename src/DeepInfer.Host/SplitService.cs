@@ -38,7 +38,7 @@ public static class SplitService
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         _ = o.Number("short-prefill-tokens", 128, 0, 128);
-        if (o.Get("suffix-chunk-tokens", "32") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
+        if (o.Get("suffix-chunk-tokens", "128") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32")) throw new ArgumentException("cuda-prefill must be serial or batch-fp32.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
@@ -96,7 +96,7 @@ public static class SplitService
     {
         Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, 128);
-        var suffixChunk = o.Number("suffix-chunk-tokens", 32, 32, 512);
+        var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
         var endpoint = o.Get("listen", "http://127.0.0.1:5201");
         if (!EndpointRules.IsLoopback(EndpointRules.Validate(endpoint, false))) throw new ArgumentException("Worker HTTP API must be loopback; use the local coordinator.");
         var dataUri = new Uri(o.Get("data-listen", "tcp://127.0.0.1:5210"));
