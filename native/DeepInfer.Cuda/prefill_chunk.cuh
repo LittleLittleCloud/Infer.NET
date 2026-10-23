@@ -175,6 +175,23 @@ __global__ void chunk_gemv_bf16(Matrix m,const float *x,float *y,const int *ids,
             val+=prefill_bf16(weight(m,wr,base+j))*prefill_bf16(input[base+j]);
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// Diagnostic three-product BF16 compensation for routed/small projections.
+// Keep packed affine8 weights; compute high and residual BF16 operands locally.
+__global__ void chunk_gemv_bf16_highlow(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
+    if(row>=m.rows)return;
+    int expert=ids?ids[t*n+e]:0;size_t wr=size_t(expert)*m.rows+row;
+    const float *input=x+(size_t(t)*(routedInput?n:1)+(routedInput?e:0))*m.cols;
+    float val=0;
+    for(int base=lane*8;base<m.cols;base+=256)
+        for(int j=0;j<8 && base+j<m.cols;j++) {
+            float w=weight(m,wr,base+j),a=input[base+j];
+            float wh=prefill_bf16(w),wl=prefill_bf16(w-wh);
+            float ah=prefill_bf16(a),al=prefill_bf16(a-ah);
+            val+=wh*ah+wh*al+wl*ah;
+        }
+    val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
+}
 // cols must be divisible by256: eight bytes share one affine group and are aligned.
 __global__ void chunk_gemv_packed(Matrix m,const float *x,float *y,const int *ids,int routedInput) {
     int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
