@@ -3,6 +3,26 @@
 Requires clean identical commits and already-built binaries/model on both hosts.
 """
 import argparse,base64,datetime,hashlib,json,os,pathlib,secrets,socket,subprocess,time
+
+def show_result(directory):
+    """Display the completed model answer while preserving machine-readable evidence."""
+    result=json.loads((directory/'result.json').read_text(encoding='utf-8'))
+    answer=result['Text']
+    (directory/'answer.txt').write_text(answer+'\n',encoding='utf-8')
+    print('\n模型回答：\n',flush=True)
+    print(answer,flush=True)
+    count=len(result['Tokens'])
+    decode_seconds=(result['ElapsedMs']-result['DecodeReadyMs'])/1000
+    print(f'\n输入 {result["PromptTokens"]} tokens · 输出 {count} tokens（当前按指定数量生成，可能截断）',flush=True)
+    print(f'状态交接就绪 {result["DecodeReadyMs"]/1000:.2f}s · 推理总耗时 {result["ElapsedMs"]/1000:.2f}s（不含模型加载）',flush=True)
+    if decode_seconds>0:
+        print(f'生成阶段 {decode_seconds:.2f}s · {count/decode_seconds:.2f} tokens/s（含主机开销，非正式基准）',flush=True)
+    if result['VerificationEnabled']:
+        print('数值验证：'+('通过' if result['Verified'] else '未通过'),flush=True)
+    else:
+        print('本次未启用参考数值验证。',flush=True)
+    print('回答已保存：',directory/'answer.txt',flush=True)
+
 p=argparse.ArgumentParser();p.add_argument('--native',action='store_true');p.add_argument('--kv',choices=['fp32','bf16'],default='fp32');p.add_argument('--ssh',default='infer-windows');p.add_argument('--prompt',default='用一句话介绍你自己。');p.add_argument('--max-tokens',type=int,default=8);p.add_argument('--verify',action='store_true');p.add_argument('--run-id');p.add_argument('--port',type=int,default=5210)
 a=p.parse_args();root=pathlib.Path(__file__).resolve().parents[2];os.chdir(root)
 run=a.run_id or 'split-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')
@@ -34,6 +54,7 @@ def digest(path):
 artifacts={str(f.relative_to(root)):digest(f) for f in [host,host.parent/'libdeepinfer_metal.dylib']}
 (out/'run.json').write_text(json.dumps(dict(source=sha,artifacts=artifacts,native=a.native,run=run,verify=a.verify,promptSha256=hashlib.sha256(a.prompt.encode()).hexdigest(),maxTokens=a.max_tokens,topology='Mac Wi-Fi -> home router -> Windows Ethernet',precision='affine8 / '+a.kv+' KV / FP32 recurrent and GEMV',startedUtc=datetime.datetime.now(datetime.timezone.utc).isoformat()),indent=2))
 with (out/'mac.stdout.log').open('w') as stdout,(out/'mac.stderr.log').open('w') as stderr:
+    print('正在加载 Mac 模型；首次启动可能需要几分钟。',flush=True)
     mac=subprocess.Popen(command,env=env,stdout=stdout,stderr=stderr)
     (out/'mac.pid').write_text(str(mac.pid));deadline=time.monotonic()+600
     while 'SPLIT_LISTENING' not in (out/'mac.stderr.log').read_text():
@@ -54,5 +75,9 @@ with (out/'mac.stdout.log').open('w') as stdout,(out/'mac.stderr.log').open('w')
         finally:
             if mac.poll() is None:mac.terminate();mac.wait(timeout=30)
         (out/'exit.json').write_text(json.dumps(dict(mac=mac.returncode,windows=remote_exit)))
+        if (out/'result.json').is_file():
+            show_result(out)
+        elif mac.returncode==0 and remote_exit==0:
+            raise RuntimeError('Both processes exited successfully but result.json is missing: '+str(out))
         print('Mac',mac.returncode,'Windows',remote_exit,'results',out,flush=True)
         raise SystemExit(mac.returncode or remote_exit)
