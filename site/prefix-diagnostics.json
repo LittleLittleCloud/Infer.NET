@@ -701,5 +701,53 @@
       "No BF16 GEMM or KV acceptance",
       "Whole GPU memory includes other Windows workloads"
     ]
+  },
+  "partitionBreakpointTrace": {
+    "source": "acbb63083a132d224bf8c483937d7b0aa16e2b46",
+    "librarySha256": "a4de81bab49c171ce8a74f4be0b241a94810474a830de9a178599241472cbe6b",
+    "inputTokensFileSha256": "4248176bd03278693b6573f6bb63990d65f773259d8dde63256cbcd6b22ba50b",
+    "targetToken": 14975,
+    "chunkStart": 14944,
+    "firstGateFailure": {
+      "token": 14975,
+      "layer": 17,
+      "relativeL2": 0.032016497596827655,
+      "maxAbs": 0.008551357313990593,
+      "pass": false
+    },
+    "layer16": {
+      "token": 14975,
+      "layer": 16,
+      "relativeL2": 6.2199226098863206e-06,
+      "maxAbs": 3.814697265625e-06,
+      "pass": true
+    },
+    "layer17": {
+      "token": 14975,
+      "layer": 17,
+      "relativeL2": 0.032016497596827655,
+      "maxAbs": 0.008551357313990593,
+      "pass": false
+    },
+    "layer18": {
+      "token": 14975,
+      "layer": 18,
+      "relativeL2": 0.027372453672379875,
+      "maxAbs": 0.007607251405715942,
+      "pass": false
+    },
+    "layer19": {
+      "token": 14975,
+      "layer": 19,
+      "relativeL2": 0.02735391710072888,
+      "maxAbs": 0.007973998785018921,
+      "pass": false
+    },
+    "routeChoiceCaptured": false,
+    "accepted": false,
+    "limits": [
+      "Trace covers one 32-token chunk after preceding14944 tokens",
+      "No expert ID capture; causal attribution to router selection remains a hypothesis"
+    ]
   }
 }
