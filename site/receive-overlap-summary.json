@@ -1,0 +1,411 @@
+{
+  "date": "2026-10-23",
+  "source": "638a45319a24f5f41a807b45c26f3c257e315813",
+  "weightBits": 8,
+  "gemm": "fp32",
+  "kv": "fp32",
+  "cudaPrefill": "batch-fp32",
+  "cudaChunk": 32,
+  "suffixChunk": 128,
+  "decodeAttention": "fused-fp32",
+  "kvTransfer": "incremental",
+  "sendOverlap": "on",
+  "outputTokens": 128,
+  "cacheHit": 0,
+  "warmups": 1,
+  "measuredTrials": 3,
+  "cases": {
+    "8192": {
+      "off": {
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 14.3291046,
+            "clientSeconds": 16.452900084000007,
+            "decodeTokensPerSecond": 60.58749836604587,
+            "ttftSeconds": 14.357637209000004,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3223.456,
+              "suffixMs": 10648.059,
+              "stateWaitMs": 442.727,
+              "importMs": 14.527,
+              "totalMs": 14329.105
+            }
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 14.3057642,
+            "clientSeconds": 16.411556083999997,
+            "decodeTokensPerSecond": 60.58623527486138,
+            "ttftSeconds": 14.315609167000005,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3171.096,
+              "suffixMs": 10652.063,
+              "stateWaitMs": 469.665,
+              "importMs": 12.745,
+              "totalMs": 14305.764
+            }
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 14.2283904,
+            "clientSeconds": 16.338838417000005,
+            "decodeTokensPerSecond": 60.42319933037771,
+            "ttftSeconds": 14.237247749999995,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3070.953,
+              "suffixMs": 10728.746,
+              "stateWaitMs": 421.422,
+              "importMs": 7.095,
+              "totalMs": 14228.39
+            }
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 14.310151900000001,
+            "clientSeconds": 16.418467665999984,
+            "decodeTokensPerSecond": 60.47818049632016,
+            "ttftSeconds": 14.318668250000002,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3165.382,
+              "suffixMs": 10707.521,
+              "stateWaitMs": 428.494,
+              "importMs": 8.584,
+              "totalMs": 14310.152
+            }
+          }
+        ],
+        "median": {
+          "prefillSeconds": 14.3057642,
+          "clientSeconds": 16.411556083999997,
+          "decodeTokensPerSecond": 60.47818049632016,
+          "ttftSeconds": 14.315609167000005
+        },
+        "stageMedians": {
+          "hiddenWaitMs": 3165.382,
+          "suffixMs": 10707.521,
+          "stateWaitMs": 428.494,
+          "importMs": 8.584,
+          "totalMs": 14305.764
+        },
+        "rawRunId": "receive-8192-off-20261023T103957Z",
+        "rawSummarySha256": "5cb0aed9821ae842cdfdf34c1899760260f31ef39a5bd6eaca06a048c9bbe340",
+        "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+        "all128OutputIdsMatch": true,
+        "windowsWholeGpuObservedPeakMiB": 19585.0
+      },
+      "on": {
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 14.2072272,
+            "clientSeconds": 16.334872959,
+            "decodeTokensPerSecond": 60.41570572394571,
+            "ttftSeconds": 14.233622459,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3054.398,
+              "suffixMs": 10706.926,
+              "stateWaitMs": 429.181,
+              "importMs": 16.38,
+              "totalMs": 14207.227
+            }
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 14.2741755,
+            "clientSeconds": 16.377876625000003,
+            "decodeTokensPerSecond": 60.64845229686435,
+            "ttftSeconds": 14.28402325,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3194.977,
+              "suffixMs": 10645.366,
+              "stateWaitMs": 420.305,
+              "importMs": 13.33,
+              "totalMs": 14274.175
+            }
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 14.3262691,
+            "clientSeconds": 16.438948958000005,
+            "decodeTokensPerSecond": 60.38371138449774,
+            "ttftSeconds": 14.335937583000003,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3236.059,
+              "suffixMs": 10668.547,
+              "stateWaitMs": 411.519,
+              "importMs": 9.975,
+              "totalMs": 14326.269
+            }
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 14.2816272,
+            "clientSeconds": 16.387610500000008,
+            "decodeTokensPerSecond": 60.529309268595746,
+            "ttftSeconds": 14.289724542000002,
+            "metalAllocatedBytes": 37572984832,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 3155.369,
+              "suffixMs": 10667.95,
+              "stateWaitMs": 445.526,
+              "importMs": 12.615,
+              "totalMs": 14281.627
+            }
+          }
+        ],
+        "median": {
+          "prefillSeconds": 14.2816272,
+          "clientSeconds": 16.387610500000008,
+          "decodeTokensPerSecond": 60.529309268595746,
+          "ttftSeconds": 14.289724542000002
+        },
+        "stageMedians": {
+          "hiddenWaitMs": 3194.977,
+          "suffixMs": 10667.95,
+          "stateWaitMs": 420.305,
+          "importMs": 12.615,
+          "totalMs": 14281.627
+        },
+        "rawRunId": "receive-matched-8192-on-20261023T105820Z",
+        "rawSummarySha256": "83c4b2cb70e70270404b3bbaf0fedf51050abeab5b29a6680fb2204379c29763",
+        "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+        "all128OutputIdsMatch": true,
+        "windowsWholeGpuObservedPeakMiB": 19585.0
+      },
+      "prefillReductionPercent": 0.16872219940546884
+    },
+    "32768": {
+      "off": {
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 66.78855809999999,
+            "clientSeconds": 69.645939125,
+            "decodeTokensPerSecond": 44.96919680836255,
+            "ttftSeconds": 66.822777834,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 12959.239,
+              "suffixMs": 53302.401,
+              "stateWaitMs": 467.588,
+              "importMs": 51.316,
+              "totalMs": 66788.558
+            }
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 66.9471642,
+            "clientSeconds": 69.773910833,
+            "decodeTokensPerSecond": 45.256863345867586,
+            "ttftSeconds": 66.96796958299998,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 13181.593,
+              "suffixMs": 53254.997,
+              "stateWaitMs": 455.402,
+              "importMs": 48.389,
+              "totalMs": 66947.164
+            }
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 67.3201311,
+            "clientSeconds": 70.14311404200001,
+            "decodeTokensPerSecond": 45.29515966650771,
+            "ttftSeconds": 67.340283917,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 13217.963,
+              "suffixMs": 53502.385,
+              "stateWaitMs": 478.659,
+              "importMs": 116.708,
+              "totalMs": 67320.131
+            }
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 66.8583666,
+            "clientSeconds": 69.69700825000001,
+            "decodeTokensPerSecond": 45.03803071600792,
+            "ttftSeconds": 66.87784912500001,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 12996.097,
+              "suffixMs": 53381.975,
+              "stateWaitMs": 381.763,
+              "importMs": 90.543,
+              "totalMs": 66858.367
+            }
+          }
+        ],
+        "median": {
+          "prefillSeconds": 66.9471642,
+          "clientSeconds": 69.773910833,
+          "decodeTokensPerSecond": 45.256863345867586,
+          "ttftSeconds": 66.96796958299998
+        },
+        "stageMedians": {
+          "hiddenWaitMs": 13181.593,
+          "suffixMs": 53381.975,
+          "stateWaitMs": 455.402,
+          "importMs": 90.543,
+          "totalMs": 66947.164
+        },
+        "rawRunId": "receive-32768-off-20261023T104210Z",
+        "rawSummarySha256": "127c1995e42fcfe0f6fcdc9827c98642338e790763bc9c75d22da14248313d9e",
+        "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+        "all128OutputIdsMatch": true,
+        "windowsWholeGpuObservedPeakMiB": 20115.0
+      },
+      "on": {
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 66.65383349999999,
+            "clientSeconds": 69.488389709,
+            "decodeTokensPerSecond": 45.4754504898387,
+            "ttftSeconds": 66.696011084,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 12814.776,
+              "suffixMs": 53384.551,
+              "stateWaitMs": 402.952,
+              "importMs": 46.814,
+              "totalMs": 66653.833
+            }
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 66.9270447,
+            "clientSeconds": 69.76746458299999,
+            "decodeTokensPerSecond": 45.14144253496141,
+            "ttftSeconds": 66.950277833,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 13234.302,
+              "suffixMs": 53238.557,
+              "stateWaitMs": 400.453,
+              "importMs": 48.522,
+              "totalMs": 66927.045
+            }
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 67.2074422,
+            "clientSeconds": 70.02506633300001,
+            "decodeTokensPerSecond": 45.415334498421245,
+            "ttftSeconds": 67.22898087499999,
+            "metalAllocatedBytes": 38841630720,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 13202.445,
+              "suffixMs": 53450.522,
+              "stateWaitMs": 504.708,
+              "importMs": 44.252,
+              "totalMs": 67207.442
+            }
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 67.1116071,
+            "clientSeconds": 69.92363241700002,
+            "decodeTokensPerSecond": 45.474665634093355,
+            "ttftSeconds": 67.131119125,
+            "metalAllocatedBytes": 38631915520,
+            "swapOutBytes": 0,
+            "stages": {
+              "hiddenWaitMs": 13375.691,
+              "suffixMs": 53312.394,
+              "stateWaitMs": 369.363,
+              "importMs": 46.596,
+              "totalMs": 67111.607
+            }
+          }
+        ],
+        "median": {
+          "prefillSeconds": 67.1116071,
+          "clientSeconds": 69.92363241700002,
+          "decodeTokensPerSecond": 45.415334498421245,
+          "ttftSeconds": 67.131119125
+        },
+        "stageMedians": {
+          "hiddenWaitMs": 13234.302,
+          "suffixMs": 53312.394,
+          "stateWaitMs": 400.453,
+          "importMs": 46.596,
+          "totalMs": 67111.607
+        },
+        "rawRunId": "receive-32768-on-20261023T104945Z",
+        "rawSummarySha256": "18a52df8afc5e99a627940d6b825617681ae238aa7128b812115b06b53f2c331",
+        "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+        "all128OutputIdsMatch": true,
+        "windowsWholeGpuObservedPeakMiB": 20115.0
+      },
+      "prefillReductionPercent": -0.2456308672145413
+    }
+  },
+  "limitations": [
+    "FP32 diagnostic, not formal BF16/128K acceptance",
+    "No continuous Metal allocator high-water measurement",
+    "Reader wait includes upstream CUDA production, not only network transit",
+    "Windows computeMs includes D2H and host wall time; it is not a pure GPU timer"
+  ],
+  "decision": "Keep suffix-receive-overlap off: no consistent end-to-end benefit under the current CUDA bottleneck.",
+  "cancellation": {
+    "pidBefore": 75630,
+    "pidAfter": 75630,
+    "source": "0.3.0+638a45319a24f5f41a807b45c26f3c257e315813",
+    "abortAfterSeconds": 1.066717875,
+    "readyAfterAbortSeconds": 3.1715674169999994,
+    "recovery8TokensMatch": true,
+    "localResetDeterministic": true,
+    "agentPidUnchanged": true
+  },
+  "disconnect": {
+    "source": "0.3.0+638a45319a24f5f41a807b45c26f3c257e315813",
+    "macPidUnchanged": 75630,
+    "transportFailureStatus": 502,
+    "offlineLocalSucceeded": true,
+    "reconnectedOutput128Matches": true
+  },
+  "deploymentChecks": 15,
+  "excludedComparison": "The first on8K cohort retained Windows32K allocations. It remains archived with COMPARISON-LIMITATION.json; the reported on8K cohort repeats after reload, matching the19585MiB Windows footprint and10240-token Metal capacity of off8K."
+}

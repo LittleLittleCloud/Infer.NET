@@ -1,5 +1,23 @@
 [
   {
+    "id": "suffix-receive-overlap",
+    "kind": "2026-10-23 · 对照实验 · 无稳定收益",
+    "title": "提前收包没有提速：瓶颈仍在 CUDA 产出",
+    "question": "把Mac网络接收与suffix GPU计算重叠，能否消除等待？",
+    "setup": "638a453，同包开关A/B；affine8/FP32，CUDA32、Metal128，8K/32K输入、128输出，AC，预热1＋正式3。",
+    "change": "有界预接收队列，接收与GPU消费分离；保持状态导入顺序与取消后的reader回收。",
+    "result": "8K 14.306→14.282秒（0.17%）；32K 66.947→67.112秒（慢0.25%）。没有稳定收益，默认保持off。",
+    "validation": "123 Mac测试、Windows122＋1平台跳过、双端AOT和CI；15部署检查、取消与agent断连恢复通过。首组8K容量不匹配，已保留并重测。",
+    "conclusion": "数据等待也包括等CUDA计算/回读产出，不能全部归因于网络收包；现有CUDA发送已重叠。",
+    "next": "验证CUDA分段注意力；继续BF16误差定位。",
+    "commands": [
+      "--suffix-receive-overlap off",
+      "--suffix-receive-overlap on"
+    ],
+    "source": "docs/SUFFIX-RECEIVE-OVERLAP.md",
+    "evidence": "site/receive-overlap-summary.json"
+  },
+  {
     "id": "decode-attention-fp32",
     "kind": "2026-10-23 · 32K / 4096 · 实测改进",
     "title": "32K decode：35.10 → 45.43 token/s",
