@@ -33,12 +33,12 @@ static void prepare_chunk(Model *g) {
 static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const int *ids=nullptr,int experts=1,bool routed=false) {
     if(g->bf16Projections && !ids && m.rows>=256 && m.cols>=256)
         prefill_gemm_bf16<<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
-    else if(g->densePacked && !ids && count>=4 && m.rows>=256 && m.cols%256==0) {
+    else if((g->fastFp32 || g->densePacked) && !ids && count>=4 && m.rows>=256 && m.cols%256==0) {
         if(m.cols<=2048)chunk_dense_reuse<8,true><<<dim3((m.rows+3)/4,(count+7)/8),128>>>(m,x,y,count);
         else chunk_dense_reuse<4,true><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
     } else if(g->denseReuse && !ids && count>=4 && m.rows>=256)
         chunk_dense_reuse<4><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
-    else if(g->expertPacked && m.cols%256==0)
+    else if((g->fastFp32 || g->expertPacked) && ids && m.cols%256==0)
         chunk_gemv_packed<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
 }
@@ -75,7 +75,7 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
         profile.mark(3);
         chunk_mv(g,m[7],p.norm,p.router,count);
-        if(m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
+        if(g->fastFp32 && m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
             chunk_expert_gate_up_packed<<<dim3((m[11].rows+3)/4,1,count),128>>>(m[11],m[12],p.norm,p.sg,p.su,nullptr);
         else {chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);}
         chunk_mv(g,m[14],p.norm,p.sr,count);

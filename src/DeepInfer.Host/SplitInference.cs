@@ -21,8 +21,8 @@ public static class SplitInference
         await using(var f=File.OpenRead(bundle))
             if(!Convert.ToHexStringLower(await SHA256.HashDataAsync(f,ct)).Equals(PrefixHash,StringComparison.Ordinal))throw new InvalidDataException("Pinned prefix bundle hash mismatch.");
         Console.Error.WriteLine("Loading resident CUDA prefix...");
-        if(options.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("Invalid cuda-prefill mode.");
-        using var gpu=new CudaPrefixSession(bundle,2048,kvBytes,layerBatch:options.Get("cuda-prefill", "batch-fp32")!="serial",packedWeights:options.Get("cuda-prefill", "batch-fp32")=="batch-fp32-packed");
+        if(options.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed" or "batch-fp32-fast")) throw new ArgumentException("Invalid cuda-prefill mode.");
+        using var gpu=new CudaPrefixSession(bundle,2048,kvBytes,layerBatch:options.Get("cuda-prefill", "batch-fp32")!="serial",packedWeights:options.Get("cuda-prefill", "batch-fp32")=="batch-fp32-packed",fastFp32:options.Get("cuda-prefill", "batch-fp32")=="batch-fp32-fast");
         using var client=new TcpClient{NoDelay=true};await client.ConnectAsync(endpoint.Host,endpoint.Port,ct);
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
         await ServePrefix(gpu, wire, ct);
