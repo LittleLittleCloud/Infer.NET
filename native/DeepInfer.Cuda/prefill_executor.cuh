@@ -90,11 +90,14 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
         }
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);
-        if(trace && l==0 && std::getenv("DEEPINFER_CUDA_ROUTE_PROBE"))for(int token:{49,91})if(pos<=token&&token<pos+count){
+        int probeLayer=0,probeTokenA=49,probeTokenB=91;
+        const char *probe=std::getenv("DEEPINFER_CUDA_ROUTE_PROBE");
+        if(probe&&std::sscanf(probe,"%d:%d",&probeLayer,&probeTokenA)==2)probeTokenB=-1;
+        if(trace && probe && l==probeLayer)for(int token:{probeTokenA,probeTokenB})if(token>=0&&pos<=token&&token<pos+count){
             int ids[8];float probabilities[8];int local=token-pos;
             ck(cudaMemcpy(ids,p.ids+local*8,sizeof(ids),cudaMemcpyDeviceToHost));
             ck(cudaMemcpy(probabilities,p.prob+local*8,sizeof(probabilities),cudaMemcpyDeviceToHost));
-            fprintf(stderr,"CUDA_ROUTE token=%d layer=0",token);
+            fprintf(stderr,"CUDA_ROUTE token=%d layer=%d",token,l);
             for(int i=0;i<8;i++)fprintf(stderr," %d:%.9g",ids[i],probabilities[i]);
             fputc('\n',stderr);
         }

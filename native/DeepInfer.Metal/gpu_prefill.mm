@@ -652,16 +652,18 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  if(!command||!e){error_text(error,capacity,@"Cannot create prefill command");return -1;}
  bool profiling=std::getenv("DEEPINFER_METAL_PREFILL_PROFILE")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_PROFILE"),"1")==0&&g->position==4096;
  double profileMs=0;int profileDispatches=0;
+ const char *routeSpec=std::getenv("DEEPINFER_METAL_ROUTE_PROBE");
+ int routeLayer=0,routeTokenA=49,routeTokenB=91;
+ if(routeSpec&&std::sscanf(routeSpec,"%d:%d",&routeLayer,&routeTokenA)==2)routeTokenB=-1;
  auto checkpoint=[&](const char *stage)->bool {
-  bool routeProbe=trace&&shape.layer==0&&strcmp(stage,"routing")==0&&
-      std::getenv("DEEPINFER_METAL_ROUTE_PROBE");
+  bool routeProbe=trace&&routeSpec&&shape.layer==uint32_t(routeLayer)&&strcmp(stage,"routing")==0;
   if(!profiling&&!routeProbe)return true;
   [e endEncoding];double interval=0;if(!q_complete(command,&interval,error,capacity))return false;
   p->submissions++;profileMs+=interval;
   if(profiling)fprintf(stderr,"PREFILL_STAGE {\"position\":%u,\"tokens\":%d,\"layer\":%u,\"stage\":\"%s\",\"gpuMs\":%.6f,\"kernels\":%d}\n",g->position,count,shape.layer,stage,interval,g->dispatches-profileDispatches);
-  if(routeProbe)for(int token:{49,91})if(g->position<=uint32_t(token)&&uint32_t(token)<g->position+count){
+  if(routeProbe)for(int token:{routeTokenA,routeTokenB})if(token>=0&&g->position<=uint32_t(token)&&uint32_t(token)<g->position+count){
    auto *ids=(uint32_t*)p->ids.contents;auto *prob=(float*)p->prob.contents;
-   int local=token-int(g->position);fprintf(stderr,"METAL_ROUTE token=%d layer=0",token);
+   int local=token-int(g->position);fprintf(stderr,"METAL_ROUTE token=%d layer=%u",token,shape.layer);
    for(int i=0;i<8;i++)fprintf(stderr," %u:%.9g",ids[local*8+i],prob[local*8+i]);
    fputc('\n',stderr);
   }
