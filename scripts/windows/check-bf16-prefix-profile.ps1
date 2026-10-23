@@ -10,6 +10,7 @@ param(
     [switch]$CompareStageModes,
     [switch]$SaveRoutes,
     [switch]$SplitKQkv,
+    [switch]$HighLowQkv,
     [switch]$SplitKOutput
 )
 $ErrorActionPreference='Stop'
@@ -22,6 +23,7 @@ $env:DEEPINFER_CUDA_ROUTER_FP32=if($Router -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_SHARED_FP32=if($Shared -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_ROUTE_PROBE=$RouteProbe
 if($CompareStageModes -and -not $StageProbe){throw '-CompareStageModes requires -StageProbe'}
+if($SplitKQkv -and $HighLowQkv){throw 'Choose either -SplitKQkv or -HighLowQkv'}
 if($StageProbe){
     $env:DEEPINFER_CUDA_STAGE_DIR=$Output
     $env:DEEPINFER_CUDA_STAGE_TOKEN=[string]$StageToken
@@ -30,6 +32,7 @@ if($StageProbe){
 if($SaveRoutes){$env:DEEPINFER_CUDA_ROUTE_TRACE=Join-Path $Output 'routes-all.i32'}
 else{Remove-Item Env:DEEPINFER_CUDA_ROUTE_TRACE -ErrorAction SilentlyContinue}
 $env:DEEPINFER_CUDA_QKV_SPLIT_K=if($SplitKQkv){'1'}else{'0'}
+$env:DEEPINFER_CUDA_QKV_HIGHLOW=if($HighLowQkv){'1'}else{'0'}
 $env:DEEPINFER_CUDA_OUTPUT_SPLIT_K=if($SplitKOutput){'1'}else{'0'}
 Set-Location $root
 $runArgs=@('--weights',$model,'--library',$dll,'--output',$Output,'--tokens','128','--kv',$Kv,'--save-trace')

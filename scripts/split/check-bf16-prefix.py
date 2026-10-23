@@ -119,6 +119,7 @@ try:
             'librarySha256':hashlib.sha256(pathlib.Path(a.library).read_bytes()).hexdigest(),
             'bundleSha256':weight_sha.hexdigest(),'weightBits':8,'kv':a.kv,
             'baselineGemm':'fp32','candidateGemm':'bf16',
+            'candidateQkvCompensation':'bf16-highlow-three-products' if os.environ.get('DEEPINFER_CUDA_QKV_HIGHLOW')=='1' else 'none',
             'candidateRouterProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_ROUTER_FP32')=='1' else 'bf16',
             'candidateSharedProjection':'fp32-diagnostic' if os.environ.get('DEEPINFER_CUDA_SHARED_FP32')=='1' else 'bf16',
             'stageProbeToken':int(os.environ.get('DEEPINFER_CUDA_STAGE_TOKEN','0')) if os.environ.get('DEEPINFER_CUDA_STAGE_DIR') else None,

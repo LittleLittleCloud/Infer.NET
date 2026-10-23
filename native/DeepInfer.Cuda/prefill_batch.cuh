@@ -50,6 +50,58 @@ __global__ void prefill_gemm_bf16(Matrix m, const float *x, float *y, int tokens
         if(token<tokens && row+16<m.rows)y[token*m.rows+row+16]=result[warp*512+256+i];
     }
 }
+// Diagnostic high/low BF16 expansion. All three Tensor Core products have
+// BF16 operands: W_hi*X_hi + W_hi*X_lo + W_lo*X_hi. The omitted low*low term
+// is second order; no extra persistent weight or activation buffers are used.
+__global__ void prefill_gemm_bf16_highlow(Matrix m, const float *x, float *y, int tokens) {
+    using namespace nvcuda;
+    __shared__ __align__(32) __nv_bfloat16 sa_hi[32*32], sa_lo[32*32];
+    __shared__ __align__(32) __nv_bfloat16 sb_hi[64*32], sb_lo[64*32];
+    __shared__ __align__(32) float result[4*512];
+    int tid=threadIdx.x, warp=tid/32, lane=tid&31;
+    int token0=blockIdx.y*32, row0=blockIdx.x*64;
+    wmma::fragment<wmma::accumulator,16,16,16,float> c0,c1;
+    wmma::fill_fragment(c0,0.f);wmma::fill_fragment(c1,0.f);
+    for(int base=0;base<m.cols;base+=32) {
+        for(int i=tid;i<32*32;i+=128) {
+            int token=token0+i/32, col=base+i%32;
+            float value=token<tokens && col<m.cols ? x[token*m.cols+col] : 0.f;
+            __nv_bfloat16 hi=__float2bfloat16_rn(value);
+            sa_hi[i]=hi;
+            sa_lo[i]=__float2bfloat16_rn(value-__bfloat162float(hi));
+        }
+        for(int i=tid;i<64*32;i+=128) {
+            int row=row0+i/32,col=base+i%32;
+            float value=row<m.rows && col<m.cols ? weight(m,row,col) : 0.f;
+            __nv_bfloat16 hi=__float2bfloat16_rn(value);
+            sb_hi[i]=hi;
+            sb_lo[i]=__float2bfloat16_rn(value-__bfloat162float(hi));
+        }
+        __syncthreads();
+        for(int k=0;k<32;k+=16) {
+            wmma::fragment<wmma::matrix_a,16,16,16,__nv_bfloat16,wmma::row_major> av_hi,av_lo;
+            wmma::fragment<wmma::matrix_b,16,16,16,__nv_bfloat16,wmma::col_major> b0_hi,b1_hi,b0_lo,b1_lo;
+            wmma::load_matrix_sync(av_hi,sa_hi+(warp/2)*16*32+k,32);
+            wmma::load_matrix_sync(av_lo,sa_lo+(warp/2)*16*32+k,32);
+            wmma::load_matrix_sync(b0_hi,sb_hi+(warp%2)*32*32+k,32);
+            wmma::load_matrix_sync(b1_hi,sb_hi+((warp%2)*32+16)*32+k,32);
+            wmma::load_matrix_sync(b0_lo,sb_lo+(warp%2)*32*32+k,32);
+            wmma::load_matrix_sync(b1_lo,sb_lo+((warp%2)*32+16)*32+k,32);
+            wmma::mma_sync(c0,av_hi,b0_hi,c0);wmma::mma_sync(c1,av_hi,b1_hi,c1);
+            wmma::mma_sync(c0,av_lo,b0_hi,c0);wmma::mma_sync(c1,av_lo,b1_hi,c1);
+            wmma::mma_sync(c0,av_hi,b0_lo,c0);wmma::mma_sync(c1,av_hi,b1_lo,c1);
+        }
+        __syncthreads();
+    }
+    wmma::store_matrix_sync(result+warp*512,c0,16,wmma::mem_row_major);
+    wmma::store_matrix_sync(result+warp*512+256,c1,16,wmma::mem_row_major);
+    __syncwarp();
+    for(int i=lane;i<256;i+=32) {
+        int token=token0+(warp/2)*16+i/16, row=row0+(warp%2)*32+i%16;
+        if(token<tokens && row<m.rows)y[token*m.rows+row]=result[warp*512+i];
+        if(token<tokens && row+16<m.rows)y[token*m.rows+row+16]=result[warp*512+256+i];
+    }
+}
 // Diagnostic QKV variant: reset the FP32 MMA accumulator every 256 input
 // columns, then combine eight partial tiles. This tests whether the long
 // serial accumulator causes the cross-backend first-projection drift.
