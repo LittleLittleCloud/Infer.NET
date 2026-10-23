@@ -225,6 +225,23 @@
     "passed": false,
     "notes": "Offline numerical comparison, not product transfer or throughput. BF16 candidate is not deployed."
   },
+  "sameSourceRouteProbe": {
+    "source": "840822313b5b478f89913c8da5acbb33da4ef0d8",
+    "metalDylibSha256": "7ee8db505b528e01bf8ff619f254ff2a611e23a54fee265be3d7f71b45819ec4",
+    "cudaDllSha256": "2bd768c86791a6e4dd4198779ac0bbb0c87e14d6695fa0f12a281f5b27aa0cae",
+    "layer": 1,
+    "token": 93,
+    "sharedTopSevenExpertIds": [237, 220, 119, 162, 30, 159, 123],
+    "metalRankEightExpertId": 167,
+    "cudaRankEightExpertId": 54,
+    "metalRankEightProbability": 0.085598439,
+    "cudaRankEightProbability": 0.0855473876,
+    "traceHashesUnchangedByProbe": true,
+    "checksPassed": 2,
+    "checksTotal": 60,
+    "rawComparisonSha256": "59d3f284df3773c26b8e49d0646f2a814a7c56a98e016e5e2713fa95cd91a661",
+    "passed": false
+  },
   "restoredServiceSmoke": {
     "profile": "deployed-affine8-fp32-kv-not-candidate",
     "status": 200,
