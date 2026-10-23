@@ -19,6 +19,8 @@ $env:DEEPINFER_CUDA_ROUTER_FP32=if($Router -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_SHARED_FP32=if($Shared -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_ROUTE_PROBE=$RouteProbe
 if($StageProbe){$env:DEEPINFER_CUDA_STAGE_DIR=$Output}
+if($SaveRoutes){$env:DEEPINFER_CUDA_ROUTE_TRACE=Join-Path $Output 'routes-all.i32'}
+else{Remove-Item Env:DEEPINFER_CUDA_ROUTE_TRACE -ErrorAction SilentlyContinue}
 $env:DEEPINFER_CUDA_QKV_SPLIT_K=if($SplitKQkv){'1'}else{'0'}
 $env:DEEPINFER_CUDA_OUTPUT_SPLIT_K=if($SplitKOutput){'1'}else{'0'}
 Set-Location $root

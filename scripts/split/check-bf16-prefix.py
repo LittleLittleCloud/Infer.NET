@@ -24,6 +24,12 @@ p.add_argument('--save-trace',action='store_true',help='Save the 20-layer CUDA t
 p.add_argument('--save-routes',action='store_true',help='Save selected expert IDs for each token/layer in all three runs')
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=False)
+route_path=a.output/'routes-all.i32'
+if a.save_routes:
+    # Set before loading the CUDA DLL: Windows C runtimes can cache getenv values.
+    os.environ['DEEPINFER_CUDA_ROUTE_TRACE']=str(route_path)
+else:
+    os.environ.pop('DEEPINFER_CUDA_ROUTE_TRACE',None)
 tokens=[100+(i*137)%247000 for i in range(a.tokens)]
 weight_sha=hashlib.sha256()
 with open(a.weights,'rb') as f:
@@ -45,12 +51,6 @@ assert bind('abi_version',[])()==6
 
 def execute(handle,mode_id,route_label):
     ok(reset(handle,err,len(err)));ok(mode(handle,mode_id))
-    route_path=a.output/f'{route_label}-routes.i32'
-    if a.save_routes:
-        if route_path.exists():raise RuntimeError(f'Route trace already exists: {route_path}')
-        os.environ['DEEPINFER_CUDA_ROUTE_TRACE']=str(route_path)
-    else:
-        os.environ.pop('DEEPINFER_CUDA_ROUTE_TRACE',None)
     hidden=bytearray();trace=bytearray();start=time.perf_counter()
     for pos in range(0,len(tokens),32):
         part=tokens[pos:pos+32]
@@ -61,9 +61,13 @@ def execute(handle,mode_id,route_label):
         hidden.extend(bytes(out));trace.extend(bytes(layer))
     seconds=time.perf_counter()-start
     if a.save_routes:
-        os.environ.pop('DEEPINFER_CUDA_ROUTE_TRACE',None)
-        if route_path.stat().st_size!=len(tokens)*20*8*4:
+        run_index={'baseline':0,'candidate':1,'repeat':2}[route_label]
+        run_bytes=len(tokens)*20*8*4
+        raw=route_path.read_bytes()
+        if len(raw)!=(run_index+1)*run_bytes:
             raise RuntimeError(f'Route trace size mismatch: {route_path}')
+        route_bytes=raw[run_index*run_bytes:]
+        (a.output/f'{route_label}-routes.i32').write_bytes(route_bytes)
     states=[]
     for layer in range(20):
         for kind in range(2):
@@ -82,7 +86,7 @@ def execute(handle,mode_id,route_label):
     run_result={'mode':mode_id,'seconds':seconds,'hiddenSha256':hashlib.sha256(hidden).hexdigest(),
                 'traceSha256':hashlib.sha256(trace).hexdigest(),'stateSha256':states}
     if a.save_routes:
-        run_result['routesSha256']=hashlib.sha256(route_path.read_bytes()).hexdigest()
+        run_result['routesSha256']=hashlib.sha256(route_bytes).hexdigest()
     return run_result,values
 
 handle=create(a.weights.encode(),256,2,err,len(err))
