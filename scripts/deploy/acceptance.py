@@ -27,7 +27,7 @@ check('output limit rejected',request('/v1/infer',dict(base,maxTokens=257))[0]==
 check('context overflow rejected without truncation',request('/v1/infer',dict(base,prompt='hello '*2200))[0]==400)
 results=[]
 for i in range(3):
- status,result=request('/v1/infer',base);check('resident request '+str(i),status==200 and len(result['tokenIds'])==32)
+ status,result=request('/v1/infer',base);(out/('response-'+str(i)+'.json')).write_text(json.dumps({'status':status,'result':result},ensure_ascii=False));check('resident request '+str(i),status==200 and len(result['tokenIds'])==32)
  results.append(result);(out/('request-'+str(i)+'.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2))
 check('three requests reset state deterministically',all(r['tokenIds']==results[0]['tokenIds'] for r in results))
 def stream(cancel=False):

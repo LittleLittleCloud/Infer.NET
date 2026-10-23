@@ -66,6 +66,8 @@ public static class SplitService
                 request.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
                 gpu.Reset();
                 await SplitInference.ServePrefix(gpu, wire, request.Token, start);
+                var ack = await wire.ReceiveAsync(request.Token);
+                if (ack.Kind != SplitWire.End || ack.Position != start.Count) throw new InvalidDataException("Missing state import acknowledgement.");
             }
             catch (Exception ex) when (ex is IOException or SocketException or System.Security.Authentication.AuthenticationException or OperationCanceledException)
             {
@@ -153,6 +155,7 @@ public static class SplitService
                     }
                     var end = await peer.Wire.ReceiveAsync(timeout.Token);
                     if (end.Kind != SplitWire.End || end.Position != ids.Length) throw new InvalidDataException("Missing handoff completion.");
+                    await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
@@ -194,7 +197,7 @@ public static class SplitService
             catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested) { }
             catch (OperationCanceledException) { await Fail(context, 504, "deadline", "Request deadline exceeded."); }
             catch (Exception ex) when (ex is IOException or SocketException)
-            { await Fail(context, 502, "handoff_failed", "State transfer failed; request state discarded."); }
+            { Console.Error.WriteLine("HANDOFF_ERROR " + ex); await Fail(context, 502, "handoff_failed", "State transfer failed; request state discarded."); }
             catch (InvalidOperationException)
             { state = "Faulted"; warmed = false; life.Cancel(); throw; }
             finally { if (acquired && warmed) state = "Ready"; }
