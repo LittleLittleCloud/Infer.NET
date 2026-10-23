@@ -210,6 +210,33 @@ __global__ void chunk_expert_gate_up_packed(Matrix gate,Matrix up,const float *x
         gateOut[out]=gateSum;upOut[out]=upSum;
     }
 }
+// One launch for both projections, but each CTA streams only one weight matrix.
+// This avoids the register pressure of holding two long dot products per thread.
+__global__ void chunk_expert_gate_up_dispatch(Matrix gate,Matrix up,const float *x,
+                                              float *gateOut,float *upOut,const int *ids,int routes) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32;
+    int which=blockIdx.y/routes,e=blockIdx.y%routes,t=blockIdx.z;
+    Matrix m=which?up:gate;
+    if(row>=m.rows)return;
+    int expert=ids[t*routes+e];size_t wr=size_t(expert)*m.rows+row;
+    const float *input=x+size_t(t)*m.cols;
+    float val=0;
+    for(int base=lane*8;base<m.cols;base+=256) {
+        size_t index=wr*m.cols+base;
+        uint2 bytes=*reinterpret_cast<const uint2*>(m.w+index);
+        float scale=bf(m.s[index/64]),bias=bf(m.b[index/64]);
+        #pragma unroll
+        for(int j=0;j<8;j++) {
+            float w=float(((j<4?bytes.x:bytes.y)>>(8*(j&3)))&255)*scale+bias;
+            val+=w*input[base+j];
+        }
+    }
+    val=sum32(val);
+    if(lane==0) {
+        size_t out=(size_t(t)*routes+e)*m.rows+row;
+        (which?upOut:gateOut)[out]=val;
+    }
+}
 // Reuse each dequantized dense weight across independent token accumulators.
 // Preserve the original per-lane accumulation and warp reduction order.
 template<int Tile,bool Packed=false> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
