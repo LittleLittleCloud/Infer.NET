@@ -1,7 +1,7 @@
 param(
     [ValidateSet('Managed','Native','All')][string]$Stage = 'All',
     [string]$VcVarsPath,
-    [string]$PackageSource,
+    [string]$NuGetConfigPath,
     [ValidatePattern('^[A-Za-z0-9_-]+$')][string]$RunId = (Get-Date -Format yyyyMMdd-HHmmss)
 )
 $ErrorActionPreference = 'Stop'
@@ -19,12 +19,16 @@ Push-Location $root
 try {
     . (Join-Path $PSScriptRoot 'environment.ps1')
     $result.commit = (& git rev-parse HEAD | Out-String).Trim()
+    if ($NuGetConfigPath) {
+        $NuGetConfigPath = (Resolve-Path $NuGetConfigPath).Path
+        $result.nugetConfigSHA256 = (Get-FileHash $NuGetConfigPath -Algorithm SHA256).Hash
+    }
     $expected = (Get-Content global.json -Raw | ConvertFrom-Json).sdk.version
     $actual = (& dotnet --version | Out-String).Trim()
     if ($LASTEXITCODE -ne 0 -or $actual -ne $expected) { throw "SDK mismatch: $actual / $expected" }
     if ($Stage -in 'Managed','All') {
         $restoreArguments = @('restore','DeepInfer.slnx','--locked-mode')
-        if ($PackageSource) { $restoreArguments += @('--source',$PackageSource) }
+        if ($NuGetConfigPath) { $restoreArguments += @('--configfile',$NuGetConfigPath) }
         Invoke-Checked dotnet $restoreArguments
         Invoke-Checked dotnet @('build','DeepInfer.slnx','-c','Release','--no-restore')
         Invoke-Checked dotnet @('test','tests/DeepInfer.Tests','-c','Release','--no-build')
@@ -52,7 +56,7 @@ try {
         Invoke-Checked $cudaCheck @()
         $native = Join-Path $output 'native'
         $publishArguments = @('publish','src/DeepInfer.Host','-c','Release','-r','win-x64','-o',$native)
-        if ($PackageSource) { $publishArguments += "-p:RestoreSources=$PackageSource" }
+        if ($NuGetConfigPath) { $publishArguments += "-p:RestoreConfigFile=$NuGetConfigPath" }
         Invoke-Checked dotnet $publishArguments
         Invoke-Checked python @('scripts/integration.py','--executable',(Join-Path $native 'deepinfer.exe'))
         $result.cudaExecutableSHA256 = (Get-FileHash $cudaCheck -Algorithm SHA256).Hash
