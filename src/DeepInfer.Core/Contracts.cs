@@ -26,7 +26,7 @@ public sealed record InferenceRequest(string Prompt, int MaxTokens = 16,
 public sealed record InferenceResult(string RequestId, string WorkerId, string Model, string Backend,
     string Text, string[] Tokens, bool IsSimulation, double ComputeMs,
     int[]? TokenIds = null, int PromptTokens = 0, string? FinishReason = null,
-    long GpuDispatches = 0, double GpuComputeMs = 0, InferenceTimings? Timings = null, long GpuSubmissions = 0);
+    long GpuDispatches = 0, double GpuComputeMs = 0, InferenceTimings? Timings = null, long GpuSubmissions = 0, string? ExecutionPath = null);
 public sealed record WorkerRegistration(int ProtocolVersion, string WorkerId, string Endpoint,
     DeviceInfo[] Devices, ModelInfo[] Models, int Capacity, WorkerTelemetry? Telemetry = null);
 // Heartbeat sample, never a claim of instantaneous GPU utilization. Old workers omit it.
@@ -35,7 +35,7 @@ public sealed record WorkerTelemetry(DateTimeOffset ObservedAt, string State, bo
     bool? AgentConnected = null, int? WeightBits = null, string? Kv = null,
     int? MaxContextTokens = null, int? MaxOutputTokens = null, WorkerRequestMetrics? LastRequest = null);
 public sealed record WorkerRequestMetrics(DateTimeOffset CompletedAt, int InputTokens, int OutputTokens,
-    double PrefillMs, double DecodeTokensPerSecond, double ComputeMs, long MetalAllocatedBytes, long KvCacheBytes);
+    double PrefillMs, double DecodeTokensPerSecond, double ComputeMs, long MetalAllocatedBytes, long KvCacheBytes, string? ExecutionPath = null);
 public sealed record WorkerSnapshot(WorkerRegistration Registration, DateTimeOffset LastSeenUtc, bool Healthy);
 public sealed record ClusterSnapshot(int ProtocolVersion, WorkerSnapshot[] Workers);
 public sealed record HealthInfo(string Role, string Status, int ProtocolVersion);

@@ -108,3 +108,9 @@ python3 scripts/deploy/acceptance.py --token-file /PATH/mac/token.txt --output a
 新增 `PREFILL` 日志分别记录 reset、hidden 等待、Mac suffix、状态等待/导入及交接字节数；hidden 等待含远端计算和传输，不称为纯 CUDA 时间。`METAL_WAIT` 对超过 100 ms 的命令记录 commit、wait 和 GPU 时间。日志用于定位，不改变 API 已有计时定义。
 
 驻留参数通过显式 C ABI 从 C# 传给 Metal；不能依赖 `Environment.SetEnvironmentVariable`：Unix 的托管环境副本不会更新原生 `getenv`。0bcbbb6 的首次上线因此没有启用驻留，保留为失败实验，不能算驻留性能结果。原生 `RESIDENCY` 日志及跨边界测试才证明该选项生效。历史 `Profile` 的其他环境参数同样需要逐项审核；不要将托管赋值当成原生生效证据。
+
+### Small-request routing and CUDA readback
+
+`short-prefill-tokens` defaults to `128` (range `0..128`). The count includes the complete chat template and history. Small requests run full prefill and decode in the existing resident Mac model; larger requests retain the CUDA-prefix / Metal-suffix path. Set it to `0` to force split execution for comparisons. This is an explicit routing policy, not prefix caching; each request still resets its state. RPC results and latest worker metrics expose `executionPath` (`metal-local` or `cuda-metal-split`), also shown in the TUI.
+
+`cuda-readback` defaults to `batch`; `token` retains the original diagnostic path. Batch mode writes each final-layer hidden vector into a 256 KiB device buffer and performs one host readback per chunk (up to 32 tokens). It does not change arithmetic, precision or wire layout, and it is not batched GEMM. Native CUDA ABI is now 4; rebuild both managed/native components. Use `scripts/split/benchmark-readback.py` for exact hidden/state A/B and a synthetic-token prefix-only timing check, with the deployed agent stopped first so there is only one CUDA model.

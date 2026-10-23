@@ -77,7 +77,8 @@
         {
             if (Wide) lines.Add("");
             lines.Add($"Last completed request  {m.InputTokens} in / {m.OutputTokens} out · {m.CompletedAt.ToLocalTime():HH:mm:ss}");
-            lines.Add($"Prefill  {m.PrefillMs / 1000:F2}s · includes state handoff");
+            var path = m.ExecutionPath == "metal-local" ? "Mac local" : "4090 → Mac · includes handoff";
+            lines.Add($"Prefill  {m.PrefillMs / 1000:F2}s · {path}");
             lines.Add($"Decode   {m.DecodeTokensPerSecond:F1} tok/s · request {m.ComputeMs / 1000:F2}s");
             lines.Add($"Last Metal allocation {GiB(m.MetalAllocatedBytes)} · KV {GiB(m.KvCacheBytes)}");
         }

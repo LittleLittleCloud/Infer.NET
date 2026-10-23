@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 3; }
+API int di_cuda_prefix_abi_version() { return 4; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
@@ -31,10 +31,10 @@ struct Model {
     Matrix embedding;
     Layer layers[20];
     int position = 0, capacity;
-    bool kvBf16 = true;
+    bool kvBf16 = true, batchReadback = true;
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
-        *eg, *eu, *eo, *sg, *su, *so, *sr;
+        *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
     int *ids;
     ~Model() {
         for (auto p : memory)
@@ -256,13 +256,14 @@ __global__ void top8(const float *logits, int *ids, float *prob) {
         prob[n] /= total;
 }
 __global__ void merge(float *x, const float *eo, const float *so, const float *sr,
-                      const float *prob) {
+                      const float *prob, float *hidden = nullptr) {
     int d = blockIdx.x * blockDim.x + threadIdx.x;
     if (d < 2048) {
         float v = so[d] * sig(sr[0]);
         for (int i = 0; i < 8; i++)
             v += eo[i * 2048 + d] * prob[i];
         x[d] += v;
+        if (hidden) hidden[d] = x[d];
     }
 }
 static void mv(Matrix m, float *x, float *y, int *ids = nullptr, int count = 1,
@@ -392,6 +393,7 @@ API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, cha
             throw std::runtime_error("Trailing prefix bundle data");
 #define BUF(name, n) g->name = g->alloc<float>(n)
         BUF(x, 2048);
+        BUF(batchHidden, 32 * 2048);
         BUF(norm, 2048);
         BUF(qkv, 8192);
         BUF(z, 4096);
@@ -471,6 +473,11 @@ API int di_cuda_prefix_reset(void *ptr, char *error, int cap) {
         return -1;
     }
 }
+API int di_cuda_prefix_readback_mode(void *ptr, int batched) {
+    auto *g=static_cast<Model*>(ptr);
+    if(!g || (batched!=0 && batched!=1)) return -1;
+    g->batchReadback=batched!=0;return 0;
+}
 API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position, float *hidden,
                            float *trace, char *error, int cap) {
     try {
@@ -528,14 +535,16 @@ API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position
                 activation<<<32, 128>>>(g->eg, g->eu, 4096);
                 mv(m[10], g->eg, g->eo, g->ids, 8, true);
                 mv(m[13], g->sg, g->so);
-                merge<<<16, 128>>>(g->x, g->eo, g->so, g->sr, g->prob);
+                merge<<<16, 128>>>(g->x, g->eo, g->so, g->sr, g->prob,
+                    g->batchReadback && l == 19 ? g->batchHidden + i * 2048 : nullptr);
                 if (trace)
                     ck(cudaMemcpy(trace + (i * 20 + l) * 2048, g->x, 2048 * 4,
                                   cudaMemcpyDeviceToHost));
             }
-            ck(cudaMemcpy(hidden + i * 2048, g->x, 2048 * 4, cudaMemcpyDeviceToHost));
+            if (!g->batchReadback) ck(cudaMemcpy(hidden + i * 2048, g->x, 2048 * 4, cudaMemcpyDeviceToHost));
             g->position++;
         }
+        if (g->batchReadback) ck(cudaMemcpy(hidden, g->batchHidden, size_t(count) * 2048 * 4, cudaMemcpyDeviceToHost));
         ck(cudaGetLastError());
         return 0;
     } catch (const std::exception &e) {

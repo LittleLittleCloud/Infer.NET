@@ -37,6 +37,7 @@ public sealed class MetalSplitSession : IDisposable
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null) => graph.Suffix(tokens, hidden, final, logits);
     public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
+    public int Prefill(int[] tokens, CancellationToken ct) => graph.Prefill(tokens, ct);
     public int Reference(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]>? trace)
     {
         // Match the first CUDA correctness path: <=32-token chunks, FP32 affine GEMV.
@@ -55,14 +56,15 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
     private readonly int kvBytes;
-    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2)
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = true)
     {
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=3) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        if(CudaPrefixNative.AbiVersion()!=4) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
         if (handle == 0) throw new InvalidOperationException(Message(error));
+        if (CudaPrefixNative.ReadbackMode(handle, batchReadback ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA readback configuration rejected."); }
     }
     private static string Message(byte[] e) => System.Text.Encoding.UTF8.GetString(e).TrimEnd('\0');
     public float[] Run(int[] tokens, int position, float[]? trace)
@@ -106,6 +108,8 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 }
 internal static unsafe partial class CudaPrefixNative
 {
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_readback_mode")]
+    internal static partial int ReadbackMode(nint graph, int batched);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_abi_version")]
     internal static partial int AbiVersion();
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_create", StringMarshalling=StringMarshalling.Utf8)]
