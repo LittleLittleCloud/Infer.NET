@@ -56,14 +56,15 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
     private readonly int kvBytes;
-    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false)
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true)
     {
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=4) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        if(CudaPrefixNative.AbiVersion()!=5) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
         if (handle == 0) throw new InvalidOperationException(Message(error));
+        if (CudaPrefixNative.ExecutionMode(handle, layerBatch ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA prefill configuration rejected."); }
         if (CudaPrefixNative.ReadbackMode(handle, batchReadback ? 1 : 0) != 0) { Dispose(); throw new InvalidOperationException("CUDA readback configuration rejected."); }
     }
     private static string Message(byte[] e) => System.Text.Encoding.UTF8.GetString(e).TrimEnd('\0');
@@ -108,6 +109,8 @@ public sealed unsafe class CudaPrefixSession : IDisposable
 }
 internal static unsafe partial class CudaPrefixNative
 {
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_execution_mode")]
+    internal static partial int ExecutionMode(nint graph, int mode);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_readback_mode")]
     internal static partial int ReadbackMode(nint graph, int batched);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_abi_version")]

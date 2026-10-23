@@ -38,6 +38,7 @@ public static class SplitService
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         _ = o.Number("short-prefill-tokens", 128, 0, 128);
+        if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32")) throw new ArgumentException("cuda-prefill must be serial or batch-fp32.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
@@ -54,9 +55,9 @@ public static class SplitService
         Console.WriteLine("AGENT Loading: verifying pinned 8bit prefix");
         await using (var f = File.OpenRead(bundle))
             if (Convert.ToHexStringLower(await SHA256.HashDataAsync(f, ct)) != SplitInference.PrefixHash) throw new InvalidDataException("Prefix bundle hash mismatch.");
-        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch");
+        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch", o.Get("cuda-prefill", "batch-fp32") == "batch-fp32");
         gpu.Run([1, 2, 3, 4], 0, null); gpu.Reset();
-        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
+        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context} prefill={o.Get("cuda-prefill", "batch-fp32")} readback={o.Get("cuda-readback", "token")}");
         while (!ct.IsCancellationRequested)
         {
             try
@@ -93,6 +94,7 @@ public static class SplitService
     public static async Task RunMac(Options o, CancellationToken ct)
     {
         Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, 128);
         var endpoint = o.Get("listen", "http://127.0.0.1:5201");
         if (!EndpointRules.IsLoopback(EndpointRules.Validate(endpoint, false))) throw new ArgumentException("Worker HTTP API must be loopback; use the local coordinator.");
         var dataUri = new Uri(o.Get("data-listen", "tcp://127.0.0.1:5210"));
@@ -114,7 +116,7 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && peers.Reader.TryPeek(out var peer) && peer.Connected, Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
@@ -126,8 +128,8 @@ public static class SplitService
             var connected = (Volatile.Read(ref activePeer)?.Connected ?? false) || (peers.Reader.TryPeek(out var peer) && peer.Connected);
             if (connected) Interlocked.Exchange(ref lastPeerSeen, Stopwatch.GetTimestamp());
             var recentPeer = Interlocked.Read(ref lastPeerSeen);
-            var accepting = warmed && (connected || queue.Busy || (recentPeer != 0 && Stopwatch.GetElapsedTime(recentPeer).TotalSeconds < 5));
-            var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : "WaitingForAgent";
+            var accepting = warmed && (shortPrefillLimit > 0 || connected || queue.Busy || (recentPeer != 0 && Stopwatch.GetElapsedTime(recentPeer).TotalSeconds < 5));
+            var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : shortPrefillLimit > 0 ? "ReadyLocal" : "WaitingForAgent";
             return registration with { Telemetry = new(DateTimeOffset.UtcNow, currentState, accepting,
                 queue.Busy, queue.WaitingCount, queue.WaitingCapacity, Interlocked.Read(ref completed), Environment.ProcessId,
                 Build, connected, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
@@ -148,7 +150,7 @@ public static class SplitService
                 var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
                 var maxTokens = input.UseRemainingContext ? Protocol.Qwen36Context - ids.Length : input.MaxTokens;
                 if (maxTokens < 1 || (long)ids.Length + maxTokens > Protocol.Qwen36Context) { await Fail(context, 400, "context_length", $"Prompt plus output exceeds the model's {Protocol.Qwen36Context}-token window; no silent truncation."); return; }
-                var localPrefill = ids.Length <= o.Number("short-prefill-tokens", 128, 0, 128);
+                var localPrefill = ids.Length <= shortPrefillLimit;
                 var executionPath = localPrefill ? "metal-local" : "cuda-metal-split";
                 Peer? peer = null;
                 var requestId = Guid.NewGuid();

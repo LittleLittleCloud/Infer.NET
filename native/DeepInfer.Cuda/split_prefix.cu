@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 4; }
+API int di_cuda_prefix_abi_version() { return 5; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
