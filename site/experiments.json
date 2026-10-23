@@ -1,5 +1,23 @@
 [
   {
+    "id": "metal-scratch-profile",
+    "kind": "2026-10-23 · 双机完整对照",
+    "title": "Metal临时缓冲缩到128：节省约101MiB",
+    "question": "实际原生执行配置是什么，缩小临时缓冲是否影响长输出？",
+    "setup": "73c3d5d同包512/128对照，8bit/FP32，8K/32K输入和4096输出，预热1＋正式3。",
+    "change": "读取并校验原生Metal配置；临时缓冲容量从512调为128。",
+    "result": "32K/4096整次143.683→142.951秒，响应分配中位少100.75MiB。",
+    "validation": "全部输出ID一致；Mac124测试、Windows123＋1跳过、双端AOT、CI及15项部署检查通过。",
+    "conclusion": "保留128配置，实测的是FP32/32K；BF16/128K目标仍未通过。8K Windows容量不匹配，细小时间差不能归因于缓冲。",
+    "next": "检验长上下文CUDA注意力的完整前段数值与速度。",
+    "commands": [
+      "--metal-scratch-tokens 512",
+      "--metal-scratch-tokens 128"
+    ],
+    "source": "docs/METAL-EXECUTION-PROFILE.md",
+    "evidence": "site/metal-scratch-summary.json"
+  },
+  {
     "id": "cuda-dense-reuse",
     "kind": "2026-10-23 · 完整双机对照",
     "title": "复用CUDA权重读取，保持FP32运算结果",

@@ -1,0 +1,489 @@
+{
+  "source": "73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "kv": "fp32",
+  "cudaPrefill": "batch-fp32-packed",
+  "warmups": 1,
+  "measured": 3,
+  "cases": {
+    "128-32k": {
+      "run": "scratch-32768-128-20261023T124349Z",
+      "inputTokens": 32768,
+      "outputTokens": 128,
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 128,
+      "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 128, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 52.9684445,
+          "clientSeconds": 55.813900958,
+          "decodeTokensPerSecond": 45.30571601528166,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38735986688,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 52.991061,
+          "clientSeconds": 55.806659375,
+          "decodeTokensPerSecond": 45.43211395805121,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38735986688,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.029778,
+          "clientSeconds": 55.843789208000004,
+          "decodeTokensPerSecond": 45.47883772993138,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38526271488,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 52.8392783,
+          "clientSeconds": 55.65644958300001,
+          "decodeTokensPerSecond": 45.38138624197879,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38526271488,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 52.991061,
+        "clientSeconds": 55.806659375,
+        "decodeTokensPerSecond": 45.43211395805121,
+        "metalAllocatedBytes": 38526271488
+      },
+      "maxResponseAllocationBytes": 38735986688,
+      "windowsWholeGpuPeakMiB": 20102.0
+    },
+    "512-32k": {
+      "run": "scratch-32768-512-20261023T122848Z",
+      "inputTokens": 32768,
+      "outputTokens": 128,
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 512,
+      "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 512, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 53.3627359,
+          "clientSeconds": 56.275135958,
+          "decodeTokensPerSecond": 44.07813853092565,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38841630720,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.0419262,
+          "clientSeconds": 55.894072042000005,
+          "decodeTokensPerSecond": 44.873145913160585,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38841630720,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.0934727,
+          "clientSeconds": 55.951811334,
+          "decodeTokensPerSecond": 44.77697400171316,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38841630720,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.0723787,
+          "clientSeconds": 55.976226333,
+          "decodeTokensPerSecond": 44.022863326063884,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 38841630720,
+          "contextCapacity": 34816,
+          "kvCacheBytes": 1426063360,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "fca331d23098fb484bd0834397fcc50ff8a3246c8eda4c7c39d62d096350b9cc"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 53.0723787,
+        "clientSeconds": 55.951811334,
+        "decodeTokensPerSecond": 44.77697400171316,
+        "metalAllocatedBytes": 38841630720
+      },
+      "maxResponseAllocationBytes": 38841630720,
+      "windowsWholeGpuPeakMiB": 20102.0
+    },
+    "128-8k": {
+      "run": "scratch-8192-128-20261023T124215Z",
+      "inputTokens": 8192,
+      "outputTokens": 128,
+      "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 128,
+      "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 128, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 11.4806402,
+          "clientSeconds": 13.653210082999998,
+          "decodeTokensPerSecond": 60.26896568251877,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37467340800,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.3795231,
+          "clientSeconds": 13.490388791999997,
+          "decodeTokensPerSecond": 60.494260976147785,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37467340800,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.378304,
+          "clientSeconds": 13.480872915999996,
+          "decodeTokensPerSecond": 60.66735040840592,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37467340800,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.3285917,
+          "clientSeconds": 13.433638459000008,
+          "decodeTokensPerSecond": 60.55774156816893,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37467340800,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 11.378304,
+        "clientSeconds": 13.480872915999996,
+        "decodeTokensPerSecond": 60.55774156816893,
+        "metalAllocatedBytes": 37467340800
+      },
+      "maxResponseAllocationBytes": 37467340800,
+      "windowsWholeGpuPeakMiB": 20102.0
+    },
+    "512-8k": {
+      "run": "scratch-8192-512-20261023T122726Z",
+      "inputTokens": 8192,
+      "outputTokens": 128,
+      "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 512,
+      "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 512, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 11.307472599999999,
+          "clientSeconds": 13.438513042,
+          "decodeTokensPerSecond": 60.389066307527685,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37572984832,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.9922363,
+          "clientSeconds": 14.125030916,
+          "decodeTokensPerSecond": 59.79516342818576,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37572984832,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.264661700000001,
+          "clientSeconds": 13.371875415999995,
+          "decodeTokensPerSecond": 60.54425374964389,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37572984832,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 11.2207472,
+          "clientSeconds": 13.330165084,
+          "decodeTokensPerSecond": 60.45887620564278,
+          "tail1024ClientTokensPerSecond": null,
+          "metalAllocatedBytes": 37572984832,
+          "contextCapacity": 10240,
+          "kvCacheBytes": 419430400,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 11.264661700000001,
+        "clientSeconds": 13.371875415999995,
+        "decodeTokensPerSecond": 60.45887620564278,
+        "metalAllocatedBytes": 37572984832
+      },
+      "maxResponseAllocationBytes": 37572984832,
+      "windowsWholeGpuPeakMiB": 19572.0
+    },
+    "128-long": {
+      "run": "scratch-long-32768-128-20261023T124735Z",
+      "inputTokens": 32768,
+      "outputTokens": 4096,
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 128,
+      "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 128, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 52.9803275,
+          "clientSeconds": 143.228905916,
+          "decodeTokensPerSecond": 45.39730851386169,
+          "tail1024ClientTokensPerSecond": 45.27504999617885,
+          "metalAllocatedBytes": 39327547392,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.062311199999996,
+          "clientSeconds": 142.950647375,
+          "decodeTokensPerSecond": 45.592787909019776,
+          "tail1024ClientTokensPerSecond": 45.285676673338465,
+          "metalAllocatedBytes": 39327547392,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 110.921875,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.2006285,
+          "clientSeconds": 143.12066349999998,
+          "decodeTokensPerSecond": 45.56087317392298,
+          "tail1024ClientTokensPerSecond": 45.25053652904297,
+          "metalAllocatedBytes": 39327547392,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 52.9927994,
+          "clientSeconds": 142.87290404199996,
+          "decodeTokensPerSecond": 45.5920358322094,
+          "tail1024ClientTokensPerSecond": 45.26519947991813,
+          "metalAllocatedBytes": 38614515712,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 53.062311199999996,
+        "clientSeconds": 142.950647375,
+        "decodeTokensPerSecond": 45.5920358322094,
+        "metalAllocatedBytes": 39327547392
+      },
+      "maxResponseAllocationBytes": 39327547392,
+      "windowsWholeGpuPeakMiB": 20102.0
+    },
+    "512-long": {
+      "run": "scratch-long-32768-512-20261023T123235Z",
+      "inputTokens": 32768,
+      "outputTokens": 4096,
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+      "source": "0.3.0+73c3d5db228eb5b7ab665d9bd528828f6e1c6592",
+      "scratchTokens": 512,
+      "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17",
+      "nativeProfile": "METAL_NATIVE_PROFILE MetalExecutionProfile { KvElementBytes = 4, Bf16Gemm = False, Matrix = True, ChunkedDelta = True, GroupedExperts = True, PackedExperts = False, ExpandedGemm = False, DeviceDelta = False, ScratchTokens = 512, FusedAttention = True, FusedAllAttention = False, AttentionFeatures = 256, AttentionBatchTokens = 128, MatrixRows = 64 }",
+      "trials": [
+        {
+          "warmup": true,
+          "prefillSeconds": 53.1023761,
+          "clientSeconds": 143.84938845800002,
+          "decodeTokensPerSecond": 45.1508291231986,
+          "tail1024ClientTokensPerSecond": 45.06003192126658,
+          "metalAllocatedBytes": 39642906624,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.3016627,
+          "clientSeconds": 143.5857965,
+          "decodeTokensPerSecond": 45.3885242211304,
+          "tail1024ClientTokensPerSecond": 45.12828177287453,
+          "metalAllocatedBytes": 39433191424,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.5132707,
+          "clientSeconds": 144.024317333,
+          "decodeTokensPerSecond": 45.27667311172092,
+          "tail1024ClientTokensPerSecond": 45.16159706770118,
+          "metalAllocatedBytes": 39433191424,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 197.015625,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        },
+        {
+          "warmup": false,
+          "prefillSeconds": 53.4565368,
+          "clientSeconds": 143.682585583,
+          "decodeTokensPerSecond": 45.41678575032919,
+          "tail1024ClientTokensPerSecond": 45.174603319346346,
+          "metalAllocatedBytes": 39433191424,
+          "contextCapacity": 36864,
+          "kvCacheBytes": 1509949440,
+          "swapOutMiB": 0.0,
+          "tokenIdsSha256": "24b2e9326b7bfcce57aa6942e6978f3e0c99d8e9cbbfceb966604eab8dbaaa17"
+        }
+      ],
+      "median": {
+        "prefillSeconds": 53.4565368,
+        "clientSeconds": 143.682585583,
+        "decodeTokensPerSecond": 45.3885242211304,
+        "metalAllocatedBytes": 39433191424
+      },
+      "maxResponseAllocationBytes": 39642906624,
+      "windowsWholeGpuPeakMiB": 20102.0
+    }
+  },
+  "limitations": [
+    "Only FP32/8K/32K; formal BF16/131072 gates untested",
+    "Worker prefill, not formal coordinator t2-t1",
+    "Metal allocated bytes are response samples, not continuous peaks",
+    "Windows GPU measurements include display/other processes",
+    "8K Windows capacity differs across modes: 19572 vs20102 MiB; do not attribute small timing difference to scratch",
+    "System swap-out cannot be attributed to model process"
+  ],
+  "deploymentAcceptance": [
+    {
+      "name": "readiness advertises 8bit FP32 model window",
+      "pass": true
+    },
+    {
+      "name": "API rejects wrong authentication",
+      "pass": true
+    },
+    {
+      "name": "output limit rejected",
+      "pass": true
+    },
+    {
+      "name": "context overflow rejected without truncation",
+      "pass": true
+    },
+    {
+      "name": "resident request 0",
+      "pass": true
+    },
+    {
+      "name": "resident request 1",
+      "pass": true
+    },
+    {
+      "name": "resident request 2",
+      "pass": true
+    },
+    {
+      "name": "three requests reset state deterministically",
+      "pass": true
+    },
+    {
+      "name": "streamed token IDs and text match final result",
+      "pass": true
+    },
+    {
+      "name": "stream and nonstream agree",
+      "pass": true
+    },
+    {
+      "name": "client can cancel after first streamed token",
+      "pass": true
+    },
+    {
+      "name": "next request correct after cancellation",
+      "pass": true
+    },
+    {
+      "name": "natural EOS terminates before limit",
+      "pass": true
+    },
+    {
+      "name": "bounded queue provides explicit backpressure",
+      "pass": true
+    },
+    {
+      "name": "Mac model PID remains unchanged",
+      "pass": true
+    }
+  ]
+}
