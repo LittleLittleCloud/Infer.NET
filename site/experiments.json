@@ -1,5 +1,22 @@
 [
   {
+    "id": "cuda-gemm-experts-20261023",
+    "title": "CUDA GEMM / 专家：整模前段对现网 packed 模式仅快 1.6%",
+    "kind": "2026-10-23 · 8bit权重 · FP32 KV · 候选未部署",
+    "question": "向量化 affine8 tile 读取、packed 专家和共享专家融合，能在保持前段结果一致时加速 RTX 4090 prefill 吗？",
+    "setup": "RTX 4090 SM89；固定 Qwen3.6 35B A3B 8bit 前20层；32-token CUDA 分块、FP32 KV。完整前段使用512个合成token，预热1轮、每模式正式3轮；不含网络、Mac后段和解码。",
+    "change": "BF16 Tensor Core tile读取改为向量化；FP32候选 mode 6 启用 packed dense/路由专家并融合小型共享专家 gate/up，较大的路由专家融合因实测退化已排除。",
+    "result": "BF16 32×8192×2048 单算子0.2134→0.0690ms且与原tile逐位一致，但尚未部署。FP32前20层 mode 1→6 中位0.7679→0.5432秒；针对当前部署 packed mode 5→6 仅0.5493→0.5408秒，约1.6%节时。",
+    "validation": "同DLL比较：131个合成token的20层轨迹、最终hidden、40份KV/Delta状态与增量KV逐位一致；512-token各轮hidden哈希相同。旧agent已恢复，Mac ready、coordinator已连接，真实16-token请求HTTP 200。原始结果仅保留Windows本地，result.json SHA-256 cfe8492ad3a3dced50af4ebaf7bcbca678788dcbcfed3887b55ae611798d2b7e。",
+    "conclusion": "相对现网的额外收益很小，算子提速不能直接外推为双机吞吐。候选保持关闭；正式128K与Q8 KV门槛未验收。",
+    "next": "先测同版真实双机RPC、suffix logits和完整生成，再将重点转向大规模路由专家与分块执行；维持原正确性、内存和128K门槛。",
+    "commands": [
+      "powershell -File scripts/windows/benchmark-fast-prefill.ps1 -OldAgentPid VERIFIED_PID -OldAgentExe EXISTING_EXE -Config PRIVATE_WORKER_JSON -RunDirectory NEW_LOCAL_DIRECTORY -BaselineMode 5"
+    ],
+    "source": "docs/CUDA-GEMM-EXPERT-20261023.md",
+    "evidence": "Windows artifacts/dual-host/gemm-experts-packed-ab-4e00cae（仅本机）"
+  },
+  {
     "id": "cuda-score-reuse",
     "title": "CUDA QK 复用：算子更快，双机 prefill 未提速",
     "kind": "8bit · FP32 KV · 双机 A/B 未采用",
