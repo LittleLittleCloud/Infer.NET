@@ -36,4 +36,16 @@ A separate partitioned attention kernel passed independent double-oracle cases a
 
 Source `55afd1049be9e8d4f55a8a863c9cdd2159139b90`, `scripts/windows/check-prefill-attention.ps1`, one warmup plus five operator trials, hot data. This kernel is **not integrated into the deployed executor**; these numbers are not full-model tokens/s. Public records are in `site/prefix-diagnostics.json`, with raw logs retained locally.
 
-The next measured experiment reuses dequantized dense weights across multiple input tokens while preserving FP32 arithmetic order. Formal BF16/131072-input gates remain open; no threshold has been relaxed. See [Issue3](https://github.com/LittleLittleCloud/Infer.NET/issues/3).
+Dense weight reuse subsequently reduced deployed 32K prefill by 20.9%; see [the exact A/B record](CUDA-DENSE-REUSE.md). Formal BF16/131072-input gates remain open; no threshold has been relaxed. See [Issue3](https://github.com/LittleLittleCloud/Infer.NET/issues/3).
+
+
+## Whole-prefix attention integration: FP32 passes, BF16 still fails
+
+The experimental integration at `092e7ff0bd8b41d71fc40150157b7ff32b6e2469` tested 131 fixed token IDs in irregular 1/7/17/32-token chunks. Partitioned attention was forced on every chunk and compared with the retained attention path, on the same RTX 4090 and the same pinned weights. Both paths use packed FP32 GEMM. All 2,620 per-token/layer hidden checks and 40 final recurrent/KV states were tested against unchanged relativeL2 < 1e-4 and maxAbs < 0.01 limits.
+
+- FP32 KV: **2,660/2,660 pass**, worst relativeL2 5.88494e-7.
+- BF16 KV: **15/2,660 fail**, worst relativeL2 0.0400159 at token45/layer19 (maxAbs 0.00936964). The first failure is token24/layer15.
+
+This isolates a sensitivity to changing attention reduction/normalization order even on one CUDA device. It does not prove a router selection changed: this experiment did not record routes. Passing the standalone operator and matching a few output IDs are insufficient for whole-model numerical acceptance. The BF16 candidate remains rejected; thresholds, reference and weight quantization were not changed. This is FP32 GEMM with BF16 KV, not the formal BF16 GEMM profile. No 128K whole-model throughput claim is made.
+
+The experimental branch is not deployed. The accepted `8b5e3bd` packed FP32 deployment was restored and its real split request matched all eight baseline output IDs. Detailed failed tensors and source/binary identity are retained in `site/prefix-diagnostics.json`; full local results are `artifacts/dual-host/cuda-long-attention-092e7ff/result-kv{4,2}.json`.

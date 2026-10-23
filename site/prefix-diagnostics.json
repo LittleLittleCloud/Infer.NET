@@ -507,5 +507,134 @@
       }
     ]
   },
-  "formal128KGoalsPassed": false
+  "formal128KGoalsPassed": false,
+  "wholePrefixAttentionIntegration": {
+    "acceptedForDeployment": false,
+    "formalBf16Gemm": false,
+    "runs": [
+      {
+        "source": "092e7ff0bd8b41d71fc40150157b7ff32b6e2469",
+        "librarySha256": "7ec8c2e280cd70e79f34ecec4b707968cb92d9121ced53ee0c76fbe1544ce02c",
+        "kvBytes": 4,
+        "tokens": 131,
+        "allPassed": true,
+        "kind": "whole-native-prefix-numerical-test-not-e2e",
+        "checkCount": 2660,
+        "failedChecks": [],
+        "worstRelative": {
+          "tensor": "hidden/p122/l19",
+          "maxAbs": 1.6391277313232422e-07,
+          "relativeL2": 5.884937518843499e-07,
+          "pass": true
+        }
+      },
+      {
+        "source": "092e7ff0bd8b41d71fc40150157b7ff32b6e2469",
+        "librarySha256": "7ec8c2e280cd70e79f34ecec4b707968cb92d9121ced53ee0c76fbe1544ce02c",
+        "kvBytes": 2,
+        "tokens": 131,
+        "allPassed": false,
+        "kind": "whole-native-prefix-numerical-test-not-e2e",
+        "checkCount": 2660,
+        "failedChecks": [
+          {
+            "tensor": "hidden/p24/l15",
+            "maxAbs": 3.458559513092041e-05,
+            "relativeL2": 0.0001269693507378846,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p24/l16",
+            "maxAbs": 3.22684645652771e-05,
+            "relativeL2": 0.0001295564328247095,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p24/l17",
+            "maxAbs": 2.8401613235473633e-05,
+            "relativeL2": 0.00010887025945602331,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p24/l18",
+            "maxAbs": 2.8967857360839844e-05,
+            "relativeL2": 0.00010158657336774623,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p24/l19",
+            "maxAbs": 2.562999725341797e-05,
+            "relativeL2": 0.000104640294556629,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p45/l19",
+            "maxAbs": 0.009369637351483107,
+            "relativeL2": 0.04001585333447031,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p64/l19",
+            "maxAbs": 7.998943328857422e-05,
+            "relativeL2": 0.00012753188173120312,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p82/l19",
+            "maxAbs": 4.839897155761719e-05,
+            "relativeL2": 0.00010174365250897298,
+            "pass": false
+          },
+          {
+            "tensor": "hidden/p107/l19",
+            "maxAbs": 0.0004929304122924805,
+            "relativeL2": 0.00017518355057943773,
+            "pass": false
+          },
+          {
+            "tensor": "state/l11/t0",
+            "maxAbs": 0.03125,
+            "relativeL2": 0.0001162970832712908,
+            "pass": false
+          },
+          {
+            "tensor": "state/l11/t1",
+            "maxAbs": 0.0078125,
+            "relativeL2": 0.00010751658934722135,
+            "pass": false
+          },
+          {
+            "tensor": "state/l15/t0",
+            "maxAbs": 0.03125,
+            "relativeL2": 0.00021777997075876624,
+            "pass": false
+          },
+          {
+            "tensor": "state/l15/t1",
+            "maxAbs": 0.0078125,
+            "relativeL2": 0.000237395730906582,
+            "pass": false
+          },
+          {
+            "tensor": "state/l19/t0",
+            "maxAbs": 0.03125,
+            "relativeL2": 0.000296238013356208,
+            "pass": false
+          },
+          {
+            "tensor": "state/l19/t1",
+            "maxAbs": 0.0078125,
+            "relativeL2": 0.0003684076336654655,
+            "pass": false
+          }
+        ],
+        "worstRelative": {
+          "tensor": "hidden/p45/l19",
+          "maxAbs": 0.009369637351483107,
+          "relativeL2": 0.04001585333447031,
+          "pass": false
+        }
+      }
+    ]
+  }
 }
