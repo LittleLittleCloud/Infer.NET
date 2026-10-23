@@ -444,10 +444,10 @@ static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0
  const char *row=std::getenv("DEEPINFER_METAL_PREFILL_ROWS");p->matrixRows=row&&strcmp(row,"32")==0?32:64;
  const char *tokenTile=std::getenv("DEEPINFER_METAL_PREFILL_TOKEN_TILE");p->matrixTokens=tokenTile&&strcmp(tokenTile,"8")==0?8:tokenTile&&strcmp(tokenTile,"32")==0?32:0;
  NSString *source=[[NSString stringWithFormat:@"#define VECTOR_QUANT\n#define PREFILL_MATRIX_ROWS %u\n#define PREFILL_ROUTE_TILE %u\n",p->matrixRows,p->bf16Gemm?64:16] stringByAppendingString:[quant_source stringByAppendingString:prefill_source]];
- auto qlib=[g->compute.device newLibraryWithSource:[source stringByAppendingString:prefill_moe_source] options:options error:&failure];
+ auto qlib=[g->compute.device newLibraryWithSource:q_math_source([source stringByAppendingString:prefill_moe_source]) options:options error:&failure];
  if(!qlib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
  NSString *attentionSource=[[NSString stringWithFormat:@"#define PREFILL_ATTENTION_FEATURES %u\n",p->attentionFeatures] stringByAppendingString:[g_kv_source(g) stringByAppendingString:prefill_graph_source]];
- auto glib=[g->compute.device newLibraryWithSource:[attentionSource stringByAppendingString:[[NSString stringWithFormat:@"\n#define DELTA_DEVICE %d\n",p->deviceDelta?1:0] stringByAppendingString:prefill_delta_source]] options:options error:&failure];
+ auto glib=[g->compute.device newLibraryWithSource:q_math_source([attentionSource stringByAppendingString:[[NSString stringWithFormat:@"\n#define DELTA_DEVICE %d\n",p->deviceDelta?1:0] stringByAppendingString:prefill_delta_source]]) options:options error:&failure];
  if(!qlib||!glib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
  NSArray<NSString*> *names=@[@"prefill_gemv5",@"prefill_gemv8",@"prefill_shared",@"prefill_experts5",@"prefill_experts8",@"prefill_expert_down",@"prefill_embedding",@"prefill_norm",@"prefill_add_norm",@"prefill_merge",@"prefill_top8",@"prefill_linear",@"prefill_delta",@"prefill_delta_norm",@"prefill_head",@"prefill_scores",@"prefill_attention",@"prefill_matrix5_8",@"prefill_matrix8_8",@"prefill_matrix5_16",@"prefill_matrix8_16",@"prefill_matrix5_24",@"prefill_matrix8_24",@"prefill_matrix5_32",@"prefill_matrix8_32",@"prefill_fused_attention",@"decode_fused_attention",@"prefill_build_groups",@"prefill_group_dispatch",@"prefill_grouped_gate",@"prefill_grouped_down",@"prefill_delta_prepare",@"prefill_delta_apply"];
  for(int i=0;i<PPCount;i++){p->ps[i]=[g->compute.device newComputePipelineStateWithFunction:[(i<6||(i>=PMatrix85&&i<PFusedAttention)||(i>=PBuildGroups&&i<PDeltaPrepare)?qlib:glib) newFunctionWithName:names[i]] error:&failure];
@@ -455,14 +455,14 @@ static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0
  if(p->bf16Gemm){
   if(![g->compute.device supportsFamily:MTLGPUFamilyApple10]){error_text(error,capacity,@"BF16 NAX GEMM requires Apple10 (M5) or later");delete p;return false;}
   if(@available(macOS 26.0,*)){options.languageVersion=MTLLanguageVersion4_0;}else{error_text(error,capacity,@"BF16 NAX requires macOS 26 or later");delete p;return false;}
-  auto lib=[g->compute.device newLibraryWithSource:[source stringByAppendingString:prefill_bf16_source] options:options error:&failure];
+  auto lib=[g->compute.device newLibraryWithSource:q_math_source([source stringByAppendingString:prefill_bf16_source]) options:options error:&failure];
   if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   NSArray<NSString*> *bfNames=@[@"prefill_bf16_matrix5",@"prefill_bf16_matrix8",@"prefill_bf16_gate",@"prefill_bf16_down"];
   for(int i=0;i<4;i++){p->bf16ps[i]=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:bfNames[i]] error:&failure];
    if(!p->bf16ps[i]||p->bf16ps[i].maxTotalThreadsPerThreadgroup<128){error_text(error,capacity,failure.localizedDescription ?: @"Unsupported BF16 GEMM pipeline");delete p;return false;}}
  }
  if(p->bf16Gemm&&p->expandedGemm){
-  auto lib=[g->compute.device newLibraryWithSource:[source stringByAppendingString:prefill_expanded_source] options:options error:&failure];
+  auto lib=[g->compute.device newLibraryWithSource:q_math_source([source stringByAppendingString:prefill_expanded_source]) options:options error:&failure];
   if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   p->expandedWeight=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(8192)*2048/2);p->expandedUp=g_buffer(g,p->expandedExperts?NSUInteger(256)*512*2048/2:NSUInteger(512)*2048/2);
   p->expandedInput=g_buffer(g,(p->expandedExperts||p->packedExperts)?NSUInteger((p->maxTokens*8+63)/64+256)*64*2048/2:NSUInteger(std::max(64u,p->maxTokens))*4096/2);
@@ -472,7 +472,7 @@ static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0
  }
  if(p->bf16Gemm&&p->packedExperts){
   auto packedSource=[[NSString stringWithFormat:@"#define PACKED_EXPERT_PIPELINE %d\n#define PACKED_EXPERT_ADAPTIVE %d\n",p->pipelineExperts?1:0,p->adaptiveExperts?1:0] stringByAppendingString:[source stringByAppendingString:prefill_expert_packed_source]];
-  auto lib=[g->compute.device newLibraryWithSource:packedSource options:options error:&failure];if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
+  auto lib=[g->compute.device newLibraryWithSource:q_math_source(packedSource) options:options error:&failure];if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   p->packedGatePs=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:p->fusedExpertGate?@"packed_expert_gate_fused":@"packed_expert_gate"] error:&failure];p->packedDownPs=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:@"packed_expert_down"] error:&failure];
   p->packedGateDirectPs=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:p->fusedExpertGate?@"packed_expert_gate_fused_direct":@"packed_expert_gate_direct"] error:&failure];
   if(!p->packedGateDirectPs){error_text(error,capacity,failure.localizedDescription ?: @"Unsupported direct expert pipeline");delete p;return false;}
@@ -495,7 +495,7 @@ static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0
   if(p->attentionQueryTokens==8&&p->attentionKeyTokens==128){error_text(error,capacity,@"Query tile 8 requires key tile <=64");delete p;return false;}
   if(p->attentionPartitionTokens!=1024&&(p->attentionQueryTokens!=4||p->attentionKeyTokens!=128)){error_text(error,capacity,@"Custom attention partitions require query tile 4 and key tile 128");delete p;return false;}
   auto attentionSource=[[NSString stringWithFormat:@"#define BF16_QUERY_TOKENS %u\n#define BF16_KEY_TOKENS %u\n",p->attentionQueryTokens,p->attentionKeyTokens] stringByAppendingString:[g_kv_source(g) stringByAppendingString:prefill_attention_bf16_source]];
-  auto lib=[g->compute.device newLibraryWithSource:attentionSource options:options error:&failure];
+  auto lib=[g->compute.device newLibraryWithSource:q_math_source(attentionSource) options:options error:&failure];
   if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
   p->packedQueries=g_buffer(g,NSUInteger(p->attentionBatchTokens)*4096/2);p->queryPackPs=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:@"prefill_pack_queries"] error:&failure];
   p->attentionBf16Ps=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:@"prefill_attention_bf16"] error:&failure];
@@ -503,7 +503,7 @@ static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0
   // prefill tiles. Decode/tiny inputs retain the smaller original pipeline.
   if(p->attentionQueryTokens==4&&p->attentionKeyTokens==128){
    auto wideSource=[[NSString stringWithFormat:@"#define BF16_ATTENTION_SG 16\n#define BF16_ATTENTION_PARTITION %u\n",p->attentionPartitionTokens] stringByAppendingString:attentionSource];
-   auto wideLib=[g->compute.device newLibraryWithSource:wideSource options:options error:&failure];
+   auto wideLib=[g->compute.device newLibraryWithSource:q_math_source(wideSource) options:options error:&failure];
    if(wideLib)p->attentionWidePs=[g->compute.device newComputePipelineStateWithFunction:[wideLib newFunctionWithName:@"prefill_attention_bf16"] error:&failure];
    if(!p->attentionWidePs||p->attentionWidePs.maxTotalThreadsPerThreadgroup<512){error_text(error,capacity,failure.localizedDescription ?: @"Unsupported wide BF16 attention pipeline");delete p;return false;}
   }
