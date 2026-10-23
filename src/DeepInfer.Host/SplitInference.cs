@@ -12,7 +12,7 @@ namespace DeepInfer.Host;
 public static class SplitInference
 {
     // Deterministic export of the pinned checkpoint; recompute on both hosts.
-    private const string PrefixHash="ff5ba3ac11d26d77ea930709ff2a0489df3a00bbdaa2b5e8978a16845a50fe77";
+    internal const string PrefixHash="ff5ba3ac11d26d77ea930709ff2a0489df3a00bbdaa2b5e8978a16845a50fe77";
     public static async Task Worker(Options options,CancellationToken ct)
     {
         var token=RequireToken(options);var kvBytes=KvBytes(options);var endpoint=new Uri(options.Get("endpoint","tcp://127.0.0.1:5210"));
@@ -24,7 +24,11 @@ public static class SplitInference
         using var gpu=new CudaPrefixSession(bundle,2048,kvBytes);
         using var client=new TcpClient{NoDelay=true};await client.ConnectAsync(endpoint.Host,endpoint.Port,ct);
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
-        var start=await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
+        await ServePrefix(gpu, wire, ct);
+    }
+    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null)
+    {
+        var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
         for(var offset=0;offset<tokens.Length;offset+=32)
         {

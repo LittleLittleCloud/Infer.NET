@@ -12,6 +12,8 @@ public static class Commands
         var options = new Options(args);
         switch (options.Command)
         {
+            case "split-serve": await SplitService.RunMac(options, ct); break;
+            case "split-agent": await SplitService.RunAgent(options, ct); break;
             case "split-worker": await SplitInference.Worker(options, ct); break;
             case "split-infer": await SplitInference.Coordinator(options, ct); break;
             case "coordinator": await Server.RunAsync(options, false, ct); break;
@@ -32,6 +34,7 @@ public static class Commands
                 using (var client = Client(options)) Console.WriteLine(JsonSerializer.Serialize(await client.StatusAsync(ct), RpcJson.Default.ClusterSnapshot));
                 break;
             case "infer":
+                if (options.Flag("stream")) { await ServiceStreaming.Client(options, ct); break; }
                 using (var client = Client(options))
                 {
                     var result = await client.InferAsync(new(options.Get("prompt", "用一句话介绍你自己。"),

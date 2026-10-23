@@ -423,6 +423,29 @@ API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, cha
     }
 }
 API void di_cuda_prefix_destroy(void *ptr) { delete static_cast<Model *>(ptr); }
+API int di_cuda_prefix_reset(void *ptr, char *error, int cap) {
+    try {
+        auto *g = static_cast<Model *>(ptr);
+        if (!g) throw std::runtime_error("Invalid prefix session");
+        ck(cudaDeviceSynchronize());
+        for (int i = 0; i < 20; ++i) {
+            auto &l = g->layers[i];
+            if ((i + 1) % 4) {
+                ck(cudaMemset(l.state, 0, 32 * 128 * 128 * sizeof(float)));
+                ck(cudaMemset(l.history, 0, 3 * 8192 * sizeof(float)));
+            } else {
+                ck(cudaMemset(l.keys, 0, size_t(g->capacity) * 512 * (g->kvBf16 ? 2 : 4)));
+                ck(cudaMemset(l.values, 0, size_t(g->capacity) * 512 * (g->kvBf16 ? 2 : 4)));
+            }
+        }
+        ck(cudaDeviceSynchronize());
+        g->position = 0;
+        return 0;
+    } catch (const std::exception &e) {
+        if (error && cap > 0) snprintf(error, cap, "%s", e.what());
+        return -1;
+    }
+}
 API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position, float *hidden,
                            float *trace, char *error, int cap) {
     try {

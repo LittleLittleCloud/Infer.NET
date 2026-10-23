@@ -25,6 +25,10 @@ public sealed class MetalSplitSession : IDisposable
     }
     public int[] Tokenize(string prompt, CancellationToken ct) => tokenizer.EncodePrompt(prompt, ct);
     public string Decode(int[] tokens) => tokenizer.Decode(tokens);
+    public bool IsEnd(int token) => tokenizer.IsEnd(token);
+    public byte[] Piece(int token) => tokenizer.DecodePiece(0, token);
+    public double GpuMilliseconds => device.GpuMilliseconds;
+    public (int Capacity, long KvBytes, long AllocatedBytes) Stats() => graph.Stats();
     public void Reset(int capacity) { graph.Reset(); graph.Reserve(capacity); }
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null) => graph.Suffix(tokens, hidden, final, logits);
     public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
@@ -66,6 +70,13 @@ public sealed unsafe class CudaPrefixSession : IDisposable
             if (CudaPrefixNative.Run(handle, t, tokens.Length, position, y, r, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
         return output;
     }
+    public void Reset()
+    {
+        ObjectDisposedException.ThrowIf(handle == 0, this);
+        var error = new byte[2048];
+        fixed (byte* e = error)
+            if (CudaPrefixNative.Reset(handle, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+    }
     public byte[] State(int layer, int tensor, int position)
     {
         ObjectDisposedException.ThrowIf(handle == 0, this);
@@ -90,6 +101,8 @@ internal static unsafe partial class CudaPrefixNative
     internal static partial nint Create(string path,int capacity,int kvBytes,byte* error,int errorCapacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_destroy")]
     internal static partial void Destroy(nint graph);
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_reset")]
+    internal static partial int Reset(nint graph, byte* error, int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_run")]
     internal static partial int Run(nint graph,int* tokens,int count,int position,float* hidden,float* trace,byte* error,int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_state")]

@@ -112,6 +112,7 @@ public static class Server
         {
             var registry = new WorkerRegistry();
             app.MapGet("/v1/workers", () => registry.Snapshot());
+            app.MapPost("/v1/infer/stream", (InferenceRequest request, HttpContext context) => ServiceStreaming.Proxy(request, context, registry, token));
             app.MapPost("/v1/workers/register", (WorkerRegistration registration) =>
             {
                 try { registry.Register(registration, allowRemote); return Results.NoContent(); }
