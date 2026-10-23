@@ -179,6 +179,37 @@ __global__ void chunk_gemv_packed(Matrix m,const float *x,float *y,const int *id
     }
     val=sum32(val);if(lane==0)y[(size_t(t)*n+e)*m.rows+row]=val;
 }
+// Gate and up projections use the same routed input. One launch and one input
+// load stream serve both matrices while retaining their separate FP32 sums.
+__global__ void chunk_expert_gate_up_packed(Matrix gate,Matrix up,const float *x,
+                                            float *gateOut,float *upOut,const int *ids) {
+    int lane=threadIdx.x&31,row=blockIdx.x*4+threadIdx.x/32,e=blockIdx.y,t=blockIdx.z,n=gridDim.y;
+    if(row>=gate.rows)return;
+    int expert=ids[t*n+e];
+    size_t gateRow=size_t(expert)*gate.rows+row,upRow=size_t(expert)*up.rows+row;
+    const float *input=x+size_t(t)*gate.cols;
+    float gateSum=0,upSum=0;
+    for(int base=lane*8;base<gate.cols;base+=256) {
+        size_t gi=gateRow*gate.cols+base,ui=upRow*up.cols+base;
+        uint2 gw=*reinterpret_cast<const uint2*>(gate.w+gi);
+        uint2 uw=*reinterpret_cast<const uint2*>(up.w+ui);
+        float gs=bf(gate.s[gi/64]),gb=bf(gate.b[gi/64]);
+        float us=bf(up.s[ui/64]),ub=bf(up.b[ui/64]);
+        #pragma unroll
+        for(int j=0;j<8;j++) {
+            float activation=input[base+j];
+            float g=float(((j<4?gw.x:gw.y)>>(8*(j&3)))&255)*gs+gb;
+            float u=float(((j<4?uw.x:uw.y)>>(8*(j&3)))&255)*us+ub;
+            gateSum+=g*activation;
+            upSum+=u*activation;
+        }
+    }
+    gateSum=sum32(gateSum);upSum=sum32(upSum);
+    if(lane==0) {
+        size_t out=(size_t(t)*n+e)*gate.rows+row;
+        gateOut[out]=gateSum;upOut[out]=upSum;
+    }
+}
 // Reuse each dequantized dense weight across independent token accumulators.
 // Preserve the original per-lane accumulation and warp reduction order.
 template<int Tile,bool Packed=false> __global__ void chunk_dense_reuse(Matrix m,const float *x,float *y,int count) {
