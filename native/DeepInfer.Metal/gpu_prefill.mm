@@ -653,10 +653,18 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  bool profiling=std::getenv("DEEPINFER_METAL_PREFILL_PROFILE")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_PROFILE"),"1")==0&&g->position==4096;
  double profileMs=0;int profileDispatches=0;
  auto checkpoint=[&](const char *stage)->bool {
-  if(!profiling)return true;
+  bool routeProbe=trace&&shape.layer==0&&strcmp(stage,"routing")==0&&
+      std::getenv("DEEPINFER_METAL_ROUTE_PROBE");
+  if(!profiling&&!routeProbe)return true;
   [e endEncoding];double interval=0;if(!q_complete(command,&interval,error,capacity))return false;
   p->submissions++;profileMs+=interval;
-  fprintf(stderr,"PREFILL_STAGE {\"position\":%u,\"tokens\":%d,\"layer\":%u,\"stage\":\"%s\",\"gpuMs\":%.6f,\"kernels\":%d}\n",g->position,count,shape.layer,stage,interval,g->dispatches-profileDispatches);
+  if(profiling)fprintf(stderr,"PREFILL_STAGE {\"position\":%u,\"tokens\":%d,\"layer\":%u,\"stage\":\"%s\",\"gpuMs\":%.6f,\"kernels\":%d}\n",g->position,count,shape.layer,stage,interval,g->dispatches-profileDispatches);
+  if(routeProbe)for(int token:{49,91})if(g->position<=uint32_t(token)&&uint32_t(token)<g->position+count){
+   auto *ids=(uint32_t*)p->ids.contents;auto *prob=(float*)p->prob.contents;
+   int local=token-int(g->position);fprintf(stderr,"METAL_ROUTE token=%d layer=0",token);
+   for(int i=0;i<8;i++)fprintf(stderr," %u:%.9g",ids[local*8+i],prob[local*8+i]);
+   fputc('\n',stderr);
+  }
   profileDispatches=g->dispatches;
   command=[g->compute.queue commandBuffer];e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
   if(!command||!e){error_text(error,capacity,@"Cannot create profile command");return false;}return true;
