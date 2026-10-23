@@ -65,6 +65,8 @@ def execute(handle,mode_id):
                 if not path.exists():path.write_bytes(data.raw)
     values=array.array('f');values.frombytes(trace)
     if not all(math.isfinite(v) for v in values):raise RuntimeError('Nonfinite layer trace')
+    if a.save_trace and mode_id==5:
+        (a.output/'baseline-trace.f32').write_bytes(trace)
     return {'mode':mode_id,'seconds':seconds,'hiddenSha256':hashlib.sha256(hidden).hexdigest(),
             'traceSha256':hashlib.sha256(trace).hexdigest(),'stateSha256':states},values
 
