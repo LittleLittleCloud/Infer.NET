@@ -80,7 +80,15 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
            std::strcmp(std::getenv("DEEPINFER_CUDA_ROUTER_FP32"),"1")==0)
             chunk_gemv<<<dim3((m[7].rows+3)/4,1,count),128>>>(m[7],p.norm,p.router,nullptr,false);
         else chunk_mv(g,m[7],p.norm,p.router,count);
-        chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
+        const bool sharedFp32=g->bf16AllProjections&&std::getenv("DEEPINFER_CUDA_SHARED_FP32")&&
+            std::strcmp(std::getenv("DEEPINFER_CUDA_SHARED_FP32"),"1")==0;
+        if(sharedFp32){
+            chunk_gemv<<<dim3((m[11].rows+3)/4,1,count),128>>>(m[11],p.norm,p.sg,nullptr,false);
+            chunk_gemv<<<dim3((m[12].rows+3)/4,1,count),128>>>(m[12],p.norm,p.su,nullptr,false);
+            chunk_gemv<<<dim3((m[14].rows+3)/4,1,count),128>>>(m[14],p.norm,p.sr,nullptr,false);
+        }else{
+            chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
+        }
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);
         if(trace && l==0 && std::getenv("DEEPINFER_CUDA_ROUTE_PROBE"))for(int token:{49,91})if(pos<=token&&token<pos+count){
             int ids[8];float probabilities[8];int local=token-pos;
