@@ -338,7 +338,7 @@ struct GPrefill {
  bool matrix=true,fusedAttention=true,fusedAll=false;uint32_t matrixRows=64,matrixTokens=0,scoreCapacity=2048,attentionFeatures=256,maxTokens=2048;
 };
 static void g_prefill_destroy(GPrefill *p){delete p;}
-static bool p_create(GModel *g,char *error,int capacity) {
+static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0) {
  auto *p=new GPrefill{};
  p->groupedExperts=!std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS"),"grouped")==0;
  p->chunkedDelta=!std::getenv("DEEPINFER_METAL_PREFILL_DELTA")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_DELTA"),"chunked")==0;
@@ -349,6 +349,7 @@ static bool p_create(GModel *g,char *error,int capacity) {
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_ATTENTION")){p->fusedAttention=strcmp(v,"legacy")!=0;p->fusedAll=strcmp(v,"fused-all")==0;}
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_ATTENTION_FEATURES")){if(strcmp(v,"64")==0)p->attentionFeatures=64;else if(strcmp(v,"128")==0)p->attentionFeatures=128;}
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_CHUNK"))for(uint32_t n:{32u,64u,128u,256u,512u,1024u,2048u})if(std::string(v)==std::to_string(n))p->maxTokens=n;
+ if(scratchTokens)p->maxTokens=scratchTokens;
  if(const char *gemm=std::getenv("DEEPINFER_METAL_PREFILL_GEMM"))if(strcmp(gemm,"fp32")&&strcmp(gemm,"bf16-nax")){error_text(error,capacity,@"DEEPINFER_METAL_PREFILL_GEMM must be fp32 or bf16-nax");delete p;return false;}
  p->bf16Gemm=std::getenv("DEEPINFER_METAL_PREFILL_GEMM")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_GEMM"),"bf16-nax")==0;
  if(const char *impl=std::getenv("DEEPINFER_METAL_PREFILL_GEMM_IMPL")){
@@ -659,6 +660,16 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
 
 extern "C" int di_graph_prepare_prefill(void *graph,char *error,int capacity){
  @autoreleasepool {if(!graph){error_text(error,capacity,@"Invalid graph");return -1;}auto *g=static_cast<GModel*>(graph);return g->prefill||p_create(g,error,capacity)?0:-1;}
+}
+extern "C" int di_graph_prepare_prefill_scratch(void *graph,int tokens,char *error,int capacity){
+ @autoreleasepool {
+  if(!graph||(tokens!=32&&tokens!=64&&tokens!=128&&tokens!=256&&tokens!=512&&tokens!=1024&&tokens!=2048)){
+   error_text(error,capacity,@"Invalid prefill scratch capacity");return -1;
+  }
+  auto *g=static_cast<GModel*>(graph);
+  if(g->prefill){error_text(error,capacity,@"Prefill scratch already configured");return -1;}
+  return p_create(g,error,capacity,uint32_t(tokens))?0:-1;
+ }
 }
 
 // Only called between requests, after reset. Grow per layer so the previous

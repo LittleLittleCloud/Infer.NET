@@ -10,7 +10,7 @@ public sealed class MetalSplitSession : IDisposable
     private readonly Qwen36Weights weights;
     private readonly Qwen36Gpu graph;
     private readonly QwenTokenizer tokenizer;
-    public MetalSplitSession(string directory, int kvBytes = 2, bool? residency = null, int residencyRefreshMilliseconds = 1000)
+    public MetalSplitSession(string directory, int kvBytes = 2, bool? residency = null, int residencyRefreshMilliseconds = 1000, int prefillScratchTokens = 0)
     {
         if (kvBytes is not (2 or 4) || Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != (kvBytes == 2 ? "bf16" : "fp32"))
             throw new InvalidOperationException("Split session KV precision must match the selected protocol profile.");
@@ -18,7 +18,7 @@ public sealed class MetalSplitSession : IDisposable
         try
         {
             weights = new(directory, device);
-            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights); tokenizer = new(Path.Combine(directory, "tokenizer.json"), true); device.PrepareResidency(); }
+            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights, prefillScratchTokens); tokenizer = new(Path.Combine(directory, "tokenizer.json"), true); device.PrepareResidency(); }
             catch { graph?.Dispose(); weights.Dispose(); throw; }
         }
         catch { device.Dispose(); throw; }
@@ -34,7 +34,7 @@ public sealed class MetalSplitSession : IDisposable
     public (int Capacity, long KvBytes, long AllocatedBytes) Stats() => graph.Stats();
     public void Reset(int capacity) { graph.Reset(); graph.Reserve(capacity); }
     public void EnsureCapacity(int tokens) { if (tokens > graph.Stats().Capacity) graph.Grow(tokens); }
-    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null) => graph.Suffix(tokens, hidden, final, logits);
+    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null, float[]? trace = null) => graph.Suffix(tokens, hidden, final, logits, trace);
     public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
     public int Prefill(int[] tokens, CancellationToken ct) => graph.Prefill(tokens, ct);

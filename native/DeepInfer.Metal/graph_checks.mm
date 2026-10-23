@@ -6,6 +6,15 @@ int main(){@autoreleasepool {
     setenv("DEEPINFER_METAL_PREFILL_CHUNK","128",1);
     char error[2048]{};auto *c=static_cast<QContext*>(di_quant_create(error,sizeof(error)));
     if(!c){fprintf(stderr,"%s\n",error);return 1;}
+    for(int scratch:{32,512}) {
+        GModel configured{};configured.compute=*c;
+        if(di_graph_prepare_prefill_scratch(&configured,33,error,sizeof(error))==0 || configured.prefill ||
+           di_graph_prepare_prefill_scratch(&configured,scratch,error,sizeof(error))!=0 ||
+           configured.prefill->maxTokens!=scratch ||
+           di_graph_prepare_prefill_scratch(&configured,scratch,error,sizeof(error))==0){
+            fprintf(stderr,"Explicit prefill scratch configuration failed\n");delete c;return 1;
+        }
+    }
     NSError *failure=nil;MTLCompileOptions *options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
     auto library=[c->device newLibraryWithSource:graph_source options:options error:&failure];
     if(!library){fprintf(stderr,"%s\n",failure.localizedDescription.UTF8String);delete c;return 1;}
@@ -119,5 +128,5 @@ int main(){@autoreleasepool {
                 if(h[j*8192+d]!=expected){fprintf(stderr,"Convolution history tail oracle failed\n");delete c;return 1;}}
         }
     }
-    delete c;printf("PASS: 60 hardware checks (10 graph primitives, 44 batched projections including 65/128-token tiles, 6 recurrence/state/history cases)\n");return 0;
+    delete c;printf("PASS: 2 explicit scratch configuration cases and 60 hardware checks (10 graph primitives, 44 batched projections including 65/128-token tiles, 6 recurrence/state/history cases)\n");return 0;
 }}

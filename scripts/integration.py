@@ -66,7 +66,7 @@ def registration(id, endpoint, version=1):
 try:
     option = subprocess.run([exe, 'version', '--metal-residency', 'off', '--residency-refresh-ms', '0', '--short-prefill-tokens', '128', '--cuda-readback', 'batch', '--cuda-prefill', 'batch-fp32'], capture_output=True, text=True, timeout=10)
     check(option.returncode == 0, 'residency A/B CLI options are accepted')
-    for arguments, expected in [(['--metal-residency', 'invalid'], 'metal-residency must be on or off'), (['--residency-refresh-ms', '-1'], 'residency-refresh-ms must be 0..60000'), (['--short-prefill-tokens', '129'], 'short-prefill-tokens must be 0..128'), (['--cuda-readback', 'invalid'], 'cuda-readback must be batch or token'), (['--cuda-prefill', 'invalid'], 'cuda-prefill must be serial or batch-fp32')]:
+    for arguments, expected in [(['--metal-residency', 'invalid'], 'metal-residency must be on or off'), (['--residency-refresh-ms', '-1'], 'residency-refresh-ms must be 0..60000'), (['--short-prefill-tokens', '129'], 'short-prefill-tokens must be 0..128'), (['--cuda-readback', 'invalid'], 'cuda-readback must be batch or token'), (['--cuda-prefill', 'invalid'], 'cuda-prefill must be serial or batch-fp32'), (['--suffix-chunk-tokens', '64'], 'suffix-chunk-tokens must be 32, 128 or 512')]:
         option = subprocess.run([exe, 'split-serve', *arguments], capture_output=True, text=True, timeout=10)
         check(option.returncode != 0 and expected in option.stdout + option.stderr, 'residency invalid policy rejected before model load: ' + arguments[0])
     origin = f'http://127.0.0.1:{port()}'

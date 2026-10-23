@@ -38,6 +38,7 @@ public static class SplitService
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
         _ = o.Number("short-prefill-tokens", 128, 0, 128);
+        if (o.Get("suffix-chunk-tokens", "32") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32")) throw new ArgumentException("cuda-prefill must be serial or batch-fp32.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
@@ -95,6 +96,7 @@ public static class SplitService
     {
         Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, 128);
+        var suffixChunk = o.Number("suffix-chunk-tokens", 32, 32, 512);
         var endpoint = o.Get("listen", "http://127.0.0.1:5201");
         if (!EndpointRules.IsLoopback(EndpointRules.Validate(endpoint, false))) throw new ArgumentException("Worker HTTP API must be loopback; use the local coordinator.");
         var dataUri = new Uri(o.Get("data-listen", "tcp://127.0.0.1:5210"));
@@ -184,15 +186,20 @@ public static class SplitService
                     {
                         requestId = peer!.Wire.Request;
                         await peer.Wire.SendAsync(new(SplitWire.Start, 20, 0, 0, ids.Length, MemoryMarshal.AsBytes(ids.AsSpan()).ToArray()), timeout.Token);
-                        for (var offset = 0; offset < ids.Length; offset += 32)
+                        for (var offset = 0; offset < ids.Length; offset += suffixChunk)
                         {
-                            var count = Math.Min(32, ids.Length - offset); var phase = Stopwatch.GetTimestamp();
-                            var frame = await peer.Wire.ReceiveAsync(timeout.Token);
-                            hiddenWaitMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
-                            if (frame.Kind != SplitWire.Hidden || frame.Position != offset || frame.Count != count) throw new InvalidDataException("Noncontiguous hidden stream.");
-                            var hidden = MemoryMarshal.Cast<byte, float>(frame.Data).ToArray();
+                            var count = Math.Min(suffixChunk, ids.Length - offset);
+                            var hidden = new float[count * 2048];
+                            for (var at = 0; at < count; at += 32)
+                            {
+                                var receiving = Stopwatch.GetTimestamp();
+                                var frame = await peer.Wire.ReceiveAsync(timeout.Token);
+                                hiddenWaitMs += Stopwatch.GetElapsedTime(receiving).TotalMilliseconds;
+                                if (frame.Kind != SplitWire.Hidden || frame.Position != offset + at || frame.Count != Math.Min(32, count - at)) throw new InvalidDataException("Noncontiguous hidden stream.");
+                                MemoryMarshal.Cast<byte, float>(frame.Data).CopyTo(hidden.AsSpan(at * 2048));
+                            }
                             if (hidden.Any(x => !float.IsFinite(x))) throw new InvalidDataException("Nonfinite hidden.");
-                            phase = Stopwatch.GetTimestamp();
+                            var phase = Stopwatch.GetTimestamp();
                             next = gpu.Suffix(ids.AsSpan(offset, count).ToArray(), hidden, offset + count == ids.Length);
                             suffixMs += Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                         }
@@ -211,7 +218,7 @@ public static class SplitService
                         await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     }
                     var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
-                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
+                    Console.Error.WriteLine($"PREFILL request={requestId} path={executionPath} tokens={ids.Length} suffixChunk={suffixChunk} resetMs={resetMs:F3} hiddenWaitMs={hiddenWaitMs:F3} suffixMs={suffixMs:F3} stateWaitMs={stateWaitMs:F3} importMs={importMs:F3} stateBytes={stateBytes} totalMs={prefillMs:F3}");
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
                     for (var i = 0; i < maxTokens; i++)
@@ -268,7 +275,7 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
-                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000));
+                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: 512);
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

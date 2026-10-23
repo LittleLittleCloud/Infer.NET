@@ -10,7 +10,7 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
     private readonly QuantizedMetal device;
     private readonly int prefillChunk = Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK") switch
     { "32" => 32, "64" => 64, "128" => 128, "256" => 256, "512" => 512, "1024" => 1024, _ => 2048 };
-    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights)
+    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights, int prefillScratchTokens = 0)
     {
         this.device = device;
         Span<byte> error = stackalloc byte[2048]; error.Clear();
@@ -46,7 +46,8 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             }
             if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL") != "0")
                 fixed (byte* e = error)
-                    if (GraphNative.PreparePrefill(handle, e, error.Length) != 0)
+                    if ((prefillScratchTokens == 0 ? GraphNative.PreparePrefill(handle, e, error.Length)
+                        : GraphNative.PreparePrefillScratch(handle, prefillScratchTokens, e, error.Length)) != 0)
                         throw new InvalidOperationException(Message(error));
             Reset();
         }
@@ -120,13 +121,14 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         }
         return next;
     }
-    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits)
+    public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits, float[]? trace = null)
     {
-        if (tokens.Length is < 1 or > 32 || hidden.Length != tokens.Length * 2048) throw new ArgumentException("Invalid split hidden geometry.");
+        if (tokens.Length is < 1 or > 512 || hidden.Length != tokens.Length * 2048 ||
+            trace is not null && trace.Length != tokens.Length * 40 * 2048) throw new ArgumentException("Invalid split hidden geometry.");
         Span<byte> error = stackalloc byte[2048]; error.Clear();
-        fixed (int* ids = tokens) fixed (float* h = hidden) fixed (float* y = logits) fixed (byte* e = error)
+        fixed (int* ids = tokens) fixed (float* h = hidden) fixed (float* y = logits) fixed (float* t = trace) fixed (byte* e = error)
         {
-            if (GraphNative.Range(handle, ids, tokens.Length, final ? 1 : 0, 20, 40, h, null, y, null,
+            if (GraphNative.Range(handle, ids, tokens.Length, final ? 1 : 0, 20, 40, h, null, y, t,
                 out var next, out var dispatches, out var ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
             device.Count(ms, dispatches, GraphNative.PrefillSubmissions(handle));
             return next;
@@ -176,6 +178,8 @@ internal static unsafe partial class GraphNative
     internal static partial int PrefillSubmissions(GraphHandle graph);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill")]
     internal static partial int PreparePrefill(GraphHandle graph, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill_scratch")]
+    internal static partial int PreparePrefillScratch(GraphHandle graph, int tokens, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_destroy")]
     internal static partial void Destroy(nint graph);
 }
