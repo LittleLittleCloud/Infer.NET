@@ -46,9 +46,11 @@ dotnet run --project src/DeepInfer.Tui -c Release -- http://127.0.0.1:5200
 
 TUI 通过 Runtime 中的 `InferChatClient : Microsoft.Extensions.AI.IChatClient` 调用公共 Chat Completions 接口，提供 GetResponseAsync 与 GetStreamingResponseAsync。UI 每轮使用 streaming；system prompt、历史、模型与输出上限从统一适配器传入，不绕过 coordinator。
 
-紧凑界面不使用边框，默认 Dashboard，另一个 Tab 为 Playground。支持鼠标点击 Tab、worker、按钮及输入框，滚轮翻看 worker 或对话。Dashboard 显示心跳、在线/离线、serve 状态、附属 agent 连接、排队数、完成数、量化与窗口、最近完成请求的 prefill/decode 和 Metal/KV 分配；没有上报的数据明确显示未知，不编造 GPU 利用率。Windows agent 是 serve 的附属设备，不冒充独立注册 worker。切换 Tab 保留对话、草稿和正在进行的生成。Playground 包含对话区、输入框、操作行与统计。Enter 发送，Tab 移动焦点，Send/Stop/New chat/Settings/Older/Latest 可用；Settings 调整系统提示词和输出上限；默认 `auto`，也可输入正整数。鼠标依赖终端支持 SGR 事件，Tab/Enter 可继续使用。生成时可输入下一轮草稿，但不会同时提交第二个请求。Stop 保留部分输出供查看，取消或失败的轮次不加入下一轮模型历史；New chat 清空会话。历史超过容量会明确报错，可主动开启新会话。
+界面使用 header / body / footer 三段式布局，无边框。Header 固定标题、Tab 和连接状态；body 占满剩余高度；footer 固定输入区、操作、请求统计和连接地址。默认 Dashboard，另一个 Tab 为 Playground。宽度至少 100 列时 Dashboard 左侧为 worker 列表、右侧为状态详情；窄窗口上下排列。终端缩放不会丢失草稿或对话。支持鼠标点击 Tab、worker、按钮及输入框，滚轮翻看 worker 或对话。Dashboard 显示心跳、在线/离线、serve 状态、附属 agent 连接、排队数、完成数、量化与窗口、最近完成请求的 prefill/decode 和 Metal/KV 分配；没有上报的数据明确显示未知，不编造 GPU 利用率。Windows agent 是 serve 的附属设备，不冒充独立注册 worker。切换 Tab 保留对话、草稿和正在进行的生成。Playground 包含对话区、输入框、操作行与统计。Enter 发送，Tab 移动焦点，Send/Stop/New chat/Settings/Older/Latest 可用；Settings 调整系统提示词和输出上限；默认 `auto`，也可输入正整数。鼠标依赖终端支持 SGR 事件，Tab/Enter 可继续使用。生成时可输入下一轮草稿，但不会同时提交第二个请求。Stop 保留部分输出供查看，取消或失败的轮次不加入下一轮模型历史；New chat 清空会话。历史超过容量会明确报错，可主动开启新会话。
 
-显示 first text 时间、输出 token 数和请求总耗时，不把包含网络/prefill 的平均速度冒充模型 decode 吞吐。TUI 不加载模型，不启动后台 worker，不内置工具执行权限。
+底部信息栏显示当前 coordinator 的完整 Chat Completions、Responses URL 和 Claude Code base URL，并标明 `/v1/messages` 路径。Claude Code base 对应 `ANTHROPIC_BASE_URL`，不要把 `/v1/messages` 填成 base；使用原集群 token 鉴权，界面不显示凭据。这些地址仅表明文本 API 入口；工具调用和 token-count API 尚未实现，尚不能宣称完整 Claude Code / 第三方编码 agent 工作流兼容。地址由实际连接配置生成，默认 loopback 地址只适用于本机客户端。
+
+Dashboard 的 prefill 用秒显示，明确包含流水线状态交接；它不是纯 GPU prefill kernel 时间。统计是最近**已完成**请求，当前请求执行时不会冒用旧值作为当前耗时。Playground 显示 first text 时间、输出 token 数和请求总耗时，不把包含网络/prefill 的平均速度冒充模型 decode 吞吐。TUI 不加载模型，不启动后台 worker，不内置工具执行权限。
 
 ## 复现测试
 

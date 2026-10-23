@@ -6,44 +6,60 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.AI
 @using RazorConsole.Components
+@using RazorConsole.Core.Renderables
+@using RazorConsole.Core.Rendering
+@using RazorConsole.Core.Input
 @using Spectre.Console
 @implements IAsyncDisposable
 @inject ClusterClient Client
 @inject IChatClient Chat
+@inject ITerminalViewport Viewport
 
-<Rows>
-    <PlainText Content="@DisplayText($"Infer.NET  ·  {(playground ? "Chat playground" : "Worker dashboard")}  ·  {endpoint}")" Foreground="Color.Cyan1" />
-    <Columns>
-        <TextButton Content="Dashboard" FocusOrder="0" BackgroundColor="@(!playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = false" />
-        <TextButton Content="Playground" FocusOrder="1" BackgroundColor="@(playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = true" />
-    </Columns>
-    <PlainText Content="@DisplayText(status + (busy ? " · generating" : ""))" Foreground="@(ready ? Color.Green : Color.Yellow)" />
-    @if (!playground)
-    {
-        <WorkerDashboard Workers="@workers" Stale="@stale" />
-        <PlainText Content="Click a worker for details · wheel pages workers · Tab / Enter also work" Foreground="Color.Grey" />
-    }
-    else
-    {
-    <div @onwheel="ScrollHistory"><PlainText Content="@DisplayText(Transcript())" /></div>
-    @if (settings)
-    {
-        <TextInput Label="System" @bind-Value="system" BorderStyle="BoxBorder.None" Disabled="@busy" />
-        <TextInput Label="Max output (auto = until EOS / model window)" @bind-Value="limit" BorderStyle="BoxBorder.None" Disabled="@busy" />
-    }
-    <TextInput @key="composerVersion" FocusOrder="2" Label="›" @bind-Value="prompt" BorderStyle="BoxBorder.None" OnSubmit="Submit" />
-    <Columns>
-        <TextButton Content="Send" OnClick="Send" />
-        <TextButton Content="Stop" OnClick="Cancel" />
-        <TextButton Content="New chat" OnClick="Clear" />
-        <TextButton Content="Settings" OnClick="ToggleSettings" />
-        <TextButton Content="Older" OnClick="Older" />
-        <TextButton Content="Latest" OnClick="Latest" />
-    </Columns>
-    <PlainText Content="@DisplayText(info)" Foreground="Color.Grey" />
-    <PlainText Content="Click / Enter send · wheel scrolls history · Tab focus · Ctrl+C quit" Foreground="Color.Grey" />
-    }
-</Rows>
+<Flex Direction="FlexDirection.Column" Width="@Viewport.Width" Height="@Viewport.Height">
+    <Flex Direction="FlexDirection.Column" Height="4" FillWidth="true">
+        <PlainText Content="@DisplayText($"Infer.NET  ·  {(playground ? "Chat playground" : "Worker dashboard")}")" Foreground="Color.Cyan1" />
+        <Flex Direction="FlexDirection.Row" Gap="3" Height="1">
+            <TextButton Content=" Dashboard " FocusOrder="0" BackgroundColor="@(!playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = false" />
+            <TextButton Content=" Playground " FocusOrder="1" BackgroundColor="@(playground ? Color.DarkCyan : Color.Default)" OnClick="() => playground = true" />
+        </Flex>
+        <Box Height="1" FillWidth="true"><PlainText Content="@DisplayText(status + (busy ? " · generating" : ""))" Foreground="@(ready ? Color.Green : Color.Yellow)" /></Box>
+        <Box Height="1" />
+    </Flex>
+    <Box Height="@BodyHeight" FillWidth="true" Border="BoxBorder.None">
+        @if (!playground)
+        {
+            <WorkerDashboard Workers="@workers" Stale="@stale" Width="@Viewport.Width" Height="@BodyHeight" />
+        }
+        else
+        {
+            <div @onwheel="ScrollHistory"><PlainText Content="@DisplayText(Transcript())" /></div>
+        }
+    </Box>
+    <Flex Direction="FlexDirection.Column" Height="@FooterHeight" FillWidth="true">
+        <Box Height="1" />
+        @if (playground)
+        {
+            @if (settings)
+            {
+                <Box Height="1" FillWidth="true"><TextInput Label="System" @bind-Value="system" BorderStyle="BoxBorder.None" Disabled="@busy" /></Box>
+                <Box Height="1" FillWidth="true"><TextInput Label="Max output (auto)" @bind-Value="limit" BorderStyle="BoxBorder.None" Disabled="@busy" /></Box>
+            }
+            <Box Height="1" FillWidth="true"><TextInput @key="composerVersion" FocusOrder="2" Label="›" @bind-Value="prompt" BorderStyle="BoxBorder.None" OnSubmit="Submit" Expand="true" /></Box>
+            <Flex Direction="FlexDirection.Row" Gap="2" Height="1">
+                <TextButton Content="Send" OnClick="Send" />
+                <TextButton Content="Stop" OnClick="Cancel" />
+                <TextButton Content="New chat" OnClick="Clear" />
+                <TextButton Content="Settings" OnClick="ToggleSettings" />
+                <TextButton Content="Older" OnClick="Older" />
+                <TextButton Content="Latest" OnClick="Latest" />
+            </Flex>
+        }
+        <Box Height="1" FillWidth="true"><PlainText Content="@DisplayText(playground ? info : "Select worker · wheel scrolls · Tab focus · Ctrl+C quit")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Chat Completions  {ApiBase}/v1/chat/completions")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Responses         {ApiBase}/v1/responses")" Foreground="Color.Grey" /></Box>
+        <Box Height="1" FillWidth="true"><PlainText Content="@($"Claude Code base  {ApiBase}  · Messages /v1/messages")" Foreground="Color.Grey" /></Box>
+    </Flex>
+</Flex>
 
 @code {
     private string? prompt = "你好";
@@ -57,9 +73,14 @@
     private bool busy, ready, settings, playground, stale;
     private WorkerSnapshot[] workers = [];
     private int older, composerVersion;
+    private string ApiBase => endpoint.TrimEnd('/');
+    private int FooterHeight => 5 + (playground ? 2 + (settings ? 2 : 0) : 0);
+    private int BodyHeight => Math.Max(1, Viewport.Height - 4 - FooterHeight);
+    private void Resize() => _ = InvokeAsync(StateHasChanged);
     protected override async Task OnInitializedAsync()
     {
         endpoint = (Chat.GetService(typeof(ChatClientMetadata)) as ChatClientMetadata)?.ProviderUri?.ToString() ?? "";
+        Viewport.OnResized += Resize;
         await Refresh(); poll = Poll();
     }
     private static string DisplayText(string text) => string.Concat(text.EnumerateRunes().Select(r => System.Text.Rune.IsControl(r) && r.Value is not (10 or 9) ? "�" : r.ToString()));
@@ -69,24 +90,22 @@
         if (pending.Length > 0) all += "\n\nYou  " + pending + "\n\nQwen  " + (partial.Length > 0 ? partial : busy ? "…" : "(no output)");
         if (all.Length == 0) return "Start a conversation. System prompt and output limit are in Settings.";
         // Bound rendered rows while retaining the complete message history sent to IChatClient.
-        var width = Math.Max(20, SafeWidth() - 4); var rows = new List<string>();
+        var width = Math.Max(20, Viewport.Width); var rows = new List<string>();
         foreach (var line in all.Split('\n'))
         {
             var b = new System.Text.StringBuilder(); var cells = 0;
             foreach (var rune in line.EnumerateRunes())
             {
-                var size = rune.Value >= 0x1100 ? 2 : 1;
+                var size = TextSelectionState.CellWidth(rune.ToString());
                 if (cells + size > width) { rows.Add(b.ToString()); b.Clear(); cells = 0; }
                 b.Append(rune); cells += size;
             }
             rows.Add(b.ToString());
         }
-        var height = Math.Max(3, SafeHeight() - (settings ? 12 : 10));
+        var height = BodyHeight;
         older = Math.Min(older, Math.Max(0, rows.Count - height));
         return string.Join("\n", rows.Skip(Math.Max(0, rows.Count - height - older)).Take(height));
     }
-    private static int SafeWidth() { try { return Console.WindowWidth; } catch (IOException) { return 80; } }
-    private static int SafeHeight() { try { return Console.WindowHeight; } catch (IOException) { return 24; } }
     private async Task Poll()
     {
         try { using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2)); while (await timer.WaitForNextTickAsync(stop.Token)) await InvokeAsync(async () => { await Refresh(); StateHasChanged(); }); }
@@ -153,5 +172,5 @@
     private void ScrollHistory(WheelEventArgs e) { older = Math.Max(0, older + (e.DeltaY < 0 ? 3 : -3)); }
     private void Older() => older += 5;
     private void Latest() => older = 0;
-    public async ValueTask DisposeAsync() { stop.Cancel(); request?.Cancel(); if (generation != null) await generation; if (poll != null) await poll; stop.Dispose(); }
+    public async ValueTask DisposeAsync() { Viewport.OnResized -= Resize; stop.Cancel(); request?.Cancel(); if (generation != null) await generation; if (poll != null) await poll; stop.Dispose(); }
 }
