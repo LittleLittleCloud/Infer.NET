@@ -4,9 +4,22 @@ using DeepInfer.Backends.Models;
 using Xunit;
 namespace DeepInfer.Tests;
 
+// Hosted macOS can expose a paravirtual GPU that executes GEMV but cannot create
+// MTLResidencySet. Keep this hardware test mandatory on physical Macs; don't hide
+// a real residency allocation failure with a catch-and-return in the test body.
+public sealed class ResidencyFactAttribute : FactAttribute
+{
+    public ResidencyFactAttribute()
+    {
+        if (!OperatingSystem.IsMacOS()) Skip = "Metal residency requires a physical macOS GPU.";
+        else if (new DeepInfer.Backends.MetalBackend().DiscoverDevices().Any(d => d.Name.Contains("Paravirtual", StringComparison.OrdinalIgnoreCase)))
+            Skip = "Paravirtual Metal GPU does not implement residency sets; validated separately on physical M5 Pro.";
+    }
+}
+
 public class QuantizedTests
 {
-    [Fact]
+    [ResidencyFact]
     public void ExplicitResidencyCrossesManagedNativeBoundaryAndReleasesWeights()
     {
         if (!OperatingSystem.IsMacOS()) return;

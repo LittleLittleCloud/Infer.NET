@@ -42,6 +42,8 @@ jobs:
           test "${sdk_version%%.*}" -ge 26
       - run: dotnet restore DeepInfer.slnx --locked-mode
       - run: dotnet build DeepInfer.slnx -c Release --no-restore
+      - name: Record actual GPU capabilities
+        run: dotnet run --project src/DeepInfer.Host -c Release --no-build -- devices
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build
       - run: python3 scripts/chat-integration.py
       - run: python3 scripts/integration.py
