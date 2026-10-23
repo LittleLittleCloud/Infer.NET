@@ -190,7 +190,10 @@ def client(args):
         (remote_out/'completed.json').write_text(json.dumps(metadata(library)))
 
 
-def cases():
+def cases(smoke=False):
+    if smoke:
+        yield {'name': 'gpu-smoke', 'mode': 'gpu', 'bytes': 1028, 'chunk': 256}
+        return
     for chunk in (256*1024, 4*MIB, 16*MIB):
         yield {'name': 'host-128MiB', 'mode': 'host', 'bytes': 128*MIB, 'chunk': chunk}
     yield {'name': '128K-first20-state', 'mode': 'gpu', 'bytes': MAX_BYTES, 'chunk': 4*MIB}
@@ -203,7 +206,7 @@ def server(args):
     out.mkdir(parents=True, exist_ok=False)
     library = ROOT / 'artifacts/state-transfer/transfer_metal.dylib'
     manifest = {'schemaVersion': 1, 'kind': 'synthetic-state-transport', 'transport': 'direct TCP, authenticated; no TLS or compression; SSH control only',
-                'modelExecution': False, 'fullKVBytes': KV_BYTES, 'recurrentBytes': RECURRENT_BYTES,
+                'smokeOnly': args.smoke, 'modelExecution': False, 'fullKVBytes': KV_BYTES, 'recurrentBytes': RECURRENT_BYTES,
                 'local': metadata(library), 'warmups': 1, 'trials': 3,
                 'timing': 'Mac monotonic clock; GO through receiver GPU validation and final acknowledgment; allocation/pattern fill excluded',
                 'gpuPath': 'CUDA device <-> pinned staging <-> socket <-> Metal shared MTLBuffer; no overlap/double buffering',
@@ -220,7 +223,7 @@ def server(args):
     try:
         with socket.socket() as listener, (out/'windows.log').open('w') as log, (out/'trials.jsonl').open('w') as raw:
             listener.bind((local_ip, 0)); listener.listen(1); listener.settimeout(45)
-            script = r"Set-Location C:\Users\xiaoyun\repos\Infer.NET; & \"$env:LOCALAPPDATA\Infer.NET\Python\python.exe\" -u scripts\benchmark-state-transfer.py client".replace('\\"','"')
+            script = r"Set-Location (Join-Path $env:USERPROFILE 'repos\Infer.NET'); & \"$env:LOCALAPPDATA\Infer.NET\Python\python.exe\" -u scripts\benchmark-state-transfer.py client".replace('\\"','"')
             encoded = base64.b64encode(script.encode('utf-16le')).decode()
             proc = subprocess.Popen(['ssh', '-o', 'BatchMode=yes', args.ssh,
                                      'powershell.exe -NoProfile -NonInteractive -EncodedCommand '+encoded],
@@ -240,7 +243,7 @@ def server(args):
                 gpu = Gpu(library); gpu.selftest()
                 assert recv_json(sock)['selftest'] == 'passed'
                 manifest['gpuSelftests'] = 'CPU pattern, tail and corruption rejection passed on both GPUs'
-                for config in cases():
+                for config in cases(args.smoke):
                     for direction in ('cuda-to-metal', 'metal-to-cuda'):
                         for trial in range(4):
                             case = {**config, 'direction': direction, 'trial': trial, 'warmup': trial == 0, 'seed': 1000+trial}
@@ -284,6 +287,7 @@ if __name__ == '__main__':
     parser.add_argument('role', choices=['server', 'client'])
     parser.add_argument('--ssh', default='infer-windows')
     parser.add_argument('--output')
+    parser.add_argument('--smoke', action='store_true', help='Only bidirectional 1028-byte GPU correctness/launch checks')
     args = parser.parse_args()
     if args.role == 'server' and not args.output: parser.error('--output required')
     (server if args.role == 'server' else client)(args)
