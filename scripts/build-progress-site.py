@@ -73,6 +73,9 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <li><span class="status done">基线完成</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>工具链、68 项单测、两组 25 项 RPC 和 SM89 数值检查通过。Mac Wi-Fi ↔ Windows 千兆网口已实测：128K 前 20 层状态，4090 → Mac 中位 24.66 秒，反向 41.20 秒；40 次传输校验全部通过。合成 GPU 状态传输不代表模型状态恢复。<a href="experiments.html#kv-sync-lan">实验记录 →</a></p></div></li>
 <li><span class="status pending">待实现</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>4090 前段 prefill → Mac 后段；完整 KV / Delta 状态就绪后由 Mac decode。</p></div></li>
 <li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
+<section id="device-topology" aria-labelledby="topology-heading"><div class="section-head"><h2 id="topology-heading">当前设备拓扑</h2><a href="experiments.html#kv-sync-lan">传输实测 →</a></div>
+<figure class="device-topology"><a href="assets/device-topology-pixel.png" aria-label="查看设备拓扑原图"><img src="assets/device-topology-pixel.png" width="1942" height="809" loading="lazy" decoding="async" alt="M5 Pro，48 GiB 统一内存，Metal，经 Wi-Fi 连接家庭路由器；Windows RTX 4090，24 GiB 显存，CUDA，经 1 Gbps 有线网络连接路由器。GPU 缓冲同步实测：4090 到 Mac 为 55.77 MB/s，Mac 到 4090 为 33.37 MB/s。"></a>
+<figcaption class="note">2026-10-22 · 128K 前 20 层等容量合成状态，三次正式测量的中位数；图中速度为 GPU 缓冲传输吞吐，不是模型推理速度。</figcaption></figure></section>
 <section><div class="section-head"><h2>8bit 单机实测</h2>''' + source('docs/QWEN36-8BIT.md') + '''</div>
 <p>M5 Pro 20 核 GPU / 48 GiB，AC / High Power。模型已加载，每次清空请求状态；BF16 GEMM 输入及 KV，FP32 状态与累加。</p>'''
 body += table(['输入 / 输出 tokens', 'prefill 秒', 'prefill token/s', 'decode token/s', '分块', '正式次数'], [
@@ -109,5 +112,6 @@ for n in notes:
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
 for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'experiments.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
+shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
 print(f'Built {OUT}: 2 pages, {len(notes)} notes, {len(measurements)} measured baselines; revision {revision}')
