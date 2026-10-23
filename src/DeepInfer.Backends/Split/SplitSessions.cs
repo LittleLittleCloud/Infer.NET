@@ -37,6 +37,7 @@ public sealed class MetalSplitSession : IDisposable
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null, float[]? trace = null) => graph.Suffix(tokens, hidden, final, logits, trace);
     public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
+    public void KvRange(int layer, int tensor, int position, int count, int total, byte[] bytes) => graph.PrefixKvRange(layer, tensor, position, count, total, bytes);
     public int Prefill(int[] tokens, CancellationToken ct) => graph.Prefill(tokens, ct);
     public int Reference(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]>? trace)
     {
@@ -59,7 +60,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true)
     {
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=5) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        if(CudaPrefixNative.AbiVersion()!=6) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
@@ -99,6 +100,17 @@ public sealed unsafe class CudaPrefixSession : IDisposable
             if (CudaPrefixNative.State(handle, layer, tensor, position, d, data.Length, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
         return data;
     }
+    public byte[] KvRange(int layer, int tensor, int position, int count)
+    {
+        ObjectDisposedException.ThrowIf(handle == 0, this);
+        if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count is < 1 or > 32)
+            throw new ArgumentException("Invalid KV range descriptor.");
+        var data = new byte[count*512*kvBytes]; var error = new byte[2048];
+        fixed (byte* d = data) fixed (byte* e = error)
+            if (CudaPrefixNative.KvRange(handle, layer, tensor, position, count, d, data.Length, e, error.Length) != 0)
+                throw new InvalidOperationException(Message(error));
+        return data;
+    }
     public static int StateBytes(int layer, int tensor, int position, int kvBytes = 2)
     {
         if (kvBytes is not (2 or 4)) throw new ArgumentException("Invalid KV width.");
@@ -125,6 +137,8 @@ internal static unsafe partial class CudaPrefixNative
     internal static partial int Reset(nint graph, byte* error, int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_run")]
     internal static partial int Run(nint graph,int* tokens,int count,int position,float* hidden,float* trace,byte* error,int capacity);
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_kv_range")]
+    internal static partial int KvRange(nint graph,int layer,int tensor,int position,int count,byte* data,int bytes,byte* error,int capacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_state")]
     internal static partial int State(nint graph,int layer,int tensor,int position,byte* data,int bytes,byte* error,int capacity);
 }

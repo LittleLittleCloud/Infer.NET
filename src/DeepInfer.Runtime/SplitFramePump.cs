@@ -1,16 +1,24 @@
 using System.Threading.Channels;
 namespace DeepInfer.Runtime;
 
-// One synchronous GPU producer, one network sender. At most two queued frames
+// One synchronous GPU producer, one network sender. At most two queued items (frames or chunk bundles)
 // plus the producer's current frame. Joining on every exit keeps reset/disposal
 // from racing an in-flight GPU call. No retries or background work after return.
 public static class SplitFramePump
 {
-    public static async Task Run(IEnumerable<SplitWire.Frame> frames,
-        Func<SplitWire.Frame, CancellationToken, ValueTask> send, CancellationToken ct)
+    public static Task Run(IEnumerable<SplitWire.Frame> frames,
+        Func<SplitWire.Frame, CancellationToken, ValueTask> send, CancellationToken ct) => RunItems(frames, send, ct);
+
+    public static Task RunBatches(IEnumerable<SplitWire.Frame[]> batches,
+        Func<SplitWire.Frame, CancellationToken, ValueTask> send, CancellationToken ct) =>
+        RunItems(batches, async (batch, cancel) =>
+        { foreach (var frame in batch) { cancel.ThrowIfCancellationRequested(); await send(frame, cancel); } }, ct);
+
+    private static async Task RunItems<T>(IEnumerable<T> frames,
+        Func<T, CancellationToken, ValueTask> send, CancellationToken ct)
     {
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        var channel = Channel.CreateBounded<SplitWire.Frame>(new BoundedChannelOptions(2)
+        var channel = Channel.CreateBounded<T>(new BoundedChannelOptions(2)
         { SingleWriter = true, SingleReader = true, FullMode = BoundedChannelFullMode.Wait });
         var producer = Task.Run(async () =>
         {

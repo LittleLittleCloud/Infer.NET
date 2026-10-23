@@ -569,6 +569,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
  if(begin==0&&g->splitActive){error_text(error,capacity,@"Reset split graph before full prefill");return -1;}
  if(begin==20){
+  if(g->splitTarget&&g->position+count>g->splitTarget){error_text(error,capacity,@"Split prefix target exceeded");return -1;}
   if(!g->splitActive){if(g->position){error_text(error,capacity,@"Reset before split prefill");return -1;}g->splitActive=true;}
   g->splitMissing=(1ull<<40)-1;
  }
@@ -719,9 +720,26 @@ extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position
  auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*(g->kvBf16?2:4);
  if(bytes!=expected)return -1;
  uint64_t bit=1ull<<(layer*2+kind);
- if(importState&&(!g->splitActive||!(g->splitMissing&bit)))return -1;
+ if(importState&&(!g->splitActive||!(g->splitMissing&bit)||(!l.linear&&g->splitKvWritten[layer*2+kind]!=0)))return -1;
  auto buffer=l.linear?(kind?l.history:l.state):(kind?l.values:l.keys);
  if(importState){memcpy(buffer.contents,data,bytes);g->splitMissing&=~bit;}
  else memcpy(data,buffer.contents,bytes);
+ return 0;
+}
+
+// Ordered, lossless KV slices, imported only after the corresponding suffix
+// submission completes. Final recurrent states remain mandatory before decode.
+extern "C" int di_graph_prefix_kv_range(void *graph,int layer,int kind,int position,int count,int total,const void *data,int bytes){
+ if(!graph||!data||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||position<0||count<1||count>512||
+    total<1||total>262144||position>total-count)return -1;
+ auto *g=static_cast<GModel*>(graph);auto &l=g->layers[layer];auto index=layer*2+kind;uint64_t bit=1ull<<index;
+ if(!g->splitActive||!l.loaded||l.linear||!(g->splitMissing&bit)||(uint32_t)total>g->capacity||
+    (uint32_t)(position+count)>g->position||g->splitKvWritten[index]!=(uint32_t)position||
+    (g->splitTarget&&g->splitTarget!=(uint32_t)total)||bytes!=count*512*(g->kvBf16?2:4))return -1;
+ auto buffer=kind?l.values:l.keys;if(!buffer)return -1;
+ g->splitTarget=uint32_t(total);
+ memcpy(static_cast<unsigned char*>(buffer.contents)+size_t(position)*512*(g->kvBf16?2:4),data,bytes);
+ g->splitKvWritten[index]+=uint32_t(count);
+ if(g->splitKvWritten[index]==g->splitTarget)g->splitMissing&=~bit;
  return 0;
 }

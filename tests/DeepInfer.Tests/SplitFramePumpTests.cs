@@ -6,6 +6,24 @@ public class SplitFramePumpTests
 {
     private static SplitWire.Frame Frame(int n) => new(SplitWire.Hidden, 20, 0, n, 1, []);
     [Fact]
+    public async Task ChunkBundlesStayOrderedAndBoundedOnSendFailure()
+    {
+        var full = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var produced = 0; var disposed = false; var sent = new List<int>();
+        IEnumerable<SplitWire.Frame[]> Batches()
+        {
+            try { for (var i=0;i<100;i++) { if(Interlocked.Increment(ref produced)==4)full.SetResult(); yield return [Frame(i*2),Frame(i*2+1)]; } }
+            finally { disposed=true; }
+        }
+        var run=SplitFramePump.RunBatches(Batches(),async (f,ct)=>
+        {
+            sent.Add(f.Position);
+            if(f.Position==1) { await full.Task.WaitAsync(TimeSpan.FromSeconds(5),ct); Assert.Equal(4,Volatile.Read(ref produced)); throw new IOException("KV send failed"); }
+        },CancellationToken.None);
+        await Assert.ThrowsAsync<IOException>(()=>run.WaitAsync(TimeSpan.FromSeconds(5)));
+        Assert.Equal(new[]{0,1},sent);Assert.True(disposed);Assert.Equal(4,produced);
+    }
+    [Fact]
     public async Task PreservesOrderAcrossBoundedProducerAndAsyncSender()
     {
         var actual = new List<int>();

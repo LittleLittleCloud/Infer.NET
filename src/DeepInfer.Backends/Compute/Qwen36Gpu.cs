@@ -140,6 +140,12 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             if (GraphNative.PrefixState(handle, layer, kind, position, p, data.Length, import ? 1 : 0) != 0)
                 throw new InvalidOperationException("State import/export rejected (identity, position, precision, size or duplicate).");
     }
+    public void PrefixKvRange(int layer, int kind, int position, int count, int total, byte[] data)
+    {
+        fixed (byte* p = data)
+            if (GraphNative.PrefixKvRange(handle, layer, kind, position, count, total, p, data.Length) != 0)
+                throw new InvalidOperationException("KV range import rejected (identity, position, precision, size, target or duplicate).");
+    }
     public void Dispose() => handle.Dispose();
 }
 internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
@@ -153,6 +159,8 @@ internal static unsafe partial class GraphNative
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefill_range")]
     internal static partial int Range(GraphHandle graph, int* tokens, int count, int classifier, int begin, int end,
         float* hidden, float* output, float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_kv_range")]
+    internal static partial int PrefixKvRange(GraphHandle graph, int layer, int kind, int position, int count, int total, byte* data, int bytes);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_state")]
     internal static partial int PrefixState(GraphHandle graph, int layer, int kind, int position, byte* data, int bytes, int importState);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create")]

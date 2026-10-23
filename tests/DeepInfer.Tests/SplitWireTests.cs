@@ -54,6 +54,20 @@ public sealed class SplitWireTests
         await reader.ReceiveAsync(default);await Assert.ThrowsAsync<InvalidDataException>(()=>reader.ReceiveAsync(default));
         using var truncated=new MemoryStream(bytes[..^1]);await Assert.ThrowsAsync<EndOfStreamException>(()=>new SplitWire(truncated,new byte[32],id).ReceiveAsync(default));
     }
+    [Theory] [InlineData(2)] [InlineData(4)]
+    public async Task TransfersAuthenticatedKvRangeAndRejectsBadGeometry(int kvBytes)
+    {
+        var id=Guid.NewGuid();using var stream=new MemoryStream();
+        var sender=new SplitWire(stream,new byte[32],id,kvBytes);
+        var frame=new SplitWire.Frame(SplitWire.KvRange,7,1,64,17,new byte[17*512*kvBytes]);frame.Data[17]=42;
+        await sender.SendAsync(frame,default);stream.Position=0;
+        var actual=await new SplitWire(stream,new byte[32],id,kvBytes).ReceiveAsync(default);
+        Assert.Equal(frame.Data,actual.Data);Assert.Equal(frame.Position,actual.Position);Assert.Equal(frame.Count,actual.Count);
+        foreach(var bad in new[]{frame with { Layer=0 },frame with { Count=33 },frame with { Position=int.MaxValue },frame with { Tensor=2 },frame with { Data=frame.Data[..^1] }})
+            Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(bad,kvBytes));
+        SplitWire.Validate(new(SplitWire.Start,20,3,0,1,new byte[4]),kvBytes);
+        Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.Start,20,4,0,1,new byte[4]),kvBytes));
+    }
     [Fact] public void RejectsWrongStateShapeAndUnsupportedContext()
     {
         Assert.Throws<InvalidDataException>(()=>SplitWire.Validate(new(SplitWire.State,3,0,128,1,new byte[128*512*4])));

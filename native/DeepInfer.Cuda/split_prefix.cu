@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 5; }
+API int di_cuda_prefix_abi_version() { return 6; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
@@ -588,6 +588,16 @@ API int di_cuda_prefix_state(void *ptr, int layer, int kind, int position, void 
         err(error, cap, e);
         return -1;
     }
+}
+// Export only the newly computed causal KV slice. No recurrence snapshot here.
+API int di_cuda_prefix_kv_range(void *ptr,int layer,int kind,int position,int count,void *dest,int bytes,char *error,int cap) {
+    try {
+        auto *g=static_cast<Model*>(ptr);
+        if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>32||
+           position>g->position-count||bytes!=count*512*(g->kvBf16?2:4))throw std::runtime_error("Invalid KV export range");
+        auto &l=g->layers[layer];auto *src=static_cast<unsigned char*>(kind?l.values:l.keys);
+        ck(cudaMemcpy(dest,src+size_t(position)*512*(g->kvBf16?2:4),bytes,cudaMemcpyDeviceToHost));return 0;
+    }catch(const std::exception &e){err(error,cap,e);return -1;}
 }
 // Deterministic operator checks independent of model files. Outputs [GEMV, Delta]
 // max absolute errors against scalar double accumulation, checked by the caller.

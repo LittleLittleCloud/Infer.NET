@@ -29,9 +29,9 @@ public static class SplitInference
     internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false)
     {
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
-        var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
+        var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=(start.Tensor&1)!=0;var incremental=(start.Tensor&2)!=0;var timer=Stopwatch.StartNew();
         double computeMs=0, sendMs=0;
-        IEnumerable<SplitWire.Frame> Chunks()
+        IEnumerable<SplitWire.Frame[]> Chunks()
         {
             for(var offset=0;offset<tokens.Length;offset+=32)
             {
@@ -39,9 +39,12 @@ public static class SplitInference
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
+                var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden)) };
+                if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset,count,Bytes(trace)));
+                if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
+                    frames.Add(new(SplitWire.KvRange,layer,kind,offset,count,gpu.KvRange(layer,kind,offset,count)));
                 computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
-                yield return new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden));
-                if(trace is not null)yield return new(SplitWire.Trace,0,0,offset,count,Bytes(trace));
+                yield return frames.ToArray();
             }
         }
         async ValueTask Send(SplitWire.Frame frame,CancellationToken cancel)
@@ -50,11 +53,12 @@ public static class SplitInference
             sendMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
             if(frame.Kind==SplitWire.Hidden)Console.Error.WriteLine($"PREFIX_PROGRESS tokens={frame.Position+frame.Count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         }
-        if(overlapSend)await SplitFramePump.Run(Chunks(),Send,ct);
-        else foreach(var frame in Chunks())await Send(frame,ct);
-        Console.Error.WriteLine($"PREFIX_CHUNKS overlap={overlapSend} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+        if(overlapSend)await SplitFramePump.RunBatches(Chunks(),Send,ct);
+        else foreach(var batch in Chunks())foreach(var frame in batch)await Send(frame,ct);
+        Console.Error.WriteLine($"PREFIX_CHUNKS overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         for(var layer=0;layer<20;layer++)for(var tensor=0;tensor<2;tensor++)
-            await wire.SendAsync(new(SplitWire.State,layer,tensor,tokens.Length,1,gpu.State(layer,tensor,tokens.Length)),ct);
+            if(!incremental||(layer+1)%4!=0)
+                await wire.SendAsync(new(SplitWire.State,layer,tensor,tokens.Length,1,gpu.State(layer,tensor,tokens.Length)),ct);
         await wire.SendAsync(new(SplitWire.End,20,0,tokens.Length,0,[]),ct);
         Console.Error.WriteLine($"PREFIX_FINISHED elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
     }
@@ -62,7 +66,7 @@ public static class SplitInference
     {
         var token=RequireToken(options);var kvBytes=KvBytes(options);var uri=new Uri(options.Get("listen","tcp://127.0.0.1:5210"));var ip=IPAddress.Parse(uri.Host);
         if(!IPAddress.IsLoopback(ip)&&!options.Flag("allow-remote"))throw new ArgumentException("Remote split listener requires --allow-remote.");
-        var verify=options.Flag("verify");var max=options.Number("max-tokens",8,1,DeepInfer.Core.Protocol.Qwen36Context);
+        var incremental=IncrementalKv(options);var verify=options.Flag("verify");var max=options.Number("max-tokens",8,1,DeepInfer.Core.Protocol.Qwen36Context);
         var output=Path.GetFullPath(options.Get("output","artifacts/split/run-"+DateTime.UtcNow.ToString("yyyyMMddTHHmmss")));
         Directory.CreateDirectory(output);
         Console.Error.WriteLine("Loading full resident Metal model...");
@@ -90,7 +94,7 @@ public static class SplitInference
         Console.Error.WriteLine($"SPLIT_LISTENING promptTokens={tokens.Length}");
         using var client=await listener.AcceptTcpClientAsync(ct);client.NoDelay=true;listener.Stop();
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,true,Guid.Empty,ct,kvBytes);
-        var timer=Stopwatch.StartNew();await wire.SendAsync(new(SplitWire.Start,20,verify?1:0,0,tokens.Length,Bytes(tokens)),ct);
+        var timer=Stopwatch.StartNew();await wire.SendAsync(new(SplitWire.Start,20,(verify?1:0)|(incremental?2:0),0,tokens.Length,Bytes(tokens)),ct);
         var nextToken=-1;
         for(var offset=0;offset<tokens.Length;offset+=32)
         {
@@ -105,6 +109,21 @@ public static class SplitInference
                 var actual=Floats(trace.Data);
                 for(var p=0;p<count;p++)for(var l=0;l<20;l++)checks.Add(Compare($"hidden/p{offset+p}/l{l}",referenceTrace!.AsSpan(((offset+p)*20+l)*2048,2048),actual.AsSpan((p*20+l)*2048,2048)));
             }
+            if(incremental)for(var l=3;l<20;l+=4)for(var t=0;t<2;t++)
+            {
+                var range=await wire.ReceiveAsync(ct);
+                if(range.Kind!=SplitWire.KvRange||range.Layer!=l||range.Tensor!=t||range.Position!=offset||range.Count!=count)
+                    throw new InvalidDataException("Missing, duplicate or stale KV range.");
+                gpu.KvRange(l,t,offset,count,tokens.Length,range.Data);
+                if(verify)
+                {
+                    var reference=await File.ReadAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),ct);
+                    var slice=reference.AsSpan(offset*512*kvBytes,count*512*kvBytes).ToArray();
+                    checks.Add(Compare($"kv/p{offset}/l{l}/t{t}",StateFloats(slice,l,kvBytes),StateFloats(range.Data,l,kvBytes)));
+                    await using var stateFile=new FileStream(Path.Combine(output,$"cuda-state-{l}-{t}.bin"),offset==0?FileMode.Create:FileMode.Append);
+                    await stateFile.WriteAsync(range.Data,ct);
+                }
+            }
             Console.Error.WriteLine($"SUFFIX_PROGRESS tokens={offset+count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         }
         var hiddenReadyMs=timer.Elapsed.TotalMilliseconds;
@@ -117,6 +136,7 @@ public static class SplitInference
         if(verify)Reject(()=>gpu.Forward(nextToken,tokens.Length),"decode-before-state");
         for(var l=0;l<20;l++)for(var t=0;t<2;t++)
         {
+            if(incremental&&(l+1)%4==0)continue;
             var f=await wire.ReceiveAsync(ct);if(f.Kind!=SplitWire.State||f.Layer!=l||f.Tensor!=t||f.Position!=tokens.Length)throw new InvalidDataException("Missing, duplicate or stale prefix state.");
             if(verify)
             {
@@ -129,7 +149,7 @@ public static class SplitInference
                 Reject(()=>gpu.State(l,t,tokens.Length+1,f.Data,true),"wrong-state-position");
                 Reject(()=>gpu.State(l,t,tokens.Length,f.Data[..^1],true),"wrong-state-size");
             }
-            if(verify&&l==19&&t==1)Reject(()=>gpu.Forward(nextToken,tokens.Length),"decode-before-last-state");
+            if(verify&&l==(incremental?18:19)&&t==1)Reject(()=>gpu.Forward(nextToken,tokens.Length),"decode-before-last-state");
             gpu.State(l,t,tokens.Length,f.Data,true);
             if(verify&&l==0&&t==0)Reject(()=>gpu.State(l,t,tokens.Length,f.Data,true),"duplicate-state");
         }
@@ -143,10 +163,12 @@ public static class SplitInference
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
         var result=new SplitResult(wire.Request.ToString(),SplitWire.Revision,tokens.Length,ids.ToArray(),gpu.Decode(ids.ToArray()),expected.ToArray(),
-            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),guards.ToArray(),$"CUDA serial-token affine8 prefix; Metal <=32-token suffix; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
+            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),guards.ToArray(),$"CUDA layer-major affine8 prefix; Metal <=32-token suffix; incrementalKV={incremental}; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
         var json=JsonSerializer.Serialize(result,SplitJson.Default.SplitResult);await File.WriteAllTextAsync(Path.Combine(output,"result.json"),json+Environment.NewLine,ct);Console.WriteLine(json);
         if(verify&&!result.Verified)throw new InvalidOperationException("Split correctness gate failed; see result.json. Do not use these timings as accepted performance.");
     }
+    internal static bool IncrementalKv(Options o)=>o.Get("kv-transfer","final") switch
+    { "incremental"=>true,"final"=>false,_=>throw new ArgumentException("--kv-transfer must be final or incremental.") };
     private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };
     private static string RequireToken(Options o)=>o.Token is {Length:>=32} t?t:throw new ArgumentException("Set DEEPINFER_TOKEN to a random secret of at least 32 characters.");
     private static byte[] Bytes(float[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();

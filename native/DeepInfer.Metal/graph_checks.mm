@@ -15,6 +15,27 @@ int main(){@autoreleasepool {
             fprintf(stderr,"Explicit prefill scratch configuration failed\n");delete c;return 1;
         }
     }
+    // KV handoff uses exact shared-memory bytes and strictly contiguous ranges.
+    for(bool bf16:{false,true}) {
+        GModel g{};g.compute=*c;g.kvBf16=bf16;g.capacity=16;g.position=4;g.splitActive=true;g.splitMissing=(1ull<<40)-1;
+        for(auto &l:g.layers){l.loaded=true;l.linear=true;l.state=[c->device newBufferWithLength:32*128*128*4 options:MTLResourceStorageModeShared];l.history=[c->device newBufferWithLength:3*8192*4 options:MTLResourceStorageModeShared];}
+        auto &l=g.layers[3];l.linear=false;l.keys=g_kv_buffer(&g,16*512);l.values=g_kv_buffer(&g,16*512);
+        std::vector<unsigned char> bytes(8*512*(bf16?2:4));for(size_t i=0;i<bytes.size();i++)bytes[i]=i%251;
+        auto put=[&](int kind,int pos,int count,int total,int size=-1){return di_graph_prefix_kv_range(&g,3,kind,pos,count,total,bytes.data()+pos*512*(bf16?2:4),size<0?count*512*(bf16?2:4):size);};
+        auto fail=[&](bool condition){if(condition){fprintf(stderr,"KV range handoff guard failed bf16=%d\n",bf16);exit(1);}};
+        fail(put(0,0,4,8)!=0); // First half preserves missing bit; full replacement is forbidden.
+        fail(g.splitKvWritten[6]!=4 || !(g.splitMissing&(1ull<<6)) || g.splitTarget!=8);
+        fail(put(0,0,4,8)==0 || put(0,5,1,8)==0 || put(0,4,4,8)==0 || put(1,0,4,9)==0 || put(1,0,4,8,1)==0);
+        fail(di_graph_prefix_state(&g,3,0,4,bytes.data(),4*512*(bf16?2:4),1)==0);
+        fail(put(1,0,4,8)!=0);g.position=8;
+        fail(put(0,4,4,8)!=0 || put(1,4,4,8)!=0 || (g.splitMissing&((1ull<<6)|(1ull<<7)))!=0);
+        fail(memcmp(l.keys.contents,bytes.data(),bytes.size()) || memcmp(l.values.contents,bytes.data(),bytes.size()));
+        int next=-1,dispatches=0;double milliseconds=0;
+        fail(di_graph_forward(&g,10,8,1,nullptr,nullptr,&next,&dispatches,&milliseconds,error,sizeof(error))==0);
+        fail(put(0,4,4,8)==0 || g.splitMissing==0); // Recurrent state is still mandatory.
+        fail(di_graph_reset(&g)!=0 || g.splitTarget!=0 || g.splitKvWritten[6]!=0 || g.splitActive);
+        fail(put(0,0,4,8)==0); // No suffix has run since reset.
+    }
     NSError *failure=nil;MTLCompileOptions *options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
     auto library=[c->device newLibraryWithSource:graph_source options:options error:&failure];
     if(!library){fprintf(stderr,"%s\n",failure.localizedDescription.UTF8String);delete c;return 1;}
@@ -128,5 +149,5 @@ int main(){@autoreleasepool {
                 if(h[j*8192+d]!=expected){fprintf(stderr,"Convolution history tail oracle failed\n");delete c;return 1;}}
         }
     }
-    delete c;printf("PASS: 2 explicit scratch configuration cases and 60 hardware checks (10 graph primitives, 44 batched projections including 65/128-token tiles, 6 recurrence/state/history cases)\n");return 0;
+    delete c;printf("PASS: FP32/BF16 incremental KV bytes and handoff guards, 2 explicit scratch configuration cases and 60 hardware checks (10 graph primitives, 44 batched projections including 65/128-token tiles, 6 recurrence/state/history cases)\n");return 0;
 }}

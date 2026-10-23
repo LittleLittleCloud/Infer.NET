@@ -236,6 +236,8 @@ struct GModel {
     uint32_t position=0,capacity=2048;
     uint64_t splitMissing=0; // Two state tensors per prefix layer; decode requires all 40.
     bool splitActive=false;
+    uint32_t splitTarget=0;
+    std::array<uint32_t,40> splitKvWritten{};
     id<MTLBuffer> attentionParts;
     int dispatches=0;
     id<MTLCounterSampleBuffer> counters;
@@ -386,7 +388,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {
