@@ -103,5 +103,20 @@
     "next": "继续 Issue #2 的 Windows SSH 与 CUDA 环境核验，再推进 CUDA 前段和跨机状态交接。",
     "commands": [],
     "evidence": null
+  },
+  {
+    "id": "windows-ssh-discovery",
+    "title": "Windows SSH 接入与开发环境核验",
+    "kind": "工程验证 · SSH 已通 · 工具链待补齐",
+    "source": "docs/WINDOWS-ENVIRONMENT.md",
+    "question": "Mac 能否通过已核验主机指纹的密钥连接 Windows，并发现真实 GPU、编译器与网络状态？",
+    "setup": "2026-10-22（America/Los_Angeles），Windows 原生环境、专用本地普通账户；通过 SSH 执行只读检查。连接映射与身份信息仅保存在本地。",
+    "change": "初始账户无法解析；用户创建本地账户并安装公钥后，非交互登录成功。本机保存连接别名，未安装远端工具或同步仓库。",
+    "result": "RTX 4090 总显存 24564 MiB、当时占用 1334 MiB，驱动 610.88；nvcc 13.4.59、Git 与 CMake 可用。物理网卡报告 1 Gbps，10 Gbps 为 Hyper-V 虚拟接口。所需 .NET SDK 10.0.100 缺失，MSVC C++ 工具链尚未找到，Python 不在账户 PATH。",
+    "validation": "实际密钥登录、主机身份命令与环境读取成功；普通账户的部分 CIM 查询被拒，改用 .NET API 读取系统、磁盘和网络信息。未执行 CUDA 编译、GPU 模型验收或有效带宽测试。",
+    "conclusion": "SSH 开发控制通道已可用；这不代表 CUDA 工具链、跨机推理或性能目标已通过。先补齐构建环境，保留当前精确 SDK 与依赖锁策略。",
+    "next": "Issue #2：补齐工具链、确定独立工作目录、通过 GitHub 同步相同 SHA，再进行 CUDA 与链路验证。",
+    "commands": [],
+    "evidence": null
   }
 ]

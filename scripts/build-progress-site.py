@@ -70,7 +70,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <div class="notice"><strong>Linux / macOS 云端 CI 已通过</strong><p>已固定 .NET SDK 选择，并升级 macOS 构建 SDK。两平台各通过 68 项单测、25 项 RPC 与 25 项 Native AOT RPC 检查；构建零警告、零错误。这些检查使用模拟推理，不替代 GPU 模型验收。<a href="''' + REPO + '''/actions/runs/39855878001">成功运行 ↗</a> · <a href="experiments.html#ci-repair">修复记录 →</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
-<li><span class="status pending">待接入</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>等待 SSH 配置；驱动、toolkit、显存与实际网络仍需核验。</p></div></li>
+<li><span class="status pending">接入中</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>SSH 密钥登录已验证；RTX 4090、CUDA 13.4 可见，物理链路为 1 Gbps。仍需补齐精确 .NET SDK、确认 MSVC/Python，再同步代码并验证 CUDA。</p></div></li>
 <li><span class="status pending">待实现</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>4090 前段 prefill → Mac 后段；完整 KV / Delta 状态就绪后由 Mac decode。</p></div></li>
 <li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
 <section><div class="section-head"><h2>8bit 单机实测</h2>''' + source('docs/QWEN36-8BIT.md') + '''</div>
