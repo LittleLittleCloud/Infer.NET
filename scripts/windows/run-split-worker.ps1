@@ -13,6 +13,7 @@ $env:DEEPINFER_TOKEN=$config.token
 $sha=git rev-parse HEAD
 $sha | Set-Content (Join-Path $out 'source.txt')
 $exe=Join-Path $root 'src\DeepInfer.Host\bin\Release\net10.0\deepinfer.exe'
+if((Get-FileHash (Join-Path (Split-Path $exe) 'deepinfer_cuda.dll')).Hash -ne (Get-FileHash (Join-Path $root 'native\DeepInfer.Cuda\build\deepinfer_cuda.dll')).Hash){throw 'Runtime CUDA DLL differs from native build; rebuild Host before running'}
 $bundle=Join-Path $root 'artifacts\split\prefix.bin'
 Get-FileHash $exe,(Join-Path (Split-Path $exe) 'deepinfer_cuda.dll'),(Join-Path (Split-Path $exe) 'DeepInfer.Backends.dll') -Algorithm SHA256 | ConvertTo-Json | Set-Content (Join-Path $out 'artifacts.json')
 $process=Start-Process -FilePath $exe -ArgumentList @('split-worker','--weights',('"'+$bundle+'"'),'--endpoint',$config.endpoint) -PassThru -NoNewWindow -RedirectStandardOutput (Join-Path $out 'stdout.log') -RedirectStandardError (Join-Path $out 'stderr.log')
