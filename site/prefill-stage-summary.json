@@ -1,6 +1,5 @@
 {
   "source": "919259d290855b1ce0401374bf8b3d781ed1ed43",
-  "postDeployTestOnlySource": "1bf5ed3",
   "codeReview": "https://github.com/LittleLittleCloud/Infer.NET/pull/25",
   "weightBits": 8,
   "kv": "fp32",
@@ -47,5 +46,10 @@
     "Mac receive wait includes upstream compute and network delivery; socket writes include backpressure",
     "No BF16 or 131072-token acceptance",
     "Longer split prompt was repetitive synthetic text, not a standard benchmark input"
+  ],
+  "tuiCheckoutSource": "2dd2a53",
+  "postDeploymentChanges": [
+    "1bf5ed3: TUI PTY smoke update",
+    "2dd2a53: compact dashboard spacing"
   ]
 }

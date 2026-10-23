@@ -1,6 +1,6 @@
 # 双机 prefill 分项计时，2026-10-23
 
-运行候选代码为 [PR #25](https://github.com/LittleLittleCloud/Infer.NET/pull/25) 的 `919259d290855b1ce0401374bf8b3d781ed1ed43`；后一提交只更新 TUI 冒烟测试，运行二进制仍为 `919259d`。Mac coordinator 与 split-serve 使用该 Native AOT 包，Windows 前台 split-agent 使用同源 Windows 包。模型仍是固定 Qwen3.6-35B-A3B affine8/group64、FP32 GEMM/KV、4090 前20层与 Mac 后20层。没有改内核、权重、状态布局或性能目标。
+运行候选代码为 [PR #25](https://github.com/LittleLittleCloud/Infer.NET/pull/25) 的 `919259d290855b1ce0401374bf8b3d781ed1ed43`；后续 `1bf5ed3` 更新 TUI 冒烟测试，`2dd2a53` 调整紧凑面板间距，当前 TUI 源码已在根工作区构建。Host/agent 运行二进制仍为 `919259d`。Mac coordinator 与 split-serve 使用该 Native AOT 包，Windows 前台 split-agent 使用同源 Windows 包。模型仍是固定 Qwen3.6-35B-A3B affine8/group64、FP32 GEMM/KV、4090 前20层与 Mac 后20层。没有改内核、权重、状态布局或性能目标。
 
 原始用户请求为 4,642 输入、1,088 输出：Mac 记录 prefill 7.011 秒，后段 5.643 秒，隐藏向量等待 0.812 秒，最终状态等待 0.545 秒，导入 0.011 秒；Windows 日志对应该请求的分块计算累计 5.579 秒，分块帧 socket 写入累计 4.346 秒，从开始到状态发送完成为 6.924 秒。旧版没有单独记录最终状态导出/写入，不能将 4.346 秒称为整个跨机传输或纯网络时延。
 
