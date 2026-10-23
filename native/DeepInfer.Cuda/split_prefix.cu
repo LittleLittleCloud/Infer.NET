@@ -496,7 +496,7 @@ API int di_cuda_prefix_execution_mode(void *ptr,int mode) {
 }
 API int di_cuda_prefix_chunk_mode(void *ptr,int tokens) {
     auto *g=static_cast<Model*>(ptr);
-    if(!g||g->position!=0||g->chunk.prepared||tokens!=32&&tokens!=1024&&tokens!=2048||
+    if(!g||g->position!=0||g->chunk.prepared||tokens!=32&&tokens!=256&&tokens!=512&&tokens!=1024&&tokens!=2048||
        tokens>32&&!g->layerBatch)return -1;
     g->prefillChunkTokens=tokens;return 0;
 }

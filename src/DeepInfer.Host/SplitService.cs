@@ -51,7 +51,7 @@ public static class SplitService
         var cudaPrefill = o.Get("cuda-prefill", "batch-fp32");
         if (cudaPrefill is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("cuda-prefill must be serial, batch-fp32 or batch-fp32-packed.");
         var cudaChunk = o.Get("cuda-prefill-chunk", cudaPrefill == "serial" ? "32" : "1024");
-        if (cudaChunk is not ("32" or "1024" or "2048")) throw new ArgumentException("cuda-prefill-chunk must be 32, 1024 or 2048.");
+        if (cudaChunk is not ("32" or "256" or "512" or "1024" or "2048")) throw new ArgumentException("cuda-prefill-chunk must be 32, 256, 512, 1024 or 2048.");
         if (cudaPrefill == "serial" && cudaChunk != "32")
             throw new ArgumentException("Long CUDA chunks require layer-major prefill.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");

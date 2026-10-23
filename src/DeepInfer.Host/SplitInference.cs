@@ -29,7 +29,7 @@ public static class SplitInference
     }
     internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false, int prefillChunk = 32)
     {
-        if (prefillChunk is not (32 or 1024 or 2048)) throw new ArgumentException("Unsupported CUDA prefill chunk.");
+        if (prefillChunk is not (32 or 256 or 512 or 1024 or 2048)) throw new ArgumentException("Unsupported CUDA prefill chunk.");
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=(start.Tensor&1)!=0;var incremental=(start.Tensor&2)!=0;var timer=Stopwatch.StartNew();
         double computeMs=0, stateExportMs=0, sendMs=0;

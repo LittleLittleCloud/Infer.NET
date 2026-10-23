@@ -63,7 +63,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false, int prefillChunkTokens = 32)
     {
         if(packedWeights && !layerBatch) throw new ArgumentException("Packed weights require layer-major prefill.");
-        if(prefillChunkTokens is not (32 or 1024 or 2048) || (!layerBatch && prefillChunkTokens != 32))
+        if(prefillChunkTokens is not (32 or 256 or 512 or 1024 or 2048) || (!layerBatch && prefillChunkTokens != 32))
             throw new ArgumentException("Long CUDA chunks require layer-major prefill.");
         if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
         if(CudaPrefixNative.AbiVersion()!=7) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");

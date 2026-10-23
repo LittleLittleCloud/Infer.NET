@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare real layer-major 1024/2048-token CUDA prefill with 32-token chunks.
+"""Compare layer-major CUDA prefill chunks with the 32-token control.
 
 Exclusive-GPU diagnostic. It does not exercise the RPC transfer or Mac suffix.
 """
@@ -18,7 +18,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--weights', required=True)
 p.add_argument('--library', required=True)
 p.add_argument('--output', required=True, type=pathlib.Path)
-p.add_argument('--chunk', required=True, type=int, choices=(1024, 2048))
+p.add_argument('--chunk', required=True, type=int, choices=(256, 512, 1024, 2048))
 p.add_argument('--kv-bytes', type=int, choices=(2, 4), default=4)
 p.add_argument('--mode', type=int, choices=(1, 5), default=5)
 a = p.parse_args()

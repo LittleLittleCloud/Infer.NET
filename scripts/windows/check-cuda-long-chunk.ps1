@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory=$true)][string]$Config,
     [Parameter(Mandatory=$true)][string]$Output,
-    [ValidateSet(1024,2048)][int]$Chunk=1024,
+    [ValidateSet(256,512,1024,2048)][int]$Chunk=1024,
     [ValidateSet(1,5)][int]$Mode=5,
     [ValidateSet(2,4)][int]$KvBytes=4
 )
