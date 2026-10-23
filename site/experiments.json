@@ -228,5 +228,23 @@
       "python3 scripts/deploy/acceptance.py --token-file /PRIVATE/mac/token.txt --output artifacts/deploy/acceptance-UNIQUE"
     ],
     "evidence": "artifacts/deploy/acceptance-6/summary.json"
+  },
+  {
+    "id": "chat-playground",
+    "title": "三种 Chat API 与无边框流式 TUI",
+    "kind": "8bit · 真实双机功能验收 · 非性能基准",
+    "source": "docs/CHAT-ACCEPTANCE.md",
+    "question": "让现有 5200 部署可直接用于多轮对话，兼容官方 SDK 的流式与完整响应。",
+    "setup": "2026-10-22；两端 Native AOT 91479e3ac0bb6897fdeb8c90a4255f31fb9140db；M5 Pro + RTX 4090，8bit 权重、FP32 KV、2K 总上下文、256 输出上限。",
+    "change": "Microsoft.Extensions.AI.IChatClient playground；无边框布局、Stop/New chat、结构化历史；Chat Completions/Messages/Responses 三格式；短回答后的 agent 连接等待。",
+    "result": "真实旧 API 15 项、新兼容 API 15 项、实际终端 TUI 5 项通过。三格式文本与 usage 一致，连续短回答、Responses output 回传、取消恢复正常。",
+    "validation": "102 项单测；三平台 CI 普通与 AOT 各 25 旧 RPC/32 新协议；本机 AOT/官方 SDK/PTY 共 48 项受控检查通过。真实模型结果单列；分词与官方模板 43 tokens 一致。",
+    "conclusion": "当前双机部署已更新，TUI 默认 5200，可直接多轮流式对话。文本子集兼容，不支持工具/图像/存储式 Responses/非 greedy；没有扩大容量或宣布性能达标。Windows 仍为前台 agent，SCM 未安装。",
+    "next": "完成 Windows SCM 托管、长时稳定性与 BF16/128K 性能目标；按需求扩展工具调用与采样。",
+    "commands": [
+      "dotnet run --project src/DeepInfer.Tui -c Release",
+      "python scripts/chat-acceptance.py --token-file /PRIVATE/mac/token.txt --output artifacts/chat/real-UNIQUE"
+    ],
+    "evidence": "artifacts/chat/real-public-final/summary.json + real-legacy-final/summary.json + real-tui-final/summary.json"
   }
 ]
