@@ -220,9 +220,9 @@
     "question": "将一次性双机脚本变成可重复请求、可托管、有边界的服务。",
     "setup": "2026-10-22；两端源码 85c68efe50ceced6bb00a72ce8214e98dd168724；M5 Pro + RTX 4090，已有家庭 LAN，affine 8bit、FP32 KV、2K 总上下文上限、256 输出上限。",
     "change": "常驻模型、逐请求状态 reset、双向 TLS、SSE、取消/deadline、限流、模型散列校验、Native AOT 包、LaunchAgent/SCM 安装器。",
-    "result": "真实模型 15 项服务验收通过；8 请求突发得到 3 成功/5 个 429。三轮 17/32 短请求 decode 为 3.94/68.24/72.06 t/s；首轮第二 token 停顿 7.46 秒，保留异常，非正式吞吐基准。 用户启动后复测 15 项仍全部通过，但 InferNetCuda 查询返回服务不存在；新一轮首请求 prefill 66.44 秒，三轮完整数据保留于记录中。",
+    "result": "初次与后续两轮真实服务验收均通过 15 项检查，队列均为 3 成功/5 个 429。最新前台 agent 复测：17/32 三次 prefill 68.67/1.69/1.05 秒，decode 0.98/30.03/72.20 t/s；此前慢轮完整保留于记录中。",
     "validation": "85 项单测；三平台 CI 的 RPC 与 Native AOT RPC 各 25 项通过。模型输出、SSE 与取消恢复一致，Mac PID 保持不变；Mac LaunchAgent 已运行。 Windows agent 断线后撤销 ready，重启后输出一致且 Mac PID 不变；Native AOT CLI 流式 EOS 通过。",
-    "conclusion": "真实双机服务可连续请求；用户启动后仍未找到预期 Windows SCM 服务，需核对启动方式。首请求长停顿复现，BF16/128K 性能尚未通过。",
+    "conclusion": "用户确认采用前台 agent，SCM 尚未安装。真实推理功能通过，首请求长停顿仍复现；监测到整机换页活动，尚不能全部归因于 worker。BF16/128K 性能目标未通过。",
     "next": "完成 Windows 服务托管验收，定位首请求停顿，再推进长上下文目标。",
     "commands": [
       "python3 scripts/deploy/acceptance.py --token-file /PRIVATE/mac/token.txt --output artifacts/deploy/acceptance-UNIQUE"

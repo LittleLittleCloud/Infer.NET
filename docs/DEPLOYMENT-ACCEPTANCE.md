@@ -100,3 +100,22 @@ Windows 私有配置已增加 `log-file`，SCM 启动后记录持久日志；日
 首次 prefill 约 66.44 秒，decode 约 20.89 秒，单 token 最大约 20.47 秒；保留慢轮，不将第三轮恢复到约 72 t/s 表述为稳定性能。长停顿期间采样显示 Metal command queue 在提交系统调用中、模型线程在 `waitUntilCompleted`，只能定位等待发生在 Mac Metal 路径，不能单凭该采样确定根因。没有完整换页增量和供电对照，本轮不是正式性能实验，也不能证明 swap。未因验收重启两端 worker。
 
 本轮 summary SHA256：`bc19d603077b28c55388309f581b97260c7ff2884c4f9316e1085f5b31b9a3db`。采样及服务查询输出仅本地保留，公开记录省略账号、路径与网络地址。
+
+## 前台 agent 再次复测（2026-10-22，追加）
+
+用户已澄清此前直接启动 exe，等待凭据的服务安装器已停止、没有创建 SCM 服务。本轮开始时旧 PID 已退出，Windows 无 deepinfer 进程，Mac 不就绪。确认无冲突后，重新启动同一已校验候选二进制，由保留 SSH 会话的开发 runner 维持前台进程；未改变服务托管方式，Mac 模型进程未重启。
+
+本轮 15 项真实检查再次全部通过，队列 3 成功/5 个 429；输出状态重置、SSE、取消恢复与自然 EOS 正常。三次连续 17 输入/32 固定输出的原始结果：
+
+| 请求 | prefill ms | decode token/s |
+|---|---:|---:|
+| 1 | 68665.6741 | 0.9847 |
+| 2 | 1688.1245 | 30.0251 |
+| 3 | 1050.1618 | 72.2015 |
+
+本轮开始时 Mac 为 AC Power。覆盖就绪等待及全套验收的整机 vm_stat 增量：swap-in 24.637 GiB，swap-out 22.562 GiB（16384 字节页）。该区间含启动等待且是整机计数，不能全部归因于模型，也不是单个请求的换页测量。它证明存在明显换页活动，不能独立证明慢请求全部由 swap 导致。
+
+首次 prefill 仍约 68.67 秒，decode 约 31.48 秒；第三次恢复约 72.20 t/s。保留三轮，结论是功能可用但首请求时延不稳定，不宣称性能达标。Windows 前台 agent 保留运行，Windows Service 安装继续待用户操作。
+
+原始证据本地 `artifacts/deploy/acceptance-foreground-2/summary.json`、`foreground-2-environment.json` 与 Windows runner 日志；未公开原始日志。
+summary SHA256：`f4447c82fe98043c84492825408e1c88314c30217a9dcae081ce792500270a5d`。
