@@ -13,7 +13,7 @@ public sealed class DeploymentTests
         using var key = RSA.Create(2048);
         var request = new CertificateRequest("CN=" + name, key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         using var cert = request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddHours(1));
-        return X509CertificateLoader.LoadPkcs12(cert.Export(X509ContentType.Pkcs12), null);
+        return X509CertificateLoader.LoadPkcs12(cert.Export(X509ContentType.Pkcs12), null, OperatingSystem.IsWindows() ? X509KeyStorageFlags.MachineKeySet : X509KeyStorageFlags.EphemeralKeySet);
     }
     private static string Pin(X509Certificate2 cert) => Convert.ToHexString(SHA256.HashData(cert.RawData));
     [Fact]

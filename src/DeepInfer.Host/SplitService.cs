@@ -21,7 +21,7 @@ public static class SplitService
 {
     private static readonly string Build = typeof(SplitService).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unknown";
     private static string Token(Options o) => o.Token is { Length: >= 32 } s ? s : throw new ArgumentException("A token-file containing at least 32 characters is required.");
-    private static X509Certificate2 Certificate(Options o) => X509CertificateLoader.LoadPkcs12FromFile(o.Get("tls-cert", ""), File.ReadAllText(o.Get("tls-password-file", "")).Trim(), OperatingSystem.IsWindows() ? X509KeyStorageFlags.DefaultKeySet : X509KeyStorageFlags.EphemeralKeySet);
+    private static X509Certificate2 Certificate(Options o) => X509CertificateLoader.LoadPkcs12FromFile(o.Get("tls-cert", ""), File.ReadAllText(o.Get("tls-password-file", "")).Trim(), OperatingSystem.IsWindows() ? X509KeyStorageFlags.MachineKeySet : X509KeyStorageFlags.EphemeralKeySet);
     private static FileStream Lock(Options o, string role)
     {
         var path = o.Get("lock-file", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Infer.NET", role + ".lock"));
@@ -121,11 +121,12 @@ public static class SplitService
             if (!warmed) { await Fail(context, 503, "not_ready", state); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
+            var acquired = false;
             try
             {
                 using var slot = await queue.Enter(timeout.Token);
                 if (slot is null) { await Fail(context, 429, "queue_full", "Request queue is full."); return; }
-                state = "Busy";
+                acquired = true; state = "Busy";
                 var ids = gpu!.Tokenize(input.Prompt, timeout.Token);
                 if (ids.Length + input.MaxTokens > 2048) { await Fail(context, 400, "context_length", "Prompt plus output must fit 2048 tokens; no silent truncation."); return; }
                 gpu.Reset(ids.Length + input.MaxTokens);
@@ -197,7 +198,7 @@ public static class SplitService
             { await Fail(context, 502, "handoff_failed", "State transfer failed; request state discarded."); }
             catch (InvalidOperationException)
             { state = "Faulted"; warmed = false; life.Cancel(); throw; }
-            finally { if (warmed) state = "Ready"; }
+            finally { if (acquired && warmed) state = "Ready"; }
         }
         app.MapPost("/v1/infer", (InferenceRequest r, HttpContext c) => Handle(r, c, false));
         app.MapPost("/v1/infer/stream", (InferenceRequest r, HttpContext c) => Handle(r, c, true));
