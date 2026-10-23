@@ -94,7 +94,10 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             }
         }
         profile.mark((l+1)%4 ? 1 : 2);
-        chunk_mv(g,m[6],p.attention,p.out,count);
+        const char *outputSplitK=std::getenv("DEEPINFER_CUDA_OUTPUT_SPLIT_K");
+        if(g->bf16Projections&&outputSplitK&&std::strcmp(outputSplitK,"1")==0)
+            prefill_gemm_bf16_split_k<<<dim3((m[6].rows+63)/64,(count+31)/32),128>>>(m[6],p.attention,p.out,count);
+        else chunk_mv(g,m[6],p.attention,p.out,count);
         probe("output-projection",p.out,2048,l);
         chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
         probe("residual-norm",p.norm,2048,l);

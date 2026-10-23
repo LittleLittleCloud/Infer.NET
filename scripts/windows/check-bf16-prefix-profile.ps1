@@ -5,7 +5,8 @@ param(
     [ValidateSet('bf16','fp32')][string]$Shared='fp32',
     [string]$RouteProbe='1',
     [switch]$StageProbe,
-    [switch]$SplitKQkv
+    [switch]$SplitKQkv,
+    [switch]$SplitKOutput
 )
 $ErrorActionPreference='Stop'
 $root=Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
@@ -18,6 +19,7 @@ $env:DEEPINFER_CUDA_SHARED_FP32=if($Shared -eq 'fp32'){'1'}else{'0'}
 $env:DEEPINFER_CUDA_ROUTE_PROBE=$RouteProbe
 if($StageProbe){$env:DEEPINFER_CUDA_STAGE_DIR=$Output}
 $env:DEEPINFER_CUDA_QKV_SPLIT_K=if($SplitKQkv){'1'}else{'0'}
+$env:DEEPINFER_CUDA_OUTPUT_SPLIT_K=if($SplitKOutput){'1'}else{'0'}
 Set-Location $root
 python (Join-Path $root 'scripts\split\check-bf16-prefix.py') --weights $model --library $dll --output $Output --tokens 128 --save-trace
 if($LASTEXITCODE -ne 0){throw "BF16 prefix diagnostic failed with code $LASTEXITCODE"}
