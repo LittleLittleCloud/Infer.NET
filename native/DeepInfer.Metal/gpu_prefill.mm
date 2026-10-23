@@ -329,7 +329,7 @@ struct GPrefill {
  std::array<id<MTLComputePipelineState>,PPCount> ps;
  id<MTLBuffer> x,norm,out,qkv,z,a,b,q,k,v,attention,conv,router,ids,prob,sharedAct,sharedRoute,sharedOut,expertAct,expertOut,scores,tokens,trace;
  id<MTLBuffer> groupedRoutes,groupedCounts,groupedTiles,groupedTileCount,groupedDispatch,deltaW,deltaU,deltaCausal,deltaFactors;
- bool smallBf16=false,groupedExperts=false,chunkedDelta=false,deviceDelta=false,bf16Gemm=false,expandedGemm=false,expandedExperts=false,packedExperts=false;
+ bool groupedExperts=false,chunkedDelta=false,deviceDelta=false,bf16Gemm=false,expandedGemm=false,expandedExperts=false,packedExperts=false;
  bool directExperts=false,expertActDirect=false,pipelineExperts=false,adaptiveExperts=false,fusedExpertGate=false;id<MTLComputePipelineState> packedGatePs,packedDownPs,packedGateDirectPs;
  int submissions=1;
  bool attentionBf16=false;uint32_t attentionQueryTokens=4,attentionKeyTokens=32,attentionThreads=128,attentionBatchTokens=128,attentionPartitionTokens=1024;id<MTLComputePipelineState> attentionBf16Ps,attentionWidePs,queryPackPs;id<MTLBuffer> packedQueries;
@@ -340,7 +340,6 @@ struct GPrefill {
 static void g_prefill_destroy(GPrefill *p){delete p;}
 static bool p_create(GModel *g,char *error,int capacity) {
  auto *p=new GPrefill{};
- p->smallBf16=std::getenv("DEEPINFER_SPLIT_BF16")&&strcmp(std::getenv("DEEPINFER_SPLIT_BF16"),"1")==0;
  p->groupedExperts=!std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_EXPERTS"),"grouped")==0;
  p->chunkedDelta=!std::getenv("DEEPINFER_METAL_PREFILL_DELTA")||strcmp(std::getenv("DEEPINFER_METAL_PREFILL_DELTA"),"chunked")==0;
  if(const char *v=std::getenv("DEEPINFER_METAL_PREFILL_DELTA_IMPL")){
@@ -412,7 +411,6 @@ static bool p_create(GModel *g,char *error,int capacity) {
   NSArray<NSString*> *names=@[@"expanded_weights",@"expanded_pack",@"expanded_matrix",@"expanded_gate"];
   for(int i=0;i<4;i++){p->expandedPs[i]=[g->compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:names[i]] error:&failure];if(!p->expandedPs[i]){error_text(error,capacity,failure.localizedDescription);delete p;return false;}}
  }
- if(p->smallBf16&&(!p->bf16Gemm||!p->expandedGemm||!p->groupedExperts)){error_text(error,capacity,@"Split BF16 requires bf16-nax, hybrid/expanded GEMM and grouped experts");delete p;return false;}
  if(p->bf16Gemm&&p->packedExperts){
   auto packedSource=[[NSString stringWithFormat:@"#define PACKED_EXPERT_PIPELINE %d\n#define PACKED_EXPERT_ADAPTIVE %d\n",p->pipelineExperts?1:0,p->adaptiveExperts?1:0] stringByAppendingString:[source stringByAppendingString:prefill_expert_packed_source]];
   auto lib=[g->compute.device newLibraryWithSource:packedSource options:options error:&failure];if(!lib){error_text(error,capacity,failure.localizedDescription);delete p;return false;}
@@ -482,7 +480,7 @@ static void p_build_groups(GModel *g,id<MTLComputeCommandEncoder> e,PShape shape
 }
 static void p_delta(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuffer> state,id<MTLBuffer> history,PShape shape) {
  auto *p=g->prefill;
- if(p->chunkedDelta&&(shape.tokens>=64||g->prefill->smallBf16)){struct {uint32_t tokens,blocks;} ds{shape.tokens,(shape.tokens+31)/32};
+ if(p->chunkedDelta&&shape.tokens>=64){struct {uint32_t tokens,blocks;} ds{shape.tokens,(shape.tokens+31)/32};
   g_bind(e,p->conv,0);g_bind(e,p->a,1);g_bind(e,p->b,2);g_bind(e,p->deltaW,3);g_bind(e,p->deltaU,4);g_bind(e,p->deltaCausal,5);g_bind(e,p->deltaFactors,6);[e setBytes:&ds length:sizeof(ds) atIndex:7];
   p_run(g,e,PDeltaPrepare,MTLSizeMake(32,ds.blocks,1),128);g_barrier(e);
   g_bind(e,state,0);g_bind(e,p->conv,1);g_bind(e,p->deltaW,2);g_bind(e,p->deltaU,3);g_bind(e,p->deltaCausal,4);g_bind(e,p->deltaFactors,5);g_bind(e,p->attention,6);g_bind(e,history,7);g_bind(e,p->qkv,8);[e setBytes:&ds length:sizeof(ds) atIndex:9];
@@ -534,17 +532,17 @@ static void p_expanded(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,QMatr
 }
 static void p_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuffer> x,id<MTLBuffer> out,PShape shape,bool experts=false) {
  shape.rows=m.rows;shape.columns=m.columns;shape.bits=m.bits;
- bool direct=experts&&g->prefill->expertActDirect&&x==g->prefill->expertAct&&(shape.tokens>=64||g->prefill->smallBf16);
- if(experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&(shape.tokens>=64||g->prefill->smallBf16)&&!direct)p_pack_expert(g,e,shape,false,x);
- if(g->prefill->bf16Gemm&&g->prefill->expandedGemm&&(shape.tokens>=64||g->prefill->smallBf16)&&m.rows>=32&&(!experts||(g->prefill->groupedExperts&&g->prefill->expandedExperts))){p_expanded(g,e,m,nullptr,x,out,shape,experts);return;}
- g_bind(e,m.packed,0);g_bind(e,m.scales,1);g_bind(e,m.biases,2);g_bind(e,!direct&&experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&(shape.tokens>=64||g->prefill->smallBf16)?g->prefill->expandedInput:x,3);g_bind(e,out,4);[e setBytes:&shape length:sizeof(shape) atIndex:5];
- if(!experts&&g->prefill->bf16Gemm&&g->prefill->matrix&&m.rows>=32&&(shape.tokens>=64||g->prefill->smallBf16)){
+ bool direct=experts&&g->prefill->expertActDirect&&x==g->prefill->expertAct&&shape.tokens>=64;
+ if(experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&shape.tokens>=64&&!direct)p_pack_expert(g,e,shape,false,x);
+ if(g->prefill->bf16Gemm&&g->prefill->expandedGemm&&shape.tokens>=64&&m.rows>=32&&(!experts||(g->prefill->groupedExperts&&g->prefill->expandedExperts))){p_expanded(g,e,m,nullptr,x,out,shape,experts);return;}
+ g_bind(e,m.packed,0);g_bind(e,m.scales,1);g_bind(e,m.biases,2);g_bind(e,!direct&&experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&shape.tokens>=64?g->prefill->expandedInput:x,3);g_bind(e,out,4);[e setBytes:&shape length:sizeof(shape) atIndex:5];
+ if(!experts&&g->prefill->bf16Gemm&&g->prefill->matrix&&m.rows>=32&&shape.tokens>=64){
   [e setComputePipelineState:g->prefill->bf16ps[m.bits==8?1:0]];
   [e dispatchThreadgroups:MTLSizeMake((m.rows+63)/64,(shape.tokens+63)/64,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;return;}
  if(!experts&&g->prefill->matrix&&m.rows>=128){uint32_t tile=g->prefill->matrixTokens?g->prefill->matrixTokens:std::min(32u,((shape.tokens+7)/8)*8);
  int pipeline=PMatrix85+int((tile/8-1)*2)+(m.bits==8?1:0);
  p_run(g,e,pipeline,MTLSizeMake((m.rows+g->prefill->matrixRows-1)/g->prefill->matrixRows,(shape.tokens+tile-1)/tile,1),g->prefill->matrixRows*4);return;}
- if(experts&&g->prefill->groupedExperts&&(shape.tokens>=64||g->prefill->smallBf16)){auto *p=g->prefill;
+ if(experts&&g->prefill->groupedExperts&&shape.tokens>=64){auto *p=g->prefill;
   g_bind(e,p->groupedRoutes,6);g_bind(e,p->groupedCounts,7);g_bind(e,p->groupedTiles,8);[e setComputePipelineState:p->bf16Gemm?(p->packedExperts?p->packedDownPs:p->bf16ps[3]):p->ps[PGroupedDown]];
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:16 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?32:128):256,1,1)];g->dispatches++;return;}
  if(experts)g_bind(e,g->prefill->ids,6);
@@ -552,13 +550,13 @@ static void p_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuf
 }
 static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatrix &up,id<MTLBuffer> out,PShape shape,bool experts) {
  shape.rows=gate.rows;shape.columns=gate.columns;shape.bits=gate.bits;
- bool direct=experts&&g->prefill->directExperts&&out==g->prefill->expertAct&&gate.rows<=512&&(shape.tokens>=64||g->prefill->smallBf16);
+ bool direct=experts&&g->prefill->directExperts&&out==g->prefill->expertAct&&gate.rows<=512&&shape.tokens>=64;
  if(out==g->prefill->expertAct)g->prefill->expertActDirect=direct;
- if(experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&(shape.tokens>=64||g->prefill->smallBf16))p_pack_expert(g,e,shape,true,g->prefill->norm);
+ if(experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&shape.tokens>=64)p_pack_expert(g,e,shape,true,g->prefill->norm);
  g_bind(e,gate.packed,0);g_bind(e,gate.scales,1);g_bind(e,gate.biases,2);g_bind(e,up.packed,3);g_bind(e,up.scales,4);g_bind(e,up.biases,5);
- g_bind(e,experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&(shape.tokens>=64||g->prefill->smallBf16)?g->prefill->expandedInput:g->prefill->norm,6);g_bind(e,out,7);[e setBytes:&shape length:sizeof(shape) atIndex:8]; if(experts)g_bind(e,g->prefill->ids,9);
- if(g->prefill->bf16Gemm&&g->prefill->expandedGemm&&(shape.tokens>=64||g->prefill->smallBf16)&&(!experts||(g->prefill->groupedExperts&&g->prefill->expandedExperts))){p_expanded(g,e,gate,&up,g->prefill->norm,out,shape,experts);return;}
- if(experts&&g->prefill->groupedExperts&&(shape.tokens>=64||g->prefill->smallBf16)){auto *p=g->prefill;
+ g_bind(e,experts&&g->prefill->bf16Gemm&&g->prefill->packedExperts&&shape.tokens>=64?g->prefill->expandedInput:g->prefill->norm,6);g_bind(e,out,7);[e setBytes:&shape length:sizeof(shape) atIndex:8]; if(experts)g_bind(e,g->prefill->ids,9);
+ if(g->prefill->bf16Gemm&&g->prefill->expandedGemm&&shape.tokens>=64&&(!experts||(g->prefill->groupedExperts&&g->prefill->expandedExperts))){p_expanded(g,e,gate,&up,g->prefill->norm,out,shape,experts);return;}
+ if(experts&&g->prefill->groupedExperts&&shape.tokens>=64){auto *p=g->prefill;
   g_bind(e,p->groupedRoutes,9);g_bind(e,p->groupedCounts,10);g_bind(e,p->groupedTiles,11);[e setComputePipelineState:p->bf16Gemm?(p->packedExperts?(direct?p->packedGateDirectPs:p->packedGatePs):p->bf16ps[2]):p->ps[PGroupedGate]];
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:0 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?64:128):256,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
@@ -569,7 +567,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  if(!graph||!tokens||!((begin==0&&end==40)||(begin==20&&end==40&&hidden))||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
  auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
  if(begin==0&&g->splitActive){error_text(error,capacity,@"Reset split graph before full prefill");return -1;}
- if(begin==20){if(!g->kvBf16){error_text(error,capacity,@"Split handoff requires BF16 KV");return -1;}
+ if(begin==20){
   if(!g->splitActive){if(g->position){error_text(error,capacity,@"Reset before split prefill");return -1;}g->splitActive=true;}
   g->splitMissing=(1ull<<40)-1;
  }
@@ -630,7 +628,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   g_bind(e,p->x,0);g_bind(e,p->out,1);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];p_run(g,e,PAdd,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("residual-norm"))return -1;
   p_gemv(g,e,m[GR],p->norm,p->router,shape);p_gate(g,e,m[GSG],m[GSU],p->sharedAct,shape,false);p_gemv(g,e,m[GSR],p->norm,p->sharedRoute,shape);g_barrier(e);if(!checkpoint("router-shared-gate"))return -1;
   g_bind(e,p->router,0);g_bind(e,p->ids,1);g_bind(e,p->prob,2);g_bind(e,p->groupedTileCount,3);p_run(g,e,PTop,MTLSizeMake(count,1,1),32);g_barrier(e);
-  if(p->groupedExperts&&(count>=64||p->smallBf16))p_build_groups(g,e,shape,m[GEG].rows,m[GED].rows);if(!checkpoint("routing"))return -1;
+  if(p->groupedExperts&&count>=64)p_build_groups(g,e,shape,m[GEG].rows,m[GED].rows);if(!checkpoint("routing"))return -1;
   p_gate(g,e,m[GEG],m[GEU],p->expertAct,shape,true);g_barrier(e);if(!checkpoint("expert-gate"))return -1;
   p_gemv(g,e,m[GED],p->expertAct,p->expertOut,shape,true);p_gemv(g,e,m[GSD],p->sharedAct,p->sharedOut,shape);g_barrier(e);if(!checkpoint("expert-shared-down"))return -1;
   g_bind(e,p->x,0);g_bind(e,p->expertOut,1);g_bind(e,p->sharedOut,2);g_bind(e,p->sharedRoute,3);g_bind(e,p->prob,4);
@@ -703,8 +701,8 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
 // [position,kv-head,dimension] BF16, or [value-head,value-dim,key-dim] FP32.
 extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position,void *data,int bytes,int importState){
  if(!graph||!data||layer<0||layer>=20||kind<0||kind>1||position<1)return -1;
- auto *g=static_cast<GModel*>(graph);if(!g->kvBf16||g->position!=(uint32_t)position)return -1;
- auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*2;
+ auto *g=static_cast<GModel*>(graph);if(g->position!=(uint32_t)position)return -1;
+ auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*(g->kvBf16?2:4);
  if(bytes!=expected)return -1;
  uint64_t bit=1ull<<(layer*2+kind);
  if(importState&&(!g->splitActive||!(g->splitMissing&bit)))return -1;

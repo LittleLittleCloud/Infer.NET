@@ -15,15 +15,15 @@ public static class SplitInference
     private const string PrefixHash="ff5ba3ac11d26d77ea930709ff2a0489df3a00bbdaa2b5e8978a16845a50fe77";
     public static async Task Worker(Options options,CancellationToken ct)
     {
-        var token=RequireToken(options);var endpoint=new Uri(options.Get("endpoint","tcp://127.0.0.1:5210"));
+        var token=RequireToken(options);var kvBytes=KvBytes(options);var endpoint=new Uri(options.Get("endpoint","tcp://127.0.0.1:5210"));
         var bundle=options.Get("weights","artifacts/split/prefix.bin");
         Console.Error.WriteLine("Verifying pinned prefix bundle SHA256...");
         await using(var f=File.OpenRead(bundle))
             if(!Convert.ToHexStringLower(await SHA256.HashDataAsync(f,ct)).Equals(PrefixHash,StringComparison.Ordinal))throw new InvalidDataException("Pinned prefix bundle hash mismatch.");
         Console.Error.WriteLine("Loading resident CUDA prefix...");
-        using var gpu=new CudaPrefixSession(bundle,2048);
+        using var gpu=new CudaPrefixSession(bundle,2048,kvBytes);
         using var client=new TcpClient{NoDelay=true};await client.ConnectAsync(endpoint.Host,endpoint.Port,ct);
-        var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct);
+        var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
         var start=await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
         for(var offset=0;offset<tokens.Length;offset+=32)
@@ -42,13 +42,13 @@ public static class SplitInference
     }
     public static async Task Coordinator(Options options,CancellationToken ct)
     {
-        var token=RequireToken(options);var uri=new Uri(options.Get("listen","tcp://127.0.0.1:5210"));var ip=IPAddress.Parse(uri.Host);
+        var token=RequireToken(options);var kvBytes=KvBytes(options);var uri=new Uri(options.Get("listen","tcp://127.0.0.1:5210"));var ip=IPAddress.Parse(uri.Host);
         if(!IPAddress.IsLoopback(ip)&&!options.Flag("allow-remote"))throw new ArgumentException("Remote split listener requires --allow-remote.");
         var verify=options.Flag("verify");var max=options.Number("max-tokens",8,1,256);
         var output=Path.GetFullPath(options.Get("output","artifacts/split/run-"+DateTime.UtcNow.ToString("yyyyMMddTHHmmss")));
         Directory.CreateDirectory(output);
         Console.Error.WriteLine("Loading full resident Metal model...");
-        using var gpu=new MetalSplitSession(options.Get("weights","models/qwen3.6-35b-a3b-8bit-mlx"));
+        using var gpu=new MetalSplitSession(options.Get("weights","models/qwen3.6-35b-a3b-8bit-mlx"),kvBytes);
         var prompt=options.Get("prompt-file","") is {Length:>0} file?await File.ReadAllTextAsync(file,ct):options.Get("prompt","用一句话介绍你自己。");
         var tokens=gpu.Tokenize(prompt,ct);
         if(tokens.Length>2048||tokens.Length+max>2048)throw new ArgumentException("Initial split executor supports prompt + output <=2048; no long-context performance claim.");
@@ -61,7 +61,7 @@ public static class SplitInference
             var next=gpu.Reference(tokens,ct,logits,(p,l,x)=>{if(l<20)x.CopyTo(referenceTrace,(p*20+l)*2048);});
             await File.WriteAllBytesAsync(Path.Combine(output,"reference-logits-0.f32"),Bytes(logits),ct);
             for(var l=0;l<20;l++)for(var t=0;t<2;t++)
-            {var data=new byte[CudaPrefixSession.StateBytes(l,t,tokens.Length)];gpu.State(l,t,tokens.Length,data,false);await File.WriteAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),data,ct);}
+            {var data=new byte[CudaPrefixSession.StateBytes(l,t,tokens.Length,kvBytes)];gpu.State(l,t,tokens.Length,data,false);await File.WriteAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),data,ct);}
             for(var i=0;i<max;i++)
             {expected.Add(next);if(i+1<max){next=gpu.Forward(next,tokens.Length+i,logits);await File.WriteAllBytesAsync(Path.Combine(output,$"reference-logits-{i+1}.f32"),Bytes(logits),ct);}}
             await File.WriteAllBytesAsync(Path.Combine(output,"reference-prefix-trace.f32"),Bytes(referenceTrace),ct);
@@ -71,7 +71,7 @@ public static class SplitInference
         using var listener=new TcpListener(ip,uri.Port);listener.Start(1);
         Console.Error.WriteLine($"SPLIT_LISTENING promptTokens={tokens.Length}");
         using var client=await listener.AcceptTcpClientAsync(ct);client.NoDelay=true;listener.Stop();
-        var wire=await SplitWire.ConnectAsync(client.GetStream(),token,true,Guid.Empty,ct);
+        var wire=await SplitWire.ConnectAsync(client.GetStream(),token,true,Guid.Empty,ct,kvBytes);
         var timer=Stopwatch.StartNew();await wire.SendAsync(new(SplitWire.Start,20,verify?1:0,0,tokens.Length,Bytes(tokens)),ct);
         var nextToken=-1;
         for(var offset=0;offset<tokens.Length;offset+=32)
@@ -97,7 +97,7 @@ public static class SplitInference
             {
                 var reference=await File.ReadAllBytesAsync(Path.Combine(output,$"reference-state-{l}-{t}.bin"),ct);
                 await File.WriteAllBytesAsync(Path.Combine(output,$"cuda-state-{l}-{t}.bin"),f.Data,ct);
-                checks.Add(Compare($"state/l{l}/t{t}",StateFloats(reference,l),StateFloats(f.Data,l)));
+                checks.Add(Compare($"state/l{l}/t{t}",StateFloats(reference,l,kvBytes),StateFloats(f.Data,l,kvBytes)));
             }
             gpu.State(l,t,tokens.Length,f.Data,true);
         }
@@ -111,16 +111,17 @@ public static class SplitInference
         }
         var elapsed=timer.Elapsed.TotalMilliseconds;
         var result=new SplitResult(wire.Request.ToString(),SplitWire.Revision,tokens.Length,ids.ToArray(),gpu.Decode(ids.ToArray()),expected.ToArray(),
-            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),"CUDA serial-token affine8 prefix; Metal <=32-token suffix; BF16 GEMM operands and KV; FP32 accumulation/recurrent state; authenticated direct LAN; no prefix hit");
+            verify&&ids.SequenceEqual(expected)&&checks.All(x=>x.Pass),verify,hiddenReadyMs,readyMs,elapsed,checks.ToArray(),$"CUDA serial-token affine8 prefix; Metal <=32-token suffix; KV={(kvBytes==2?"BF16":"FP32 diagnostic")}; FP32 GEMV/recurrent state; authenticated direct LAN; no prefix hit");
         var json=JsonSerializer.Serialize(result,SplitJson.Default.SplitResult);await File.WriteAllTextAsync(Path.Combine(output,"result.json"),json+Environment.NewLine,ct);Console.WriteLine(json);
         if(verify&&!result.Verified)throw new InvalidOperationException("Split correctness gate failed; see result.json. Do not use these timings as accepted performance.");
     }
+    private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };
     private static string RequireToken(Options o)=>o.Token is {Length:>=32} t?t:throw new ArgumentException("Set DEEPINFER_TOKEN to a random secret of at least 32 characters.");
     private static byte[] Bytes(float[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
     private static byte[] Bytes(int[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
     private static int[] Ints(byte[] x)=>MemoryMarshal.Cast<byte,int>(x).ToArray();
     private static float[] Floats(byte[] x)=>MemoryMarshal.Cast<byte,float>(x).ToArray();
-    private static float[] StateFloats(byte[] data,int layer)=>(layer+1)%4!=0?Floats(data):MemoryMarshal.Cast<byte,ushort>(data).ToArray().Select(x=>BitConverter.Int32BitsToSingle(x<<16)).ToArray();
+    private static float[] StateFloats(byte[] data,int layer,int kvBytes)=>(layer+1)%4!=0||kvBytes==4?Floats(data):MemoryMarshal.Cast<byte,ushort>(data).ToArray().Select(x=>BitConverter.Int32BitsToSingle(x<<16)).ToArray();
     private static SplitCheck Compare(string name,ReadOnlySpan<float> expected,ReadOnlySpan<float> actual)
     {
         double error=0,norm=0,max=0;for(var i=0;i<expected.Length;i++){var d=(double)expected[i]-actual[i];error+=d*d;norm+=(double)expected[i]*expected[i];max=Math.Max(max,Math.Abs(d));}

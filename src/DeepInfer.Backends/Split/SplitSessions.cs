@@ -10,10 +10,10 @@ public sealed class MetalSplitSession : IDisposable
     private readonly Qwen36Weights weights;
     private readonly Qwen36Gpu graph;
     private readonly QwenTokenizer tokenizer;
-    public MetalSplitSession(string directory)
+    public MetalSplitSession(string directory, int kvBytes = 2)
     {
-        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != "bf16" || Environment.GetEnvironmentVariable("DEEPINFER_SPLIT_BF16") != "1")
-            throw new InvalidOperationException("Split sessions require DEEPINFER_METAL_KV=bf16 and DEEPINFER_SPLIT_BF16=1.");
+        if (kvBytes is not (2 or 4) || Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != (kvBytes == 2 ? "bf16" : "fp32"))
+            throw new InvalidOperationException("Split session KV precision must match the selected protocol profile.");
         device = new();
         try
         {
@@ -31,7 +31,7 @@ public sealed class MetalSplitSession : IDisposable
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
     public int Reference(int[] tokens, CancellationToken ct, float[] logits, Action<int,int,float[]>? trace)
     {
-        // Match the first CUDA correctness path: <=32-token chunks, BF16 multiplicands with FP32 accumulation.
+        // Match the first CUDA correctness path: <=32-token chunks, FP32 affine GEMV.
         var next = -1;
         for (var offset = 0; offset < tokens.Length; offset += 32)
         {
@@ -46,10 +46,14 @@ public sealed class MetalSplitSession : IDisposable
 public sealed unsafe class CudaPrefixSession : IDisposable
 {
     private nint handle;
-    public CudaPrefixSession(string bundle, int capacity)
+    private readonly int kvBytes;
+    public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2)
     {
+        if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
+        if(CudaPrefixNative.AbiVersion()!=2) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        this.kvBytes = kvBytes;
         var error = new byte[2048];
-        fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, e, error.Length);
+        fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
         if (handle == 0) throw new InvalidOperationException(Message(error));
     }
     private static string Message(byte[] e) => System.Text.Encoding.UTF8.GetString(e).TrimEnd('\0');
@@ -65,22 +69,25 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public byte[] State(int layer, int tensor, int position)
     {
         ObjectDisposedException.ThrowIf(handle == 0, this);
-        var data = new byte[StateBytes(layer,tensor,position)]; var error = new byte[2048];
+        var data = new byte[StateBytes(layer,tensor,position,kvBytes)]; var error = new byte[2048];
         fixed (byte* d = data) fixed (byte* e = error)
             if (CudaPrefixNative.State(handle, layer, tensor, position, d, data.Length, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
         return data;
     }
-    public static int StateBytes(int layer, int tensor, int position)
+    public static int StateBytes(int layer, int tensor, int position, int kvBytes = 2)
     {
+        if (kvBytes is not (2 or 4)) throw new ArgumentException("Invalid KV width.");
         if (layer is < 0 or >= 20 || tensor is < 0 or > 1 || position is < 1 or > 2048) throw new ArgumentException("Invalid state descriptor.");
-        return (layer+1)%4 == 0 ? position*512*2 : tensor == 0 ? 32*128*128*4 : 3*8192*4;
+        return (layer+1)%4 == 0 ? position*512*kvBytes : tensor == 0 ? 32*128*128*4 : 3*8192*4;
     }
     public void Dispose() { if(handle != 0) CudaPrefixNative.Destroy(handle); handle = 0; }
 }
 internal static unsafe partial class CudaPrefixNative
 {
+    [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_abi_version")]
+    internal static partial int AbiVersion();
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_create", StringMarshalling=StringMarshalling.Utf8)]
-    internal static partial nint Create(string path,int capacity,byte* error,int errorCapacity);
+    internal static partial nint Create(string path,int capacity,int kvBytes,byte* error,int errorCapacity);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_destroy")]
     internal static partial void Destroy(nint graph);
     [LibraryImport("deepinfer_cuda", EntryPoint="di_cuda_prefix_run")]
