@@ -19,11 +19,17 @@ p.add_argument('--weights', required=True)
 p.add_argument('--library', required=True)
 p.add_argument('--output', required=True, type=pathlib.Path)
 p.add_argument('--chunk', required=True, type=int, choices=(256, 512, 1024, 2048))
+p.add_argument('--tokens', type=int, help='Synthetic token count; defaults to --chunk')
+p.add_argument('--first-chunk', type=int, choices=(0, 128), default=0,
+               help='Also compare a 128-token first tile followed by --chunk tiles')
 p.add_argument('--kv-bytes', type=int, choices=(2, 4), default=4)
 p.add_argument('--mode', type=int, choices=(1, 5), default=5)
 a = p.parse_args()
+token_count = a.tokens or a.chunk
+if token_count < 1 or token_count > 262144:
+    p.error('--tokens must be 1..262144')
 a.output.mkdir(parents=True, exist_ok=False)
-tokens = [100 + (i * 137) % 247000 for i in range(a.chunk)]
+tokens = [100 + (i * 137) % 247000 for i in range(token_count)]
 weight_hash = hashlib.sha256()
 with open(a.weights, 'rb') as stream:
     for block in iter(lambda: stream.read(8 << 20), b''):
@@ -51,18 +57,27 @@ state = bind('state', [c.c_void_p, c.c_int, c.c_int, c.c_int, c.c_void_p, c.c_in
 kv_range = bind('kv_range', [c.c_void_p, c.c_int, c.c_int, c.c_int, c.c_int,
                              c.c_void_p, c.c_int, c.c_char_p, c.c_int])
 assert bind('abi_version', [])() == 7
-handle = create(a.weights.encode(), a.chunk, a.kv_bytes, err, len(err))
+handle = create(a.weights.encode(), token_count, a.kv_bytes, err, len(err))
 if not handle:
     raise RuntimeError(err.value.decode())
 try:
     ok(mode(handle, a.mode))
     ok(chunk_mode(handle, a.chunk))
-    def execute(size):
+    def execute(size, first=0):
         ok(reset(handle, err, len(err)))
         hidden = bytearray()
         started = time.perf_counter()
-        for offset in range(0, len(tokens), size):
-            part = tokens[offset:offset + size]
+        offsets = []
+        offset = 0
+        if first:
+            offsets.append((0, min(first, len(tokens))))
+            offset = min(first, len(tokens))
+        while offset < len(tokens):
+            count = min(size, len(tokens) - offset)
+            offsets.append((offset, count))
+            offset += count
+        for offset, count in offsets:
+            part = tokens[offset:offset + count]
             ids = (c.c_int * len(part))(*part)
             output = (c.c_float * (len(part) * 2048))()
             ok(run(handle, ids, len(part), offset, output, None, err, len(err)))
@@ -76,7 +91,7 @@ try:
                 data = c.create_string_buffer(size_bytes)
                 ok(state(handle, layer, tensor, len(tokens), data, size_bytes, err, len(err)))
                 states.append(hashlib.sha256(data.raw).hexdigest())
-                if size == a.chunk and (layer + 1) % 4 == 0:
+                if size == a.chunk and first == 0 and len(tokens) <= a.chunk and (layer + 1) % 4 == 0:
                     kv = c.create_string_buffer(size_bytes)
                     ok(kv_range(handle, layer, tensor, 0, len(tokens), kv, size_bytes, err, len(err)))
                     if kv.raw != data.raw:
@@ -85,17 +100,21 @@ try:
         floats.frombytes(hidden)
         if not all(math.isfinite(value) for value in floats):
             raise RuntimeError('Nonfinite hidden')
-        return {'chunk': size, 'seconds': seconds,
+        return {'chunk': size, 'firstChunk': first, 'seconds': seconds,
                 'hiddenSha256': hashlib.sha256(hidden).hexdigest(), 'stateSha256': states}
 
     records = []
+    schedules = [(32, 0), (a.chunk, 0)]
+    if a.first_chunk:
+        schedules.append((a.chunk, a.first_chunk))
     for trial in range(4):
-        for size in ((32, a.chunk) if trial % 2 == 0 else (a.chunk, 32)):
-            record = execute(size)
+        for size, first in (schedules if trial % 2 == 0 else list(reversed(schedules))):
+            record = execute(size, first)
             record['trial'] = trial
             record['warmup'] = trial == 0
             records.append(record)
-            print(json.dumps({'trial': trial, 'chunk': size, 'seconds': record['seconds']}), flush=True)
+            print(json.dumps({'trial': trial, 'chunk': size, 'firstChunk': first,
+                              'seconds': record['seconds']}), flush=True)
     reference = records[0]
     exact = all(r['hiddenSha256'] == reference['hiddenSha256'] and
                 r['stateSha256'] == reference['stateSha256'] for r in records)
@@ -107,8 +126,9 @@ try:
         'executionMode': a.mode,
         'tokens': len(tokens), 'tokensSha256': hashlib.sha256(json.dumps(tokens).encode()).hexdigest(),
         'records': records, 'exactHiddenAndState': exact,
-        'medianSeconds': {str(size): statistics.median(r['seconds'] for r in records
-                            if not r['warmup'] and r['chunk'] == size) for size in (32, a.chunk)},
+        'medianSeconds': {(f'{size}+{first}' if a.first_chunk else str(size)): statistics.median(
+            r['seconds'] for r in records if not r['warmup'] and r['chunk'] == size and
+            r['firstChunk'] == first) for size, first in schedules},
         'limitations': ['Synthetic token IDs', 'No Mac suffix, RPC, client time or 128K request',
                         'No trace comparison unless a mismatch is separately investigated']
     }

@@ -27,7 +27,7 @@ public static class SplitInference
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
         await ServePrefix(gpu, wire, ct);
     }
-    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false, int prefillChunk = 32)
+    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false, int prefillChunk = 32, int firstChunk = 0)
     {
         if (prefillChunk is not (32 or 256 or 512 or 1024 or 2048)) throw new ArgumentException("Unsupported CUDA prefill chunk.");
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
@@ -40,9 +40,9 @@ public static class SplitInference
             // Keep each CUDA tile as one queued pump item, so the next tile can
             // compute while 128-token frames from the previous tile are sent.
             var frameTokens = step == 32 ? 32 : 128;
-            for(var offset=0;offset<tokens.Length;offset+=step)
+            foreach(var (offset,count) in PrefixChunkPlan.Create(tokens.Length,step,verify?0:firstChunk))
             {
-                ct.ThrowIfCancellationRequested();var count=Math.Min(step,tokens.Length-offset);
+                ct.ThrowIfCancellationRequested();
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
@@ -70,7 +70,7 @@ public static class SplitInference
         }
         if(overlapSend)await SplitFramePump.RunBatches(Chunks(),Send,ct);
         else foreach(var batch in Chunks())foreach(var frame in batch)await Send(frame,ct);
-        Console.Error.WriteLine($"PREFIX_CHUNKS chunk={prefillChunk} overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+        Console.Error.WriteLine($"PREFIX_CHUNKS chunk={prefillChunk} firstChunk={(verify?0:firstChunk)} overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         for(var layer=0;layer<20;layer++)for(var tensor=0;tensor<2;tensor++)
             if(!incremental||(layer+1)%4!=0)
             {

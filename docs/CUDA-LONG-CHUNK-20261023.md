@@ -63,3 +63,9 @@
 本机原始响应仅保存在 `artifacts/dual-host/midchunk-e2e-20261023T2030Z/{32,256,512,1024,256-confirm}.json`，对应 SHA-256 依次为 `e05a1ec5e78bd2b078aa83331689e982367e0d43d21c624bffa3eec138de08b1`、`1fb20715933291d49eb96a38c56513232dd9af500e7bcc6b7970e947d36a3dd5`、`686b41c4d9ccead4d53cefecf749009a441730fb3eed56131a317da2091daf89`、`a0ada66ed09d069cd99309857a3b33b462c678a6b1d6d592443620714a36bd58`、`2743a03e9e77a6bfbe98a4973c3a4dfa2105a6da9a99d3ad025b472cf8241765`。Windows 原生输入/状态文件仅本机可用，不提供为公开下载。试验结束后原 `919259d` Mac LaunchAgents 与 Windows agent 已恢复；coordinator 报告 worker healthy/Ready、agent connected，真实 8192/8 跨机请求 HTTP 200 且输出 ID 哈希保持一致。
 
 此轮不选择 256/512 为默认；默认 1024 是先前用户指定的 CUDA 计算块，并非当前有线 8K 端到端最优。需要继续改流水线发送粒度或 Mac 后段，再在 32K/128K、BF16 与长输出上重测，不能把这个短请求的速度外推为固定目标通过。
+
+## 待测：短首块 + 长后续块
+
+现有 1024 块要等前 1024 token 的 CUDA 前 20 层全部完成，Mac 才能拿到第一帧 hidden。为检验流水线启动等待是否是主要损失，新增可选 `cuda-prefill-first-chunk=128`：先计算并发送 128 token，此后仍用配置的 1024/2048 计算块。默认 `0` 保留原行为，验证模式仍强制 32-token 块。它不改变模型、FP32 算术、原生 ABI 或 split wire 格式；发送的 hidden/KV 帧仍不超过 128 token。测试前不把更早的首帧外推为完整请求加速。
+
+`scripts/split/check-cuda-long-chunk.py --chunk 1024 --tokens 8192 --first-chunk 128` 可独占 GPU 对照 32、1024 和短首块三种原生执行序列，逐字节比较最终 hidden 与 40 份状态。通过后再做同源双机 A/B，保留完整响应、Mac 等待和 CUDA 计算时间及换页/显存证据；未通过前不改默认部署。
