@@ -43,6 +43,9 @@ struct Model {
     ChunkWorkspace chunk;
     bool profileEnabled=false,denseReuse=false,densePacked=false,expertPacked=false;double profileTotals[9]{};
     int attentionPartitionThreshold=-1;
+    // Experimental read-only route probe, enabled only before a native prefix run.
+    int debugRouteLayer=-1,debugRoutePosition=-1,debugRoutes[8]{};
+    float debugRouter[256]{},debugRouteProb[8]{};bool debugRouteCaptured=false;
     float eps, theta;
     float *x, *norm, *qkv, *z, *a, *b, *conv, *attention, *k, *v, *q, *scores, *out, *router, *prob,
         *eg, *eu, *eo, *sg, *su, *so, *sr, *batchHidden;
@@ -482,6 +485,7 @@ API int di_cuda_prefix_reset(void *ptr, char *error, int cap) {
         }
         ck(cudaDeviceSynchronize());
         g->position = 0;
+        g->debugRouteCaptured=false;
         return 0;
     } catch (const std::exception &e) {
         if (error && cap > 0) snprintf(error, cap, "%s", e.what());
@@ -502,6 +506,18 @@ API int di_cuda_prefix_partition_threshold(void *ptr,int threshold) {
     auto *g=static_cast<Model*>(ptr);
     if(!g||g->position!=0||threshold < -1||threshold>262144)return -1;
     g->attentionPartitionThreshold=threshold;return 0;
+}
+API int di_cuda_prefix_route_probe(void *ptr,int layer,int position) {
+    auto *g=static_cast<Model*>(ptr);
+    if(!g||g->position!=0||layer<0||layer>=20||position<0||position>=g->capacity)return -1;
+    g->debugRouteLayer=layer;g->debugRoutePosition=position;g->debugRouteCaptured=false;return 0;
+}
+API int di_cuda_prefix_route_read(void *ptr,int *ids,int idCount,float *logits,int logitCount,float *prob,int probCount) {
+    auto *g=static_cast<Model*>(ptr);
+    if(!g||!g->debugRouteCaptured||!ids||!logits||!prob||idCount!=8||logitCount!=256||probCount!=8)return -1;
+    std::copy(g->debugRoutes,g->debugRoutes+8,ids);
+    std::copy(g->debugRouter,g->debugRouter+256,logits);
+    std::copy(g->debugRouteProb,g->debugRouteProb+8,prob);return 0;
 }
 // Diagnostic phase timing; disabled in every production session by default.
 API int di_cuda_prefix_profile_mode(void *ptr,int enabled) {
