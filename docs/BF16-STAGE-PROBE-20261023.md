@@ -63,6 +63,24 @@ Output split-K improves the CUDA operation itself by about 12 times against the 
 
 The Windows prefix result reports 0.5014 s for its baseline and 0.2934/0.3189 s for the candidate/repeat. These are single, instrumented, synthetic runs with readbacks and no full service path or formal warmup. They are **not** a prefill throughput result. This probe has no transfer, Mac suffix, decode, logits, long context, or swap acceptance. Previous full 128-token BF16 layer/state comparison still passed only 2 of 60 checks.
 
+## Within-CUDA expert-route gap
+
+At `176b666`, an opt-in diagnostic captured every selected expert ID for 128 synthetic tokens × 20 CUDA prefix layers in internal FP32 mode 5 and BF16 mode 6. The route output is fixed at process start because the Windows CUDA DLL may not observe environment changes made after it loads. The first attempted capture at `7736b1e` failed before writing a route file for this reason; it produced no route verdict. The corrected run used the same source, affine8/group64 weights, BF16 KV and diagnostic FP32 router/shared projections as the preceding stage probes, and its mode-6 trace hash matched the earlier `9f43459` trace (`fc52acaa68f9205277124f8871bfec417277e5425961755ce327c34198800582`). The candidate repeat produced identical hidden, layer, state and route hashes.
+
+| Comparison | Observation |
+| --- | ---: |
+| Token/layer decisions compared | 2,560 |
+| Different ordered top-eight lists | 1,562 |
+| Different expert sets | 671 |
+| Layer-0 ordered-list differences | 13 / 128 tokens |
+| Layer-0 expert-set changes | 5 / 128 tokens |
+| Aggregate layer-0 activation relative L2 | 0.00991373 |
+| Tokens with layer-0 activation relative L2 ≥ 1e-4 | 128 / 128 |
+
+The worst layer-0 activation is token 16 (relative L2 `0.0657264`), where the eighth selected expert changes from `217` in internal FP32 mode to `78` in BF16 mode. Token 0 keeps the same expert set but swaps the order of experts `43` and `106`. Route differences grow across deeper layers; the observed mode gap is therefore not explained by a single anomalous token. This is a **within-CUDA mode comparison**, not the fixed independent FP32 reference or a real request. It does not prove which BF16 operation first changes token 16's router margin, and matching routes alone would not satisfy the layer/state/logit correctness gate. The online Windows agent was restored; the serve returned Ready and a one-token chat completion returned HTTP 200 with `OK`.
+
+The route diagnostic is opt-in (`-SaveRoutes`) and leaves the deployed FP32 mode unchanged. The local route comparison and mode-gap JSON are `artifacts/dual-host/bf16-route-gap-176b666-v2.json` (SHA-256 `ee7fdc40dd1541e4b39c37b8779ecc53c9575c1c85df7442e588e4e6e11a2ac2`) and `bf16-mode-gap-176b666.json` (SHA-256 `862c9ec38a61711fd13c8d7db41a91dea0cfc51b766f1591527fc3952a9005e9`). Raw route IDs and traces remain outside Git. Probe readbacks invalidate throughput timing.
+
 The existing Mac serve and Windows agent were stopped only during their respective isolated model loads and then restored. A short live request returned HTTP 200 and `OK` after both workers reported Ready. The candidate remains outside the live deployment.
 
 Reproduce using the pinned model and new artifact directories, with active GPU workers paused and restored according to the deployment SOP:
@@ -70,6 +88,7 @@ Reproduce using the pinned model and new artifact directories, with active GPU w
 ```text
 Windows: powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_CUDA_DIRECTORY -Router fp32 -Shared fp32 -RouteProbe 1:93 -StageProbe
 Windows QKV split-K: add -SplitKQkv; output-only: add -SplitKOutput; combined: add both switches. Use fresh output directories for each.
+Windows mode route gap: add -SaveRoutes to a fresh directory, then run python scripts/split/analyze-bf16-route-gap.py --cuda NEW_CUDA_DIRECTORY --output NEW_ROUTE_JSON and python scripts/split/analyze-bf16-mode-gap.py --cuda NEW_CUDA_DIRECTORY --output NEW_MODE_GAP_JSON.
 Mac: DEEPINFER_METAL_KV=bf16 DEEPINFER_METAL_PREFILL_GEMM=bf16-nax DEEPINFER_METAL_PREFILL_CHUNK=128 DEEPINFER_METAL_PREFILL_MATRIX=1 DEEPINFER_METAL_PREFILL_DELTA=sequential DEEPINFER_METAL_ROUTER_FP32=1 DEEPINFER_METAL_STAGE_DIR=NEW_METAL_DIRECTORY deepinfer split-check-bf16-prefix --weights MODEL_DIR --output NEW_METAL_DIRECTORY
 Compare: python3 scripts/split/compare-bf16-stages.py --metal NEW_METAL_DIRECTORY --cuda NEW_CUDA_DIRECTORY --output NEW_REPORT.json
 CPU reference (NumPy diagnostic dependency): python3 scripts/split/analyze-bf16-stage-reference.py --model MODEL_DIR --metal NEW_METAL_DIRECTORY --cuda NEW_CUDA_DIRECTORY --bundle PREFIX_BUNDLE --output NEW_REFERENCE.json
@@ -78,4 +97,4 @@ Within-host mode gap: python3 scripts/split/analyze-bf16-mode-gap.py --cuda NEW_
 
 Local raw evidence is retained outside Git under `artifacts/dual-host/bf16-cuda-stage-9f43459`, `bf16-metal-stage-9f43459`, `bf16-stage-compare-9f43459.json`, `bf16-cpu-reference-9f43459-v4.json`, `bf16-cuda-splitk-5c1dea1`, `bf16-splitk-stage-compare-5c1dea1.json`, `bf16-splitk-full-compare-5c1dea1.json`, `bf16-splitk-cpu-reference-5c1dea1-v2.json`, and the corresponding `bf16-cuda-output-splitk-e6b119d` / `bf16-cuda-qkv-output-splitk-e6b119d` directories and JSON reports. SHA-256: baseline stage comparison `ec4035c3f8b3a175bf1978d40fc415d1aeef0b54f9be44a32daf54d5a44c3f81`; baseline CPU reference `d3a77f121f507f3d9a389cc1189d8dac575a3eb9ee24f59e6b7bfdb8ed39283e`; QKV split-K stage/full/CPU comparison `622a3a2557248df92be5c31b2c95f8045f41b1dde801c9186bf9eca673dd34b5` / `6ddde4bd68cb7eea3577ddb14377d65e14fae100c4fb5b434e7dbc9e947711c6` / `ce8c7c3282ede32815a31c14c00a7e6328e77db33e1299da611ecae8532fb2d3`; output-only full/CPU/mode-gap `287d4f853dc0114417dd20efb36dbcb2006d104c68f3877b4299f604357c8708` / `306eb8dc4e4d81163911d3fb09aaddd62a7e23294124729a38b161087cab656e` / `edfa271261ad9926719817a2373ac9a9c4b979eb1cbe9859500060f6dfa3eedc`; combined full/CPU/mode-gap `aca19fbbed99124c5519b7457ea53187a150d4f9c9e9d7d462193005771f731c` / `38b18a681d55a2ff490b9fc2a44e0badbd93ad1ab88d37bcfc93b7b81e2b3a24` / `6297215058794bb797041c8dc9a387888202e99001cc7c3e0f14c844950385ca`. Raw tensors are not published. Windows baseline result SHA-256 `a16278faaf8804d72047ec865e4dbb293c370f7012bda087049da09d78bad3f7`; Mac result SHA-256 `a5e76538a78f909abc8f2945e4eab338d9bfb0510cfdf8670b6e5957a67f6a21`. The baseline Windows DLL SHA-256 is `0a7ded1c3f365a837961d790265adc53c4ee42f5f2c90474baeace577a5478f3`; Mac dylib SHA-256 is `290e2d5b07ebc764b3ba3201ab3c86642aca087606c3234c241ed937b43f5ec1`.
 
-Next: quantify the full BF16-mode versus fixed FP32-reference gap before further kernel tuning, including token-level route changes. A candidate must pass whole layer/state/logit checks and real split RPC before any performance claim or rollout.
+Next: isolate the first token-16 router-margin change against the fixed independent FP32 reference and test whether the BF16 precision policy itself can satisfy that gate. A candidate must pass whole layer/state/logit checks and real split RPC before any performance claim or rollout.
