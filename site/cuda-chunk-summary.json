@@ -1,0 +1,374 @@
+{
+  "date": "2026-10-23",
+  "source": "cc19a65056f351e201f65901d285490ee24b11b1",
+  "model": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "groupSize": 64,
+  "kv": "fp32",
+  "multiplication": "fp32",
+  "inputTokens": 8192,
+  "outputTokens": 128,
+  "cacheHit": 0,
+  "ignoreEos": true,
+  "chunkTokens": 32,
+  "warmups": 1,
+  "measuredTrials": 3,
+  "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+  "power": "Mac AC, pmset powermode=2; Windows stock observed power, no setting changed",
+  "network": "Existing Mac Wi-Fi / Windows Ethernet LAN; TLS; no SSH tunnel",
+  "all128OutputTokensEqualAcross8Requests": true,
+  "outputTokenIdsSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc",
+  "modes": {
+    "serial": {
+      "runId": "chunk-e2e-serial-20261023T075202Z",
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 52.7106206,
+          "decodeTokensPerSecond": 55.92466322564125,
+          "clientSeconds": 55.008652458,
+          "ttftSeconds": 52.739363833,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 52.573222,
+          "decodeTokensPerSecond": 55.916463797039675,
+          "clientSeconds": 54.855549417000006,
+          "ttftSeconds": 52.583375333000006,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 52.481637199999994,
+          "decodeTokensPerSecond": 56.03281740638742,
+          "clientSeconds": 54.75793399999999,
+          "ttftSeconds": 52.491694124999995,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 52.5026071,
+          "decodeTokensPerSecond": 55.973032104985435,
+          "clientSeconds": 54.781823541999984,
+          "ttftSeconds": 52.51319183299998,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        }
+      ],
+      "stages": [
+        {
+          "hiddenWaitMs": 31846.289,
+          "suffixMs": 17798.197,
+          "stateWaitMs": 3005.957,
+          "importMs": 22.366,
+          "stateBytes": 200704000.0,
+          "totalMs": 52710.621
+        },
+        {
+          "hiddenWaitMs": 31849.13,
+          "suffixMs": 17766.045,
+          "stateWaitMs": 2905.056,
+          "importMs": 18.869,
+          "stateBytes": 200704000.0,
+          "totalMs": 52573.222
+        },
+        {
+          "hiddenWaitMs": 31735.845,
+          "suffixMs": 17751.196,
+          "stateWaitMs": 2942.127,
+          "importMs": 18.822,
+          "stateBytes": 200704000.0,
+          "totalMs": 52481.637
+        },
+        {
+          "hiddenWaitMs": 31772.591,
+          "suffixMs": 17776.658,
+          "stateWaitMs": 2904.17,
+          "importMs": 15.378,
+          "stateBytes": 200704000.0,
+          "totalMs": 52502.607
+        }
+      ],
+      "median": {
+        "prefillSeconds": 52.5026071,
+        "decodeTokensPerSecond": 55.973032104985435,
+        "clientSeconds": 54.781823541999984,
+        "ttftSeconds": 52.51319183299998
+      },
+      "windowsWholeGpuPeakMiB": 19502.0,
+      "rawSummarySha256": "4c3c08887e343f63e8252313d1ac39708755c2d11471beb22f19e783f9d4e34c"
+    },
+    "batch-fp32": {
+      "runId": "chunk-e2e-batch-fp32-20261023T075943Z",
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "prefillSeconds": 18.3047,
+          "decodeTokensPerSecond": 54.904887010498065,
+          "clientSeconds": 20.633652333999997,
+          "ttftSeconds": 18.320938333999997,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "prefillSeconds": 18.5917403,
+          "decodeTokensPerSecond": 55.89824160857358,
+          "clientSeconds": 20.876343540999997,
+          "ttftSeconds": 18.604381083,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "prefillSeconds": 18.642273399999997,
+          "decodeTokensPerSecond": 55.78683910276137,
+          "clientSeconds": 20.926459707999996,
+          "ttftSeconds": 18.650242790999997,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "prefillSeconds": 18.870699499999997,
+          "decodeTokensPerSecond": 55.83257893407785,
+          "clientSeconds": 21.167839541000006,
+          "ttftSeconds": 18.893455290999995,
+          "metalAllocatedBytes": 37995495424,
+          "swapOutBytes": 0
+        }
+      ],
+      "stages": [
+        {
+          "hiddenWaitMs": 359.375,
+          "suffixMs": 14999.243,
+          "stateWaitMs": 2911.146,
+          "importMs": 16.012,
+          "stateBytes": 200704000.0,
+          "totalMs": 18304.7
+        },
+        {
+          "hiddenWaitMs": 322.173,
+          "suffixMs": 15008.324,
+          "stateWaitMs": 3223.78,
+          "importMs": 17.084,
+          "stateBytes": 200704000.0,
+          "totalMs": 18591.74
+        },
+        {
+          "hiddenWaitMs": 434.412,
+          "suffixMs": 14987.521,
+          "stateWaitMs": 3184.194,
+          "importMs": 15.183,
+          "stateBytes": 200704000.0,
+          "totalMs": 18642.273
+        },
+        {
+          "hiddenWaitMs": 605.081,
+          "suffixMs": 15007.278,
+          "stateWaitMs": 3221.452,
+          "importMs": 15.58,
+          "stateBytes": 200704000.0,
+          "totalMs": 18870.699
+        }
+      ],
+      "median": {
+        "prefillSeconds": 18.642273399999997,
+        "decodeTokensPerSecond": 55.83257893407785,
+        "clientSeconds": 20.926459707999996,
+        "ttftSeconds": 18.650242790999997
+      },
+      "windowsWholeGpuPeakMiB": 19524.0,
+      "rawSummarySha256": "6f0591e54340b633ec45d7d7db40a256fc575d189b005a6cc23638d8f0dec89b"
+    }
+  },
+  "prefillSpeedup": 2.816319982733437,
+  "nativePrefix": {
+    "fp32": {
+      "source": "387511b04719e046874f2dad0b986e697702baa2",
+      "dllSha256": "49ddfa5accede214874c7257f004bceae4c27c3e0cdf9fb5c420a6974a7c565d",
+      "kvBytes": 4,
+      "weightBits": 8,
+      "tokensSha256": "0040fef20910cc640cdc3ea957a5ce82d17b3a21cc436da9f148e0a05dfe447a",
+      "correctnessTokens": 131,
+      "allFinite": true,
+      "allLayerTraceEqual": true,
+      "hiddenEqual": true,
+      "all40StateTensorsEqual": true,
+      "records": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": false,
+          "seconds": 2.615852399962023,
+          "tokensPerSecond": 195.7296979016986,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": true,
+          "seconds": 0.7628677999600768,
+          "tokensPerSecond": 671.1516727102579,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7633505000267178,
+          "tokensPerSecond": 670.727274013811,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.6154133999953046,
+          "tokensPerSecond": 195.7625513430952,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.6349109999137,
+          "tokensPerSecond": 194.31396355200206,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7643758999183774,
+          "tokensPerSecond": 669.8275024823167,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.764537199982442,
+          "tokensPerSecond": 669.6861840231691,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.6287047000369057,
+          "tokensPerSecond": 194.7727335036194,
+          "hiddenSha256": "b45614520f640d265783eece639d350f4423d9ef6cdf2bcf5a6c696d6c477b23"
+        }
+      ],
+      "medianSeconds": {
+        "False": 2.6287047000369057,
+        "True": 0.7643758999183774
+      },
+      "kind": "layer-major-fp32-prefix-only-synthetic-token-test-not-e2e-acceptance"
+    },
+    "bf16": {
+      "source": "387511b04719e046874f2dad0b986e697702baa2",
+      "dllSha256": "49ddfa5accede214874c7257f004bceae4c27c3e0cdf9fb5c420a6974a7c565d",
+      "kvBytes": 2,
+      "weightBits": 8,
+      "tokensSha256": "0040fef20910cc640cdc3ea957a5ce82d17b3a21cc436da9f148e0a05dfe447a",
+      "correctnessTokens": 131,
+      "allFinite": true,
+      "allLayerTraceEqual": true,
+      "hiddenEqual": true,
+      "all40StateTensorsEqual": true,
+      "records": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": false,
+          "seconds": 2.6379348000045866,
+          "tokensPerSecond": 194.09122621192526,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 0,
+          "warmup": true,
+          "batched": true,
+          "seconds": 0.7663283000001684,
+          "tokensPerSecond": 668.1209606899387,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7641154999146238,
+          "tokensPerSecond": 670.0557704394255,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.617130500031635,
+          "tokensPerSecond": 195.63411147965724,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.63195120007731,
+          "tokensPerSecond": 194.5324822074819,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7670462999958545,
+          "tokensPerSecond": 667.4955605714637,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": true,
+          "seconds": 0.7650828999467194,
+          "tokensPerSecond": 669.2085263383299,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "batched": false,
+          "seconds": 2.6035458999685943,
+          "tokensPerSecond": 196.65487749080057,
+          "hiddenSha256": "73ff1f20d37bd5f74a4e8120bc244c91e7bc1c0165b7915e631a5ce8121a9a0b"
+        }
+      ],
+      "medianSeconds": {
+        "False": 2.617130500031635,
+        "True": 0.7650828999467194
+      },
+      "kind": "layer-major-fp32-prefix-only-synthetic-token-test-not-e2e-acceptance"
+    }
+  },
+  "limitations": [
+    "Worker prefill phase and client TTFT are recorded; formal coordinator t2-t1 instrumentation remains pending.",
+    "Not BF16 cross-host correctness or 128K/4096-output acceptance.",
+    "Serial then batch order, not randomized.",
+    "One mislabeled batch attempt after failed agent switch was aborted and excluded; raw failure retained.",
+    "GPU peak is sampled at 500ms; not an allocation-event exact peak."
+  ]
+}

@@ -332,5 +332,23 @@
       "python3 scripts/split/benchmark-readback.py --help"
     ],
     "evidence": "site/short-prefill-summary.json；完整事件与原始状态检查仅本机"
+  },
+  {
+    "id": "cuda-chunk",
+    "title": "CUDA 按层批量执行：8K 双机 prefill 提速 2.82 倍",
+    "kind": "8bit · FP32 KV · 双机实测",
+    "source": "docs/CUDA-CHUNK-PREFILL.md",
+    "question": "将逐 token 前段改为按层批量、Delta 状态保留在寄存器，能否改善完整双机请求？",
+    "setup": "cc19a65 同二进制；8192 输入 / 128 固定输出；32-token 分块；每配置预热 1、测 3；Mac AC / High Power，现有家庭 LAN，0% prefix cache。",
+    "change": "投影、卷积、attention、专家批量执行，Delta 整块递推；保留原 FP32 运算顺序。",
+    "result": "prefill 52.503 → 18.642 秒；客户端整次 54.782 → 20.926 秒；decode 55.97 → 55.83 token/s。",
+    "validation": "完整前段 131 tokens 全部层输出/状态逐字节相同；双机 8 次全部128个输出 token 相同。每次新增 swap-out 0。",
+    "conclusion": "当前主要时间转至 Mac 后段约15秒与最终状态交接约3.2秒。8K改善不等于128K或BF16目标通过。",
+    "next": "优化后段分块、状态交接重叠；继续 BF16 数值门槛与长输入验证。",
+    "commands": [
+      "powershell -File scripts/windows/benchmark-prefill-ops.ps1",
+      "python scripts/split/benchmark-prefix-chunk.py --help"
+    ],
+    "evidence": "site/cuda-chunk-summary.json; artifacts/dual-host/chunk-e2e-*"
   }
 ]
