@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-23",
+  "kind": "isolated-cuda-all-projection-highlow-fp32-vs-bf16-kv-not-e2e",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "candidateSource": "a20449e1e818af5760076a83f822f5bceec07967",
+  "cudaDllSha256": "5d383567f4e63dc39b61fb040e1aca369c6156224dd8b6b0e028ed99474c4b54",
+  "tokens": 128,
+  "candidate": "three BF16 high-low Tensor Core products for QKV, output and expert projections; FP32 accumulation; opt-in only",
+  "fp32Kv": {
+    "independentFp32PassingLayers": 20,
+    "totalLayers": 20,
+    "worstRelativeL2": 2.096763674955586e-05,
+    "metalFp32PassingLayerStateChecks": 60,
+    "totalLayerStateChecks": 60,
+    "expertSetChangesOf2560": 0,
+    "resultLocalSha256": "330feab45712cf7a46280b18c3e56cc9b7af6ae3af382290d4ae84827224a5bd",
+    "oracleComparisonLocalSha256": "326f424900aed37adb817e3505cb51cf7c8bf7771694376bd5fccec3d0c26355"
+  },
+  "bf16Kv": {
+    "independentFp32PassingLayers": 3,
+    "totalLayers": 20,
+    "firstFailingLayer": 3,
+    "firstFailRelativeL2": 0.00040836038984847845,
+    "worstRelativeL2": 0.01892851257406179,
+    "metalFp32PassingLayerStateChecks": 9,
+    "totalLayerStateChecks": 60,
+    "expertSetChangesOf2560": 7,
+    "fp32GemmBf16KvFirstFailRelativeL2": 0.0004085915238882977,
+    "resultLocalSha256": "06e06ff5682c2f5d6775c8e6577c6b8a38c994230b0733cfabd157ba27592554",
+    "oracleComparisonLocalSha256": "615560f69d00c1522d434094ae82a2d4bbf8ed80dfe1648e1468600eaf1edd0f"
+  },
+  "correctnessAcceptance": false,
+  "memoryAcceptance": false,
+  "performanceAcceptance": false,
+  "limitations": [
+    "FP32 KV passes do not satisfy BF16 KV target",
+    "Metal control from earlier source, not same-full-commit dual-host formal acceptance",
+    "No independent KV/state oracle or suffix/logits/greedy",
+    "No real RPC, 128K, memory or formal serving-throughput result",
+    "Raw tensors local only"
+  ]
+}
