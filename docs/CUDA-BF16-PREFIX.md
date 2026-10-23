@@ -28,6 +28,8 @@
 
 最后确认原线上 FP32 服务两端均回到 Ready；通过 coordinator 发出 572-token 输入、2-token 输出的真实请求，HTTP 200、`executionPath=cuda-metal-split`、`isSimulation=false`，客户端约 `1.85 s`。这只验证回退后的旧部署可用，不是 BF16 候选验收或吞吐基准。
 
+后续路由与共享专家 FP32 诊断见 [2026-10-23 独立实验](BF16-ROUTER-SHARED-20261023.md)：第 0 层跨后端 relative L2 降至 `0.00016054`，但完整检查仍仅 `2/60` 通过，线上候选仍关闭。
+
 ## 复现与证据
 
 仅在旧 agent 停止、4090 有足够空闲显存后，Windows 独立 checkout 使用 `scripts/windows/check-prefill-bf16-experts.ps1`，再用 `scripts/windows/build-prefix.ps1` 编译 DLL，运行 `scripts/split/check-bf16-prefix.py --weights PINNED_PREFIX --library BUILT_DLL --output NEW_DIRECTORY`。该脚本先验证 bundle SHA-256，结果目录不可复用。Mac 停止原 serve 后显式设置 BF16 KV/GEMM、128-token chunk、matrix=1 与 sequential Delta，再执行 `deepinfer split-check-bf16-prefix --weights MODEL_DIR --output NEW_DIRECTORY`。Windows 使用 `--tokens 128 --save-trace`，最后用 `scripts/split/compare-bf16-prefix.py` 比较两份诊断产物。公开逐层摘要在 [`site/bf16-prefix-summary.json`](../site/bf16-prefix-summary.json)；131-token 原始 JSON 仅本机保存，SHA-256 为 `a37abe830157ed8c270eb8218248b85cce2b3c0c413d87328d9f3fc1223405cc`。这些数据没有达到 `docs/QWEN36-8BIT-TARGETS.md` 的 BF16 正确性、128K 性能或资源验收。

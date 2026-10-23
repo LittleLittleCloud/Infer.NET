@@ -402,5 +402,23 @@
       "python scripts/split/check-bf16-prefix.py --weights PINNED_PREFIX --library BUILT_DLL --output NEW_DIRECTORY"
     ],
     "evidence": "site/bf16-prefix-summary.json；完整128-token比较JSON仅本机"
+  },
+  {
+    "id": "bf16-router-shared-fp32",
+    "title": "BF16 前段精度对齐：路由与共享专家",
+    "kind": "8bit · BF16 KV · 独立数值诊断，未部署",
+    "source": "docs/BF16-ROUTER-SHARED-20261023.md",
+    "question": "Metal/CUDA 的首层分歧有多少来自路由和共享专家投影精度不一致？",
+    "setup": "2026-10-23；M5 Pro + RTX 4090；固定 affine8/group64 模型；128 合成 token；Metal chunk128、CUDA chunk32、BF16 KV。分别独占GPU，采集前20层trace和40份状态；两端源码522fa9b/a0e3daf。无正式性能轮次。",
+    "change": "两端路由投影临时改为FP32；随后CUDA共享专家gate/up/route也临时改为FP32以匹配Metal。线上模式5不变。",
+    "result": "第0层 relative L2 从0.00483155降至0.00043722，再降至0.00016054；最后完整比较仍只2/60项通过，最差状态relative L2为0.071157。",
+    "validation": "CUDA候选有限且两次哈希一致；两端trace和状态离线比较。token49/91第八专家对齐，但第1层token93仍有约0.0377相对误差。旧Mac serve与Windows agent恢复Ready。",
+    "conclusion": "精度对齐减少首层误差，却没有通过1e-4相对误差/0.01绝对误差门槛；不能部署或声称性能提升。",
+    "next": "定位token93的首个路由或算术差异，并压低第0层基础误差；再做完整logits、greedy和真实RPC。",
+    "commands": [
+      "powershell -File scripts/windows/check-bf16-prefix-profile.ps1 -Config PRIVATE_WORKER_JSON -Output NEW_DIRECTORY -Router fp32 -Shared fp32",
+      "python scripts/split/compare-bf16-prefix.py --metal METAL_DIRECTORY --cuda CUDA_DIRECTORY --output NEW_JSON"
+    ],
+    "evidence": "site/bf16-prefix-summary.json；完整比较JSON与原始trace仅本机"
   }
 ]

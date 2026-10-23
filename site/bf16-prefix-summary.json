@@ -198,6 +198,33 @@
       "No full logits, greedy, suffix, decode, 128K, or resource gate"
     ]
   },
+  "routerSharedFp32Diagnostic": {
+    "date": "2026-10-23",
+    "metalSource": "522fa9b87e1848761c8461085f131eaa25d7d342",
+    "cudaSource": "a0e3daf18cd80191ef0a775f61377d619bbcc6d6",
+    "cudaDllSha256": "176da3441475fda9d67b542f5a7781fbad4918ce342afac9ca7d22399d299bd6",
+    "inputTokens": 128,
+    "tokenIdsSha256": "8894963a38fa5ac5efc5991b5eb193536d712234d434a83cf8dc3cc47072f0e7",
+    "kv": "bf16",
+    "metalChunkTokens": 128,
+    "cudaChunkTokens": 32,
+    "checksPassed": 2,
+    "checksTotal": 60,
+    "firstFailed": {
+      "name": "layer-0",
+      "relativeL2": 0.00016054499673620368,
+      "maxAbs": 0.00005179643630981445
+    },
+    "worstRelative": {
+      "name": "state-15-1",
+      "relativeL2": 0.07115699973258101,
+      "maxAbs": 0.314453125
+    },
+    "previousRouterOnlyLayer0RelativeL2": 0.00043722135921466117,
+    "rawComparisonSha256": "59d3f284df3773c26b8e49d0646f2a814a7c56a98e016e5e2713fa95cd91a661",
+    "passed": false,
+    "notes": "Offline numerical comparison, not product transfer or throughput. BF16 candidate is not deployed."
+  },
   "restoredServiceSmoke": {
     "profile": "deployed-affine8-fp32-kv-not-candidate",
     "status": 200,

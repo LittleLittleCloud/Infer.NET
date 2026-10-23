@@ -60,7 +60,7 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
                if line.startswith('|128K 输入')]
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
-body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p><h1>从单机基线，<br>走向双机推理。</h1>
+body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p><h1>从单机基线，<br>走向双机推理。</h1>
 <p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机短请求已跑通：4090 前 20 层、Mac 后 20 层与完整状态接管。FP32 KV 诊断通过，BF16 目标精度与 128K 性能仍未验收。</p>
 <div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机短请求已验证</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
@@ -68,6 +68,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>待实现 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
 <div class="notice"><strong>当前8K双机prefill：16.62s，累计约3.16倍</strong><p>CUDA计算与hidden发送重叠，再减少4.27%；decode约56token/s。真实prefill中途取消后恢复、15项部署验收通过。<a href="experiments.html#prefix-send-overlap">发送重叠对照 →</a> · <a href="send-overlap-summary.json">逐次JSON</a> · <a href="experiments.html#suffix-batching">后段128合批 →</a></p></div>
+<div class="notice"><strong>BF16跨后端正确性仍未通过</strong><p>路由与共享专家投影精度对齐后，128-token诊断的第0层相对误差降至0.00016054，但完整层/状态仅2/60项通过。候选未部署，也没有新增128K性能测量。<a href="experiments.html#bf16-router-shared-fp32">实验记录 →</a> · <a href="bf16-prefix-summary.json">数值摘要 JSON</a></p></div>
 <div class="notice"><strong>8K 双机 prefill：52.50s → 18.64s</strong><p>CUDA 按层批量执行，端到端请求由 54.78s 降至 20.93s；decode 约 56 token/s，8 次输出 token 一致。8bit / FP32 KV，128K 与 BF16 正式目标仍未通过。<a href="experiments.html#cuda-chunk">完整对照 →</a> · <a href="cuda-chunk-summary.json">逐次结果 JSON</a></p></div>
 <div class="notice"><strong>你好首字：820ms → 91ms</strong><p>短输入在驻留 Mac 完成 prefill，避免固定双机交接；六组输入共 48 次输出 token 一致。长输入仍走 4090→Mac。CUDA 合并读回反而慢约 4%，已保留较快的原默认。<a href="experiments.html#short-prefill">路由与失败实验 →</a> · <a href="short-prefill-summary.json">逐次结果 JSON</a></p></div>
 <div class="notice"><strong>空闲首步 decode：约 200ms → 25ms</strong><p>同版本开启/关闭 Metal 权重驻留，2/10/60 秒空闲各三次。24 次正式短请求输出一致、无新增整机 swap-out；高内存压力与 128K 长请求仍待验收。<a href="experiments.html#metal-residency">A/B 记录 →</a> · <a href="residency-summary.json">逐次结果 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/15">PR #15</a></p></div>
@@ -93,7 +94,7 @@ body += '''<p class="note">短输出各档为三次均值；长输出只有一�
 <section><div class="section-head"><h2>固定验收目标</h2>''' + source('docs/QWEN36-8BIT-TARGETS.md', '规范 v1') + '</div>'
 body += table(['指标', '阶段验收', '最终目标'], target_rows)
 body += '''<p class="note">目标设备：M5 Pro 48 GiB + RTX 4090 24 GiB。128K = 131072 tokens，无 prefix cache；每档完整预热一次、正式至少三次。只有正确性、资源、稳定性与性能全部通过才算完成。</p>
-<p>20/20 prefill 仍只有理想估算：短输出约 68 秒，长输出约 82 秒。网络已有独立基线，真实流水线仅验证短请求 FP32 KV 诊断模式，不能把估算当作已达到目标。</p></section>
+<p>20/20 prefill 已完成 8K 短请求的真实双机测量；128K 两档仍只有早期理想估算（约 68 / 82 秒），并无符合固定 BF16 精度与完整验收规则的端到端实测。不能把短请求成绩或估算当作已达到目标。</p></section>
 <section><div class="section-head"><h2>实验笔记</h2><a href="experiments.html">查看完整笔记 →</a></div><div class="cards">'''
 for n in notes:
     body += f'<a class="card" href="experiments.html#{esc(n["id"])}"><span class="eyebrow">{esc(n["kind"])}</span><h3>{esc(n["title"])}</h3><p>{esc(n["conclusion"])}</p><span>阅读记录 →</span></a>'
@@ -104,7 +105,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 (OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增鼠标 Dashboard、Auto 输出与上下文边界验收，保留连接心跳等失败记录；没有新增正式性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次补记 BF16 路由与共享专家精度对齐的失败检查；没有新增正式性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
