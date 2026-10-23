@@ -367,5 +367,22 @@
       "deepinfer split-check-suffix --weights MODEL_DIR --prompt-file PUBLIC_PROMPT --output NEW_DIRECTORY"
     ],
     "evidence": "site/suffix-batching-summary.json; artifacts/dual-host/suffix-e2e-*"
+  },
+  {
+    "id": "prefix-send-overlap",
+    "title": "CUDA计算与hidden发送重叠：8K降至16.62秒",
+    "kind": "8bit · FP32 KV · 双机实测",
+    "source": "docs/PREFIX-SEND-OVERLAP.md",
+    "question": "能否在发送上一块hidden时计算下一块，减少GPU等待网络？",
+    "setup": "2760e44同包；Mac后段128，CUDA wire32；8192/128，0%cache，每档预热1、测3；Mac AC/High Power。",
+    "change": "单GPU生产任务与单发送任务之间使用两个frame的有界队列；取消/失败时必须join生产任务。",
+    "result": "prefill17.365→16.624s（减少4.27%）；客户端整次19.647→18.956s；decode约56token/s。",
+    "validation": "8次全部128token一致，swap-out增量0。prefill约1秒时断开，2.38秒恢复，后续双机/单机输出正确且进程未重启；15项部署验收通过。",
+    "conclusion": "累计较初始52.5秒约3.16倍。最终KV/Delta交接仍在尾部，BF16与128K目标未通过。",
+    "next": "提前传输KV并验证更长输入/输出。",
+    "commands": [
+      "deepinfer split-agent --config PRIVATE_WORKER_JSON --cuda-send-overlap on"
+    ],
+    "evidence": "site/send-overlap-summary.json; artifacts/dual-host/overlap-e2e-*"
   }
 ]
