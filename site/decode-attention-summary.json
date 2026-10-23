@@ -1,0 +1,373 @@
+{
+  "date": "2026-10-23",
+  "source": "3fee48879cd5b92c8525a0910fdc04a5b61095f5",
+  "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "gemm": "fp32",
+  "kv": "fp32",
+  "cudaChunk": 32,
+  "suffixChunk": 128,
+  "kvTransfer": "incremental",
+  "sendOverlap": "on",
+  "cacheHit": 0,
+  "warmups": 1,
+  "measuredTrials": 3,
+  "modes": {
+    "legacy": {
+      "long": {
+        "inputTokens": 32768,
+        "outputTokens": 4096,
+        "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 65.7747938,
+            "clientSeconds": 183.07349308300002,
+            "ttftSeconds": 65.839656875,
+            "decodeTokensPerSecond": 34.9329590535628,
+            "metalAllocatedBytes": 39433191424,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 34.73646206094502
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 66.3456509,
+            "clientSeconds": 183.08217129200003,
+            "ttftSeconds": 66.38986374999999,
+            "decodeTokensPerSecond": 35.095667820846195,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 34.7668570892252
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 66.4380882,
+            "clientSeconds": 182.96578974999994,
+            "ttftSeconds": 66.49704541699998,
+            "decodeTokensPerSecond": 35.16048628317735,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 34.79176765212193
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 66.772581,
+            "clientSeconds": 183.57731475000003,
+            "ttftSeconds": 66.82720187500001,
+            "decodeTokensPerSecond": 35.079327972524425,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 34.72799067298469
+          }
+        ],
+        "median": {
+          "prefillSeconds": 66.4380882,
+          "clientSeconds": 183.08217129200003,
+          "ttftSeconds": 66.49704541699998,
+          "decodeTokensPerSecond": 35.095667820846195,
+          "last1024TokensPerSecond": 34.7668570892252
+        },
+        "windowsWholeGpuObservedPeakMiB": 20115.0,
+        "rawRunId": "decode-long-32768-4096-legacy-20261023T100609Z",
+        "rawSummarySha256": "db3342340735f173588c6001df4f24f44dafe9c2daa9e629bbda9abd9e4c2a5e",
+        "allOutputIdsMatchLegacy": true
+      },
+      "8k": {
+        "inputTokens": 8192,
+        "outputTokens": 128,
+        "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 14.4691965,
+            "clientSeconds": 16.857706957999998,
+            "ttftSeconds": 14.508014125,
+            "decodeTokensPerSecond": 54.05042155285669,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 14.2302575,
+            "clientSeconds": 16.643486292,
+            "ttftSeconds": 14.243192624999999,
+            "decodeTokensPerSecond": 52.87010352590717,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 14.2518366,
+            "clientSeconds": 16.578232459,
+            "ttftSeconds": 14.262662792,
+            "decodeTokensPerSecond": 54.83079368178291,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 14.3763837,
+            "clientSeconds": 16.760817624999994,
+            "ttftSeconds": 14.386667374999995,
+            "decodeTokensPerSecond": 53.44956776555051,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          }
+        ],
+        "median": {
+          "prefillSeconds": 14.2518366,
+          "clientSeconds": 16.643486292,
+          "ttftSeconds": 14.262662792,
+          "decodeTokensPerSecond": 53.44956776555051
+        },
+        "windowsWholeGpuObservedPeakMiB": 20115.0,
+        "rawRunId": "decode-8k-legacy-20261023T101927Z",
+        "rawSummarySha256": "39447ea62dcc5107b0e75c16ef45b99ecce25ee60955adbf8033bb0f3d5942a9",
+        "allOutputIdsMatchLegacy": true
+      },
+      "short": {
+        "arithmetic": {
+          "promptTokens": 34,
+          "outputTokens": 3,
+          "ttftMs": 146.81554200000014,
+          "decodeTokensPerSecond": 72.49581336677811,
+          "allOutputIdsMatchLegacy": true
+        },
+        "code": {
+          "promptTokens": 39,
+          "outputTokens": 29,
+          "ttftMs": 156.21741600000004,
+          "decodeTokensPerSecond": 73.15713263753933,
+          "allOutputIdsMatchLegacy": true
+        },
+        "explanation": {
+          "promptTokens": 35,
+          "outputTokens": 61,
+          "ttftMs": 150.0682910000002,
+          "decodeTokensPerSecond": 73.61325509716582,
+          "allOutputIdsMatchLegacy": true
+        },
+        "hello": {
+          "promptTokens": 24,
+          "outputTokens": 13,
+          "ttftMs": 91.01112499999996,
+          "decodeTokensPerSecond": 74.14277055469296,
+          "allOutputIdsMatchLegacy": true
+        },
+        "history": {
+          "promptTokens": 60,
+          "outputTokens": 4,
+          "ttftMs": 209.2122079999985,
+          "decodeTokensPerSecond": 71.66592213736449,
+          "allOutputIdsMatchLegacy": true
+        },
+        "long-control": {
+          "promptTokens": 351,
+          "outputTokens": 12,
+          "ttftMs": 1108.027583,
+          "decodeTokensPerSecond": 55.331630125155094,
+          "allOutputIdsMatchLegacy": true
+        }
+      }
+    },
+    "fused-fp32": {
+      "long": {
+        "inputTokens": 32768,
+        "outputTokens": 4096,
+        "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 66.51014479999999,
+            "clientSeconds": 156.862752208,
+            "ttftSeconds": 66.559789041,
+            "decodeTokensPerSecond": 45.352788828429944,
+            "metalAllocatedBytes": 39433191424,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 45.22800750371437
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 66.55255899999999,
+            "clientSeconds": 156.76503649999998,
+            "ttftSeconds": 66.6098375,
+            "decodeTokensPerSecond": 45.42237638878721,
+            "metalAllocatedBytes": 39433191424,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 45.18232575254034
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 66.4841747,
+            "clientSeconds": 156.563652042,
+            "ttftSeconds": 66.537422333,
+            "decodeTokensPerSecond": 45.48946357881433,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0,
+            "last1024TokensPerSecond": 45.26097662553038
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 66.7202843,
+            "clientSeconds": 156.91582324999996,
+            "ttftSeconds": 66.76801287500001,
+            "decodeTokensPerSecond": 45.43123326616241,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 14123008,
+            "last1024TokensPerSecond": 45.24118830770418
+          }
+        ],
+        "median": {
+          "prefillSeconds": 66.55255899999999,
+          "clientSeconds": 156.76503649999998,
+          "ttftSeconds": 66.6098375,
+          "decodeTokensPerSecond": 45.43123326616241,
+          "last1024TokensPerSecond": 45.24118830770418
+        },
+        "windowsWholeGpuObservedPeakMiB": 20115.0,
+        "rawRunId": "decode-long-32768-4096-fused-fp32-20261023T102316Z",
+        "rawSummarySha256": "efa5dfd1be76f685329640bb955867e0ea5253041e7e4c2b1d2bf02c885b4a77",
+        "allOutputIdsMatchLegacy": true
+      },
+      "8k": {
+        "inputTokens": 8192,
+        "outputTokens": 128,
+        "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+        "trials": [
+          {
+            "trial": 0,
+            "warmup": true,
+            "prefillSeconds": 14.638933999999999,
+            "clientSeconds": 16.883961666,
+            "ttftSeconds": 14.67638,
+            "decodeTokensPerSecond": 57.465714913764735,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 1,
+            "warmup": false,
+            "prefillSeconds": 14.4675034,
+            "clientSeconds": 16.616624834,
+            "ttftSeconds": 14.476941167,
+            "decodeTokensPerSecond": 59.348162772477,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 2,
+            "warmup": false,
+            "prefillSeconds": 14.2878583,
+            "clientSeconds": 16.42411475,
+            "ttftSeconds": 14.296556917000004,
+            "decodeTokensPerSecond": 59.688989346032365,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          },
+          {
+            "trial": 3,
+            "warmup": false,
+            "prefillSeconds": 14.4523596,
+            "clientSeconds": 16.596139250000007,
+            "ttftSeconds": 14.460075042,
+            "decodeTokensPerSecond": 59.445190083718536,
+            "metalAllocatedBytes": 38720159744,
+            "swapOutBytes": 0
+          }
+        ],
+        "median": {
+          "prefillSeconds": 14.4523596,
+          "clientSeconds": 16.596139250000007,
+          "ttftSeconds": 14.460075042,
+          "decodeTokensPerSecond": 59.445190083718536
+        },
+        "windowsWholeGpuObservedPeakMiB": 20115.0,
+        "rawRunId": "decode-8k-fused-fp32-20261023T103409Z",
+        "rawSummarySha256": "9e873bfbb53d305f7700309338a7be9a1f8a5210136c29254815b14ec9d2caad",
+        "allOutputIdsMatchLegacy": true
+      },
+      "short": {
+        "arithmetic": {
+          "promptTokens": 34,
+          "outputTokens": 3,
+          "ttftMs": 147.69904200000016,
+          "decodeTokensPerSecond": 72.35916193618642,
+          "allOutputIdsMatchLegacy": true
+        },
+        "code": {
+          "promptTokens": 39,
+          "outputTokens": 29,
+          "ttftMs": 156.2924579999998,
+          "decodeTokensPerSecond": 71.7972466268756,
+          "allOutputIdsMatchLegacy": true
+        },
+        "explanation": {
+          "promptTokens": 35,
+          "outputTokens": 61,
+          "ttftMs": 150.19687499999978,
+          "decodeTokensPerSecond": 70.1730666647642,
+          "allOutputIdsMatchLegacy": true
+        },
+        "hello": {
+          "promptTokens": 24,
+          "outputTokens": 13,
+          "ttftMs": 91.02975000000002,
+          "decodeTokensPerSecond": 72.86372661529774,
+          "allOutputIdsMatchLegacy": true
+        },
+        "history": {
+          "promptTokens": 60,
+          "outputTokens": 4,
+          "ttftMs": 208.3309169999996,
+          "decodeTokensPerSecond": 71.64572621302189,
+          "allOutputIdsMatchLegacy": true
+        },
+        "long-control": {
+          "promptTokens": 351,
+          "outputTokens": 12,
+          "ttftMs": 1136.846834,
+          "decodeTokensPerSecond": 53.14045602240785,
+          "allOutputIdsMatchLegacy": true
+        }
+      }
+    }
+  },
+  "limitations": [
+    "FP32 diagnostic, not formal BF16/128K acceptance",
+    "Worker prefill and client TTFT, not the formal coordinator t2-t1 metric",
+    "Metal allocation sampled in responses, not a continuous allocator high-water mark",
+    "Windows memory sampled every500ms"
+  ],
+  "longImprovement": {
+    "decodePercent": 29.449690195600354,
+    "clientReductionPercent": 14.374493489061003
+  },
+  "8kImprovement": {
+    "decodePercent": 11.217344814586783,
+    "clientReductionPercent": 0.28447791027261804
+  },
+  "cancellation": {
+    "pidBefore": 72044,
+    "pidAfter": 72044,
+    "source": "0.3.0+3fee48879cd5b92c8525a0910fdc04a5b61095f5",
+    "abortAfterSeconds": 1.056219625,
+    "readyAfterAbortSeconds": 1.618922417,
+    "recovery8TokensMatch": true,
+    "localResetDeterministic": true,
+    "agentPidUnchanged": true
+  },
+  "deploymentAcceptanceChecks": 15,
+  "shortDecodeLargestObservedRegressionPercent": 4.673327416184403
+}

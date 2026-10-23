@@ -1,5 +1,23 @@
 [
   {
+    "id": "decode-attention-fp32",
+    "kind": "2026-10-23 · 32K / 4096 · 实测改进",
+    "title": "32K decode：35.10 → 45.43 token/s",
+    "question": "单 token 专用注意力能否兑现整模提速？",
+    "setup": "3fee488，两端 affine8 / FP32，CUDA32、Metal128，分段KV、现有LAN、AC；每档预热1次＋正式3次。",
+    "change": "复用8个GQA查询头，单查询FP32融合注意力，128-key分段；同包开关A/B。",
+    "result": "32K/4096 decode中位+29.45%，整次183.08→156.77秒；8K/128 decode53.45→59.45。",
+    "validation": "32K八轮4096个token一致；8K八轮128个token一致；短对话48轮输出一致；数值、取消与部署检查通过。",
+    "conclusion": "32K已超过37t/s这一数字，但不代表BF16/128K目标通过。短上下文decode最大回退4.67%；最后一轮系统swap-out13.47MiB，低于门槛。",
+    "next": "按上下文选内核，并把Mac收包与suffix计算重叠；继续解决BF16误差。",
+    "commands": [
+      "--decode-attention legacy",
+      "--decode-attention fused-fp32"
+    ],
+    "source": "docs/DECODE-ATTENTION.md",
+    "evidence": "site/decode-attention-summary.json"
+  },
+  {
     "id": "long-context-32k",
     "kind": "2026-10-23 · 32K / 4096 · 性能差距",
     "title": "32K decode 降至35.14 t/s：瓶颈仍在",
