@@ -22,6 +22,7 @@ metal=json.loads((a.metal/'result.json').read_text())
 cuda=json.loads((a.cuda/'result.json').read_text())
 tokens=metal['tokens']
 assert tokens==cuda['tokens']==128 and metal['kv']==cuda['kv']=='bf16'
+assert metal.get('routerProjection','bf16')==cuda.get('candidateRouterProjection','bf16'),'Router profile mismatch'
 expected_tokens=[100+(i*137)%247000 for i in range(tokens)]
 assert json.loads((a.metal/'tokens.json').read_text())==expected_tokens
 assert cuda['tokensSha256']==hashlib.sha256(json.dumps(expected_tokens).encode()).hexdigest()

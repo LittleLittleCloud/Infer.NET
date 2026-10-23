@@ -51,6 +51,7 @@ internal static class Bf16PrefixReference
         json.WriteNumber("tokens", tokens.Length);
         json.WriteNumber("weightBits", 8);
         json.WriteString("kv", "bf16");
+        json.WriteString("routerProjection", Environment.GetEnvironmentVariable("DEEPINFER_METAL_ROUTER_FP32") == "1" ? "fp32-diagnostic" : "bf16");
         json.WriteNumber("chunkTokens", 128);
         json.WriteNumber("nextToken", next);
         json.WriteString("traceSha256", Convert.ToHexStringLower(SHA256.HashData(bytes)));

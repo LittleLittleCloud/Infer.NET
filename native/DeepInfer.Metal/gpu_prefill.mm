@@ -705,7 +705,13 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   if(!l.linear&&!checkpoint("attention"))return -1;
   p_gemv(g,e,m[GO],p->attention,p->out,shape);g_barrier(e);if(!checkpoint("output-projection"))return -1;
   g_bind(e,p->x,0);g_bind(e,p->out,1);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];p_run(g,e,PAdd,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("residual-norm"))return -1;
-  p_gemv(g,e,m[GR],p->norm,p->router,shape);p_gate(g,e,m[GSG],m[GSU],p->sharedAct,shape,false);p_gemv(g,e,m[GSR],p->norm,p->sharedRoute,shape);g_barrier(e);if(!checkpoint("router-shared-gate"))return -1;
+  if(std::getenv("DEEPINFER_METAL_ROUTER_FP32")&&strcmp(std::getenv("DEEPINFER_METAL_ROUTER_FP32"),"1")==0){
+   PShape route=shape;route.rows=m[GR].rows;route.columns=m[GR].columns;route.bits=m[GR].bits;
+   g_bind(e,m[GR].packed,0);g_bind(e,m[GR].scales,1);g_bind(e,m[GR].biases,2);
+   g_bind(e,p->norm,3);g_bind(e,p->router,4);[e setBytes:&route length:sizeof(route) atIndex:5];
+   p_run(g,e,route.bits==8?PQ8:PQ5,MTLSizeMake((route.rows+3)/4,(count+3)/4,1),128);
+  }else p_gemv(g,e,m[GR],p->norm,p->router,shape);
+  p_gate(g,e,m[GSG],m[GSU],p->sharedAct,shape,false);p_gemv(g,e,m[GSR],p->norm,p->sharedRoute,shape);g_barrier(e);if(!checkpoint("router-shared-gate"))return -1;
   g_bind(e,p->router,0);g_bind(e,p->ids,1);g_bind(e,p->prob,2);g_bind(e,p->groupedTileCount,3);p_run(g,e,PTop,MTLSizeMake(count,1,1),32);g_barrier(e);
   if(p->groupedExperts&&count>=64)p_build_groups(g,e,shape,m[GEG].rows,m[GED].rows);if(!checkpoint("routing"))return -1;
   p_gate(g,e,m[GEG],m[GEU],p->expertAct,shape,true);g_barrier(e);if(!checkpoint("expert-gate"))return -1;
