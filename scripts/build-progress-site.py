@@ -79,7 +79,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
 <li><span class="status done">基线完成</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>工具链、68 项单测、两组 25 项 RPC 和 SM89 数值检查通过。Mac Wi-Fi ↔ Windows 千兆网口已实测：128K 前 20 层状态，4090 → Mac 中位 24.66 秒，反向 41.20 秒；40 次传输校验全部通过。合成 GPU 状态传输不代表模型状态恢复。<a href="experiments.html#kv-sync-lan">实验记录 →</a></p></div></li>
-<li><span class="status pending">诊断通过</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>FP32 KV：8K/128 A/B 与 8K/4096 持续输出通过；分段状态齐备后接管 decode。BF16 与 128K 正式目标未通过，最新代码见未合并 <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/23">PR #23</a>。<a href="experiments.html#split-prefill-mvp">实验记录 →</a> · <a href="split-prefill-summary.json">数值摘要 JSON</a></p></div></li>
+<li><span class="status pending">诊断通过</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>FP32 KV：8K/128 A/B 与 8K/4096 持续输出通过；分段状态齐备后接管 decode。BF16 与 128K 正式目标未通过；有线 8K CUDA 分块对照见 <a href="experiments.html#cuda-midchunk-wired">最新实验</a>，候选代码为未合并 <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/30">PR #30</a>。<a href="experiments.html#split-prefill-mvp">流水线记录 →</a> · <a href="split-prefill-summary.json">数值摘要 JSON</a></p></div></li>
 <li><span class="status pending">候选已测</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/9">常驻服务与部署 #9</a></h3><p>真实模型 15 项验收通过：连续请求、SSE、取消恢复、EOS 与限流；双向 TLS，8bit/FP32 KV，已扩大上下文并实测8K长输出。Mac由LaunchAgent托管，Windows仍为SSH控制的前台进程，SCM待管理员安装；首请求优化见上方实测。<a href="experiments.html#persistent-deployment">完整记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/10">PR #10</a></p></div></li>
 <li><span class="status done">已接入</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/11">Chat API 与 TUI #11</a></h3><p>Microsoft.Extensions.AI.IChatClient、真实流式、多轮历史、取消恢复；三格式官方 SDK 互通。8bit/FP32 KV；上下文与Auto输出已扩展，实际验证长度见最新实验。<a href="experiments.html#chat-playground">验收记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/12">PR #12</a></p></div></li>
 <li><span class="status done">已接入</span><div><h3><a href="https://github.com/LittleLittleCloud/Infer.NET/issues/13">鼠标 Dashboard / 上下文 #13</a></h3><p>真实 worker 状态、性能和 Playground；Auto 输出与按需 KV 扩容。<a href="experiments.html#tui-dashboard">实验记录 →</a></p></div></li>
@@ -97,7 +97,7 @@ body += '''<p class="note">短输出各档为三次均值；长输出只有一�
 <section><div class="section-head"><h2>固定验收目标</h2>''' + source('docs/QWEN36-8BIT-TARGETS.md', '规范 v1') + '</div>'
 body += table(['指标', '阶段验收', '最终目标'], target_rows)
 body += '''<p class="note">目标设备：M5 Pro 48 GiB + RTX 4090 24 GiB。128K = 131072 tokens，无 prefix cache；每档完整预热一次、正式至少三次。只有正确性、资源、稳定性与性能全部通过才算完成。</p>
-<p>20/20 prefill 仍只有理想估算：短输出约 68 秒，长输出约 82 秒。网络已有独立基线，真实流水线已有8K/4096 FP32 KV测量，BF16/128K仍未验收，不能把估算当作已达到目标。</p></section>
+<p>128K 的 20/20 prefill 仍只有理想估算：短输出约 68 秒，长输出约 82 秒。网络已有独立基线，真实流水线已有8K/4096 FP32 KV测量，BF16/128K仍未验收，不能把估算当作已达到目标。</p></section>
 <section><div class="section-head"><h2>实验笔记</h2><a href="experiments.html">查看完整笔记 →</a></div><div class="cards">'''
 for n in notes:
     body += f'<a class="card" href="experiments.html#{esc(n["id"])}"><span class="eyebrow">{esc(n["kind"])}</span><h3>{esc(n["title"])}</h3><p>{esc(n["conclusion"])}</p><span>阅读记录 →</span></a>'
@@ -108,7 +108,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 (OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增分段 KV 交接 A/B 与 4096-token 持续生成；保留退化和驱动失败记录，BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增有线 CUDA 计算块 A/B，保留端到端退化、分段 KV 交接与 4096-token 持续生成记录；BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
@@ -125,7 +125,7 @@ for n in notes:
             body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'style.css']:
+for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'cuda-midchunk-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')

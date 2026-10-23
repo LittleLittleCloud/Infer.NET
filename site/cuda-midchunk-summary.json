@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-23",
+  "kind": "real-dual-host-short-input-ab",
+  "source": "47fe588160fc748a8a3f0125b46308c3f03d52d3",
+  "model": "Qwen3.6-35B-A3B",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "gemm": "fp32",
+  "kv": "fp32",
+  "inputTokens": 8192,
+  "outputTokens": 8,
+  "cacheHit": 0,
+  "network": "Mac 1000baseT full-duplex wired to existing LAN; Windows agent connects to Mac wired interface",
+  "groups": [
+    {
+      "label": "32",
+      "cudaChunkTokens": 32,
+      "warmups": 1,
+      "measuredTrials": 3,
+      "prefillSeconds": [
+        10.9721,
+        10.9356,
+        11.0707
+      ],
+      "medianPrefillSeconds": 10.9721,
+      "medianClientSeconds": 11.1026,
+      "medianCudaComputeSeconds": 9.7635,
+      "medianMacHiddenWaitSeconds": 0.4109,
+      "medianMacSuffixSeconds": 10.2898,
+      "medianDecodeTokensPerSecond": 55.9544,
+      "deterministic": true,
+      "rawLocalSha256": "e05a1ec5e78bd2b078aa83331689e982367e0d43d21c624bffa3eec138de08b1"
+    },
+    {
+      "label": "256",
+      "cudaChunkTokens": 256,
+      "warmups": 1,
+      "measuredTrials": 3,
+      "prefillSeconds": [
+        11.2747,
+        11.2815,
+        11.2659
+      ],
+      "medianPrefillSeconds": 11.2747,
+      "medianClientSeconds": 11.406,
+      "medianCudaComputeSeconds": 9.13,
+      "medianMacHiddenWaitSeconds": 0.7026,
+      "medianMacSuffixSeconds": 10.2894,
+      "medianDecodeTokensPerSecond": 55.8959,
+      "deterministic": true,
+      "rawLocalSha256": "1fb20715933291d49eb96a38c56513232dd9af500e7bcc6b7970e947d36a3dd5"
+    },
+    {
+      "label": "512",
+      "cudaChunkTokens": 512,
+      "warmups": 1,
+      "measuredTrials": 3,
+      "prefillSeconds": [
+        11.5508,
+        11.4799,
+        11.4742
+      ],
+      "medianPrefillSeconds": 11.4799,
+      "medianClientSeconds": 11.6251,
+      "medianCudaComputeSeconds": 9.077,
+      "medianMacHiddenWaitSeconds": 0.9132,
+      "medianMacSuffixSeconds": 10.2919,
+      "medianDecodeTokensPerSecond": 56.1295,
+      "deterministic": true,
+      "rawLocalSha256": "686b41c4d9ccead4d53cefecf749009a441730fb3eed56131a317da2091daf89"
+    },
+    {
+      "label": "1024",
+      "cudaChunkTokens": 1024,
+      "warmups": 1,
+      "measuredTrials": 3,
+      "prefillSeconds": [
+        12.0955,
+        12.0894,
+        12.0607
+      ],
+      "medianPrefillSeconds": 12.0894,
+      "medianClientSeconds": 12.2219,
+      "medianCudaComputeSeconds": 9.1641,
+      "medianMacHiddenWaitSeconds": 1.5047,
+      "medianMacSuffixSeconds": 10.3089,
+      "medianDecodeTokensPerSecond": 55.2922,
+      "deterministic": true,
+      "rawLocalSha256": "a0ada66ed09d069cd99309857a3b33b462c678a6b1d6d592443620714a36bd58"
+    },
+    {
+      "label": "256-confirm",
+      "cudaChunkTokens": 256,
+      "warmups": 1,
+      "measuredTrials": 3,
+      "prefillSeconds": [
+        11.3033,
+        11.2896,
+        11.266
+      ],
+      "medianPrefillSeconds": 11.2896,
+      "medianClientSeconds": 11.4225,
+      "medianCudaComputeSeconds": 9.1919,
+      "medianMacHiddenWaitSeconds": 0.7191,
+      "medianMacSuffixSeconds": 10.2905,
+      "medianDecodeTokensPerSecond": 56.0316,
+      "deterministic": true,
+      "rawLocalSha256": "2743a03e9e77a6bfbe98a4973c3a4dfa2105a6da9a99d3ad025b472cf8241765"
+    }
+  ],
+  "outputIdsSha256": "86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544",
+  "rollback": "Original 919259d Mac coordinator/serve and Windows agent restored; healthy and connected; real 8192/8 split request HTTP 200 with identical token hash",
+  "performanceAcceptance": false,
+  "targetBF16Acceptance": false,
+  "limitations": [
+    "Current measured path is FP32 GEMM/KV, not fixed BF16 target",
+    "8192/8 does not establish 131072/4096 performance or decode sustainability",
+    "No per-trial swap-out, GPU peak, or power record for formal resource acceptance",
+    "CUDA, suffix and transfer stages overlap; stage durations must not be summed",
+    "Raw request JSON and Windows logs are local only; SHA-256 values identify them, not download links"
+  ]
+}

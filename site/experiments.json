@@ -1,5 +1,23 @@
 [
   {
+    "id": "cuda-midchunk-wired",
+    "kind": "2026-10-23 · 有线双机完整对照",
+    "title": "CUDA块256/512原生更快，8K双机仍以32最快",
+    "question": "缩小1024-token CUDA计算块，能否兼顾前段计算复用与Mac流水线等待？",
+    "setup": "候选PR #30两端同源47fe588 Native AOT；Qwen3.6 35B A3B affine8/FP32 KV；Mac 1GbE有线与Windows RTX4090；8192输入/8输出、0%缓存，各档预热1次＋正式3次，256追加确认。",
+    "change": "增加可选256/512 CUDA计算块，保持128-token hidden/KV传输帧与原有1024默认；另测32、1024同版对照。",
+    "result": "8K prefill中位：32=10.972s，256=11.275s，512=11.480s，1024=12.089s；256反向确认11.290s。256相较32把CUDA计算9.764→9.130s，但Mac hidden等待0.411→0.703s。",
+    "validation": "所有轮次8个输出ID完全相同；256/512原生hidden及40状态逐字节一致。Mac129测试、Windows128通过＋1跳过，双端AOT包协议v5一致。旧919259d部署已恢复，真实跨机请求HTTP200且输出哈希一致。",
+    "conclusion": "在此8K有线配置下，32是已测四档里最快的完整prefill；中间块没有稳定端到端收益。阶段计算与传输重叠，socket写入不能当纯网络耗时。BF16/128K与资源门槛未通过。",
+    "next": "改进首批hidden的流水线交付及Mac后段，再对32K/128K与4096输出做同源、同精度、内存受控复测；保留候选默认1024与旧服务回退。",
+    "commands": [
+      "候选分支 codex/cuda-1024-prefill：--cuda-prefill-chunk 32|256|512|1024",
+      "python3 scripts/split/bench-live-chunk.py --help"
+    ],
+    "source": "docs/CUDA-LONG-CHUNK-20261023.md",
+    "evidence": "site/cuda-midchunk-summary.json"
+  },
+  {
     "id": "prefill-stage-timing",
     "kind": "2026-10-23 · 双机计时与部署验收",
     "title": "把约7秒 prefill 拆到两端，标明流水线重叠",
