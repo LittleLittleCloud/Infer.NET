@@ -177,7 +177,7 @@ The M5 MoE launcher selects the measured hybrid GEMM, packed expert input and fu
 
 ## Persistent 8bit deployment
 
-The `split-serve` / `split-agent` commands keep Metal and CUDA weights loaded across requests, warm the complete Mac graph before readiness, reset request state, and use pinned mutual TLS for cross-host state transfer. The local coordinator exposes both complete and streamed responses; CLI and TUI share it. Current limits: affine8 weights, FP32 KV, 2048 total tokens and 256 output tokens, one active request plus a bounded queue. BF16/128K performance acceptance remains open.
+The `split-serve` / `split-agent` commands keep Metal and CUDA weights loaded across requests, warm the complete Mac graph before readiness, reset request state, and use pinned mutual TLS for cross-host state transfer. The local coordinator exposes both complete and streamed responses; CLI and TUI share it. Current deployment uses affine8 weights and FP32 KV, enforces the model's 262144-token context limit without silent truncation, and runs one active request plus a bounded queue. The long-chunk candidate selects 1024 CUDA prefill tokens by default; the deployed 32-token package remains the stable version. BF16 accuracy, 128K performance and resource acceptance remain open.
 
 See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Native AOT packaging, Mac LaunchAgents, Windows Service installation, upgrade/rollback and real-model acceptance. Windows Service installation requires administrator PowerShell; the foreground SSH runner is only for development.
 
