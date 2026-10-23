@@ -282,5 +282,20 @@
       "python3 scripts/chat-integration.py --sdk --tui"
     ],
     "evidence": "docs/TUI-LAYOUT.md（原始终端记录仅本地）"
+  },
+  {
+    "id": "idle-latency",
+    "title": "空闲后首请求停顿：Metal 驻留诊断",
+    "kind": "8bit · 两次实机诊断 · 非性能基准",
+    "source": "docs/IDLE-LATENCY.md",
+    "question": "首请求及首步 decode 的长停顿属于正常计算开销吗？",
+    "setup": "2026-10-22；后端 5064814；Mac M5 Pro 48 GiB + RTX 4090，FP32 KV，AC，24 输入 / 13 输出。",
+    "change": "没有更改后端；相同短请求连续两次，同时采样栈及整机换页计数。",
+    "result": "客户端 20.27s → 1.90s；首步 decode 16.39s → 0.41s；整机换入页折算 4.20 GiB → 4.83 MiB。全部输出 token 一致、模型 PID 不变。",
+    "validation": "栈定位到 Metal command submit/wait；首步 GPU 计时仅 17.77ms。两次诊断不算正式基准，整机计数不能全部归因单进程。",
+    "conclusion": "强烈指向内存重新驻留/换页；CUDA prefill 仍逐 token 执行，是另一独立性能缺口。",
+    "next": "有预算的 residency A/B、分阶段计时，再优化批量 prefill；尚未修复。",
+    "commands": [],
+    "evidence": "site/idle-latency-summary.json；原始采样仅本地"
   }
 ]

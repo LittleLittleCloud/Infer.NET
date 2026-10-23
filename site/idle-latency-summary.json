@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-22",
+  "runId": "idle-latency-20261023T061238Z",
+  "kind": "diagnostic-not-benchmark",
+  "backendSource": "0.3.0+506481445d3670d129ff3d101251f96357efb971",
+  "os": "macOS 26.6.2 (25G83)",
+  "macDevice": "Apple M5 Pro 48 GiB",
+  "cudaDevice": "RTX 4090",
+  "power": "AC; High Power not rechecked in this diagnostic",
+  "weightBits": 8,
+  "kv": "fp32",
+  "pidUnchanged": true,
+  "modelReloaded": false,
+  "tokenIdsMatch": true,
+  "pageBytes": 16384,
+  "recommendedWorkingSetBytes": 40200896512,
+  "metalAllocatedBytes": 37819006976,
+  "runs": [
+    {
+      "run": 0,
+      "clientSeconds": 20.269839292,
+      "firstTextSeconds": 3.708522584,
+      "inputTokens": 24,
+      "outputTokens": 13,
+      "prefillMs": 3347.6862,
+      "firstDecodeMs": 16392.6044,
+      "gpuComputeMs": 225.75545799918473,
+      "swapInBytes": 4510547968,
+      "swapOutBytes": 750845952,
+      "decompressedPageBytes": 32870580224,
+      "tokenIdsSha256": "723ade6cae0bf06930775a872e83797b81d75ac8a4ea137fd835cc11a8778623"
+    },
+    {
+      "run": 1,
+      "clientSeconds": 1.9032253340000018,
+      "firstTextSeconds": 1.3266577500000025,
+      "inputTokens": 24,
+      "outputTokens": 13,
+      "prefillMs": 1314.4243,
+      "firstDecodeMs": 410.424,
+      "gpuComputeMs": 225.5020420998335,
+      "swapInBytes": 5062656,
+      "swapOutBytes": 0,
+      "decompressedPageBytes": 1093238784,
+      "tokenIdsSha256": "723ade6cae0bf06930775a872e83797b81d75ac8a4ea137fd835cc11a8778623"
+    }
+  ],
+  "limits": [
+    "Two consecutive requests, not a throughput benchmark or latency distribution.",
+    "Machine-wide vm_stat deltas do not isolate one process; decompressed page bytes are logical page volume, not SSD traffic.",
+    "First request sampled with sample for one second; tracing has observer overhead.",
+    "Windows stage durations and per-stage prefill wall time not separately measured.",
+    "No residency A/B implementation or service restart performed."
+  ],
+  "rawEvidence": "Local only: artifacts/dual-host/idle-latency-20261023T061238Z"
+}
