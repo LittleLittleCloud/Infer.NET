@@ -26,19 +26,33 @@ public static class SplitInference
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
         await ServePrefix(gpu, wire, ct);
     }
-    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null)
+    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false)
     {
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=start.Tensor==1;var timer=Stopwatch.StartNew();
-        for(var offset=0;offset<tokens.Length;offset+=32)
+        double computeMs=0, sendMs=0;
+        IEnumerable<SplitWire.Frame> Chunks()
         {
-            ct.ThrowIfCancellationRequested();var count=Math.Min(32,tokens.Length-offset);
-            var trace=verify?new float[count*20*2048]:null;
-            var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
-            await wire.SendAsync(new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden)),ct);
-            if(trace is not null)await wire.SendAsync(new(SplitWire.Trace,0,0,offset,count,Bytes(trace)),ct);
-            Console.Error.WriteLine($"PREFIX_PROGRESS tokens={offset+count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+            for(var offset=0;offset<tokens.Length;offset+=32)
+            {
+                ct.ThrowIfCancellationRequested();var count=Math.Min(32,tokens.Length-offset);
+                var trace=verify?new float[count*20*2048]:null;
+                var began=Stopwatch.GetTimestamp();
+                var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
+                computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                yield return new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden));
+                if(trace is not null)yield return new(SplitWire.Trace,0,0,offset,count,Bytes(trace));
+            }
         }
+        async ValueTask Send(SplitWire.Frame frame,CancellationToken cancel)
+        {
+            var began=Stopwatch.GetTimestamp();await wire.SendAsync(frame,cancel);
+            sendMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+            if(frame.Kind==SplitWire.Hidden)Console.Error.WriteLine($"PREFIX_PROGRESS tokens={frame.Position+frame.Count}/{tokens.Length} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+        }
+        if(overlapSend)await SplitFramePump.Run(Chunks(),Send,ct);
+        else foreach(var frame in Chunks())await Send(frame,ct);
+        Console.Error.WriteLine($"PREFIX_CHUNKS overlap={overlapSend} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         for(var layer=0;layer<20;layer++)for(var tensor=0;tensor<2;tensor++)
             await wire.SendAsync(new(SplitWire.State,layer,tensor,tokens.Length,1,gpu.State(layer,tensor,tokens.Length)),ct);
         await wire.SendAsync(new(SplitWire.End,20,0,tokens.Length,0,[]),ct);
