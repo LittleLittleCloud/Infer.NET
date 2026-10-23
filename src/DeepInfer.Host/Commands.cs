@@ -14,7 +14,8 @@ public static class Commands
         {
             case "version": Console.WriteLine(typeof(Commands).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion); break;
             case "split-check-suffix": await SuffixChecks.Run(options, ct); break;
-            case "split-check-bf16-prefix": await Bf16PrefixReference.Run(options, ct); break;
+            case "split-check-bf16-prefix": await Bf16PrefixReference.Run(options, ct, fp32: false); break;
+            case "split-check-fp32-prefix": await Bf16PrefixReference.Run(options, ct, fp32: true); break;
             case "split-serve": await SplitService.RunMac(options, ct); break;
             case "split-agent": await SplitService.RunAgent(options, ct); break;
             case "split-worker": await SplitInference.Worker(options, ct); break;
