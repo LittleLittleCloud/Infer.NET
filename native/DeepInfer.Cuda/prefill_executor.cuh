@@ -31,7 +31,7 @@ static void prepare_chunk(Model *g) {
         p.scores=next;p.scoreCapacity=scoreCapacity;
     }
     if(g->attentionPartitionThreshold>=0 && g->capacity>=g->attentionPartitionThreshold) {
-        int tile=g->kvBf16?256:512,partitions=(g->capacity+tile-1)/tile;
+        int tile=g->kvBf16?256:128,partitions=(g->capacity+tile-1)/tile;
         if(p.partitions<partitions) {
             auto *next=g->alloc<float>(size_t(32)*16*partitions*258);
             if(p.parts){auto old=std::find(g->memory.begin(),g->memory.end(),p.parts);if(old!=g->memory.end())g->memory.erase(old);ck(cudaFree(p.parts));}
@@ -82,8 +82,8 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             } else {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(float*)v.keys,(float*)v.values,pos,g->eps,g->theta);
                 if(g->attentionPartitionThreshold>=0 && pos+count>=g->attentionPartitionThreshold) {
-                    chunk_attention_parts<float,512><<<dim3(16,count,(pos+count+511)/512),256>>>(p.q,(float*)v.keys,(float*)v.values,p.parts,pos,p.partitions);
-                    chunk_attention_combine<<<dim3(16,count),256,p.partitions*sizeof(float)>>>(p.parts,p.qkv,p.attention,pos,p.partitions,512);
+                    chunk_attention_parts<float,128><<<dim3(16,count,(pos+count+127)/128),256>>>(p.q,(float*)v.keys,(float*)v.values,p.parts,pos,p.partitions);
+                    chunk_attention_combine<<<dim3(16,count),256,p.partitions*sizeof(float)>>>(p.parts,p.qkv,p.attention,pos,p.partitions,128);
                 } else {
                     chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,p.scoreCapacity);
                     chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,p.scoreCapacity);
