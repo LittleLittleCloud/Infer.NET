@@ -11,7 +11,10 @@
     "validation": "历史记录：48 次模型请求输出一致；146 项 GPU 检查、68 项单测、25 项 RPC 检查与 4 项实际模型验收通过。",
     "conclusion": "没有稳定的 32K 收益，默认保留 staged/serial。少搬数据不必然等于整体更快。",
     "next": "转向专家尾块利用率、gate/up 融合与 DeltaNet 搬运。",
-    "commands": ["artifacts/baselines/mlx-env/bin/python scripts/sweep-qwen36-expert-flow.py", "python3 scripts/summarize-qwen36-expert-flow.py"],
+    "commands": [
+      "artifacts/baselines/mlx-env/bin/python scripts/sweep-qwen36-expert-flow.py",
+      "python3 scripts/summarize-qwen36-expert-flow.py"
+    ],
     "evidence": "artifacts/baselines/qwen36-expert-flow-summary.json"
   },
   {
@@ -26,7 +29,10 @@
     "validation": "历史记录：24 次本引擎请求输出一致；专家、DeltaNet、attention 数值检查、68 项单测、25 项 RPC、4 项真实模型验收通过。",
     "conclusion": "采用该组合。没有达到同轮 MLX prefill 持平；该结论只适用于 5bit。另试 MPP DeltaNet 仅约 0.2% pilot 收益但增加 64 MiB 工作区，未采用。",
     "next": "验证 8bit 格式，并重新检查长输入与显存边界。",
-    "commands": ["artifacts/baselines/mlx-env/bin/python scripts/sweep-qwen36-joy.py", "python3 scripts/summarize-qwen36-joy.py"],
+    "commands": [
+      "artifacts/baselines/mlx-env/bin/python scripts/sweep-qwen36-joy.py",
+      "python3 scripts/summarize-qwen36-joy.py"
+    ],
     "evidence": "artifacts/baselines/qwen36-joy-summary.json"
   },
   {
@@ -41,7 +47,10 @@
     "validation": "120 组逐层状态、完整 logits、8 个 greedy token 参考通过；relative L2 最大 3.56e-6，logits 2.22e-6。历史 68 项单测及长请求后 4 项 RPC 验收通过。短输出各测三次；4096 输出仅正式测一次，不满足新验收规范的三次要求。",
     "conclusion": "8bit 单机基线成立；短数值参考不证明 128K 语义质量，也不是 8bit 对 BF16 的质量评测。本轮没有本机 MLX 8bit A/B，不能引用 5bit 结果宣称框架持平。",
     "next": "接入 Windows，先实现并测量 CUDA 前段，再做跨机验收。",
-    "commands": ["artifacts/baselines/mlx-env/bin/python scripts/benchmark-qwen36-8bit.py --label unique-run", "python3 scripts/summarize-qwen36-8bit.py"],
+    "commands": [
+      "artifacts/baselines/mlx-env/bin/python scripts/benchmark-qwen36-8bit.py --label unique-run",
+      "python3 scripts/summarize-qwen36-8bit.py"
+    ],
     "evidence": "artifacts/baselines/qwen36-8bit-summary.json"
   },
   {
@@ -56,7 +65,9 @@
     "validation": "长输出预热和正式请求的 4096 token 序列一致，随后真实 RPC 验收通过。正式长请求整机新增 swap-out 259.98 MiB；首次完整预热约 9.47 GiB。",
     "conclusion": "限制取决于提交驻留集合、工作区与输出预算；不能把已完成的 128K 请求泛化为任意输出长度，也不能宣传 48 GiB 下无 swap。换页计数属于整机，不能全部归因于 worker。",
     "next": "保持精度，继续降低工作区和驻留压力，以支持更高长输出 prefill 吞吐。",
-    "commands": ["artifacts/baselines/mlx-env/bin/python scripts/benchmark-qwen36-8bit.py --lengths 131072 --long-output-chunk 512 --label unique-memory-run"],
+    "commands": [
+      "artifacts/baselines/mlx-env/bin/python scripts/benchmark-qwen36-8bit.py --lengths 131072 --long-output-chunk 512 --label unique-memory-run"
+    ],
     "evidence": "artifacts/baselines/qwen36-8bit-summary.json"
   },
   {
@@ -86,7 +97,9 @@
     "validation": "已核对 Pages 发布版本、页面内容和本地链接。浏览器自动预览工具无法启动，未完成截图视觉检查。云端还原失败，不能声称该轮云端构建、测试或 AOT 已通过。",
     "conclusion": "发布与产品构建是独立验证项。历史本机测试通过不替代干净云端验证；此次依赖失败本身不证明推理性能退化。",
     "next": "后续已在“云端 CI：SDK 固定与 Metal 构建环境修复”记录中完成 Issue #5 验证；保留本次失败作为历史证据。",
-    "commands": ["gh run view 39854806684 --repo LittleLittleCloud/Infer.NET --log-failed"],
+    "commands": [
+      "gh run view 39854806684 --repo LittleLittleCloud/Infer.NET --log-failed"
+    ],
     "evidence": null
   },
   {
@@ -122,7 +135,7 @@
   {
     "id": "windows-user-tools",
     "title": "Windows 用户工具安装与托管验证",
-    "kind": "工程验证 · 托管通过 · MSVC 待管理员安装",
+    "kind": "工程验证 · 托管通过 · 原生阻塞后续已解除",
     "source": "docs/WINDOWS-ENVIRONMENT.md",
     "question": "能否保持固定 SDK 和依赖锁，在 Windows 完成构建、单测与实际进程 RPC，并准备原生验证？",
     "setup": "2026-10-22，本地普通账户，独立 GitHub checkout；验证版本 1022ea3e0e6503c2c7600f86b314c154dfb8dedd，安装和验证脚本在 draft PR #6。",
@@ -130,7 +143,22 @@
     "result": "带漏洞检查的 locked restore 成功，Release 构建零警告、零错误；68/68 单测、25/25 RPC 检查通过。程序识别 RTX 4090 / SM89，正确标记 CUDA 推理未实现。原生预检因未找到 MSVC 失败。",
     "validation": "Python EXE 安装先报 1601，官方完整 ZIP 安装成功；NuGet V3 TLS 握手失败，改用官方 V2 包地址及独立漏洞数据端点，确认漏洞缓存已下载。未关闭 TLS 校验、依赖锁或漏洞检查；失败日志保留。",
     "conclusion": "Windows 托管开发环境已可用。MSVC 管理员安装尚未完成，CUDA kernel 与 Native AOT 尚未验收；原 NuGet V3 连通性问题仍存在。不能把设备发现或模拟 RPC 视为 GPU 推理成功。",
-    "next": "执行已准备并验证微软签名的 Build Tools 安装程序，再完成 CUDA SM89 数值检查和 Native AOT RPC。Issue #2 保持打开。",
+    "next": "后续“Windows CUDA 与 Native AOT 验证”已完成管理员安装后的原生验收；保留本次 MSVC 缺失记录。",
+    "commands": [],
+    "evidence": null
+  },
+  {
+    "id": "windows-native-validation",
+    "title": "Windows CUDA 与 Native AOT 验证",
+    "kind": "工程验证 · 原生通过 · 链路待测",
+    "source": "docs/WINDOWS-ENVIRONMENT.md",
+    "question": "管理员完成 Build Tools 安装后，4090 能否实际编译执行 CUDA，并运行 Native AOT 原生 RPC？",
+    "setup": "2026-10-22，Windows 原生 RTX 4090，MSVC 14.44.35207，CUDA 13.4.59，SDK 10.0.100。两端干净源码版本 bfb363fab08d49cc2b2c57d9857802a8df9f4db2；run setup-native-after-msvc-20261022。",
+    "change": "用户完成 MSVC 管理员安装，随后自动发现并激活 C++ 编译环境；执行已有 SM89 数值检查与 win-x64 Native AOT 验证脚本。",
+    "result": "FP32 GEMM 的 851/851 输出通过 CPU double 参考检查，最大绝对误差 5.96756026e-07（容差 1e-5）。Native AOT 发布成功，原生程序的 25/25 独立进程 RPC 检查通过，整体退出码 0。",
+    "validation": "M=37、N=23、K=53，包含 tile 尾部。原始日志与结果 JSON 在两端保留但未公开，源码和产物 SHA256 见完整记录。此前托管阶段的 68 单测与 25 RPC 通过，本轮未重复。",
+    "conclusion": "Windows 开发环境已就绪。CUDA 检查只证明工具链和小型计算正确，RPC 使用模拟推理；CUDA 模型推理、双机交接和性能目标仍待实现验收。",
+    "next": "继续测量有效链路吞吐与状态传输开销，推进 8bit CUDA 前段实现；Issue #2 因网络验收未完成保持打开。",
     "commands": [],
     "evidence": null
   }

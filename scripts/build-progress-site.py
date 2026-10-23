@@ -70,7 +70,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.22</p>
 <div class="notice"><strong>Linux / macOS 云端 CI 已通过</strong><p>已固定 .NET SDK 选择，并升级 macOS 构建 SDK。两平台各通过 68 项单测、25 项 RPC 与 25 项 Native AOT RPC 检查；构建零警告、零错误。这些检查使用模拟推理，不替代 GPU 模型验收。<a href="''' + REPO + '''/actions/runs/39855878001">成功运行 ↗</a> · <a href="experiments.html#ci-repair">修复记录 →</a></p></div>
 <ol class="milestones"><li><span class="status done">已完成</span><div><h3>Mac 8bit 正确性与容量基线</h3><p>128K 输入、4096 固定输出跑通；短数值参考与长请求后的 RPC 检查通过。</p></div></li>
 <li><span class="status done">已固定</span><div><h3>性能目标 v1</h3><p>最终 2000 t/s、长请求 180 秒、decode 至少 37 t/s；阶段线 1600 t/s / 200 秒。</p></div></li>
-<li><span class="status pending">原生待验</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>SSH、GitHub 同步、.NET 10.0.100 / Python 已就绪；Windows 构建、68 项单测及 25 项 RPC 已通过。等待管理员安装 MSVC，随后验证 CUDA SM89 与 Native AOT。物理链路为 1 Gbps。</p></div></li>
+<li><span class="status pending">链路待测</span><div><h3><a href="''' + REPO + '''/issues/2">Windows 与 CUDA 环境 #2</a></h3><p>Windows 工具链已就绪：68 项单测、25 项托管 RPC、25 项 Native AOT RPC 通过；4090 SM89 的 851 项 GEMM 数值检查通过。CUDA 模型推理待实现，1 Gbps 物理链路的有效吞吐待测。</p></div></li>
 <li><span class="status pending">待实现</span><div><h3><a href="''' + REPO + '''/issues/3">20/20 流水线与状态交接 #3</a></h3><p>4090 前段 prefill → Mac 后段；完整 KV / Delta 状态就绪后由 Mac decode。</p></div></li>
 <li><span class="status pending">未验收</span><div><h3><a href="''' + REPO + '''/issues/4">128K 双机正式验收 #4</a></h3><p>两档输出都需通过；含通信与状态导入，不能只测 GPU 算子。</p></div></li></ol></section>
 <section><div class="section-head"><h2>8bit 单机实测</h2>''' + source('docs/QWEN36-8BIT.md') + '''</div>
@@ -94,7 +94,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 (OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次没有新增 GPU 实验。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-22。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。本次新增 CUDA 环境数值检查，没有新增模型性能测量。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
