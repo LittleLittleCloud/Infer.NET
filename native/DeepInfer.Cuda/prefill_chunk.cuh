@@ -65,6 +65,28 @@ __global__ void chunk_scores(const float *q, const KV *k, float *s, int pos, int
     if (lane == 0)
         s[h * capacity + t] = v / 16.f;
 }
+template <class KV>
+__global__ void chunk_scores_reuse2(const float *q,const KV *k,float *s,
+                                    int pos,int capacity,int count) {
+    int key=blockIdx.x*4+threadIdx.x/32,h=blockIdx.y,lane=threadIdx.x&31;
+    int first=blockIdx.z*2,second=first+1;
+    bool valid0=key<=pos+first,valid1=second<count && key<=pos+second;
+    if(!valid0 && !valid1)return;
+    const float *query0=q+size_t(first)*4096+h*256;
+    const float *query1=valid1?q+size_t(second)*4096+h*256:nullptr;
+    float value0=0,value1=0;
+    for(int d=lane;d<256;d+=32){
+        float keyValue=float(k[size_t(key)*512+(h/8)*256+d]);
+        if(valid0)value0+=query0[d]*keyValue;
+        if(valid1)value1+=query1[d]*keyValue;
+    }
+    if(valid0)value0=sum32(value0);
+    if(valid1)value1=sum32(value1);
+    if(lane==0){
+        if(valid0)s[(size_t(first)*16+h)*capacity+key]=value0/16.f;
+        if(valid1)s[(size_t(second)*16+h)*capacity+key]=value1/16.f;
+    }
+}
 
 template <class KV>
 __global__ void chunk_attend(float *s, const KV *v, const float *raw, float *out, int pos,

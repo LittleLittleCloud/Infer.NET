@@ -25,6 +25,13 @@ static float median_stage_ms(const std::function<void()> &setup,const std::funct
     ck(cudaEventDestroy(begin));ck(cudaEventDestroy(end));
     std::sort(samples.begin(),samples.end());return samples[1];
 }
+__global__ void score_mismatches(const float *a,const float *b,int pos,int capacity,
+                                 unsigned *mismatches) {
+    int key=blockIdx.x*256+threadIdx.x,h=blockIdx.y,seq=blockIdx.z;
+    if(key<=pos+seq && __float_as_uint(a[(size_t(seq)*16+h)*capacity+key])!=
+                       __float_as_uint(b[(size_t(seq)*16+h)*capacity+key]))
+        atomicAdd(mismatches,1u);
+}
 
 template<class KV> static void check_case(int length,int count) {
     Model g;
@@ -54,6 +61,7 @@ template<class KV> static void check_case(int length,int count) {
     ck(cudaMemcpy(y2,shared.data(),outputCount*4,cudaMemcpyHostToDevice));
     ck(cudaMemcpy(y3,plain.data(),outputCount*4,cudaMemcpyHostToDevice));
     auto score2=[&] {chunk_scores<<<dim3((length+3)/4,16,count),128>>>(dq,dk,scores2,pos,length);};
+    auto scoreReuse2=[&] {chunk_scores_reuse2<<<dim3((length+3)/4,16,(count+1)/2),128>>>(dq,dk,scores1,pos,length,count);};
     auto softmax2=[&] {chunk_softmax<<<dim3(16,count),256>>>(scores2,pos,length);};
     auto pv2=[&] {chunk_attend_pv<<<dim3(16,count),256>>>(scores2,dv,dr,y3,pos,length);};
     auto retained=[&] {
@@ -87,12 +95,24 @@ template<class KV> static void check_case(int length,int count) {
         throw std::runtime_error("Shared-cache query reuse changed the retained attention result");
     }
     if(plain!=baseline)throw std::runtime_error("Separated softmax/PV changed the retained attention result");
+    score2();scoreReuse2();
+    unsigned *deviceMismatches=g.alloc<unsigned>(1);
+    score_mismatches<<<dim3((length+255)/256,16,count),256>>>(scores2,scores1,pos,length,deviceMismatches);
+    unsigned mismatches=0;ck(cudaMemcpy(&mismatches,deviceMismatches,sizeof(mismatches),cudaMemcpyDeviceToHost));
+    if(mismatches)throw std::runtime_error("Reused QK score differs bitwise from retained score");
+    auto scorePreserved=[&] {
+        scoreReuse2();
+        chunk_attend<<<dim3(16,count),256>>>(scores1,dv,dr,y1,pos,length);
+    };
+    scorePreserved();ck(cudaGetLastError());ck(cudaMemcpy(candidate.data(),y1,outputCount*4,cudaMemcpyDeviceToHost));
+    if(candidate!=baseline)throw std::runtime_error("Reused QK score changed attention output");
     if(count==32 && length>=4096){
         float oldMs=median_ms(retained),newMs=median_ms(reuse),sharedMs=median_ms(shared2);
         float scoreMs=median_ms(score2),softmaxMs=median_stage_ms(score2,softmax2);
         float pvMs=median_stage_ms([&]{score2();softmax2();},pv2);
-        printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true,\"retainedMedianMs\":%.6f,\"reuseMedianMs\":%.6f,\"shared2MedianMs\":%.6f,\"scoreMedianMs\":%.6f,\"softmaxMedianMs\":%.6f,\"pvMedianMs\":%.6f}\n",
-               length,count,sizeof(KV),oldMs,newMs,sharedMs,scoreMs,softmaxMs,pvMs);
+        float scoreReuseMs=median_ms(scoreReuse2),preservedMs=median_ms(scorePreserved);
+        printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true,\"scoreBitwiseEqual\":true,\"retainedMedianMs\":%.6f,\"reuseMedianMs\":%.6f,\"shared2MedianMs\":%.6f,\"scoreMedianMs\":%.6f,\"scoreReuseMedianMs\":%.6f,\"softmaxMedianMs\":%.6f,\"pvMedianMs\":%.6f,\"preservedMedianMs\":%.6f}\n",
+               length,count,sizeof(KV),oldMs,newMs,sharedMs,scoreMs,scoreReuseMs,softmaxMs,pvMs,preservedMs);
     }else printf("{\"length\":%d,\"queries\":%d,\"kvBytes\":%zu,\"bitwiseEqual\":true}\n",length,count,sizeof(KV));
     fflush(stdout);
 }
