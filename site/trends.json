@@ -7487,12 +7487,12 @@
       "title": "Issue #58 · M5 Pro full local · HumanEval 20",
       "date": "2026-10-24 America/Los_Angeles",
       "measuredCommit": "87c2b7dcaf4a418dcb18707e1913562717b43cdc",
-      "state": "pending-review",
+      "state": "adopted",
       "change": "Main eaaf81f plus explicit full-context Metal local routing; no inference kernel or precision changes.",
       "result": "20/20 Pi completed; 20/20 official assertions passed. Prefill 268.20 tok/s, decode 66.43 tok/s; complete worker timings; all requests metal-local.",
       "provenance": {
-        "kind": "candidate",
-        "mainCommit": null,
+        "kind": "main",
+        "mainCommit": "9d525237eac265b1fe5c4ccf2649a4b6a536d682",
         "evidence": "https://github.com/LittleLittleCloud/Infer.NET/pull/59"
       },
       "baselineRunId": null,
@@ -7520,7 +7520,8 @@
           "sampledCohortSwapOutBytes": 2161508352,
           "loadingAndWarmupSwapOutBytes": 9328230400,
           "peakWorkerMetalAllocatedBytes": 37290852352
-        }
+        },
+        "adoption": "User authorized code and results merges on 2026-10-24. Code PR #59 merged as 9d525237eac265b1fe5c4ccf2649a4b6a536d682; measured runtime remains 87c2b7dcaf4a418dcb18707e1913562717b43cdc. Merge artifact not remeasured; no new speed point."
       },
       "binarySha256": {
         "macExecutable": "b4a15505fd2c86f0cd44185cd982eda666bfc5fff9a64e6f7cda494fbd2e9df8",

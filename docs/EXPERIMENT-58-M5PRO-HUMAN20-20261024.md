@@ -49,7 +49,7 @@ prefill 使用 Σworker 输入 tokens / Σworker prefill 秒；decode 使用 Σ(
 
 资源数值来自采样括住的题组区间，未取得逐请求精确 swap-out 或进程 footprint 峰值。实际 RSS 不作为 footprint 替代。内存压力与显著换页是这轮性能的限制条件；保留完整原始采样和所有正式请求，不排除慢样本。
 
-这次是应用负载单次固定 cohort 测量，不代表 128K 正式目标验收，也不证明候选优于双机路径。不同拓扑、精度、分块或 TTFT 边界的历史点保留在不同配置系列，未伪造可比 A/B 基线。代码与结果均等待人工 review，不自动合并或关闭 Issue。
+这次是应用负载单次固定 cohort 测量，不代表 128K 正式目标验收，也不证明候选优于双机路径。不同拓扑、精度、分块或 TTFT 边界的历史点保留在不同配置系列，未伪造可比 A/B 基线。用户于 2026-10-24 明确批准两个 PR 合并。代码 PR #59 已以 merge commit `9d525237eac265b1fe5c4ccf2649a4b6a536d682` 合入 main，保留被测 `87c2b7dcaf4a418dcb18707e1913562717b43cdc` 的祖先关系。图中该实测点标为已采用，并映射到合并版本；合并产物未复测，不增加虚构的合并 SHA 测量点，也不自动设为该系列的已复测 main 基线。结果 PR #60 按本次授权合并；Issue 待结果合入与 Pages 验证后关闭。
 
 ## 复现与证据
 
@@ -74,4 +74,4 @@ python3 scripts/import-issue58-local-humaneval.py --run-dir NEW_RUN --results-pr
 
 参数化观察脚本见 [observe.py](evaluations/issue58/observe.py)。公开数值见 [performance.json](evaluations/issue58/performance.json)，证据散列见 [evidence.json](evaluations/issue58/evidence.json)。逐题和逐请求数据保存在 [site/trends.json](../site/trends.json)。原始日志、Pi 会话与生成代码仅在本机忽略目录 `artifacts/humaneval20-m5pro-20261024-preflight/`，不是公开下载链接；公开摘要不包含凭据、私网地址、完整提示词或输出正文。
 
-稳定测量点：`https://littlelittlecloud.github.io/Infer.NET/#experiment=humaneval20-m5pro-20261024&run=issue58-m5pro-local-human20-20261024`。该点在结果 PR 合入并且 Pages 部署成功后上线；本轮不自动发布。
+稳定测量点：`https://littlelittlecloud.github.io/Infer.NET/#experiment=humaneval20-m5pro-20261024&run=issue58-m5pro-local-human20-20261024`。该点由结果 PR 合入后的既有 Pages workflow 发布；只有 workflow 和实际页面核对成功后才标为已上线。
