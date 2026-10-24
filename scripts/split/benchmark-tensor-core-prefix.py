@@ -32,7 +32,7 @@ def bind(dll, name, args, result=c.c_int):
     return fn
 
 
-def run_case(label, library, weights, output, trials):
+def run_case(label, library, weights, output, trials, mode_id=2):
     dll = c.CDLL(str(library.resolve()))
     error = c.create_string_buffer(2048)
     create = bind(dll, "create", [c.c_char_p, c.c_int, c.c_int, c.c_char_p, c.c_int], c.c_void_p)
@@ -75,7 +75,7 @@ def run_case(label, library, weights, output, trials):
         return bytes(hidden), bytes(trace)
 
     try:
-        ok(mode(handle, 2))  # BF16 Tensor Core projections, FP32 KV/state.
+        ok(mode(handle, mode_id))  # 2: BF16 Tensor Core; 5: packed FP32.
         correctness_count = 131
         hidden, trace = execute(correctness_count, [1, 7, 17, 32], True)
         (output / (label + "-hidden.bin")).write_bytes(hidden)
@@ -95,7 +95,7 @@ def run_case(label, library, weights, output, trials):
         records = []
         for trial in range(trials + 1):
             ok(reset(handle, error, len(error)))
-            ok(mode(handle, 2))
+            ok(mode(handle, mode_id))
             start = time.perf_counter()
             trial_hidden, _ = execute(512, [32], False)
             seconds = time.perf_counter() - start
@@ -104,7 +104,7 @@ def run_case(label, library, weights, output, trials):
             print(json.dumps({"label": label, **records[-1]}), flush=True)
         if len({item["hiddenSha256"] for item in records}) != 1:
             raise RuntimeError(label + ": nondeterministic full-prefix hidden")
-        return {"label": label, "librarySha256": sha(library.read_bytes()),
+        return {"label": label, "mode": mode_id, "librarySha256": sha(library.read_bytes()),
                 "tokenIdsSha256": sha(json.dumps(token_ids, separators=(",", ":")).encode()),
                 "hiddenSha256": sha(hidden), "traceSha256": sha(trace),
                 "stateSha256": state_hashes, "records": records,
@@ -125,6 +125,23 @@ def first_trace_difference(left, right):
             return {"token": index // (20 * 2048), "layer": (index // 2048) % 20,
                     "element": index % 2048, "baseline": x, "candidate": y}
     return None
+
+
+def trace_error(left, right):
+    a = array.array("f")
+    b = array.array("f")
+    a.frombytes(left)
+    b.frombytes(right)
+    if len(a) != len(b):
+        raise ValueError("trace lengths differ")
+    squared_error = squared_reference = maximum = 0.0
+    for x, y in zip(a, b):
+        difference = float(x) - float(y)
+        squared_error += difference * difference
+        squared_reference += float(y) * float(y)
+        maximum = max(maximum, abs(difference))
+    return {"relativeL2VsFp32": math.sqrt(squared_error / max(squared_reference, 1e-30)),
+            "maxAbsVsFp32": maximum}
 
 
 def main():
@@ -148,7 +165,8 @@ def main():
     try:
         baseline = run_case("baseline", args.baseline_library, args.weights, args.output, args.trials)
         candidate = run_case("candidate", args.candidate_library, args.weights, args.output, args.trials)
-        result.update({"baseline": baseline, "candidate": candidate})
+        fp32 = run_case("candidate-fp32", args.candidate_library, args.weights, args.output, args.trials, 5)
+        result.update({"baseline": baseline, "candidate": candidate, "candidateFp32": fp32})
         mismatch = first_trace_difference((args.output / "baseline-trace.bin").read_bytes(),
                                           (args.output / "candidate-trace.bin").read_bytes())
         result["firstTraceDifference"] = mismatch
@@ -157,13 +175,21 @@ def main():
                                          mismatch is None)
         result["candidateComputeTimeChangePercent"] = 100 * (candidate["medianSeconds"] /
                                                             baseline["medianSeconds"] - 1)
+        bf16_trace = (args.output / "candidate-trace.bin").read_bytes()
+        fp32_trace = (args.output / "candidate-fp32-trace.bin").read_bytes()
+        result["crossPrecisionDiagnostic"] = {
+            "firstTraceDifference": first_trace_difference(bf16_trace, fp32_trace),
+            **trace_error(bf16_trace, fp32_trace),
+            "candidateBf16VsFp32TimeChangePercent": 100 * (candidate["medianSeconds"] /
+                                                         fp32["medianSeconds"] - 1),
+            "interpretation": "BF16-vs-FP32 differences are expected and are not a same-precision correctness gate"}
         result["passed"] = result["samePrecisionEqual"]
     except Exception as exc:
         result["passed"] = False
         result["error"] = str(exc)
     (args.output / "result.json").write_text(json.dumps(result, indent=2, allow_nan=False))
     print(json.dumps({key: value for key, value in result.items()
-                      if key not in ("baseline", "candidate")}, indent=2), flush=True)
+                      if key not in ("baseline", "candidate", "candidateFp32")}, indent=2), flush=True)
     if not result["passed"]:
         raise SystemExit(1)
 
