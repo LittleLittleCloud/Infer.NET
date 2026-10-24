@@ -35,6 +35,11 @@
       "sha": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
       "committedAt": "2026-10-24T20:47:54Z",
       "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3"
+    },
+    {
+      "sha": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+      "committedAt": "2026-10-24T22:16:46Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/afdb36fd1106cf29b19b66ac94745dda481fc429"
     }
   ],
   "configurations": [
@@ -16341,7 +16346,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-1",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/0"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/0"
         },
         {
           "taskId": "HumanEval/156",
@@ -16355,7 +16360,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-2",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/1"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/1"
         },
         {
           "taskId": "HumanEval/156",
@@ -16369,7 +16374,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-3",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/2"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/2"
         },
         {
           "taskId": "HumanEval/156",
@@ -16383,7 +16388,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-4",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/3"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/3"
         },
         {
           "taskId": "HumanEval/156",
@@ -16397,7 +16402,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-5",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/4"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/4"
         },
         {
           "taskId": "HumanEval/94",
@@ -16411,7 +16416,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-6",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/5"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/5"
         },
         {
           "taskId": "HumanEval/94",
@@ -16425,7 +16430,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-7",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/6"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/6"
         },
         {
           "taskId": "HumanEval/94",
@@ -16439,7 +16444,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-8",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/7"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/7"
         },
         {
           "taskId": "HumanEval/72",
@@ -16453,7 +16458,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-9",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/8"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/8"
         },
         {
           "taskId": "HumanEval/72",
@@ -16467,7 +16472,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-10",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/9"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/9"
         },
         {
           "taskId": "HumanEval/72",
@@ -16481,7 +16486,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-11",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/10"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/10"
         },
         {
           "taskId": "HumanEval/80",
@@ -16495,7 +16500,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-12",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/11"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/11"
         },
         {
           "taskId": "HumanEval/80",
@@ -16509,7 +16514,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-13",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/12"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/12"
         },
         {
           "taskId": "HumanEval/80",
@@ -16523,7 +16528,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-14",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/13"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/13"
         },
         {
           "taskId": "HumanEval/80",
@@ -16537,7 +16542,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-15",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/14"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/14"
         },
         {
           "taskId": "HumanEval/80",
@@ -16551,7 +16556,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-16",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/15"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/15"
         },
         {
           "taskId": "HumanEval/149",
@@ -16565,7 +16570,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-17",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/16"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/16"
         },
         {
           "taskId": "HumanEval/149",
@@ -16579,7 +16584,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-18",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/17"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/17"
         },
         {
           "taskId": "HumanEval/149",
@@ -16593,7 +16598,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-19",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/18"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/18"
         },
         {
           "taskId": "HumanEval/2",
@@ -16607,7 +16612,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-20",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/19"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/19"
         },
         {
           "taskId": "HumanEval/2",
@@ -16621,7 +16626,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-21",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/20"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/20"
         },
         {
           "taskId": "HumanEval/2",
@@ -16635,7 +16640,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-22",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/21"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/21"
         },
         {
           "taskId": "HumanEval/2",
@@ -16649,7 +16654,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-23",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/22"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/22"
         },
         {
           "taskId": "HumanEval/35",
@@ -16663,7 +16668,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-24",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/23"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/23"
         },
         {
           "taskId": "HumanEval/35",
@@ -16677,7 +16682,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-25",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/24"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/24"
         },
         {
           "taskId": "HumanEval/35",
@@ -16691,7 +16696,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-26",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/25"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/25"
         },
         {
           "taskId": "HumanEval/35",
@@ -16705,7 +16710,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-27",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/26"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/26"
         },
         {
           "taskId": "HumanEval/35",
@@ -16719,7 +16724,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-28",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/27"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/27"
         },
         {
           "taskId": "HumanEval/32",
@@ -16733,7 +16738,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-29",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/28"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/28"
         },
         {
           "taskId": "HumanEval/32",
@@ -16747,7 +16752,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-30",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/29"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/29"
         },
         {
           "taskId": "HumanEval/32",
@@ -16761,7 +16766,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-31",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/30"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/30"
         },
         {
           "taskId": "HumanEval/32",
@@ -16775,7 +16780,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-32",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/31"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/31"
         },
         {
           "taskId": "HumanEval/32",
@@ -16789,7 +16794,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-33",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/32"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/32"
         },
         {
           "taskId": "HumanEval/32",
@@ -16803,7 +16808,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-34",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/33"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/33"
         },
         {
           "taskId": "HumanEval/146",
@@ -16817,7 +16822,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-35",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/34"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/34"
         },
         {
           "taskId": "HumanEval/146",
@@ -16831,7 +16836,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-36",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/35"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/35"
         },
         {
           "taskId": "HumanEval/146",
@@ -16845,7 +16850,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-37",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/36"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/36"
         },
         {
           "taskId": "HumanEval/146",
@@ -16859,7 +16864,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-38",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/37"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/37"
         },
         {
           "taskId": "HumanEval/146",
@@ -16873,7 +16878,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-39",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/38"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/38"
         },
         {
           "taskId": "HumanEval/146",
@@ -16887,7 +16892,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-40",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/39"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/39"
         },
         {
           "taskId": "HumanEval/146",
@@ -16901,7 +16906,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-41",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/40"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/40"
         },
         {
           "taskId": "HumanEval/137",
@@ -16915,7 +16920,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-42",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/41"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/41"
         },
         {
           "taskId": "HumanEval/137",
@@ -16929,7 +16934,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-43",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/42"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/42"
         },
         {
           "taskId": "HumanEval/137",
@@ -16943,7 +16948,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-44",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/43"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/43"
         },
         {
           "taskId": "HumanEval/137",
@@ -16957,7 +16962,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-45",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/44"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/44"
         },
         {
           "taskId": "HumanEval/137",
@@ -16971,7 +16976,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-46",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/45"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/45"
         },
         {
           "taskId": "HumanEval/137",
@@ -16985,7 +16990,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-47",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/46"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/46"
         },
         {
           "taskId": "HumanEval/137",
@@ -16999,7 +17004,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-48",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/47"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/47"
         },
         {
           "taskId": "HumanEval/137",
@@ -17013,7 +17018,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-49",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/48"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/48"
         },
         {
           "taskId": "HumanEval/137",
@@ -17027,7 +17032,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-50",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/49"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/49"
         },
         {
           "taskId": "HumanEval/97",
@@ -17041,7 +17046,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-51",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/50"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/50"
         },
         {
           "taskId": "HumanEval/97",
@@ -17055,7 +17060,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-52",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/51"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/51"
         },
         {
           "taskId": "HumanEval/97",
@@ -17069,7 +17074,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-53",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/52"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/52"
         },
         {
           "taskId": "HumanEval/97",
@@ -17083,7 +17088,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-54",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/53"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/53"
         },
         {
           "taskId": "HumanEval/97",
@@ -17097,7 +17102,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-55",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/54"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/54"
         },
         {
           "taskId": "HumanEval/154",
@@ -17111,7 +17116,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-56",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/55"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/55"
         },
         {
           "taskId": "HumanEval/154",
@@ -17125,7 +17130,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-57",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/56"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/56"
         },
         {
           "taskId": "HumanEval/154",
@@ -17139,7 +17144,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-58",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/57"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/57"
         },
         {
           "taskId": "HumanEval/154",
@@ -17153,7 +17158,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-59",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/58"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/58"
         },
         {
           "taskId": "HumanEval/154",
@@ -17167,7 +17172,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-60",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/59"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/59"
         },
         {
           "taskId": "HumanEval/154",
@@ -17181,7 +17186,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-61",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/60"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/60"
         },
         {
           "taskId": "HumanEval/154",
@@ -17195,7 +17200,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-62",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/61"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/61"
         },
         {
           "taskId": "HumanEval/154",
@@ -17209,7 +17214,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-63",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/62"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/62"
         },
         {
           "taskId": "HumanEval/154",
@@ -17223,7 +17228,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-64",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/63"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/63"
         },
         {
           "taskId": "HumanEval/6",
@@ -17237,7 +17242,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-65",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/64"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/64"
         },
         {
           "taskId": "HumanEval/6",
@@ -17251,7 +17256,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-66",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/65"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/65"
         },
         {
           "taskId": "HumanEval/6",
@@ -17265,7 +17270,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-67",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/66"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/66"
         },
         {
           "taskId": "HumanEval/6",
@@ -17279,7 +17284,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-68",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/67"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/67"
         },
         {
           "taskId": "HumanEval/6",
@@ -17293,7 +17298,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-69",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/68"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/68"
         },
         {
           "taskId": "HumanEval/6",
@@ -17307,7 +17312,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-70",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/69"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/69"
         },
         {
           "taskId": "HumanEval/6",
@@ -17321,7 +17326,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-71",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/70"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/70"
         },
         {
           "taskId": "HumanEval/161",
@@ -17335,7 +17340,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-72",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/71"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/71"
         },
         {
           "taskId": "HumanEval/161",
@@ -17349,7 +17354,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-73",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/72"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/72"
         },
         {
           "taskId": "HumanEval/161",
@@ -17363,7 +17368,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-74",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/73"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/73"
         },
         {
           "taskId": "HumanEval/115",
@@ -17377,7 +17382,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-75",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/74"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/74"
         },
         {
           "taskId": "HumanEval/115",
@@ -17391,7 +17396,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-76",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/75"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/75"
         },
         {
           "taskId": "HumanEval/115",
@@ -17405,7 +17410,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-77",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/76"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/76"
         },
         {
           "taskId": "HumanEval/115",
@@ -17419,7 +17424,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-78",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/77"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/77"
         },
         {
           "taskId": "HumanEval/115",
@@ -17433,7 +17438,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-79",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/78"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/78"
         },
         {
           "taskId": "HumanEval/131",
@@ -17447,7 +17452,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-80",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/79"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/79"
         },
         {
           "taskId": "HumanEval/131",
@@ -17461,7 +17466,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-81",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/80"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/80"
         },
         {
           "taskId": "HumanEval/131",
@@ -17475,7 +17480,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-82",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/81"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/81"
         },
         {
           "taskId": "HumanEval/162",
@@ -17489,7 +17494,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-83",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/82"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/82"
         },
         {
           "taskId": "HumanEval/162",
@@ -17503,7 +17508,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-84",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/83"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/83"
         },
         {
           "taskId": "HumanEval/162",
@@ -17517,7 +17522,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-85",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/84"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/84"
         },
         {
           "taskId": "HumanEval/162",
@@ -17531,7 +17536,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-86",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/85"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/85"
         },
         {
           "taskId": "HumanEval/50",
@@ -17545,7 +17550,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-87",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/86"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/86"
         },
         {
           "taskId": "HumanEval/50",
@@ -17559,7 +17564,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-88",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/87"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/87"
         },
         {
           "taskId": "HumanEval/50",
@@ -17573,7 +17578,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-89",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/88"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/88"
         },
         {
           "taskId": "HumanEval/47",
@@ -17587,7 +17592,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-90",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/89"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/89"
         },
         {
           "taskId": "HumanEval/47",
@@ -17601,7 +17606,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-91",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/90"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/90"
         },
         {
           "taskId": "HumanEval/47",
@@ -17615,7 +17620,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-92",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/91"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/91"
         },
         {
           "taskId": "HumanEval/47",
@@ -17629,7 +17634,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-93",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/92"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/92"
         },
         {
           "taskId": "HumanEval/47",
@@ -17643,7 +17648,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-94",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/93"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/93"
         },
         {
           "taskId": "HumanEval/47",
@@ -17657,7 +17662,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-95",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/94"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/94"
         },
         {
           "taskId": "HumanEval/148",
@@ -17671,7 +17676,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-96",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/95"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/95"
         },
         {
           "taskId": "HumanEval/148",
@@ -17685,7 +17690,7 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-97",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/96"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/96"
         },
         {
           "taskId": "HumanEval/148",
@@ -17699,229 +17704,269 @@
           "firstTokenReceived": true,
           "outcome": "completed",
           "id": "issue72-main-human20-20261024-98",
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/requests/97"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/requests/97"
         }
       ],
       "tasks": [
         {
           "taskId": "HumanEval/156",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 56.266050458,
           "inputTokens": 11017,
           "outputTokens": 1033,
           "modelRequests": 5,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/0"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/0"
         },
         {
           "taskId": "HumanEval/94",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 42.94332837499999,
           "inputTokens": 7287,
           "outputTokens": 1067,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/1"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/1"
         },
         {
           "taskId": "HumanEval/72",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 33.84332825000001,
           "inputTokens": 6298,
           "outputTokens": 656,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/2"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/2"
         },
         {
           "taskId": "HumanEval/80",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 49.5515365,
           "inputTokens": 10390,
           "outputTokens": 739,
           "modelRequests": 5,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/3"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/3"
         },
         {
           "taskId": "HumanEval/149",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 36.633008625,
           "inputTokens": 6445,
           "outputTokens": 854,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/4"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/4"
         },
         {
           "taskId": "HumanEval/2",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 35.22725995799999,
           "inputTokens": 7516,
           "outputTokens": 498,
           "modelRequests": 4,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/5"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/5"
         },
         {
           "taskId": "HumanEval/35",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 42.379376957999995,
           "inputTokens": 9577,
           "outputTokens": 469,
           "modelRequests": 5,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/6"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/6"
         },
         {
           "taskId": "HumanEval/32",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 125.312674292,
           "inputTokens": 21719,
           "outputTokens": 2972,
           "modelRequests": 6,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/7"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/7"
         },
         {
           "taskId": "HumanEval/146",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 87.235381958,
           "inputTokens": 17187,
           "outputTokens": 1586,
           "modelRequests": 7,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/8"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/8"
         },
         {
           "taskId": "HumanEval/137",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 109.51560983400003,
           "inputTokens": 23667,
           "outputTokens": 1470,
           "modelRequests": 9,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/9"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/9"
         },
         {
           "taskId": "HumanEval/97",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 49.74146074999999,
           "inputTokens": 10171,
           "outputTokens": 809,
           "modelRequests": 5,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/10"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/10"
         },
         {
           "taskId": "HumanEval/154",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 97.76191754199999,
           "inputTokens": 21859,
           "outputTokens": 1126,
           "modelRequests": 9,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/11"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/11"
         },
         {
           "taskId": "HumanEval/6",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 75.76339500000006,
           "inputTokens": 16058,
           "outputTokens": 1094,
           "modelRequests": 7,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/12"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/12"
         },
         {
           "taskId": "HumanEval/161",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 30.684953791999988,
           "inputTokens": 5822,
           "outputTokens": 609,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/13"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/13"
         },
         {
           "taskId": "HumanEval/115",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 65.77411841600008,
           "inputTokens": 12815,
           "outputTokens": 1230,
           "modelRequests": 5,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/14"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/14"
         },
         {
           "taskId": "HumanEval/131",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 26.06514616700008,
           "inputTokens": 5441,
           "outputTokens": 394,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/15"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/15"
         },
         {
           "taskId": "HumanEval/162",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 40.038159374999964,
           "inputTokens": 7920,
           "outputTokens": 723,
           "modelRequests": 4,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/16"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/16"
         },
         {
           "taskId": "HumanEval/50",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 28.271694541999977,
           "inputTokens": 5655,
           "outputTokens": 493,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/17"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/17"
         },
         {
           "taskId": "HumanEval/47",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 76.20013699999981,
           "inputTokens": 14280,
           "outputTokens": 1566,
           "modelRequests": 6,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/18"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/18"
         },
         {
           "taskId": "HumanEval/148",
           "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
           "status": "passed",
           "officialValidation": "passed",
           "wallSeconds": 39.320562165999945,
           "inputTokens": 6499,
           "outputTokens": 872,
           "modelRequests": 3,
-          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json#/tasks/19"
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json#/tasks/19"
         }
       ],
       "reportedTotals": {
@@ -17946,6 +17991,18 @@
         "observations.jsonl": {
           "sha256": "bc58c2c18fccd43b7e277a9b2a492c52648053ab3b980d54ffe382514db97d42",
           "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "package-manifest.json": {
+          "sha256": "1080d7ed38ea3b00b0bdb60d851e988b62be0219f7e9eb6ce2621df0c639e6b5",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "health.json": {
+          "sha256": "f06ed96338cfe774ceaee9ae116cab0a0c2501f80371020e26bf0ace25c0a2be",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "official.json": {
+          "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+          "availability": "Local ignored experiment artifacts; not a public download"
         }
       },
       "links": [
@@ -17967,12 +18024,1848 @@
         {
           "role": "report",
           "label": "Full record",
-          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md"
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md"
         },
         {
           "role": "evidence",
           "label": "Audited JSON",
-          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/codex/experiment-72-results/docs/evaluations/issue72/baseline.json"
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/baseline.json"
+        },
+        {
+          "role": "notebook",
+          "label": "Notebook",
+          "url": "experiments.html#speculative-state-issue72-20261024"
+        }
+      ]
+    },
+    {
+      "id": "issue72-off-human20-20261024",
+      "experimentId": "speculative-state-20261024",
+      "configurationId": "issue72-local-fp32-human20",
+      "title": "Issue72 \u00b7 off \u00b7 HumanEval20",
+      "date": "2026-10-24 America/Los_Angeles",
+      "measuredCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+      "state": "failed",
+      "change": "Default-off state transaction candidate, synthetic oracle disabled.",
+      "result": "Pi 19/20; official 20/20. Worker prefill 271.061, decode 67.390 tok/s.",
+      "provenance": {
+        "kind": "candidate",
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/pull/74"
+      },
+      "baselineRunId": "issue72-main-human20-20261024",
+      "runtime": {
+        "coordinator": {
+          "commit": "afdb36fd1106cf29b19b66ac94745dda481fc429"
+        },
+        "macServe": {
+          "commit": "afdb36fd1106cf29b19b66ac94745dda481fc429"
+        }
+      },
+      "conditions": {
+        "adoption": "Human review pending; no baseline selection, deployment or adoption change.",
+        "observer": "TTFT from observer send to first valid output; Pi-to-observer dispatch excluded; two forwards.",
+        "resources": {
+          "maxObservedMetalAllocatedBytes": 37290852352,
+          "metalObservation": "Response samples, not a continuous allocator high-water trace",
+          "maxPerRequestSystemSwapOutBytes": 167706624,
+          "sumPerRequestSystemSwapOutBytes": 303939584,
+          "allObservedRequestPowerAc": true,
+          "requestResourceCoverage": 104,
+          "perRequestSwapLimitBytes": 536870912,
+          "metalAllocationLimitBytes": 41339060224
+        },
+        "piUsageMatchesWorker": false,
+        "mode": "Clean worker timing cohort."
+      },
+      "binarySha256": {
+        "macExecutable": "82037d047baf54b031be01cd9da556d15b6d3abea332aac3d8d2b35b43729504",
+        "macMetalLibrary": "3130a34cfb823d8d69c00942bd258efe0959131339b71ed37f8ee0fc99c5d92a"
+      },
+      "binaryEvidence": "docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md",
+      "harnessCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "requestCount": 104,
+      "requests": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 1606,
+          "outputTokens": 358,
+          "prefillSeconds": 5.816045600000001,
+          "decodeSeconds": 5.229462399999999,
+          "clientTtftMs": 11063.144125000008,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-1",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/0"
+        },
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2031,
+          "outputTokens": 31,
+          "prefillSeconds": 7.4522070000000005,
+          "decodeSeconds": 0.44007319999999983,
+          "clientTtftMs": 7909.333707999963,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-2",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/1"
+        },
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2124,
+          "outputTokens": 322,
+          "prefillSeconds": 7.8095251,
+          "decodeSeconds": 4.719416800000001,
+          "clientTtftMs": 12546.114249999959,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-3",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/2"
+        },
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2471,
+          "outputTokens": 270,
+          "prefillSeconds": 9.115630999999999,
+          "decodeSeconds": 3.9567014,
+          "clientTtftMs": 13089.686707999932,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-4",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/3"
+        },
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2765,
+          "outputTokens": 56,
+          "prefillSeconds": 10.2079827,
+          "decodeSeconds": 0.8117847999999994,
+          "clientTtftMs": 11037.697541999933,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-5",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/4"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 1822,
+          "outputTokens": 590,
+          "prefillSeconds": 6.6100734,
+          "decodeSeconds": 8.6443684,
+          "clientTtftMs": 15272.227458999965,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-6",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/5"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2482,
+          "outputTokens": 443,
+          "prefillSeconds": 9.1111741,
+          "decodeSeconds": 6.510665499999999,
+          "clientTtftMs": 15639.161667000053,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-7",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/6"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3048,
+          "outputTokens": 81,
+          "prefillSeconds": 11.2157476,
+          "decodeSeconds": 1.1834107000000003,
+          "clientTtftMs": 12416.666917000042,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-8",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/7"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 1731,
+          "outputTokens": 371,
+          "prefillSeconds": 6.3178025,
+          "decodeSeconds": 5.436375300000001,
+          "clientTtftMs": 11771.378750000054,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-9",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/8"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2176,
+          "outputTokens": 207,
+          "prefillSeconds": 8.023992100000001,
+          "decodeSeconds": 3.0685124000000004,
+          "clientTtftMs": 11109.913667,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-10",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/9"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2407,
+          "outputTokens": 79,
+          "prefillSeconds": 8.9518842,
+          "decodeSeconds": 1.1475406000000004,
+          "clientTtftMs": 10116.883417000054,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-11",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/10"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1617,
+          "outputTokens": 272,
+          "prefillSeconds": 5.8516387000000005,
+          "decodeSeconds": 4.0160187999999994,
+          "clientTtftMs": 9884.920875000034,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-12",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/11"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1956,
+          "outputTokens": 31,
+          "prefillSeconds": 7.199809699999999,
+          "decodeSeconds": 0.44022859999999947,
+          "clientTtftMs": 7657.014500000059,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-13",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/12"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2051,
+          "outputTokens": 234,
+          "prefillSeconds": 7.5702409,
+          "decodeSeconds": 3.4306919000000007,
+          "clientTtftMs": 11018.170583000028,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-14",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/13"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2310,
+          "outputTokens": 161,
+          "prefillSeconds": 8.538155000000001,
+          "decodeSeconds": 2.3540411000000003,
+          "clientTtftMs": 10909.325416999991,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-15",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/14"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2495,
+          "outputTokens": 92,
+          "prefillSeconds": 9.1989244,
+          "decodeSeconds": 1.3423323999999994,
+          "clientTtftMs": 10558.899584000073,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-16",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/15"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 1691,
+          "outputTokens": 378,
+          "prefillSeconds": 6.1140655,
+          "decodeSeconds": 5.5404454,
+          "clientTtftMs": 11671.825624999998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-17",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/16"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2149,
+          "outputTokens": 399,
+          "prefillSeconds": 7.9171682,
+          "decodeSeconds": 5.8611858,
+          "clientTtftMs": 13795.959124999968,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-18",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/17"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2604,
+          "outputTokens": 110,
+          "prefillSeconds": 9.597389100000001,
+          "decodeSeconds": 1.604777100000001,
+          "clientTtftMs": 11219.433291999962,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-19",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/18"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2735,
+          "outputTokens": 477,
+          "prefillSeconds": 10.095936,
+          "decodeSeconds": 7.032695399999999,
+          "clientTtftMs": 17146.203707999917,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-20",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/19"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3270,
+          "outputTokens": 102,
+          "prefillSeconds": 12.1008105,
+          "decodeSeconds": 1.4948209000000006,
+          "clientTtftMs": null,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": false,
+          "outcome": "failed",
+          "id": "issue72-off-human20-20261024-21",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/20"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "inputTokens": 1582,
+          "outputTokens": 162,
+          "prefillSeconds": 5.7148166,
+          "decodeSeconds": 2.3568087999999996,
+          "clientTtftMs": 8088.866458000098,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-22",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/21"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "inputTokens": 1801,
+          "outputTokens": 31,
+          "prefillSeconds": 6.5728401000000005,
+          "decodeSeconds": 0.4474973,
+          "clientTtftMs": 7037.513708999995,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-23",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/22"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "inputTokens": 1897,
+          "outputTokens": 133,
+          "prefillSeconds": 6.9658301,
+          "decodeSeconds": 1.9467497999999996,
+          "clientTtftMs": 8930.602207999982,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-24",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/23"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "inputTokens": 2055,
+          "outputTokens": 62,
+          "prefillSeconds": 7.58226,
+          "decodeSeconds": 0.903387999999999,
+          "clientTtftMs": 8502.98116700003,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-25",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/24"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "inputTokens": 2160,
+          "outputTokens": 85,
+          "prefillSeconds": 7.9695895,
+          "decodeSeconds": 1.2406179000000002,
+          "clientTtftMs": 9227.804290999984,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-26",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/25"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "inputTokens": 1583,
+          "outputTokens": 178,
+          "prefillSeconds": 5.7204842,
+          "decodeSeconds": 2.592161499999999,
+          "clientTtftMs": 8329.624165999918,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-27",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/26"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "inputTokens": 1832,
+          "outputTokens": 138,
+          "prefillSeconds": 6.692667999999999,
+          "decodeSeconds": 2.0104010999999993,
+          "clientTtftMs": 8720.086834000085,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-28",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/27"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "inputTokens": 2007,
+          "outputTokens": 139,
+          "prefillSeconds": 7.3647434,
+          "decodeSeconds": 2.027545299999999,
+          "clientTtftMs": 9409.396832999959,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-29",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/28"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "inputTokens": 2171,
+          "outputTokens": 105,
+          "prefillSeconds": 7.9890083,
+          "decodeSeconds": 1.5327267999999994,
+          "clientTtftMs": 9539.16183299998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-30",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/29"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 1762,
+          "outputTokens": 697,
+          "prefillSeconds": 6.4166309,
+          "decodeSeconds": 10.222913099999998,
+          "clientTtftMs": 16657.20575,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-31",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/30"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 2525,
+          "outputTokens": 31,
+          "prefillSeconds": 9.286510700000001,
+          "decodeSeconds": 0.44097689999999967,
+          "clientTtftMs": 9745.040042000028,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-32",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/31"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 2620,
+          "outputTokens": 660,
+          "prefillSeconds": 9.6175973,
+          "decodeSeconds": 9.723263400000002,
+          "clientTtftMs": 19359.325582999987,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-33",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/32"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 3305,
+          "outputTokens": 419,
+          "prefillSeconds": 12.2470959,
+          "decodeSeconds": 6.1906442,
+          "clientTtftMs": 18455.522125000018,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-34",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/33"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 3899,
+          "outputTokens": 58,
+          "prefillSeconds": 14.4541852,
+          "decodeSeconds": 0.8563235999999997,
+          "clientTtftMs": 15328.826000000048,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-35",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/34"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "inputTokens": 4595,
+          "outputTokens": 171,
+          "prefillSeconds": 17.120262999999998,
+          "decodeSeconds": 2.544633099999999,
+          "clientTtftMs": 19683.351292,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-36",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/35"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 1624,
+          "outputTokens": 341,
+          "prefillSeconds": 5.8670141000000005,
+          "decodeSeconds": 4.9893112,
+          "clientTtftMs": 10873.966999999993,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-37",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/36"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 2019,
+          "outputTokens": 331,
+          "prefillSeconds": 7.431481799999999,
+          "decodeSeconds": 4.848595,
+          "clientTtftMs": 12297.534250000012,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-38",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/37"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 2383,
+          "outputTokens": 31,
+          "prefillSeconds": 8.8168864,
+          "decodeSeconds": 0.4442790000000004,
+          "clientTtftMs": 9279.160499999989,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-39",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/38"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 2478,
+          "outputTokens": 329,
+          "prefillSeconds": 9.1660697,
+          "decodeSeconds": 4.8356327,
+          "clientTtftMs": 14019.574250000005,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-40",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/39"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 2832,
+          "outputTokens": 319,
+          "prefillSeconds": 10.484026,
+          "decodeSeconds": 4.705952800000001,
+          "clientTtftMs": 15208.194958000036,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-41",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/40"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "inputTokens": 3297,
+          "outputTokens": 83,
+          "prefillSeconds": 12.263685299999999,
+          "decodeSeconds": 1.2137657999999991,
+          "clientTtftMs": 13495.555082999887,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-42",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/41"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 1639,
+          "outputTokens": 340,
+          "prefillSeconds": 5.9388201,
+          "decodeSeconds": 4.9735928,
+          "clientTtftMs": 10930.08929199982,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-43",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/42"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 2046,
+          "outputTokens": 31,
+          "prefillSeconds": 7.4975711,
+          "decodeSeconds": 0.4419784999999993,
+          "clientTtftMs": 7956.745584000146,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-44",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/43"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 2140,
+          "outputTokens": 305,
+          "prefillSeconds": 7.8513991,
+          "decodeSeconds": 4.4669661,
+          "clientTtftMs": 12336.19812500001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-45",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/44"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 2478,
+          "outputTokens": 78,
+          "prefillSeconds": 9.1336158,
+          "decodeSeconds": 1.4571710999999996,
+          "clientTtftMs": 10619.310166999867,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-46",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/45"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 2635,
+          "outputTokens": 349,
+          "prefillSeconds": 9.8465332,
+          "decodeSeconds": 5.310845500000001,
+          "clientTtftMs": 15193.07245899995,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-47",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/46"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 3007,
+          "outputTokens": 74,
+          "prefillSeconds": 11.1652909,
+          "decodeSeconds": 1.0883721000000004,
+          "clientTtftMs": 12273.302999999942,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-48",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/47"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 3362,
+          "outputTokens": 338,
+          "prefillSeconds": 12.5294245,
+          "decodeSeconds": 5.074021800000001,
+          "clientTtftMs": 17621.91516599978,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-49",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/48"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "inputTokens": 3724,
+          "outputTokens": 97,
+          "prefillSeconds": 13.848466,
+          "decodeSeconds": 1.4830484999999989,
+          "clientTtftMs": 15350.39437499995,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-50",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/49"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "inputTokens": 1611,
+          "outputTokens": 225,
+          "prefillSeconds": 5.8620485,
+          "decodeSeconds": 3.3325141999999994,
+          "clientTtftMs": 9214.08324999993,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-51",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/50"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "inputTokens": 1903,
+          "outputTokens": 31,
+          "prefillSeconds": 6.991542000000001,
+          "decodeSeconds": 0.4429958000000006,
+          "clientTtftMs": 7452.254000000039,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-52",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/51"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "inputTokens": 1996,
+          "outputTokens": 189,
+          "prefillSeconds": 7.363287000000001,
+          "decodeSeconds": 2.7860759000000006,
+          "clientTtftMs": 10166.872750000039,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-53",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/52"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "inputTokens": 2210,
+          "outputTokens": 205,
+          "prefillSeconds": 8.2092278,
+          "decodeSeconds": 3.0364459999999998,
+          "clientTtftMs": 11263.645834000044,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-54",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/53"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "inputTokens": 2439,
+          "outputTokens": 158,
+          "prefillSeconds": 9.0699823,
+          "decodeSeconds": 2.3375137999999986,
+          "clientTtftMs": 11425.472082999931,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-55",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/54"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 1622,
+          "outputTokens": 271,
+          "prefillSeconds": 5.8928827,
+          "decodeSeconds": 4.014436099999999,
+          "clientTtftMs": 9928.959832999908,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-56",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/55"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 1960,
+          "outputTokens": 31,
+          "prefillSeconds": 7.2393491999999995,
+          "decodeSeconds": 0.44801479999999994,
+          "clientTtftMs": 7708.12354099985,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-57",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/56"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 2055,
+          "outputTokens": 235,
+          "prefillSeconds": 7.6138904,
+          "decodeSeconds": 3.473776,
+          "clientTtftMs": 11105.40775000004,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-58",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/57"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 2323,
+          "outputTokens": 33,
+          "prefillSeconds": 8.6102969,
+          "decodeSeconds": 0.47935989999999945,
+          "clientTtftMs": 9107.38891699998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-59",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/58"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 2435,
+          "outputTokens": 232,
+          "prefillSeconds": 9.0334213,
+          "decodeSeconds": 3.4453509999999987,
+          "clientTtftMs": 12497.143415999972,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-60",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/59"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 2690,
+          "outputTokens": 188,
+          "prefillSeconds": 10.0030707,
+          "decodeSeconds": 2.789363800000001,
+          "clientTtftMs": 12810.801875000152,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-61",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/60"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "inputTokens": 2902,
+          "outputTokens": 97,
+          "prefillSeconds": 10.7869674,
+          "decodeSeconds": 1.4345931,
+          "clientTtftMs": 12239.628999999923,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-62",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/61"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 1610,
+          "outputTokens": 287,
+          "prefillSeconds": 5.849447199999999,
+          "decodeSeconds": 4.243700500000001,
+          "clientTtftMs": 10111.31824999984,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-63",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/62"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 1963,
+          "outputTokens": 31,
+          "prefillSeconds": 7.227001100000001,
+          "decodeSeconds": 0.44639450000000036,
+          "clientTtftMs": 7690.789458999916,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-64",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/63"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 2058,
+          "outputTokens": 252,
+          "prefillSeconds": 7.6111389,
+          "decodeSeconds": 3.726616800000001,
+          "clientTtftMs": 11355.431458000112,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-65",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/64"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 2343,
+          "outputTokens": 33,
+          "prefillSeconds": 8.6798177,
+          "decodeSeconds": 0.47744790000000104,
+          "clientTtftMs": 9174.96691600013,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-66",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/65"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 2455,
+          "outputTokens": 249,
+          "prefillSeconds": 9.072117899999999,
+          "decodeSeconds": 3.7074655,
+          "clientTtftMs": 12797.257166999998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-67",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/66"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 2727,
+          "outputTokens": 124,
+          "prefillSeconds": 10.139047099999999,
+          "decodeSeconds": 1.8445011000000013,
+          "clientTtftMs": 12001.554999999826,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-68",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/67"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "inputTokens": 2890,
+          "outputTokens": 109,
+          "prefillSeconds": 10.7293995,
+          "decodeSeconds": 1.6148099000000002,
+          "clientTtftMs": 12364.154291999967,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-69",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/68"
+        },
+        {
+          "taskId": "HumanEval/161",
+          "attempt": 1,
+          "inputTokens": 1611,
+          "outputTokens": 318,
+          "prefillSeconds": 5.857175,
+          "decodeSeconds": 4.7074192,
+          "clientTtftMs": 10582.126708000033,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-70",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/69"
+        },
+        {
+          "taskId": "HumanEval/161",
+          "attempt": 1,
+          "inputTokens": 2001,
+          "outputTokens": 257,
+          "prefillSeconds": 7.3821678,
+          "decodeSeconds": 3.804707300000001,
+          "clientTtftMs": 11204.269791999877,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-71",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/70"
+        },
+        {
+          "taskId": "HumanEval/161",
+          "attempt": 1,
+          "inputTokens": 2282,
+          "outputTokens": 95,
+          "prefillSeconds": 8.4367102,
+          "decodeSeconds": 1.3938053,
+          "clientTtftMs": 9847.99658299994,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-72",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/71"
+        },
+        {
+          "taskId": "HumanEval/115",
+          "attempt": 1,
+          "inputTokens": 1832,
+          "outputTokens": 486,
+          "prefillSeconds": 6.7092353000000005,
+          "decodeSeconds": 7.2425771,
+          "clientTtftMs": 13970.034292000037,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-73",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/72"
+        },
+        {
+          "taskId": "HumanEval/115",
+          "attempt": 1,
+          "inputTokens": 2389,
+          "outputTokens": 257,
+          "prefillSeconds": 8.839343300000001,
+          "decodeSeconds": 3.8127354000000016,
+          "clientTtftMs": 12670.01641700017,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-74",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/73"
+        },
+        {
+          "taskId": "HumanEval/115",
+          "attempt": 1,
+          "inputTokens": 2686,
+          "outputTokens": 68,
+          "prefillSeconds": 9.9307696,
+          "decodeSeconds": 1.0055834999999989,
+          "clientTtftMs": 10953.908082999988,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-75",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/74"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "inputTokens": 1570,
+          "outputTokens": 211,
+          "prefillSeconds": 5.7198592,
+          "decodeSeconds": 3.1130652,
+          "clientTtftMs": 8850.182916999984,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-76",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/75"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "inputTokens": 1847,
+          "outputTokens": 31,
+          "prefillSeconds": 6.7685123,
+          "decodeSeconds": 0.4429214000000002,
+          "clientTtftMs": 7229.458207999869,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-77",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/76"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "inputTokens": 1942,
+          "outputTokens": 174,
+          "prefillSeconds": 7.1464853,
+          "decodeSeconds": 2.5922146999999995,
+          "clientTtftMs": 9756.079957999873,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-78",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/77"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "inputTokens": 2141,
+          "outputTokens": 120,
+          "prefillSeconds": 7.969273,
+          "decodeSeconds": 1.7764816999999993,
+          "clientTtftMs": 9763.507208000192,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-79",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/78"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "inputTokens": 2285,
+          "outputTokens": 55,
+          "prefillSeconds": 8.4886838,
+          "decodeSeconds": 0.8012473999999984,
+          "clientTtftMs": 9309.881667000127,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-80",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/79"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "inputTokens": 1583,
+          "outputTokens": 194,
+          "prefillSeconds": 5.7443138,
+          "decodeSeconds": 2.8611085999999997,
+          "clientTtftMs": 8622.612249999975,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-81",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/80"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "inputTokens": 1855,
+          "outputTokens": 243,
+          "prefillSeconds": 6.7965906,
+          "decodeSeconds": 3.5841847,
+          "clientTtftMs": 10398.063917000172,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-82",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/81"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "inputTokens": 2135,
+          "outputTokens": 234,
+          "prefillSeconds": 7.9050142999999995,
+          "decodeSeconds": 3.4595658000000005,
+          "clientTtftMs": 11382.129458999998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-83",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/82"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "inputTokens": 2393,
+          "outputTokens": 68,
+          "prefillSeconds": 8.8755502,
+          "decodeSeconds": 1.0009786000000003,
+          "clientTtftMs": 9894.478791999973,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-84",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/83"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 1591,
+          "outputTokens": 207,
+          "prefillSeconds": 5.7827028,
+          "decodeSeconds": 3.0549231999999993,
+          "clientTtftMs": 8858.393750000005,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-85",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/84"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 1865,
+          "outputTokens": 31,
+          "prefillSeconds": 6.8807512,
+          "decodeSeconds": 0.44704960000000027,
+          "clientTtftMs": 7345.784916000184,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-86",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/85"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 1960,
+          "outputTokens": 171,
+          "prefillSeconds": 7.221058200000001,
+          "decodeSeconds": 2.5257862999999996,
+          "clientTtftMs": 9764.859749999914,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-87",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/86"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2164,
+          "outputTokens": 33,
+          "prefillSeconds": 8.00809,
+          "decodeSeconds": 0.4738148000000001,
+          "clientTtftMs": 8499.174584000002,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-88",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/87"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2276,
+          "outputTokens": 168,
+          "prefillSeconds": 8.431998499999999,
+          "decodeSeconds": 2.4915296,
+          "clientTtftMs": 10941.297042000087,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-89",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/88"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2467,
+          "outputTokens": 32,
+          "prefillSeconds": 9.152366599999999,
+          "decodeSeconds": 0.4613714,
+          "clientTtftMs": 9631.448458000023,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-90",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/89"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2535,
+          "outputTokens": 33,
+          "prefillSeconds": 9.412212,
+          "decodeSeconds": 0.48612420000000023,
+          "clientTtftMs": 9916.609375000007,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-91",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/90"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2715,
+          "outputTokens": 179,
+          "prefillSeconds": 10.1101468,
+          "decodeSeconds": 2.658972100000001,
+          "clientTtftMs": 12792.796707999969,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-92",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/91"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "inputTokens": 2961,
+          "outputTokens": 47,
+          "prefillSeconds": 10.9966766,
+          "decodeSeconds": 0.6895671999999995,
+          "clientTtftMs": 11704.984292000063,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-93",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/92"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 1576,
+          "outputTokens": 225,
+          "prefillSeconds": 5.7278565,
+          "decodeSeconds": 3.331784200000001,
+          "clientTtftMs": 9077.029583000012,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-94",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/93"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 1868,
+          "outputTokens": 31,
+          "prefillSeconds": 6.854531,
+          "decodeSeconds": 0.4466927000000005,
+          "clientTtftMs": 7318.842916999984,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-95",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/94"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 1962,
+          "outputTokens": 188,
+          "prefillSeconds": 7.232957900000001,
+          "decodeSeconds": 2.7834525999999995,
+          "clientTtftMs": 10033.826916999942,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-96",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/95"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 2175,
+          "outputTokens": 215,
+          "prefillSeconds": 8.0320957,
+          "decodeSeconds": 3.2190851999999994,
+          "clientTtftMs": 11271.089875000143,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-97",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/96"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 2455,
+          "outputTokens": 141,
+          "prefillSeconds": 9.1452152,
+          "decodeSeconds": 2.0793595000000007,
+          "clientTtftMs": 11242.370958000038,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-98",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/97"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 2670,
+          "outputTokens": 380,
+          "prefillSeconds": 9.916476699999999,
+          "decodeSeconds": 5.660205299999999,
+          "clientTtftMs": 15596.812541999952,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-99",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/98"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 3216,
+          "outputTokens": 316,
+          "prefillSeconds": 11.9247402,
+          "decodeSeconds": 4.7063717,
+          "clientTtftMs": 16649.584667,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-100",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/99"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "inputTokens": 3600,
+          "outputTokens": 124,
+          "prefillSeconds": 13.3858707,
+          "decodeSeconds": 1.8794477000000007,
+          "clientTtftMs": 15286.410124999975,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-101",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/100"
+        },
+        {
+          "taskId": "HumanEval/148",
+          "attempt": 1,
+          "inputTokens": 1708,
+          "outputTokens": 425,
+          "prefillSeconds": 6.24174,
+          "decodeSeconds": 6.292875900000001,
+          "clientTtftMs": 12552.608041999974,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-102",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/101"
+        },
+        {
+          "taskId": "HumanEval/148",
+          "attempt": 1,
+          "inputTokens": 2203,
+          "outputTokens": 415,
+          "prefillSeconds": 8.1573213,
+          "decodeSeconds": 6.1536234,
+          "clientTtftMs": 14335.547833000192,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-103",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/102"
+        },
+        {
+          "taskId": "HumanEval/148",
+          "attempt": 1,
+          "inputTokens": 2642,
+          "outputTokens": 98,
+          "prefillSeconds": 9.7899838,
+          "decodeSeconds": 1.4443241999999992,
+          "clientTtftMs": 11252.898417000097,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "id": "issue72-off-human20-20261024-104",
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/requests/103"
+        }
+      ],
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 55.984835749999995,
+          "inputTokens": 10997,
+          "outputTokens": 1037,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/0"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 43.62901037499999,
+          "inputTokens": 7352,
+          "outputTokens": 1114,
+          "modelRequests": 3,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/1"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 33.300744583,
+          "inputTokens": 6314,
+          "outputTokens": 657,
+          "modelRequests": 3,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/2"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 50.38051679199998,
+          "inputTokens": 10429,
+          "outputTokens": 790,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/3"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "piCompleted": false,
+          "piError": "incomplete_or_failed_pi_run",
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 67.85794741699999,
+          "inputTokens": 12449,
+          "outputTokens": 1466,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/4"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 42.147193792000024,
+          "inputTokens": 9495,
+          "outputTokens": 473,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/5"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 36.340259875000015,
+          "inputTokens": 7593,
+          "outputTokens": 560,
+          "modelRequests": 4,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/6"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 99.61957141699997,
+          "inputTokens": 18706,
+          "outputTokens": 2036,
+          "modelRequests": 6,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/7"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 75.57198883300003,
+          "inputTokens": 14633,
+          "outputTokens": 1434,
+          "modelRequests": 6,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/8"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 102.78207708399998,
+          "inputTokens": 21031,
+          "outputTokens": 1612,
+          "modelRequests": 8,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/9"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 49.938402333,
+          "inputTokens": 10159,
+          "outputTokens": 808,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/10"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 75.80647420800005,
+          "inputTokens": 15987,
+          "outputTokens": 1087,
+          "modelRequests": 7,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/11"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 75.91338612499999,
+          "inputTokens": 16046,
+          "outputTokens": 1085,
+          "modelRequests": 7,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/12"
+        },
+        {
+          "taskId": "HumanEval/161",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 31.95030804099997,
+          "inputTokens": 5894,
+          "outputTokens": 670,
+          "modelRequests": 3,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/13"
+        },
+        {
+          "taskId": "HumanEval/115",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 37.904417459,
+          "inputTokens": 6907,
+          "outputTokens": 811,
+          "modelRequests": 3,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/14"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 45.26316462500006,
+          "inputTokens": 9785,
+          "outputTokens": 591,
+          "modelRequests": 5,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/15"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 40.6398778329999,
+          "inputTokens": 7966,
+          "outputTokens": 739,
+          "modelRequests": 4,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/16"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 89.89792812500002,
+          "inputTokens": 20534,
+          "outputTokens": 901,
+          "modelRequests": 9,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/17"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 96.96881366599996,
+          "inputTokens": 19522,
+          "outputTokens": 1620,
+          "modelRequests": 8,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/18"
+        },
+        {
+          "taskId": "HumanEval/148",
+          "attempt": 1,
+          "piCompleted": true,
+          "piError": null,
+          "status": "passed",
+          "officialValidation": "passed",
+          "wallSeconds": 38.47414120899998,
+          "inputTokens": 6553,
+          "outputTokens": 938,
+          "modelRequests": 3,
+          "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json#/tasks/19"
+        }
+      ],
+      "reportedTotals": {
+        "wallSeconds": 1190.371059542,
+        "inputTokens": 238352,
+        "outputTokens": 20429,
+        "modelRequests": 104
+      },
+      "rawEvidence": {
+        "manifest.json": {
+          "sha256": "f929585db83fbbc2af4f53b74dc272eff6d7a1f375052b8882cd74ac3e479115",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "summary.json": {
+          "sha256": "b32fd316209b6a3fb46c565e793bd39ef7bd397899e41a6edbaae32ef1814fe2",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "tasks.jsonl": {
+          "sha256": "26663fd001ad2ef1ad59d280018a236a7a5399dbd3cca23019fbaaf4233f74ea",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "observations.jsonl": {
+          "sha256": "484de900078b2536e7f7a5067104c6d583376c4cd7e977bbc5e9d5c8d52ce484",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "package-manifest.json": {
+          "sha256": "ece6ec89e417c609af3e594700e9e13500111e29264d23b450063cce1b65aa1f",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "health.json": {
+          "sha256": "003c2a35fe7a45acfe190af8a6f04ca525d30571f3532515c26d0fa9920c351d",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        },
+        "official.json": {
+          "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+          "availability": "Local ignored experiment artifacts; not a public download"
+        }
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Issue72",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/72"
+        },
+        {
+          "role": "code-pr",
+          "label": "Code PR74",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/74"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results PR75",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/75"
+        },
+        {
+          "role": "report",
+          "label": "Full record",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Audited JSON",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue72/off.json"
         },
         {
           "role": "notebook",

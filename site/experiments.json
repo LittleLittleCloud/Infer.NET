@@ -5,14 +5,14 @@
     "kind": "2026-10-24 · Approved experiment #72 · Candidate, not adopted",
     "source": "docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md",
     "question": "Can rejection recover full target state and exact greedy continuation before native DFlash2 integration?",
-    "setup": "Fixed affine8/FP32 KV, fully local M5 Pro, fused-fp32/chunk32/scratch128. Baseline4ca29eed, candidateafdb36f.",
+    "setup": "Fixed affine8/FP32 KV, fully local M5 Pro, fused-fp32/chunk32/scratch128. Main 4ca29eed; candidate afdb36f.",
     "change": "Default-off synthetic proposal verification with all-layer snapshots and rejection replay; no real draft. Code PR #74.",
-    "result": "Main reference: Pi20/20, official20/20,98/98 requests reconciled; prefill270.830, decode67.450 tok/s. Candidate real-model evaluation in progress.",
-    "validation": "430 CPU,70 managed and70 Native AOT integration checks passed;587 native Metal-buffer transaction checks passed. Invalid attempts retained.",
-    "conclusion": "No acceleration or adoption claim. GPU fixtures and fixed5/20 comparisons remain pending.",
-    "next": "Complete serialized evaluation, restore original worker, then submit final results for human review.",
+    "result": "Main: Pi 20/20, official 20/20; decode 67.450 tok/s. Candidate off: Pi 19/20 with one stream error, official 20/20; decode 67.390 tok/s. Enabled correctness cohort running.",
+    "validation": "430 CPU, 70 managed and 70 Native AOT integration checks; 587 native Metal-buffer transaction checks; 95 real-model state checks passed. Setup failures retained.",
+    "conclusion": "No acceleration or adoption claim. Off timings lie within 5% bounds, but one missing TTFT and Pi failure remain; continuous allocator peak is unmeasured.",
+    "next": "Finish enabled pilot/formal evaluation, restore original worker and submit results for human review.",
     "commands": [],
-    "evidence": "docs/evaluations/issue72/status.json; setup-failures.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
+    "evidence": "docs/evaluations/issue72/status.json; hardware-summary.json; baseline.json; off.json; copilot-provider.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
   },
   {
     "id": "splash-human20-20261024",

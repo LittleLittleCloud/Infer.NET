@@ -9,8 +9,8 @@
   "independentCpuTests": 430,
   "managedIntegrationChecks": 70,
   "implementationProvider": "GitHub Copilot CLI1.0.103 / claude-sonnet-5.5",
-  "hardwareCorrectness": "real-model phases in progress",
-  "formalPerformance": "not-yet-complete",
+  "hardwareCorrectness": "95 real-model checks passed, zero failures",
+  "formalPerformance": "Main and disabled cohorts complete; enabled correctness cohort running. Disabled Pi stream failure and incomplete TTFT coverage retained.",
   "restoration": "pending end of evaluation",
   "windowsParticipating": false,
   "baselineFormal": {
@@ -26,5 +26,23 @@
   },
   "nativeBufferTransactionChecks": 587,
   "nativeAotIntegrationChecks": 70,
-  "codeCi": "All macOS/Linux/Windows checks passed"
+  "codeCi": "All macOS/Linux/Windows checks passed",
+  "modelFixtureRunsCompleted": 95,
+  "offFormal": {
+    "runId": "issue72-off-human20-20261024",
+    "piCompleted": 19,
+    "piErrors": 1,
+    "officialPassed": 20,
+    "observedRequestCount": 104,
+    "prefillTokensPerSecond": 271.06109971096885,
+    "decodeTokensPerSecond": 67.39012194544785,
+    "clientTtftMedianMs": 11018.170583000028,
+    "coverage": {
+      "prefillRequests": 104,
+      "decodeRequests": 104,
+      "clientTtftRequests": 103,
+      "totalObservedRequests": 104
+    },
+    "piUsageMatchesWorker": false
+  }
 }

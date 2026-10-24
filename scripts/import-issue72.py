@@ -4,7 +4,7 @@ import copy,json,pathlib,subprocess,sys
 from datetime import datetime,timezone
 ROOT=pathlib.Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 from home_trends import validate,import_pi
-REPO='https://github.com/LittleLittleCloud/Infer.NET';PUBLIC=REPO+'/blob/codex/experiment-72-results/'
+REPO='https://github.com/LittleLittleCloud/Infer.NET';PUBLIC=REPO+'/blob/main/'
 REPORT='docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md'
 data=json.loads((ROOT/'site/trends.json').read_text())
 for mode in ['baseline','off','on']:
@@ -12,7 +12,7 @@ for mode in ['baseline','off','on']:
  if not path.exists():continue
  m=json.loads(path.read_text());rid=m['runId'];diagnostic=mode=='on';sha=m['macCommit']
  assert m['validForPerformanceComparison'] and m['attemptedTasks']==m['plannedTasks']==20
- if any(r['id']==rid for r in data['runs']):continue
+ existing=next((i for i,r in enumerate(data['runs']) if r['id']==rid),None)
  cfg_id='issue72-synthetic-correctness-human20' if diagnostic else 'issue72-local-fp32-human20'
  if not any(c['id']==cfg_id for c in data['configurations']):
   cfg=copy.deepcopy(data['configurations'][0]);cfg.update({'id':cfg_id,'label':'Issue72 · synthetic oracle correctness only' if diagnostic else 'Issue72 · main / candidate-off comparison','model':'mlx-community/Qwen3.6-35B-A3B-8bit','modelRevision':'e06a74e6236a60c8367e1a3214e83d8b61b637b0','weights':'affine8/group64; original per-matrix formats','kv':'FP32','cache':'0% prefix hits; request state reset','chunking':'Local prefill32 / scratch128 / fused-fp32; synthetic mixed B4' if diagnostic else 'Local prefill32 / scratch128 / fused-fp32; no speculation','topology':'Single M5 Pro20 GPU/48GiB, metal-local, Windows absent','network':'Two loopback observation hops; no handoff','power':'AC / High Power; default wired limit; serial requests','workload':'Pi1.4.0, fixed20/seed0, context32768/output4096/task timeout300s; fresh sessions; preflight warmup excluded','datasetRevision':'b9453e8f1865df0a0057a1383767caa400acfbcf','datasetSha256':m['datasetSha256'],'plannedTasks':[t['taskId'] for t in m['tasks']],'latestBaselineRun':None})
@@ -32,7 +32,8 @@ for mode in ['baseline','off','on']:
   tasks.append(t)
  speed='Synthetic correctness mode: no standard speed point; measured resources/cycles in public JSON.' if diagnostic else f"Worker prefill {m['prefillTokensPerSecond']:.3f}, decode {m['decodeTokensPerSecond']:.3f} tok/s."
  run={'id':rid,'experimentId':'speculative-state-20261024','configurationId':cfg_id,'title':'Issue72 · '+mode+' · HumanEval20','date':'2026-10-24 America/Los_Angeles','measuredCommit':sha,'state':'failed' if m['officialPassed']!=20 or m['piCompleted']!=20 else 'pending-review','change':'Fixed main reference.' if mode=='baseline' else 'Default-off state transaction candidate, synthetic oracle '+('enabled.' if diagnostic else 'disabled.'),'result':f"Pi {m['piCompleted']}/20; official {m['officialPassed']}/20. "+speed,'provenance':{'kind':'main','mainCommit':sha,'evidence':REPO+'/commit/'+sha} if mode=='baseline' else {'kind':'candidate','evidence':REPO+'/pull/74'},'baselineRunId':'issue72-main-human20-20261024' if mode=='off' else None,'runtime':{k:{'commit':sha} for k in ['coordinator','macServe']},'conditions':{'adoption':'Human review pending; no baseline selection, deployment or adoption change.','observer':'TTFT from observer send to first valid output; Pi-to-observer dispatch excluded; two forwards.','resources':m['resources'],'piUsageMatchesWorker':m['piUsageMatchesWorker'],'mode':'Synthetic oracle correctness only; no real draft or acceleration claim.' if diagnostic else 'Clean worker timing cohort.'},'binarySha256':m['binarySha256'],'binaryEvidence':REPORT,'harnessCommit':sha,'harnessSha256':m['harnessSha256'],'requestCount':len(requests),'requests':requests,'tasks':tasks,'reportedTotals':{'wallSeconds':m['piWallSeconds'],'inputTokens':sum(t['inputTokens'] or 0 for t in tasks),'outputTokens':sum(t['outputTokens'] or 0 for t in tasks),'modelRequests':len(requests)},'rawEvidence':m['localEvidence'],'links':[{'role':'issue','label':'Issue72','url':REPO+'/issues/72'},{'role':'code-pr','label':'Code PR74','url':REPO+'/pull/74'},{'role':'results-pr','label':'Results PR75','url':REPO+'/pull/75'},{'role':'report','label':'Full record','url':PUBLIC+REPORT},{'role':'evidence','label':'Audited JSON','url':source},{'role':'notebook','label':'Notebook','url':'experiments.html#speculative-state-issue72-20261024'}]}
- data['runs'].append(run)
+ if existing is None:data['runs'].append(run)
+ else:data['runs'][existing]=run
 normalized=copy.deepcopy(data)
 normalized['runs']=[import_pi(spec,ROOT) for spec in data['imports']]+normalized['runs']
 validate(normalized)
