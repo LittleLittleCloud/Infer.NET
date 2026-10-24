@@ -190,6 +190,18 @@ class BenchmarkTests(unittest.TestCase):
                 provider = json.loads(config)["providers"]["infernet"]
                 self.assertEqual(provider["apiKey"], "$INFERNET_BENCH_TOKEN")
                 self.assertTrue(provider["authHeader"])
+                self.assertEqual(provider["api"], "openai-completions")
+                self.assertEqual(provider["baseUrl"], args.endpoint + "/v1")
+                model, = provider["models"]
+                self.assertEqual(model["id"], "qwen3.6-35b-a3b")
+                self.assertEqual(model["contextWindow"], args.context_window)
+                self.assertEqual(model["maxTokens"], args.max_tokens)
+                self.assertEqual(model["compat"], {
+                    "maxTokensField": "max_tokens",
+                    "supportsDeveloperRole": False,
+                    "supportsReasoningEffort": False,
+                    "supportsStore": False,
+                })
                 self.assertNotIn("UNRELATED_SECRET", env)
                 (workspace / "solution.py").write_text("def f():\n    return 1\n")
                 return {

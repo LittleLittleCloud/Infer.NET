@@ -280,7 +280,12 @@ def run_task(args, task_id, prompt, executable, version, token):
             "models": [{
                 "id": MODEL, "reasoning": False, "input": ["text"],
                 "contextWindow": args.context_window, "maxTokens": args.max_tokens,
-                "compat": {"supportsDeveloperRole": False},
+                "compat": {
+                    "maxTokensField": "max_tokens",
+                    "supportsDeveloperRole": False,
+                    "supportsReasoningEffort": False,
+                    "supportsStore": False,
+                },
             }],
         }}}
         (agent / "models.json").write_text(json.dumps(model_config), encoding="utf-8")

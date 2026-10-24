@@ -128,6 +128,16 @@ Each task gets a new temporary workspace, home, and agent directory, removed
 after collection. The child environment is restricted, but the local API
 token is necessarily available to Pi (and hence its tools).
 
+The generated `infernet/qwen3.6-35b-a3b` model uses `openai-completions` with
+explicit endpoint compatibility: `maxTokensField="max_tokens"`,
+`supportsDeveloperRole=false`, `supportsReasoningEffort=false`, and
+`supportsStore=false`. The current Infer.NET endpoint requires `max_tokens`
+rather than `max_completion_tokens`, does not support the developer role, and
+rejects `reasoning_effort` and `store` parameters (including `store=false`).
+These settings prevent Pi from sending unsupported parameters; they match the
+working Pi model configuration without reading or modifying your normal config.
+The offline fixture checks these fields in each task's generated `models.json`.
+
 From the repository root (replace paths/build labels with verified local values):
 
 ```sh
