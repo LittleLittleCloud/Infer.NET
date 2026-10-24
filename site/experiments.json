@@ -1,5 +1,20 @@
 [
   {
+    "id": "splash-human20-20261024",
+    "title": "Splash 8bit：完整常驻启动被内存规划器拒绝，20题未执行",
+    "kind": "2026-10-24 · 第三方参考准备失败 · 无性能点",
+    "source": "docs/EXPERIMENT-61-SPLASH-HUMAN20-20261024.md",
+    "question": "Splash 1.4.0 在 M5 Pro 48GiB 上完整常驻 affine8，能否完成固定 Pi HumanEval20？",
+    "setup": "M5 Pro 20 GPU /48GiB，AC/High Power；固定 affine8 e06a74e；Q8 KV/FP32状态，DFlash2，关闭专家流式及SSD prefix cache。",
+    "change": "独立采集器代码PR #62；不改变产品执行后端。实验Issue #61。",
+    "result": "0/20题执行；最低内存39,279,945,088 bytes > hard budget39,127,154,688 bytes，缺152,790,400 bytes；prefill/decode/TTFT未取得，通过率未验证。",
+    "validation": "21个模型文件散列核对通过；采集器HTTP/SSE fixture通过。原worker已恢复原版本Ready。",
+    "conclusion": "完整常驻配置在进入Ready前被拒绝；不能用估算、合成fixture或0值补性能图。",
+    "next": "等待用户选择是否授权8bit专家SSD流式，之后另记配置并执行20题；本记录保存准备失败，不代表测试完成。",
+    "commands": [],
+    "evidence": "docs/evaluations/issue61/summary.json；evidence.json；原始证据仅本机忽略artifacts目录。"
+  },
+  {
     "id": "humaneval20-m5pro-20261024",
     "title": "M5 Pro 全本地 Pi / HumanEval 20：全部通过，存在换页",
     "kind": "已采用代码的历史实测 · affine8 / FP32 KV · 单机",

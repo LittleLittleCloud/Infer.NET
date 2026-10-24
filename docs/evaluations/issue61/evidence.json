@@ -1,0 +1,34 @@
+{
+  "setup.log": {
+    "sha256": "ca620a233326492e1462d7048613358ee81012a8cb2055c2fe8e6cc07ccbea20",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "environment.json": {
+    "sha256": "dd5991f7bd5f454eb7a82d60cacd3d6e35fbef936bca039bf66121dab8bed623",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "verified-model-sha256.json": {
+    "sha256": "a1285f52e87cc3eee065c5fb659640c6e0e6659b55fe50a51326d522aae25486",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "HumanEval.jsonl.gz": {
+    "sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restored-health.json": {
+    "sha256": "19ae4e4b7e3f5ec59d8b9e1ad2d5b48b374b6d952e7b5c5661af0dba347acf47",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "check-observer.py": {
+    "sha256": "262d0a1b27dab9dd3bd0318d03054265c1335e0414dac6c25c3ebbe13716d9ff",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "fixture-observer/requests.jsonl": {
+    "sha256": "1ee15c2e7ecc4b2a95484d76d9e18786d0eafc654a63f9f2f68b8e5e7793334e",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "fixture-observer/resources.jsonl": {
+    "sha256": "93af0112830c26c8fe88bec685be20493708dbaaadc82fecc7cb33b889f1ce45",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  }
+}
