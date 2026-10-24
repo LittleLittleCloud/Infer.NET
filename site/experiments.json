@@ -1,5 +1,20 @@
 [
   {
+    "id": "decode-profile-20261024",
+    "title": "Decode bottleneck research: Copilot / Claude Sonnet 5.5",
+    "kind": "2026-10-24 · Research only · Pending experiment approval",
+    "source": "docs/DECODE-RESEARCH-SONNET-20261024.md",
+    "question": "Which native Metal decode costs should be optimized before comparing with Splash?",
+    "setup": "Audited main 4ca29eed and Splash 1482f6b source; historical metrics only. No new inference run.",
+    "change": "Read-only research by GitHub Copilot CLI 1.0.103 / claude-sonnet-5.5; reviewed synthesis and diagnostic-only experiment Issue #70.",
+    "result": "Not measured. No optimization implemented and no new throughput point.",
+    "validation": "Model usage and unchanged-file counts verified; fixed upstream SHA inspected; speculative causal claims corrected during independent review.",
+    "conclusion": "Existing clocks, KV precision and speculation differ. Diagnose per-stage costs before selecting a single optimization.",
+    "next": "Issue #70 awaits human approval; subsequent fusion, GEMV/GDN, Q8 KV (#33) and DFlash2 require separate scoped experiments.",
+    "commands": [],
+    "evidence": "docs/evaluations/decode-research-20261024/manifest.json; raw model report/session/usage remain local with hashes. https://github.com/LittleLittleCloud/Infer.NET/issues/70"
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",
