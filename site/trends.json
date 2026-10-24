@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "commitTimeline": [
+    {
+      "sha": "e017d84e805c016d5912b5051e4c69f758056363",
+      "committedAt": "2026-10-23T22:52:18Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/e017d84e805c016d5912b5051e4c69f758056363"
+    }
+  ],
+  "configurations": [
+    {
+      "id": "pi-humaneval20-affine8-fp32-wifi",
+      "label": "Pi 1.4.0 · HumanEval fixed 20 · affine 8bit / FP32 KV · Wi-Fi",
+      "model": "qwen3.6-35b-a3b",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weights": "affine 8bit / group64",
+      "kv": "FP32",
+      "cache": "No prefix cache; cacheRead/cacheWrite = 0",
+      "chunking": "short-input route 128; suffix chunk 128; Metal scratch 128; incremental KV transfer",
+      "topology": "M5 Pro 48 GiB coordinator + serve (full model/decode); RTX 4090 24 GiB agent (first 20 layers)",
+      "network": "Mac Wi-Fi cross-host; Windows Ethernet",
+      "power": "Mac AC / High Power; Windows agent foreground",
+      "workload": "Pi 1.4.0; seed 0; serial; fresh workspace/session per task; read/write/bash/edit; thinking off; timeout 300 s; context 32768; max output/request 4096",
+      "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+      "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "plannedTasks": ["HumanEval/156", "HumanEval/94", "HumanEval/72", "HumanEval/80", "HumanEval/149", "HumanEval/2", "HumanEval/35", "HumanEval/32", "HumanEval/146", "HumanEval/137", "HumanEval/97", "HumanEval/154", "HumanEval/6", "HumanEval/161", "HumanEval/115", "HumanEval/131", "HumanEval/162", "HumanEval/50", "HumanEval/47", "HumanEval/148"],
+      "timing": {
+        "wall": "Pi subprocess start to exit; includes all model requests, tools, files and scheduling",
+        "prefill": "sum request input tokens / sum measured worker prefill seconds; never Pi wall time",
+        "decode": "sum request (output tokens - 1) / sum measured decode seconds",
+        "ttft": "client-send-to-first-valid-output-token"
+      },
+      "latestBaselineRun": "pi-main-rerun-20261023"
+    }
+  ],
+  "imports": [
+    {
+      "id": "pi-main-20261023",
+      "experimentId": "pi-humaneval-main-20",
+      "configurationId": "pi-humaneval20-affine8-fp32-wifi",
+      "source": "site/pi-humaneval-main-summary.json",
+      "report": "docs/PI-HUMANEVAL-MAIN-20261023.md",
+      "title": "main deployment · fixed 20-task baseline",
+      "state": "adopted",
+      "change": "Unified coordinator, Mac serve and Windows agent on main e017d84. Harness c5913cf was separate from the measured runtime.",
+      "result": "20/20 official task checks passed. 808.884 s end-to-end; 98 model requests. This is not a 164-task leaderboard or GPU throughput benchmark.",
+      "provenance": {
+        "kind": "main",
+        "mainCommit": "e017d84e805c016d5912b5051e4c69f758056363",
+        "evidence": "docs/PI-HUMANEVAL-MAIN-20261023.md"
+      },
+      "baselineRunId": null,
+      "links": [
+        {"role": "issue", "label": "Experiment Issue #40", "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/40"},
+        {"role": "code-pr", "label": "Runtime code PR #37", "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/37"}
+      ]
+    },
+    {
+      "id": "pi-main-rerun-20261023",
+      "experimentId": "pi-humaneval-rerun-20",
+      "configurationId": "pi-humaneval20-affine8-fp32-wifi",
+      "source": "site/pi-humaneval-rerun-summary.json",
+      "binarySource": "site/pi-humaneval-main-summary.json",
+      "report": "docs/PI-HUMANEVAL-RERUN-20261023.md",
+      "title": "Same-runtime rerun · tool-call failure retained",
+      "state": "regressed",
+      "change": "Reran the same fixed cohort after harness merge 1571071; harness hash and all three e017d84 runtime components unchanged. TUI was also open; environment not exclusive.",
+      "result": "19/20 official checks passed; HumanEval/149 failed with a malformed tool call. 774.288 s includes early failure, not a speedup. Separate 9.068 s retry is excluded. Per-task token counts were not published.",
+      "provenance": {
+        "kind": "main",
+        "mainCommit": "e017d84e805c016d5912b5051e4c69f758056363",
+        "evidence": "docs/PI-HUMANEVAL-RERUN-20261023.md"
+      },
+      "baselineRunId": "pi-main-20261023",
+      "links": [
+        {"role": "issue", "label": "Failure Issue #32", "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/32"},
+        {"role": "code-pr", "label": "Runtime code PR #37", "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/37"},
+        {"role": "harness-pr", "label": "Harness PR #42 (not runtime)", "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/42"}
+      ]
+    }
+  ],
+  "runs": []
+}

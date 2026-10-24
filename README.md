@@ -2,7 +2,7 @@
 
 [项目进展](https://littlelittlecloud.github.io/Infer.NET/) · [实验笔记](https://littlelittlecloud.github.io/Infer.NET/experiments.html) · [任务与验收](https://github.com/LittleLittleCloud/Infer.NET/issues/1)
 
-站点内容由 `site/` 与固定性能规范生成，运行 `python3 scripts/build-progress-site.py` 可在 `artifacts/pages/` 预览。推送相关变更到 main 后由 GitHub Actions 发布。项目名称为 Infer.NET；现有 `DeepInfer.*` 文件名与命令保留兼容。
+站点内容由 `site/` 与固定性能规范生成，运行 `python3 scripts/build-progress-site.py` 可在 `artifacts/pages/` 预览。首页为四项 commit 趋势与逐任务记录；原完整进展页保留在 [progress.html](https://littlelittlecloud.github.io/Infer.NET/progress.html)。数据契约、缺测口径与离线验收见 [首页趋势数据说明](docs/HOME-TRENDS-DATA.md)。推送相关变更到 main 后由 GitHub Actions 发布。项目名称为 Infer.NET；现有 `DeepInfer.*` 文件名与命令保留兼容。
 
 **唯一支持的真实模型是 Qwen3.6-35B-A3B。** CLI、demo 和默认启动器均选择该模型，默认权重为 `models/qwen3.6-35b-a3b-8bit-mlx`。同一模型的 5bit 与 8bit 检查点继续支持；Qwen2.5 3B/7B、TinyStories 的加载器、下载器及启动入口已移除。`synthetic-v1` 仅用于不加载权重的 RPC 测试。
 

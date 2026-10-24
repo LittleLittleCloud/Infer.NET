@@ -1,0 +1,18 @@
+{
+  "notice": "SYNTHETIC TEST DATA ONLY. Never imported by site/trends.json or the production build. Scenarios transform a copy of the normalized historical data solely for tests/browser fixtures.",
+  "requests": [
+    {"id": "fixture-1", "taskId": "HumanEval/156", "attempt": 1, "inputTokens": 100, "prefillSeconds": 2, "outputTokens": 11, "decodeSeconds": 2, "clientTtftMs": 0, "ttftBoundary": "client-send-to-first-valid-output-token", "outcome": "completed", "source": "fixture-input.json#/requests/0"},
+    {"id": "fixture-2", "taskId": "HumanEval/156", "attempt": 1, "inputTokens": 900, "prefillSeconds": 3, "outputTokens": 31, "decodeSeconds": 3, "clientTtftMs": 120, "ttftBoundary": "client-send-to-first-valid-output-token", "outcome": "completed", "source": "fixture-input.json#/requests/1"},
+    {"id": "fixture-3", "taskId": "HumanEval/149", "attempt": 1, "inputTokens": null, "prefillSeconds": null, "outputTokens": null, "decodeSeconds": null, "clientTtftMs": null, "firstTokenReceived": false, "outcome": "timeout", "source": "fixture-input.json#/requests/2"},
+    {"id": "fixture-4", "taskId": "HumanEval/94", "attempt": 1, "inputTokens": 0, "prefillSeconds": 1, "outputTokens": 1, "decodeSeconds": 1, "clientTtftMs": 240, "ttftBoundary": "client-send-to-first-valid-output-token", "outcome": "completed", "source": "fixture-input.json#/requests/3"}
+  ],
+  "scenarios": [
+    {"id": "fixture-main", "kind": "main", "state": "adopted", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "mode": "measured"},
+    {"id": "fixture-candidate", "kind": "candidate", "state": "pending-review", "commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "mode": "measured"},
+    {"id": "fixture-regressed", "kind": "candidate", "state": "regressed", "commit": "cccccccccccccccccccccccccccccccccccccccc", "mode": "regressed"},
+    {"id": "fixture-failure", "kind": "candidate", "state": "failed", "commit": "dddddddddddddddddddddddddddddddddddddddd", "mode": "missing"},
+    {"id": "fixture-zero", "kind": "candidate", "state": "not-adopted", "commit": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "mode": "zero"},
+    {"id": "fixture-unverified", "kind": "candidate", "state": "pending-review", "commit": "ffffffffffffffffffffffffffffffffffffffff", "mode": "unverified"},
+    {"id": "fixture-repeat", "kind": "main", "state": "regressed", "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "mode": "measured"}
+  ]
+}
