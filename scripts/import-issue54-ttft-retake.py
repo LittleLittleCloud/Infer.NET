@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RUN_ID = "issue54-bf16-2048-ttft-human20-20261024"
 CONFIG_ID = "pi-humaneval20-issue54-bf16-2048-observed-wifi"
 REPORT = "docs/EXPERIMENT-54-TTFT-RETAKE-20261024.md"
+RESULTS_PR = "https://github.com/LittleLittleCloud/Infer.NET/pull/57"
 SOURCE = "https://github.com/LittleLittleCloud/Infer.NET/blob/main/site/trends.json"
 OLD_ID = "issue54-bf16-2048-human20-20261024"
 
@@ -134,7 +135,9 @@ def import_run(manifest, run_dir, harness_commit):
                            "modelRequests": len(requests)},
         "rawEvidence": evidence,
         "links": [link for link in old["links"] if link["role"] not in ("results-pr", "report")] +
-                 [{"role": "report", "label": "TTFT retake and raw evidence hashes",
+                 [{"role": "results-pr", "label": "TTFT retake results PR #57",
+                   "url": RESULTS_PR},
+                  {"role": "report", "label": "TTFT retake and raw evidence hashes",
                    "url": f"https://github.com/LittleLittleCloud/Infer.NET/blob/main/{REPORT}"}],
     })
     manifest["configurations"].append(config)

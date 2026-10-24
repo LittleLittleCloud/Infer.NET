@@ -7404,6 +7404,11 @@
       },
       "links": [
         {
+          "role": "results-pr",
+          "label": "TTFT retake results PR #57",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/57"
+        },
+        {
           "role": "issue",
           "label": "Experiment Issue #54",
           "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/54"
