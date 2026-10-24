@@ -4,7 +4,7 @@
 
 ## 模型范围
 
-项目只保留 Qwen3.6-35B-A3B；本双机部署继续使用固定 revision 的 8bit 权重与 FP32 KV。单机 CLI/demo 及启动器也默认选择该模型的 8bit 检查点。Qwen2.5 3B/7B、TinyStories 的加载器、下载器和专用验证入口已移除。现有 Qwen3.6 模型、证书、token 和兼容配置可复用，更新时不重新下载权重或生成凭据。关联 [Issue #45](https://github.com/LittleLittleCloud/Infer.NET/issues/45)。
+项目只保留 Qwen3.6-35B-A3B；本双机部署继续使用固定 revision 的 8bit 权重与 FP32 KV。单机 CLI/demo 及启动器也默认选择该模型的 8bit 检查点。Qwen2.5 3B/7B、TinyStories 的加载器、下载器和专用验证入口已移除。现有 Qwen3.6 模型、证书、token 和兼容配置可复用，更新时不重新下载权重或生成凭据。关联 [Issue #45](https://github.com/LittleLittleCloud/Infer.NET/issues/45)。本次两端实际运行版本、产物散列和验收结果见 [唯一模型部署记录](SINGLE-MODEL-DEPLOYMENT-20261023.md)。
 
 ## 进程与网络
 

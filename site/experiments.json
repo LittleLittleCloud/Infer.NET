@@ -1,5 +1,22 @@
 [
   {
+    "id": "single-model-deployment",
+    "title": "仅保留 Qwen3.6：三组件同版更新与真实验收通过",
+    "kind": "2026-10-23 · 58bf950 · 部署验收",
+    "source": "docs/SINGLE-MODEL-DEPLOYMENT-20261023.md",
+    "question": "移除旧模型后，默认入口和双机常驻服务能否继续正确生成？",
+    "setup": "Qwen3.6-35B-A3B 8bit、FP32 KV；Mac M5 Pro 48 GiB + RTX 4090 24 GiB；三组件源码均为 58bf950。",
+    "change": "移除 Qwen2.5 3B/7B 与 TinyStories 运行路径，默认选择 Qwen3.6 8bit；Windows 恢复已有正式 packed 配置，保留旧包回退。",
+    "result": "真实部署 15 项检查通过；17/301 输入的输出 token 与更新前一致；在线模型仅剩 Qwen3.6，旧模型请求返回 400。",
+    "validation": "Mac 131 单测；Windows 130 通过/1 跳过；两端各 40 RPC、37 聊天检查；三平台 CI 全通过；断连撤销 ready、重启恢复且 token 一致、Mac PID 不变。",
+    "conclusion": "模型清理与双机功能更新通过；Mac LaunchAgent，Windows 仍为 SSH 控制的前台 agent。没有新的性能达标结论。",
+    "next": "继续处理工具调用可靠性、Q8 KV 与 128K 验收；Windows SCM 托管另行安装和验收。",
+    "commands": [
+      "python3 scripts/deploy/acceptance.py --token-file PRIVATE_TOKEN_FILE --output NEW_LOCAL_DIRECTORY"
+    ],
+    "evidence": "site/single-model-deployment-summary.json；原始日志与回退配置仅本机"
+  },
+  {
     "id": "pi-humaneval-rerun-20",
     "title": "Pi 固定 20 题复测：19/20，工具调用格式错误可复现",
     "kind": "2026-10-23 · e017d84 运行版本 · 真实复测",
