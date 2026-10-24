@@ -16,6 +16,9 @@ FIELDS = ("request", "completed", "build", "input", "output", "prefillMs", "deco
 
 
 def timestamp(value):
+    # .NET's round-trip format writes seven fractional digits; Python 3.9
+    # accepts six. Drop only sub-microsecond precision from UTC timestamps.
+    value = re.sub(r"(\.\d{6})\d+(?=(?:[+-]\d\d:\d\d|Z)$)", r"\1", value)
     return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 

@@ -34,7 +34,7 @@ class PerformanceSummaryTests(unittest.TestCase):
             }) + "\n")
             log = root / "serve.log"
             log.write_text(
-                "INFERENCE_METRIC request=a completed=2026-10-23T00:00:02+00:00 build=abc input=100 output=11 prefillMs=50 decodeTokens=10 decodeMs=100 path=cuda-metal-split\n"
+                "INFERENCE_METRIC request=a completed=2026-10-23T00:00:02.1234567+00:00 build=abc input=100 output=11 prefillMs=50 decodeTokens=10 decodeMs=100 path=cuda-metal-split\n"
                 "INFERENCE_METRIC request=b completed=2026-10-23T00:00:04+00:00 build=abc input=300 output=21 prefillMs=150 decodeTokens=20 decodeMs=200 path=cuda-metal-split\n"
                 "INFERENCE_METRIC request=c completed=2026-10-23T00:00:20+00:00 build=abc input=999 output=2 prefillMs=1 decodeTokens=1 decodeMs=1 path=local\n"
             )

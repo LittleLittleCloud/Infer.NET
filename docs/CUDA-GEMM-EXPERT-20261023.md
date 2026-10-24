@@ -69,3 +69,32 @@ Pi 1.4.0 then ran the **same pinned 20 HumanEval tasks**, seed 0, with the same 
 The earlier mixed-source run took 714.770 s with 101 requests and 250,989 reported tokens. This same-source run took 12.46% more wall time but also made 4.95% more model requests and reported 9.76% more tokens. Pi's tool-call path and outputs varied; the two runs do **not** isolate a Mac-code performance effect. They establish that the same-source branch deployment completed this fixed coding-agent workload correctly. This is still an FP32-KV diagnostic, not the Q8-KV or 128K target acceptance in [the fixed target](QWEN36-8BIT-TARGETS.md).
 
 The `eb492b9` Mac coordinator and split-serve remain under user LaunchAgents, and the matching Windows agent remains in a retained foreground SSH session. After the run, the Mac `/ready` endpoint and coordinator both reported Ready, the latter with an attached agent and `cuda-metal-split` as the last execution path. Windows Service persistence, host restart recovery, Q8 KV and 128K performance remain unverified. Raw task records, private deployment provenance and acceptance evidence are local-only under `artifacts/dual-host/humaneval-dual-eb492b9-20261023/`.
+
+## Controlled HumanEval prefill/decode A/B, 2026-10-23
+
+The later speed comparison held the **same Mac split-serve process** (`6a0d55d6237d1c5322f282696b5d1a33d127f79d`, PID 30590) and coordinator throughout both 20-task runs. That Mac build adds one completed-request `INFERENCE_METRIC` line; it makes no CUDA kernel change. Only the Windows agent changed: `main` inference source `e017d84e805c016d5912b5051e4c69f758056363`, `batch-fp32-packed`, versus this branch's `eb492b9dd443ce3335fb86c87df80ddf2b6b6a7e`, `batch-fp32-fast`. Current `main` commits after `e017d84` add documentation and the test harness, not inference code. Both immutable Windows packages verified. The agent configs differ only in `cuda-prefill`; pinned affine8 weights, model revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`, FP32 KV, Mac suffix configuration, TLS data channel, Wi-Fi route, AC power, and the Pi 1.4.0 harness were held fixed. A short real request verified `cuda-metal-split` and the new per-request log before measurement.
+
+The pinned 20 HumanEval task IDs and seed 0, 300-second per-task timeout, 32,768-token advertised context and 4,096-token output cap were identical. Each task ran once per agent; failures were retained. The `main` run had 19/20 Pi completions, with HumanEval/161 marked incomplete; the branch had 19/20, with HumanEval/50 marked incomplete. No timeout occurred. Official assertions were **not** run in this speed A/B. The worker metric log covered **99/99** `main` and **103/103** branch model requests; every request reported `cuda-metal-split`. Speeds below are `sum(input tokens) / sum(prefill seconds)` and `sum(decode token intervals) / sum(decode seconds)`, not Pi wall-time throughput.
+
+| Fixed 20-task HumanEval workload | `main` packed | Branch fast | Branch change |
+|---|---:|---:|---:|
+| Worker prefill | 561.62 tok/s | 532.33 tok/s | **−5.22%** |
+| Worker decode | 66.15 tok/s | 64.28 tok/s | **−2.83%** |
+| Pi application wall time | 753.85 s | 759.34 s | +0.73% time |
+| Model requests | 99 | 103 | +4 |
+| Input / output tokens | 235,872 / 21,576 | 237,271 / 19,624 | Different request mix |
+
+The aggregate rates answer what these two real Pi runs experienced, but their different prompt lengths, request counts and output paths do **not** isolate the CUDA change. To control input and decode length, the same Mac process then ran fixed 2,325- and 18,453-token prompts with 256 forced output tokens. Each mode/input had one excluded warmup and three measured requests. The first A/B medians were:
+
+| Fixed input / 256 output | `main` packed | Branch fast | Branch time change |
+|---|---:|---:|---:|
+| 2,325: CUDA compute | 2.936 s | 2.777 s | −5.43% |
+| 2,325: complete prefill | 4.256 s | 4.343 s | **+2.04%** |
+| 2,325: decode | 64.95 tok/s | 64.57 tok/s | −0.59% speed |
+| 18,453: CUDA compute | 25.108 s | 24.871 s | **−0.94%** |
+| 18,453: complete prefill | 27.477 s | 27.508 s | **+0.11%** |
+| 18,453: decode | 52.10 tok/s | 51.09 tok/s | −1.95% speed |
+
+A later long-input A–B repeat, again three measured requests per mode, found `main`/branch medians of **28.388/27.993 s** for complete prefill and **25.123/24.755 s** for CUDA compute. Pooling the six measured long-input requests per mode gives prefill medians **27.578/27.559 s** (−0.07% time) and CUDA-compute medians **25.116/24.838 s** (−1.11% time). The ~0.9 s drift in `main` prefill between its two visits is far larger than the ~0.02–0.03 s pooled/first-pair difference. Mac decode code was identical in both modes; its small observed difference cannot be attributed to the CUDA prefix kernel. CUDA `send/write` also overlaps computation and is not a standalone network latency.
+
+**Decision:** the retained fast path has a reproducible, roughly **1% long-prefix CUDA-compute benefit** over the deployed packed path, but **no demonstrated end-to-end prefill or decode speed benefit** on this Wi-Fi 8bit/FP32-KV deployment. The branch should not be promoted on a claim of user-visible performance gain. The HumanEval application run was slightly slower and its raw worker rates were lower; the fixed-input test narrows the causal conclusion to “compute improves slightly, complete prefill is effectively unchanged.” This is not a Q8-KV or 128K target acceptance result. Raw run manifests, every Pi task, metric summaries, fixed-request results and filtered per-request service log lines are local-only under `artifacts/dual-host/humaneval-ab-6a0d55d-20261023/`; the `main`/branch `worker-metrics.log` SHA-256 values are `dfb9f8230b839bde9d5407a2fd0d5242e977cc193940a9c9f366991c22f5e4bd` / `cbeb3afbdaf8a1e9eaa844015ca9bfbdb40106d2266aa1a1020387a26b18f02b`. The two HumanEval `performance.json` files record the actual Mac/Windows commits and one-line change description. After the A/B, the branch agent was restored as the active foreground process with the same Mac serve.
