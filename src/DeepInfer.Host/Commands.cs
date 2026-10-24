@@ -10,10 +10,18 @@ public static class Commands
     public static async Task<int> RunAsync(string[] args, CancellationToken ct)
     {
         var options = new Options(args);
+        // Synthetic speculative state is a Mac metal-local diagnostic; no other command may silently ignore it.
+        if (options.Command != "split-serve" && (options.Get("speculative-synthetic", "off") != "off" || options.Flag("speculative-block-tokens")))
+            throw new ArgumentException("--speculative-synthetic and --speculative-block-tokens are valid only for split-serve (metal-local).");
+        // Harness-only diagnostics are not available on other commands (so unsupported backends never expose them).
+        if (options.Command != "speculative-check")
+            foreach (var harness in new[] { "token-ids", "output-lengths", "patterns", "blocks", "warm-runs", "formal-runs", "checkpoint-tokens", "ignore-eos", "poison-suffix" })
+                if (options.Flag(harness)) throw new ArgumentException($"--{harness} is valid only for speculative-check.");
         switch (options.Command)
         {
             case "version": Console.WriteLine(typeof(Commands).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion); break;
             case "split-check-suffix": await SuffixChecks.Run(options, ct); break;
+            case "speculative-check": await SpeculativeCheck.Run(options, ct); break;
             case "split-serve": await SplitService.RunMac(options, ct); break;
             case "split-agent": await SplitService.RunAgent(options, ct); break;
             case "split-worker": await SplitInference.Worker(options, ct); break;
@@ -65,6 +73,12 @@ public static class Commands
                                [--weights models/qwen3.6-35b-a3b-8bit-mlx --model qwen3.6-35b-a3b]
                   split-serve  --config PRIVATE_MAC_WORKER_JSON   persistent Metal worker + API
                   split-agent  --config PRIVATE_WINDOWS_JSON      persistent CUDA agent
+                  split-serve  ... [--speculative-synthetic accept-all|reject-all|offset:0..7|mixed]
+                               [--speculative-block-tokens 1..8]   default-off synthetic speculative state diagnostic
+                               (metal-local only; needs --short-prefill-tokens 262144; no real draft, no speedup)
+                  speculative-check --weights MODEL_DIR --token-ids FILE [--output DIR]
+                               [--output-lengths 128,4096] [--patterns LIST] [--blocks 1,..,8]
+                               [--warm-runs 1] [--formal-runs 3] [--checkpoint-tokens 64] [--ignore-eos] [--poison-suffix]
                   infer        --endpoint http://127.0.0.1:5200 --token-file FILE --stream
                   version      print build version and source commit
                   split-infer  --weights MODEL_DIR --listen tcp://MAC_INTERFACE:5210 --allow-remote

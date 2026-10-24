@@ -105,6 +105,10 @@ python3 scripts/deploy/acceptance.py --token-file /PATH/mac/token.txt --output a
 
 It verifies real continuous requests, output determinism, consistency between streaming text and tokens, recovery after cancellation, natural EOS, capacity rejection, queue backpressure, and PID stability. Agent disconnection/restart tests, service installation/restart tests, and the full performance threshold for `docs/QWEN36-8BIT-TARGETS.md` must be executed separately.
 
+## Synthetic Speculative State (default off)
+
+`split-serve --speculative-synthetic PATTERN [--speculative-block-tokens 1..8]` enables a metal-local diagnostic with no draft model and no speedup claim; it requires `--short-prefill-tokens 262144`, supports the deployed `--decode-attention fused-fp32 --suffix-chunk-tokens 32 --metal-scratch-tokens 128` profile and returns `timings: null` (resources are reported under `speculative.resources`). See [SPECULATIVE-STATE.md](SPECULATIVE-STATE.md).
+
 ## Metal Weight Residency Candidates
 
 `split-serve` enables `metal-residency=on` by default, establishing a Metal residency set for loaded weights, with a budget not exceeding the smaller value of the suggested working set and physical memory 80% minus 512 MiB. Weights exceeding the budget will fail explicitly, not silently falling back; KV/workspace not yet pinned for residency. Residency requests are submitted after weight upload completes, before warm-up and Ready. Default is `residency-refresh-ms=1000`; residency is extended when idle, without submitting empty GPU inference; registration is revoked when the last graph/matrix reference for resources is released.

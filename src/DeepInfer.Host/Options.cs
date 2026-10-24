@@ -3,9 +3,10 @@ namespace DeepInfer.Host;
 public sealed class Options
 {
     private readonly Dictionary<string, string> values = new(StringComparer.Ordinal);
-    private static readonly HashSet<string> Flags = ["verify", "allow-remote", "json", "stay", "trace-all", "prefill", "windows-service", "stream"];
+    private static readonly HashSet<string> Flags = ["verify", "allow-remote", "json", "stay", "trace-all", "prefill", "windows-service", "stream", "ignore-eos", "poison-suffix"];
     private static readonly HashSet<string> Keys = ["listen", "coordinator", "backend", "id", "capacity", "advertise",
-        "config", "log-file", "decode-attention", "kv-transfer", "cuda-send-overlap", "suffix-chunk-tokens", "metal-scratch-tokens", "cuda-prefill", "cuda-readback", "short-prefill-tokens", "metal-residency", "residency-refresh-ms", "data-listen", "token-file", "tls-cert", "tls-password-file", "tls-peer-sha256", "lock-file", "deadline-seconds", "queue-size", "kv", "token", "endpoint", "prompt", "prompt-file", "max-tokens", "model", "requests", "warmup", "workers", "base-port", "output", "weights", "tokenizer", "reference", "route-trace"];
+        "config", "log-file", "decode-attention", "kv-transfer", "cuda-send-overlap", "suffix-chunk-tokens", "metal-scratch-tokens", "cuda-prefill", "cuda-readback", "short-prefill-tokens", "metal-residency", "residency-refresh-ms", "data-listen", "token-file", "tls-cert", "tls-password-file", "tls-peer-sha256", "lock-file", "deadline-seconds", "queue-size", "kv", "token", "endpoint", "prompt", "prompt-file", "max-tokens", "model", "requests", "warmup", "workers", "base-port", "output", "weights", "tokenizer", "reference", "route-trace",
+        "speculative-synthetic", "speculative-block-tokens", "token-ids", "output-lengths", "patterns", "blocks", "warm-runs", "formal-runs", "checkpoint-tokens"];
     public string Command { get; }
     public Options(string[] args)
     {

@@ -72,6 +72,28 @@ try:
     for limit in ('0', '128', '129', '262144'):
         option = subprocess.run([exe, 'split-serve', '--short-prefill-tokens', limit], capture_output=True, text=True, timeout=10)
         check(option.returncode != 0 and 'token-file containing at least 32 characters is required' in option.stdout + option.stderr, 'valid local-prefill threshold reaches authentication without loading a model: ' + limit)
+    full = ['--short-prefill-tokens', '262144']
+    for arguments, expected in [(['--speculative-synthetic', 'bogus', *full], 'pattern must be accept-all'), (['--speculative-synthetic', 'offset:8', *full], 'pattern must be accept-all'),
+            (['--speculative-synthetic', 'mixed', '--speculative-block-tokens', '9', *full], 'speculative-block-tokens must be 1..8'),
+            (['--speculative-synthetic', 'mixed', '--speculative-block-tokens', '0', *full], 'speculative-block-tokens must be 1..8'),
+            (['--speculative-block-tokens', '4'], 'requires --speculative-synthetic'),
+            (['--speculative-synthetic', 'mixed'], 'requires --short-prefill-tokens 262144'),
+            (['--speculative-synthetic', 'mixed', '--short-prefill-tokens', '128'], 'requires --short-prefill-tokens 262144'),
+            (['--speculative-synthetic', 'mixed', *full, '--kv-transfer', 'incremental'], 'kv-transfer incremental')]:
+        option = subprocess.run([exe, 'split-serve', *arguments], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and expected in option.stdout + option.stderr, 'speculative synthetic option rejected before model load: ' + ' '.join(arguments[:2]))
+    for command in ('split-agent', 'split-infer', 'worker', 'bench'):
+        option = subprocess.run([exe, command, '--speculative-synthetic', 'mixed', *full], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and 'valid only for split-serve' in option.stdout + option.stderr, 'speculative synthetic option rejected outside split-serve: ' + command)
+    for option_name in ('--token-ids', '--output-lengths', '--patterns', '--blocks', '--warm-runs', '--formal-runs', '--checkpoint-tokens'):
+        option = subprocess.run([exe, 'split-serve', option_name, '1'], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and 'valid only for speculative-check' in option.stdout + option.stderr, 'harness-only option rejected outside speculative-check: ' + option_name)
+    for flag in ('--ignore-eos', '--poison-suffix'):
+        option = subprocess.run([exe, 'split-serve', flag], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and 'valid only for speculative-check' in option.stdout + option.stderr, 'harness-only flag rejected outside speculative-check: ' + flag)
+    for arguments in (['--speculative-synthetic', 'off'], ['--speculative-synthetic', 'accept-all', *full], ['--speculative-synthetic', 'mixed', *full, '--decode-attention', 'fused-fp32', '--suffix-chunk-tokens', '32', '--metal-scratch-tokens', '128'], ['--speculative-synthetic', 'mixed', *full, '--decode-attention', 'legacy'], ['--speculative-synthetic', 'offset:7', '--speculative-block-tokens', '8', *full]):
+        option = subprocess.run([exe, 'split-serve', *arguments], capture_output=True, text=True, timeout=10)
+        check(option.returncode != 0 and 'token-file containing at least 32 characters is required' in option.stdout + option.stderr, 'valid speculative options reach authentication without loading a model: ' + ' '.join(arguments[:2]))
     origin = f'http://127.0.0.1:{port()}'
     start('coordinator', '--listen', origin)
     wait_for(lambda: rpc(origin, '/health', token='')[0] == 200)

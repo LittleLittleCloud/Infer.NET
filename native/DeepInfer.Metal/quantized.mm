@@ -423,3 +423,4 @@ int di_delta_step(void *ctx,void *state,const float *q,const float *k,const floa
 }
 #include "gpu_graph.mm"
 #include "gpu_prefill.mm"
+#include "graph_snapshot.mm"

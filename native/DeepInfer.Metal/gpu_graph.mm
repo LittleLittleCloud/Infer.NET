@@ -1,6 +1,7 @@
 // Original fixed-geometry Qwen3.6 GPU executor. One submitted command buffer per
 // token; tensors, convolution history, recurrent state and KV remain on device.
 #include <array>
+#include <atomic>
 static NSString *graph_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
@@ -225,6 +226,11 @@ struct GLayer {
 };
 struct GPrefill;
 static void g_prefill_destroy(GPrefill *p);
+// Opt-in state transactions (graph_snapshot.mm). The store is created lazily, so
+// graphs that never snapshot allocate nothing; instance/epoch are two scalars.
+struct GSnapshotStore;
+static void g_snapshot_destroy(GSnapshotStore *s);
+static uint64_t g_next_graph_identity(){static std::atomic<uint64_t> next{1};return next.fetch_add(1);}
 struct GModel {
     QContext compute;
     std::array<id<MTLComputePipelineState>,GPCount> ps;
@@ -251,7 +257,9 @@ struct GModel {
     id<MTLBuffer> argValues,argIds,nextToken;
     bool concurrent=true,kvBf16=false;
     GPrefill *prefill=nullptr;
-    ~GModel(){g_prefill_destroy(prefill);}
+    GSnapshotStore *snapshots=nullptr;
+    uint64_t instanceId=g_next_graph_identity(),epoch=1; // epoch changes on every reset
+    ~GModel(){g_prefill_destroy(prefill);g_snapshot_destroy(snapshots);}
 };
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer);
 static bool g_profiling(GModel *g){return g->counters&&g->position==32;}
@@ -389,7 +397,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->epoch++;return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {

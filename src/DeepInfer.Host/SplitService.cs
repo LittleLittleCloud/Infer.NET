@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
+using DeepInfer.Backends.Speculative;
 using DeepInfer.Backends.Split;
 using DeepInfer.Core;
 using DeepInfer.Runtime;
@@ -28,8 +29,27 @@ public static class SplitService
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
         return new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
     }
-    private static void Profile(Options o)
+    // Default off. Enabling selects the Mac metal-local synthetic speculative-state diagnostic; every unsupported
+    // combination is rejected before the model loads.
+    internal static (SyntheticPattern Pattern, int Block)? Speculative(Options o, bool serve)
     {
+        var pattern = o.Get("speculative-synthetic", "off");
+        if (pattern == "off")
+        {
+            if (o.Flag("speculative-block-tokens")) throw new ArgumentException("--speculative-block-tokens requires --speculative-synthetic.");
+            return null;
+        }
+        if (!serve) throw new ArgumentException("Synthetic speculative state is valid only for split-serve (metal-local).");
+        var parsed = SyntheticPattern.Parse(pattern);
+        var block = o.Number("speculative-block-tokens", 4, 1, SyntheticPattern.MaxBlockTokens);
+        if (o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context) != Protocol.Qwen36Context)
+            throw new ArgumentException($"Synthetic speculative state requires --short-prefill-tokens {Protocol.Qwen36Context} (all requests metal-local; split prefix handoff is unsupported).");
+        if (SplitInference.IncrementalKv(o)) throw new ArgumentException("Synthetic speculative state does not support --kv-transfer incremental.");
+        return (parsed, block);
+    }
+    internal static void Profile(Options o, bool serve = false)
+    {
+        _ = Speculative(o, serve);
         // Managed environment changes below do not configure libc getenv on Unix.
         // Keep the managed chunk policy; verify native precision before warming or accepting requests.
         if (o.Get("kv", "fp32") != "fp32") throw new ArgumentException("Deployment currently accepts only verified FP32 KV; BF16 remains experimental.");
@@ -102,7 +122,8 @@ public static class SplitService
     }
     public static async Task RunMac(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        Profile(o, true); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        var speculative = Speculative(o, true);
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         var incrementalKv = SplitInference.IncrementalKv(o);
         var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
@@ -256,7 +277,7 @@ public static class SplitService
                         : null;
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
-                    for (var i = 0; i < maxTokens; i++)
+                    for (var i = 0; speculative is null && i < maxTokens; i++)
                     {
                         timeout.Token.ThrowIfCancellationRequested();
                         if (gpu.IsEnd(next) && !input.BenchmarkIgnoreEos) { finish = "eos"; break; }
@@ -277,19 +298,40 @@ public static class SplitService
                             Console.Error.WriteLine($"DECODE request={requestId} token={i+2} wallMs={ms:F3} gpuMs={gpu.GpuMilliseconds-beforeGpu:F3}");
                         }
                     }
+                    SpeculativeDiagnostics? diagnostics = null; MetalSpeculativeTarget? specTarget = null;
+                    if (speculative is { } synthetic)
+                    {
+                        // Timings stay null: emission is block-structured, so the N-1 decode interval of the SOP does not exist.
+                        var target = specTarget = gpu.BeginSpeculative(ids.Length);
+                        var run = await SpeculativeEngine.Run(target, next, maxTokens, input.BenchmarkIgnoreEos, gpu.IsEnd, synthetic.Pattern, synthetic.Block,
+                            new RolloutOracle(), timeout.Token, async emittedToken =>
+                            {
+                                if (streaming)
+                                {
+                                    var bytes = gpu.Piece(emittedToken); var chars = new char[bytes.Length + 4];
+                                    var length = decoder.GetChars(bytes, chars, false);
+                                    await Event(context, "token", new ServiceEvent(new string(chars, 0, length), emittedToken, null, null, ids.Length), timeout.Token);
+                                }
+                            }, keepDetail: input.Profile);
+                        output.AddRange(run.Output); finish = run.FinishReason; diagnostics = run.Diagnostics;
+                    }
                     if (streaming)
                     {
                         var chars = new char[4]; var length = decoder.GetChars([], chars, true);
                         if (length > 0) await Event(context, "token", new ServiceEvent(new string(chars, 0, length), null, null, null), timeout.Token);
                     }
                     var stats = gpu.Stats();
-                    var timing = InferenceTimings.Create(prefillMs, first, output.Count > 1 ? last - first : 0, output.Count) with
+                    // Enabled results carry no SOP timings; the resources the timings object would hold are reported separately.
+                    if (diagnostics is not null && specTarget is not null)
+                        diagnostics = diagnostics with { Resources = new(prefillMs, stats.Capacity, stats.KvBytes, stats.AllocatedBytes, specTarget.SnapshotHostBytes,
+                            gpu.FusedFp32Decode ? "fused-fp32" : "legacy", gpu.ExecutionProfile().ScratchTokens, gpu.PrefillChunkTokens) };
+                    var timing = speculative is not null ? null : InferenceTimings.Create(prefillMs, first, output.Count > 1 ? last - first : 0, output.Count) with
                     { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes, PrefillStages = stages };
                     var result = new InferenceResult(requestId.ToString(), registration.WorkerId, Protocol.Qwen36Model, "metal", gpu.Decode(output.ToArray()), [], false, timer.Elapsed.TotalMilliseconds,
-                        output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart, executionPath);
+                        output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart, executionPath, diagnostics);
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
-                    Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
+                    Volatile.Write(ref lastRequest, timing is null ? null : new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
                         timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
                     Interlocked.Increment(ref completed);
                 }
@@ -316,6 +358,8 @@ public static class SplitService
                 Console.WriteLine($"METAL_NATIVE_PROFILE {nativeProfile}");
                 if (nativeProfile.KvElementBytes != 4 || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
                     throw new InvalidOperationException("Native Metal profile differs from the verified FP32 deployment profile.");
+                if (speculative is not null && gpu.FusedFp32Decode != SplitInference.FusedDecode(o))
+                    throw new InvalidOperationException("Native decode attention differs from the requested option.");
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }

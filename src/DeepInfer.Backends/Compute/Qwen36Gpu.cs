@@ -158,10 +158,74 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
             if (GraphNative.PrefixKvRange(handle, layer, kind, position, count, total, p, data.Length) != 0)
                 throw new InvalidOperationException("KV range import rejected (identity, position, precision, size, target or duplicate).");
     }
+    public bool FusedFp32Decode { get; private set; }
+    public int PrefillChunk => prefillChunk;
     public void ConfigureFusedFp32Decode(bool enabled)
     {
         if (GraphNative.DecodeFusedFp32(handle, enabled ? 1 : 0) != 0)
             throw new InvalidOperationException("FP32 decode attention configuration rejected; reset and use FP32 KV/prepared scratch.");
+        FusedFp32Decode = enabled;
+    }
+    // Snapshot handles are opaque native identifiers validated by the owning graph (never pointers).
+    public ulong SnapshotCreate()
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        ulong id;
+        fixed (byte* e = error)
+            if (GraphNative.SnapshotCreate(handle, out id, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+        return id;
+    }
+    public double SnapshotCapture(ulong snapshot, ulong request)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        double ms;
+        fixed (byte* e = error)
+            if (GraphNative.SnapshotCapture(handle, snapshot, request, out ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+        return ms;
+    }
+    public double SnapshotRestore(ulong snapshot, ulong request)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        double ms;
+        fixed (byte* e = error)
+            if (GraphNative.SnapshotRestore(handle, snapshot, request, out ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+        return ms;
+    }
+    public ulong[] SnapshotInfo(ulong snapshot, ulong request)
+    {
+        var values = new ulong[12];
+        fixed (ulong* v = values)
+            if (GraphNative.SnapshotInfo(handle, snapshot, request, v, values.Length) != 0) throw new InvalidOperationException("Unknown snapshot handle.");
+        return values;
+    }
+    public void SnapshotRelease(ulong snapshot)
+    {
+        if (GraphNative.SnapshotRelease(handle, snapshot) != 0) throw new InvalidOperationException("Unknown snapshot handle.");
+    }
+    public ulong[] StateDigest()
+    {
+        var digests = new ulong[80];
+        fixed (ulong* d = digests)
+            if (GraphNative.StateDigest(handle, d, digests.Length) != 0) throw new InvalidOperationException("Cannot digest graph state.");
+        return digests;
+    }
+    public byte[] StateExport(int layer, int kind, int bytes)
+    {
+        var data = new byte[bytes];
+        fixed (byte* p = data)
+            if (GraphNative.StateExport(handle, layer, kind, p, bytes) != 0) throw new InvalidOperationException("State export rejected.");
+        return data;
+    }
+    public float[] LastLogits()
+    {
+        var logits = new float[Qwen36Weights.Vocabulary];
+        fixed (float* p = logits)
+            if (GraphNative.LastLogits(handle, p, logits.Length) != 0) throw new InvalidOperationException("Cannot read logits.");
+        return logits;
+    }
+    public void PoisonKvSuffix(int rows)
+    {
+        if (GraphNative.PoisonKvSuffix(handle, rows) != 0) throw new InvalidOperationException("KV suffix poison rejected.");
     }
     public void Dispose() => handle.Dispose();
 }
@@ -209,6 +273,24 @@ internal static unsafe partial class GraphNative
     internal static partial int PreparePrefill(GraphHandle graph, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill_scratch")]
     internal static partial int PreparePrefillScratch(GraphHandle graph, int tokens, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_create")]
+    internal static partial int SnapshotCreate(GraphHandle graph, out ulong snapshot, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_capture")]
+    internal static partial int SnapshotCapture(GraphHandle graph, ulong snapshot, ulong request, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_restore")]
+    internal static partial int SnapshotRestore(GraphHandle graph, ulong snapshot, ulong request, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_info")]
+    internal static partial int SnapshotInfo(GraphHandle graph, ulong snapshot, ulong request, ulong* values, int count);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_release")]
+    internal static partial int SnapshotRelease(GraphHandle graph, ulong snapshot);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_state_digest")]
+    internal static partial int StateDigest(GraphHandle graph, ulong* digests, int count);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_state_export")]
+    internal static partial int StateExport(GraphHandle graph, int layer, int kind, byte* data, int bytes);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_last_logits")]
+    internal static partial int LastLogits(GraphHandle graph, float* logits, int count);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_poison_kv_suffix")]
+    internal static partial int PoisonKvSuffix(GraphHandle graph, int rows);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_destroy")]
     internal static partial void Destroy(nint graph);
 }

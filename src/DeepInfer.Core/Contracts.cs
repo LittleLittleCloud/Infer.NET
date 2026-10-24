@@ -23,7 +23,9 @@ public sealed record InferenceRequest(string Prompt, int MaxTokens = 16,
 public sealed record InferenceResult(string RequestId, string WorkerId, string Model, string Backend,
     string Text, string[] Tokens, bool IsSimulation, double ComputeMs,
     int[]? TokenIds = null, int PromptTokens = 0, string? FinishReason = null,
-    long GpuDispatches = 0, double GpuComputeMs = 0, InferenceTimings? Timings = null, long GpuSubmissions = 0, string? ExecutionPath = null);
+    long GpuDispatches = 0, double GpuComputeMs = 0, InferenceTimings? Timings = null, long GpuSubmissions = 0, string? ExecutionPath = null,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    SpeculativeDiagnostics? Speculative = null);
 public sealed record WorkerRegistration(int ProtocolVersion, string WorkerId, string Endpoint,
     DeviceInfo[] Devices, ModelInfo[] Models, int Capacity, WorkerTelemetry? Telemetry = null);
 // Heartbeat sample, never a claim of instantaneous GPU utilization. Old workers omit it.

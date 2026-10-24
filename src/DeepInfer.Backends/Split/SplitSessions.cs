@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using DeepInfer.Backends.Compute;
 using DeepInfer.Backends.Models;
+using DeepInfer.Backends.Speculative;
 namespace DeepInfer.Backends.Split;
 
 // Dedicated, single-request sessions. A failed request is disposed, never reused.
@@ -25,6 +26,8 @@ public sealed class MetalSplitSession : IDisposable
     }
     public void ConfigureFusedFp32Decode(bool enabled) => graph.ConfigureFusedFp32Decode(enabled);
     public MetalExecutionProfile ExecutionProfile() => graph.ExecutionProfile();
+    public bool FusedFp32Decode => graph.FusedFp32Decode;
+    public int PrefillChunkTokens => graph.PrefillChunk;
     public int[] Tokenize(string prompt, CancellationToken ct) => tokenizer.EncodePrompt(prompt, ct);
     public int[] Tokenize(DeepInfer.Core.ChatTurn[] messages, CancellationToken ct) => tokenizer.EncodeMessages(messages, ct);
     public string Decode(int[] tokens) => tokenizer.Decode(tokens);
@@ -53,7 +56,55 @@ public sealed class MetalSplitSession : IDisposable
         }
         return next;
     }
+    // Opt-in transactional view of the single local request. Allocates native snapshot storage only on first use.
+    private ulong snapshotHandle; private ulong requestCounter;
+    public MetalSpeculativeTarget BeginSpeculative(int position)
+    {
+        if (graph.ExecutionProfile().KvElementBytes != 4) throw new NotSupportedException("Speculative state snapshots require the FP32 KV profile.");
+        if (snapshotHandle == 0) snapshotHandle = graph.SnapshotCreate();
+        return new(graph, snapshotHandle, ++requestCounter, position);
+    }
     public void Dispose() { graph.Dispose(); weights.Dispose(); device.Dispose(); }
+}
+// One request epoch over a local graph. Every operation is validated natively against the graph identity,
+// reset epoch, request id, model geometry and KV precision; this wrapper never keeps a pointer.
+public sealed class MetalSpeculativeTarget : ISpeculativeTarget
+{
+    private readonly Qwen36Gpu graph; private readonly ulong snapshot, request;
+    private int position, captured = -1; private bool abandoned;
+    internal MetalSpeculativeTarget(Qwen36Gpu graph, ulong snapshot, ulong request, int position)
+    { this.graph = graph; this.snapshot = snapshot; this.request = request; this.position = position; }
+    public int Position => position;
+    private void Live() { if (abandoned) throw new InvalidOperationException("Speculative target was abandoned; reset the graph and start a new request."); }
+    public int Consume(int token)
+    {
+        Live();
+        var next = graph.Forward(token, position, true, [], null, false);
+        position++;
+        return next;
+    }
+    public void EnsureCapacity(int tokens) { Live(); if (tokens > graph.Stats().Capacity) graph.Grow(tokens); }
+    public double Capture() { Live(); var ms = graph.SnapshotCapture(snapshot, request); captured = position; return ms; }
+    public double Restore()
+    {
+        Live();
+        if (captured < 0) throw new InvalidOperationException("No snapshot has been captured for this request.");
+        var ms = graph.SnapshotRestore(snapshot, request); position = captured; return ms;
+    }
+    public void Abandon() => abandoned = true;
+    // Diagnostics for the correctness harness only.
+    public ulong[] Digest() { Live(); return graph.StateDigest(); }
+    public float[] LastLogits() { Live(); return graph.LastLogits(); }
+    public byte[] ExportState(int layer, int tensor)
+    {
+        Live();
+        var linear = (layer + 1) % 4 != 0;
+        return graph.StateExport(layer, tensor, linear ? (tensor == 0 ? 32 * 128 * 128 * 4 : 3 * 8192 * 4) : position * 512 * 4);
+    }
+    public void PoisonKvSuffix(int rows) { Live(); graph.PoisonKvSuffix(rows); }
+    public ulong[] SnapshotInfo() { Live(); return graph.SnapshotInfo(snapshot, request); }
+    // Host memory held by this request's snapshot storage (info[8]); allocated once per graph, not per capture.
+    public long SnapshotHostBytes => (long)SnapshotInfo()[8];
 }
 public sealed unsafe class CudaPrefixSession : IDisposable
 {
