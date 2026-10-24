@@ -1,5 +1,22 @@
 [
   {
+    "id": "tensor-core-gemm-issue-38-20261023",
+    "title": "RTX 4090 Tensor Core GEMM：同精度前段快 48%，仍未快过线上 FP32",
+    "kind": "2026-10-23 · Issue #38 · native 前20层诊断",
+    "question": "向量化 affine8/group64 tile 加载后，BF16 Tensor Core 的整段 CUDA prefill 是否更快，数值是否与 main 的同精度路径一致？",
+    "setup": "当前 main 99e9776 与候选 6e5a061；Qwen3.6-35B-A3B 8bit、FP32 KV、32-token CUDA 块、RTX 4090 SM89。固定512合成tokens，每模式预热1次、正式3次；另用131 tokens检查全部层与40份状态。无网络、Mac后段和decode。",
+    "change": "候选将 BF16 Tensor Core 的 affine8 tile 加载改为每线程向量读取与共享scale/bias；FP32 packed 路径保持独立对照。",
+    "result": "main/候选 BF16前20层中位1.189/0.614秒，候选节时48.4%；同版packed FP32为0.607秒，BF16比现行FP32慢1.1%。这些均为原生前段，不是worker prefill/decode token/s。",
+    "validation": "BF16算子覆盖尾部与double-BF16 oracle；main/候选131-token逐层输出、hidden与40份状态逐位一致，512-token重复结果确定。跨精度trace相对L2 0.0397只作诊断。原agent恢复，真实双机短请求HTTP 200。未测在线BF16质量、HumanEval、显存峰值或128K。",
+    "conclusion": "确认候选对旧BF16 Tensor Core实现有大幅同精度收益；没有证据表明它提升当前FP32在线服务。保留代码候选，不以该native成绩推广为默认推理路径。首页worker prefill/decode/TTFT不填入此诊断值。",
+    "next": "提供隔离的BF16 agent开关后，先完成同精度跨机状态/logits和预先固定的质量评价，再做5题迭代及20题正式Pi对照；Q8 KV/128K另验收。",
+    "commands": [
+      "python scripts/split/benchmark-tensor-core-prefix.py --weights PINNED_PREFIX --baseline-library MAIN_DLL --candidate-library CANDIDATE_DLL --baseline-commit MAIN_SHA --candidate-commit CANDIDATE_SHA --output NEW_RUN_DIR --trials 3"
+    ],
+    "source": "docs/TENSOR-CORE-GEMM-RESULT-20261023.md",
+    "evidence": "Windows本机 artifacts/dual-host/tensor-core-precision-6e5a061/；原始日志不可公开下载，报告保留SHA-256"
+  },
+  {
     "id": "main-run-cd6f7da-20",
     "kind": "2026-10-23 · main 实测 / Pi 固定 20 题",
     "title": "合并后 main Run：531.20 / 65.08 token/s，20/20 通过",
