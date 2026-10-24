@@ -9,7 +9,7 @@ import shutil
 import subprocess
 import unittest
 
-from home_trends import ROOT, aggregate_requests, homepage, import_pi, load_data, total, validate
+from home_trends import ROOT, aggregate_requests, homepage, import_pi, load_data, total, validate, sota_summary
 
 FIXTURES = ROOT / "tests/home-trends/fixtures.json"
 
@@ -92,6 +92,25 @@ class TrendTests(unittest.TestCase):
     def setUp(self):
         self.data = load_data()
         self.first, self.rerun = historical_runs(self.data)
+
+    def test_sota_requires_official_passes_complete_coverage_and_separate_scopes(self):
+        entries = {(e['family'], e['metric']): e for e in sota_summary(self.data)}
+        self.assertAlmostEqual(entries['infernet', 'prefill']['value'], 531.19940338122)
+        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 66.4336423808985)
+        self.assertAlmostEqual(entries['external', 'prefill']['value'], 3066.6108426327232)
+        self.assertAlmostEqual(entries['external', 'decode']['value'], 148.91366915373305)
+        for entry in entries.values():
+            self.assertTrue(entry['run']['metrics']['pass']['verified'])
+        # A faster record without official checks cannot become verified SOTA.
+        candidate = next(r for r in self.data['runs'] if r['id'] == 'issue54-main99e-human20-20261024')
+        candidate['metrics']['prefill']['value'] = 1e9
+        self.assertEqual(sota_summary(self.data)[0]['run']['id'], self.first['id'])
+        # Missing native observations never become zero or an inferred speed.
+        external = next(r for r in self.data['runs'] if 'splash' in r['runtime'])
+        external['requests'][0].pop('nativeCommandDelta')
+        self.assertIsNone(sota_summary(self.data)[2]['value'])
+        self.assertIn('P / D SOTA', homepage(self.data))
+        self.assertIn('不计算跨口径加速比', homepage(self.data))
 
     def test_production_only_real_history_and_measured_worker_speed(self):
         self.assertEqual(self.first["measuredCommit"], "cd6f7da401fadf044dac13e87b415d27bb5eadfb")
