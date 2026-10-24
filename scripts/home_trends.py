@@ -339,10 +339,10 @@ def homepage(data):
         f'<span id="{key}-value" class="plot-value"></span></div>'
         f'<div class="plot" id="{key}-chart"></div><p class="note" id="{key}-coverage"></p></section>'
         for key, label, anchor in (
-            ("prefill", "Prefill · token/s", "prefill-trend"),
-            ("decode", "Decode · token/s", "decode-trend"),
+            ("prefill", "Prefill · token/s ↑", "prefill-trend"),
+            ("decode", "Decode · token/s ↑", "decode-trend"),
             ("ttft", "TTFT · ms · request median ↓", "ttft-trend"),
-            ("pass", "Task pass rate · %", "task-pass-trend")
+            ("pass", "Task pass rate · % ↑", "task-pass-trend")
         )
     )
     return f'''<div class="trends-home">
@@ -356,7 +356,8 @@ def homepage(data):
 <div class="trend-grid">{charts}</div>
 <p class="note">Measured commit axes; repeated runs at the same SHA are offset for visibility, not new commits.
 All runs appear by default. Lines connect only comparable configurations. No Pi wall-time-derived throughput.
-Missing metrics are marked 未测, not zero. The issue #54 main and BF16/2048 runs did not record client first-token timestamps, so their TTFT is unavailable.</p>
+Higher positions indicate better results in every plot: faster prefill/decode, higher pass rate, or lower TTFT.
+Missing metrics are marked 未测, not zero. The original issue #54 main and BF16/2048 runs did not record client first-token timestamps; a separate BF16/2048 retake supplies the observed TTFT point.</p>
 <section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title"></h2>
 <span id="run-state"></span><a id="permalink">Link to this run</a></div>
 <p id="run-identity"></p><div class="run-summary"><div><h3>Change</h3><p id="run-change"></p></div>

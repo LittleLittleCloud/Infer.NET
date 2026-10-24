@@ -200,6 +200,14 @@ test("main/candidate/baseline have distinct shapes and only explicit baseline br
   assert.equal(new Set(branches.map(line => line.attributes.x1)).size, 1);
   assert.equal(svg.children.filter(p => p.attributes.class === "main-line").length, 1);
 });
+test("higher plot position always means better measured performance", () => {
+  const page = render(fixtures);
+  const top = (key, id) => Number.parseFloat(page.points(key).find(p => p.dataset.run === id).style.top);
+  assert.ok(top("prefill", "fixture-main") < top("prefill", "fixture-regressed"));
+  assert.ok(top("decode", "fixture-main") < top("decode", "fixture-regressed"));
+  assert.ok(top("pass", "fixture-main") < top("pass", "fixture-failure"));
+  assert.ok(top("ttft", "fixture-zero") < top("ttft", "fixture-main"));
+});
 test("partial task totals and merge-not-remeasured identity are explicit", () => {
   const modified = JSON.parse(JSON.stringify(fixtures));
   modified.runs[0].provenance.mainCommit = "1234567890123456789012345678901234567890";

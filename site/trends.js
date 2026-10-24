@@ -129,7 +129,8 @@
       const width = model.width;
       const x = value => value;
       const max = key === "pass" ? 100 : Math.max(1, ...valid.map(p => p.value)) * 1.12;
-      const y = value => 206 - value / max * 166;
+      // Keep better results higher on every chart: throughput/pass rise, TTFT falls.
+      const y = value => key === "ttft" ? 40 + value / max * 166 : 206 - value / max * 166;
       const svg = svgNode("svg", {viewBox: `0 0 ${width} 300`, role: "img",
         "aria-label": `${specs[key].label}; measured commit horizontal axis; ${specs[key].unit} vertical axis`});
       svg.style.width = width + "px";
