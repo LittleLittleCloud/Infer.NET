@@ -47,6 +47,8 @@ jobs:
       - run: dotnet test tests/DeepInfer.Tests -c Release --no-build
       - run: python3 scripts/chat-integration.py
       - run: python3 scripts/integration.py
+      - run: python3 scripts/test-pi-humaneval.py
+      - run: python3 scripts/test-pi-humaneval-performance.py
       - run: dotnet publish src/DeepInfer.Host -c Release -r ${{ matrix.rid }} -o artifacts/native
       - if: runner.os != 'Windows'
         run: python3 scripts/integration.py --executable artifacts/native/deepinfer

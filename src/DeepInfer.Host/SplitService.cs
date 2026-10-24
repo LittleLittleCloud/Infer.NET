@@ -291,6 +291,10 @@ public static class SplitService
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
                     Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
                         timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
+                    // One completed-request record lets agent benchmarks aggregate worker timings
+                    // without sampling the last-request dashboard or logging prompt content.
+                    Console.Error.WriteLine(FormattableString.Invariant(
+                        $"INFERENCE_METRIC request={requestId} completed={DateTimeOffset.UtcNow:O} build={Build} input={ids.Length} output={output.Count} prefillMs={timing.PrefillMs:R} decodeTokens={timing.DecodeTokens} decodeMs={timing.DecodeMs:R} path={executionPath}"));
                     Interlocked.Increment(ref completed);
                 }
             }
