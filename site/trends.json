@@ -1784,6 +1784,11 @@
           "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/46"
         },
         {
+          "label": "Main Run results PR #50",
+          "role": "results-pr",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/50"
+        },
+        {
           "label": "Published raw timing summary",
           "role": "evidence",
           "url": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/main-cd6f7da-20261023/observations.json"
