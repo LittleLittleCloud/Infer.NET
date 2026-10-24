@@ -1,5 +1,20 @@
 [
   {
+    "id": "homepage-trends-evaluation-44",
+    "kind": "2026-10-23 · 首页展示验收（无新推理跑分）",
+    "title": "四项 commit 趋势与逐任务明细：验收通过，待人工 review",
+    "question": "首页能否沿被测 commit 追踪 prefill、decode、TTFT 与任务通过率，并从实验点查看完整任务耗时和 token 记录？",
+    "setup": "Issue #44 已获用户批准。Copilot CLI 1.0.103 使用 gpt-6.1-sol 实现，Codex 独立验收；最终代码 37c93b63e6dd0eb2780d7a67989b51dbba601475，基于 main a5f7bc79e2d9eab308717722c52f859bb92fe2de。",
+    "change": "新增四图、配置隔离、main/候选身份、同 SHA 复测、键盘选择和深链接；详情显示元数据、改动/结果概述及全部任务。原首页保留 progress.html，新增只读 PR 站点 CI。",
+    "result": "18 项 Python、15 项 JavaScript、18 项 Chromium 检查通过。历史两轮固定 20 题显示 100% 与 95% 通过率；P/D 和 TTFT 缺少合格原始计时，显示未取得，不画零点。复测逐题 token 数未发布，仍为 null。",
+    "validation": "1280/768/390/320px、键盘、回退/深链接、全部任务、失败分母、同 SHA 复测和候选/配置隔离均通过。合成 fixture 仅验证界面，未加入生产数据。此次未部署站点、未运行新推理 benchmark，不是 128K 性能验收。",
+    "conclusion": "建议采用首页实现；代码 PR #46 与独立结果 PR 均待 human review。此记录合入不代表实现代码已进入 main，也不代表推理速度提高。",
+    "next": "用户 review 后按 SOP 保存结果并决定是否采用代码；后续实验补充真实 worker timing 和客户端 TTFT，保留精度、配置与运行身份。",
+    "commands": [],
+    "source": "docs/HOME-TRENDS-EVALUATION-20261023.md",
+    "evidence": ""
+  },
+  {
     "id": "single-model-deployment",
     "title": "仅保留 Qwen3.6：三组件同版更新与真实验收通过",
     "kind": "2026-10-23 · 58bf950 · 部署验收",

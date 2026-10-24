@@ -1,0 +1,30 @@
+{
+  "mergeTree": "38a117527eb71aa57bff027e6051708b787754ec",
+  "mergeClean": true,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "scripts/build-progress-site.py"
+      ],
+      "exitCode": 0,
+      "output": "Built [checkout]/artifacts/issue-44/combined/artifacts/pages: 3 pages, 45 notes, 2 trend runs; revision 37c93b63e6dd0eb2780d7a67989b51dbba601475\n"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/test-home-trends.py"
+      ],
+      "exitCode": 0,
+      "output": "..................\n----------------------------------------------------------------------\nRan 18 tests in 0.088s\n\nOK\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-home-trends.js"
+      ],
+      "exitCode": 0,
+      "output": "ok 1 - defaults to latest explicitly verified main baseline, not highest pass rate\nok 2 - stable experiment/run deep link resolves both and rejects mismatched IDs\nok 3 - deep link switches incompatible configurations without mixing series\nok 4 - repeated runtime SHA has one commit tick but individually selectable runs\nok 5 - missing and real zero remain distinct, failure runs remain selectable\nok 6 - result publication never changes candidate identity\nok 7 - commit timeline and main lines ignore shuffled run and timeline input order\nok 8 - same-value repeated runs retain nonoverlapping fine/coarse targets even in large cohorts\nok 9 - production DOM renders honest empty metrics and all 20 rerun rows\nok 10 - point clicks update every metric, all task rows and pressed state without recreating focus target\nok 11 - main/candidate/baseline have distinct shapes and only explicit baseline branches\nok 12 - partial task totals and merge-not-remeasured identity are explicit\nok 13 - results absence uses explicit link role, never the display label\nok 14 - run controls select failures without speed points, real zero, and browser Back\nok 15 - configuration selector and hash navigation redraw only the selected series\n15 homepage selection/render acceptance checks passed (offline DOM, no browser layout).\n"
+    }
+  ]
+}

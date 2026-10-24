@@ -306,3 +306,5 @@ See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Nat
 ## Chat playground 与 HTTP 兼容接口
 
 TUI 默认连接当前 5200 coordinator，支持 Microsoft.Extensions.AI 流式多轮对话、无边框紧凑布局。HTTP 提供 Chat Completions、Claude Messages 和 Responses 的文本流式/非流式格式。用法、鉴权与明确的能力边界见 [Chat API / TUI](docs/CHAT-API.md)。
+
+实验的提案、人工批准、代码与结果 PR、评测及基线更新流程见 [实验 SOP](docs/EXPERIMENT-SOP.md)。
