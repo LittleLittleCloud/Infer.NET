@@ -22,7 +22,7 @@ public sealed class Qwen36Model : IInferenceModel
     {
         if (!allowDiagnosticRouting && Environment.GetEnvironmentVariable("DEEPINFER_GRAPH_FORCE_ROUTES") is not null)
             throw new NotSupportedException("Forced routing is for explicit numerical verification only; unavailable in normal inference workers.");
-        if (info.IsSimulation || info.Format != "mlx-qwen36-affine") throw new NotSupportedException("Expected quantized Qwen3.6 text weights.");
+        if (info.Id != Protocol.Qwen36Model || info.IsSimulation || info.Format != "mlx-qwen36-affine") throw new NotSupportedException("Expected quantized Qwen3.6 text weights.");
         Info = info; device = new(batchSubmissions: Environment.GetEnvironmentVariable("DEEPINFER_METAL_SERIAL") != "1");
         fuseExperts = device.BatchSubmissions && Environment.GetEnvironmentVariable("DEEPINFER_METAL_EXPERT_UNFUSED") != "1";
         try
@@ -30,7 +30,7 @@ public sealed class Qwen36Model : IInferenceModel
             weights = new(directory, device);
             try
             {
-                tokenizer = new(tokenizerPath, qwen36: true);
+                tokenizer = new(tokenizerPath);
                 if (fuseExperts && Environment.GetEnvironmentVariable("DEEPINFER_METAL_GENERIC") != "1" &&
                     Environment.GetEnvironmentVariable("DEEPINFER_METAL_HOST_EXECUTOR") != "1") gpu = new(device, weights);
             }
@@ -87,7 +87,7 @@ public sealed class Qwen36Model : IInferenceModel
         var finish = maximum < request.MaxTokens ? "context_length" : "length";
         for (var n = 0; n < maximum; n++)
         {
-            ct.ThrowIfCancellationRequested(); var next = gpu is null ? LlamaModel.ArgMax(state.Logits) : state.NextToken;
+            ct.ThrowIfCancellationRequested(); var next = gpu is null ? ArgMax(state.Logits) : state.NextToken;
             if (tokenizer.IsEnd(next) && !request.BenchmarkIgnoreEos) { finish = "eos"; break; }
             ids.Add(next); pieces.Add(System.Text.Encoding.UTF8.GetString(tokenizer.DecodePiece(0, next)));
             last = started.Elapsed.TotalMilliseconds; if (ids.Count == 1) { first = last; windowTime = first; }
@@ -149,6 +149,16 @@ public sealed class Qwen36Model : IInferenceModel
             Norm(s.X, weights.FinalNorm, s.Input, weights.Epsilon);
             weights.Classifier.Multiply(s.Input, s.Logits);
         }
+    }
+    public static int ArgMax(ReadOnlySpan<float> values)
+    {
+        var index = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (!float.IsFinite(values[i])) throw new InvalidOperationException("Model produced non-finite logits.");
+            if (values[i] > values[index]) index = i;
+        }
+        return index;
     }
     private void Linear(State s, LayerState cache, Qwen36Weights.Layer w)
     {

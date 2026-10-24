@@ -39,7 +39,7 @@ Example request:
 
 Success contains request ID, worker ID, model/backend, text, synthetic units in `tokens`, `isSimulation` and worker compute milliseconds. Coordinator forwarding preserves the worker's response. Model-specific input errors retain HTTP 400. Errors use `RpcError` (`code`, `message`) for application validation, authorization and dispatch failures. ASP.NET itself handles malformed JSON/body-limit errors and may use a different or empty body.
 
-Limits: protocol version 1; non-whitespace prompts. Qwen3.6 allows up to 8,388,608 UTF-16 characters and 32,768 output tokens; other models retain 32,768 characters / 256 outputs. The HTTP envelope is capped at 64 MiB; worker capacity 1–64; registry bounded to 1024 entries with expired-entry cleanup on registration. Device/model arrays are bounded to 32 elements each. Endpoint origins must be HTTP(S), without credentials, paths, query strings or fragments. Loopback-only registration is the default.
+Limits: protocol version 1; non-whitespace prompts. Qwen3.6 allows up to 8,388,608 UTF-16 characters and 262,144 total input/output tokens; simulation retains 32,768 characters / 256 outputs. The HTTP envelope is capped at 64 MiB; worker capacity 1–64; registry bounded to 1024 entries with expired-entry cleanup on registration. Device/model arrays are bounded to 32 elements each. Endpoint origins must be HTTP(S), without credentials, paths, query strings or fragments. Loopback-only registration is the default.
 
 ## Lifetime and failure behavior
 
@@ -62,23 +62,15 @@ Routing selects live advertisements matching model ID and an implemented backend
 
 No tensor parallelism, expert parallelism, collective transport, remote memory or checkpoint migration is implemented. HTTP JSON is the control/request plane for v0.1; a future tensor data plane can be added without sending raw device addresses between processes.
 
-## v0.2 model execution
+## Supported model
 
-`LlamaCheckpoint` validates header dimensions, exact tensor/file sizes, finite weights, a 512 MiB checkpoint limit and a 256 MiB KV cache bound before use. It supports the legacy FP32 layout, not GGUF or safetensors. `LlamaTokenizer` implements score-ranked BPE and byte fallback from `tokenizer.bin`.
+Qwen3.6-35B-A3B is the only supported real model. The dense Qwen2.5 and TinyStories loaders, CPU model backend and dedicated download/verification tools have been removed. The Metal loader requires the exact model ID and `mlx-qwen36-affine` format. CLI/demo defaults use its 8bit checkpoint; the same model's 5bit checkpoint remains supported. `synthetic-v1` remains an explicit weight-free RPC test fixture, with protocol-v1 DTO defaults preserved for compatibility.
 
-`LlamaModel` uses sequential prefill and greedy decode. Its C# state performs normalization, RoPE, causal attention, SwiGLU and KV updates. All linear projections and the final classifier go through `IMatVecDevice`; CPU uses SIMD, Metal uses the original shader through a small Objective-C++ C ABI bridge. Metal weight/input/output buffers persist across calls. This hybrid boundary is explicit in capabilities and the UI.
-
-Real-model workers require capacity 1 because the loaded model owns shared device buffers; additional workers provide independent replicas. KV state is fresh per request, so unrelated requests do not share history. Context overflow is validated after tokenization; output finishes on EOS, length or remaining context. Text is decoded from combined token bytes to preserve UTF-8 boundaries; token pieces are diagnostic and token IDs are authoritative.
-
-## v0.3 Qwen 3B
-
-Directory checkpoints use `hf-qwen2`: validated safetensors shards/index and Qwen2 config, BF16/F32 tensors, Q/K/V biases, split-half RoPE, per-model theta/epsilon and tied/untied classifier support. BF16 matrices stay 16-bit in Metal buffers; the shader converts each weight to FP32 during FP32 accumulation. This is original-weight precision, not integer quantization. CPU upload converts BF16 to FP32.
-
-The tokenizer reads the pinned official tokenizer.json, applies NFC and the Qwen2 regex pretokenizer, byte-level BPE and the default single-turn chat template. User text is encoded as text and cannot inject control-token IDs. The application context is capped at 2048 tokens for a bounded CPU KV cache, despite the larger trained context. This dense execution path supports Qwen2/Qwen2.5; other geometries, sliding-window and scaled-RoPE variants are rejected. Qwen3.6 uses the separate path below.
+Real workers require capacity 1; independent workers own separate replicas. CPU matrix primitives remain for numerical tests. CUDA is used by the Qwen3.6 prefix agent, rather than a generic full-model worker.
 
 ## Qwen3.6-35B-A3B quantized MoE execution
 
-The separate `Qwen36Model` implements the pinned 40-layer/2048-hidden text architecture. It accepts `mlx-qwen36-affine`, a checkpoint layout, through the existing model/backend contracts. `Qwen36Weights` validates geometry and shapes; reads U32 packed matrices and BF16 affine parameters directly into owned Metal buffers; and ignores the unused vision weights after validating shard metadata. All 256 experts have persistent owned Metal buffers; the engine does not load/offload experts on demand. Physical residency can still be affected by macOS memory pressure and swap. Top-8 routing chooses rows from the expert stacks, with an independent sigmoid-gated shared expert. No external inference runtime is linked or invoked.
+`Qwen36Model` implements the pinned 40-layer/2048-hidden text architecture. It accepts `mlx-qwen36-affine`, a checkpoint layout, through the existing model/backend contracts. `Qwen36Weights` validates geometry and shapes; reads U32 packed matrices and BF16 affine parameters directly into owned Metal buffers; and ignores the unused vision weights after validating shard metadata. All 256 experts have persistent owned Metal buffers; the engine does not load/offload experts on demand. Physical residency can still be affected by macOS memory pressure and swap. Top-8 routing chooses rows from the expert stacks, with an independent sigmoid-gated shared expert. No external inference runtime is linked or invoked.
 
 The default `Qwen36Gpu` / `gpu_graph.mm` path executes an entire token forward in one Metal command buffer. Embedding dequantization, all 40 layers, normalization, depthwise convolution/SiLU, Gated DeltaNet, partial RoPE, gated causal full attention, Top-8 routing, shared and selected expert SwiGLU, residual merging and classifier argmax stay on the GPU. C# owns tokenization, the greedy generation loop, cancellation and RPC. Only the next token ID returns during normal decoding; full logits and hidden states are copied only for explicit verification. The graph retains strong references to weight buffers independently of the managed matrix wrappers.
 
@@ -108,13 +100,11 @@ The tokenizer uses Qwen3.6's NFC/combining-mark-aware regex and exact non-thinki
 
 An optional independent MLX-LM process creates FP32 oracle artifacts and exits before this engine loads weights. `verify-qwen36` checks tokenizer and greedy token IDs and exports per-layer traces; `compare-qwen36.py` checks numerical tolerances without MLX. `--trace-all` exports every layer state; host-only `--route-trace PATH` exports expert choices. `DEEPINFER_GRAPH_FORCE_ROUTES` is accepted only by explicit verification and rejected by ordinary model workers. It is never used in performance measurements. Router debug captures and optional GPU timestamp sampling are diagnostics; this M5 does not expose per-dispatch timestamp sampling through the attempted Metal counter API.
 
-The stable device/model/RPC contracts remain unchanged. Legacy TinyStories uses the same transformer executor with its original adjacent-pair RoPE, tokenizer, epsilon and theta. Whole-request replica routing remains the distribution boundary.
+The stable device/model/RPC contracts remain unchanged. Whole-request replica routing and the dedicated Qwen3.6 split service remain available.
 
-## Decode phase timing and 7B
+## Decode phase timing
 
 InferenceResult/ModelOutput add optional `InferenceTimings` without changing protocol v1. Timing begins inside the worker after acquiring the model gate. Prompt forwards are timed separately; decode starts after the first emitted token, ends after the last emitted token, and counts N−1 output intervals. A final forward/argmax that discovers EOS is excluded from decode. Empty/single-output responses report zero decode intervals/rate. Benchmark aggregation divides total decoded intervals by summed decode time, rather than averaging rates.
-
-Qwen2.5-7B-Instruct uses the same dense Qwen2 execution path, with 3584 hidden dimensions, 28 layers, 28 query / 4 KV heads and a separate untied classifier. A directory with this known geometry defaults to the 7B model ID. The tokenizer/chat template and application 2048-token context limit are shared with 3B. Launchers keep a single replica by default.
 
 An opt-in mixed-precision variant adds original Metal 4 MPP BF16 operand GEMM for batched dense/grouped expert projections, retaining FP32 accumulators and activation buffers. A separate BF16 KV option halves the persistent full-attention cache allocation and is used consistently by prefill and decode. Defaults remain FP32; see [BF16 Metal](BF16-METAL.md) for exact boundaries, hardware requirements and evidence.
 

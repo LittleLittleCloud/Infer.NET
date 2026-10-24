@@ -63,7 +63,7 @@ public sealed class ContractTests
         Assert.Null(RequestValidation.Error(request));
         Assert.Equal(request, JsonSerializer.Deserialize(JsonSerializer.Serialize(request, RpcJson.Default.InferenceRequest), RpcJson.Default.InferenceRequest));
         Assert.NotNull(RequestValidation.Error(request with { MaxTokens = Protocol.MaxTokens + 1 }));
-        Assert.NotNull(RequestValidation.Error(request with { Model = Protocol.Qwen3BModel }));
+        Assert.NotNull(RequestValidation.Error(request with { Model = "removed-model" }));
         Assert.NotNull(RequestValidation.Error(new("hello", BenchmarkIgnoreEos: true)));
     }
     [Fact] public void ProfileWindowsAndAllocationStatisticsRoundTrip()
@@ -92,6 +92,19 @@ public sealed class ContractTests
         foreach (var backend in new IComputeBackend[] { new MetalBackend(), new CudaBackend() })
             await Assert.ThrowsAsync<NotSupportedException>(async () => await backend.LoadModelAsync(new("model", "gguf", false), default));
     }
+    [Theory]
+    [InlineData("qwen2.5-3b-instruct", "hf-qwen2")]
+    [InlineData("qwen2.5-7b-instruct", "hf-qwen2")]
+    [InlineData("stories15m", "llama2c-f32")]
+    [InlineData("other-model", "mlx-qwen36-affine")]
+    [InlineData(Protocol.Qwen36Model, "hf-qwen2")]
+    public async Task RetiredModelsAndFormatsAreRejectedBeforeLoading(string id, string format)
+    {
+        await Assert.ThrowsAsync<NotSupportedException>(async () =>
+            await new MetalBackend("missing-weights", "missing-tokenizer").LoadModelAsync(new(id, format, false), default));
+        if (id != Protocol.Qwen36Model) Assert.NotNull(RequestValidation.Error(new("hello", Model: id, Backend: "metal")));
+    }
+    [Fact] public void CpuModelBackendIsUnavailable() => Assert.Throws<ArgumentException>(() => BackendCatalog.Create("cpu"));
     [Fact] public void SourceGeneratedJsonRoundTripsContracts()
     {
         var worker = Worker("one");

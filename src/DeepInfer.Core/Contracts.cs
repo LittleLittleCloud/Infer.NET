@@ -5,9 +5,6 @@ public static class Protocol
 {
     public const int Version = 1;
     public const string SyntheticModel = "synthetic-v1";
-    public const string TinyStoriesModel = "stories15m";
-    public const string Qwen3BModel = "qwen2.5-3b-instruct";
-    public const string Qwen7BModel = "qwen2.5-7b-instruct";
     public const string Qwen36Model = "qwen3.6-35b-a3b";
     public const int Qwen36Context = 262144;
     public const int MaxTokens = Qwen36Context;
@@ -57,6 +54,7 @@ public static class RequestValidation
 {
     public static string? Error(InferenceRequest request)
     {
+        if (request.Model is not (Protocol.Qwen36Model or Protocol.SyntheticModel)) return "Unsupported model. Only Qwen3.6-35B-A3B is supported.";
         if (request.Messages is { } messages)
         {
             if (request.Model != Protocol.Qwen36Model) return "Structured chat is supported only by Qwen3.6 chat workers.";

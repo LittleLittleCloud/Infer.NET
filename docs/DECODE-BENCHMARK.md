@@ -1,5 +1,8 @@
 # Qwen 3B / 7B decode benchmark — 2026-10-20
 
+> Historical record: this model path was retired on 2026-10-23. Only Qwen3.6-35B-A3B remains supported. Legacy loaders, model metadata and dedicated scripts referenced below were removed; the commands and paths describe the original experiment and are no longer current instructions. See [current setup](../README.md) and [Qwen3.6 validation](QWEN36-8BIT.md).
+
+
 Actual DeepInfer.NET Native AOT execution on Apple M5 Pro / 48GB unified memory, macOS 26.6. One BF16 Metal worker was loaded at a time, behind the coordinator. Both use original BF16 weights with FP32 accumulation and C# CPU attention; there is no integer quantization. The shader/kernel implementation is the same for both model sizes.
 
 Prompt: `请用中文详细解释什么是机器学习，至少写五百字。`

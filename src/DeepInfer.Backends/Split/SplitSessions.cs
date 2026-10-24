@@ -18,7 +18,7 @@ public sealed class MetalSplitSession : IDisposable
         try
         {
             weights = new(directory, device);
-            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights, prefillScratchTokens); graph.ConfigureFusedFp32Decode(fusedFp32Decode); tokenizer = new(Path.Combine(directory, "tokenizer.json"), true); device.PrepareResidency(); }
+            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights, prefillScratchTokens); graph.ConfigureFusedFp32Decode(fusedFp32Decode); tokenizer = new(Path.Combine(directory, "tokenizer.json")); device.PrepareResidency(); }
             catch { graph?.Dispose(); weights.Dispose(); throw; }
         }
         catch { device.Dispose(); throw; }

@@ -62,7 +62,7 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
 body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p><h1>从单机基线，<br>走向双机推理。</h1>
-<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过；当前 Q8 KV 目标和 128K 性能仍未验收。</p>
+<p class="lead">项目仅保留 Qwen3.6-35B-A3B，默认使用 8bit 权重；同模型 5bit 检查点继续支持。<a href="https://github.com/LittleLittleCloud/Infer.NET/issues/45">模型清理 #45</a>。自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过；当前 Q8 KV 目标和 128K 性能仍未验收。</p>
 <div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机8K/32K已验证</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>

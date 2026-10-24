@@ -21,12 +21,9 @@ public static class Commands
             case "coordinator": await Server.RunAsync(options, false, ct); break;
             case "worker": await Server.RunAsync(options, true, ct); break;
             case "demo": await Demo.RunAsync(options, ct); break;
-            case "verify-model": await ModelVerification.RunAsync(options, ct); break;
-            case "verify-qwen": await QwenVerification.RunAsync(options, ct); break;
             case "verify-qwen36": await Qwen36Verification.RunAsync(options, ct); break;
             case "qwen-tokenize":
-                var moeTokenizer = options.Get("model", "") == Protocol.Qwen36Model;
-                var qwenTokenizer = new DeepInfer.Backends.Models.QwenTokenizer(options.Get("tokenizer", moeTokenizer ? "models/qwen3.6-35b-a3b-5bit-mlx/tokenizer.json" : "models/qwen2.5-3b-instruct/tokenizer.json"), moeTokenizer);
+                var qwenTokenizer = new DeepInfer.Backends.Models.QwenTokenizer(options.Get("tokenizer", "models/qwen3.6-35b-a3b-8bit-mlx/tokenizer.json"));
                 var text = options.Get("prompt-file", "") is { Length: > 0 } file ? await File.ReadAllTextAsync(file, ct) : options.Get("prompt", "你好");
                 Console.WriteLine(JsonSerializer.Serialize(qwenTokenizer.EncodePrompt(text, ct), RpcJson.Default.Int32Array));
                 break;
@@ -40,7 +37,7 @@ public static class Commands
                 using (var client = Client(options))
                 {
                     var result = await client.InferAsync(new(options.Get("prompt", "用一句话介绍你自己。"),
-                        options.Number("max-tokens", 48, 1, Protocol.MaxTokens), options.Get("model", options.Get("backend", "metal") == "simulation" ? Protocol.SyntheticModel : Protocol.Qwen3BModel), options.Get("backend", "metal")), ct);
+                        options.Number("max-tokens", 48, 1, Protocol.MaxTokens), options.Get("model", options.Get("backend", "metal") == "simulation" ? Protocol.SyntheticModel : Protocol.Qwen36Model), options.Get("backend", "metal")), ct);
                     Console.WriteLine(options.Flag("json") ? JsonSerializer.Serialize(result, RpcJson.Default.InferenceResult) : $"{result.Text}\nworker={result.WorkerId} backend={result.Backend} compute={result.ComputeMs:F3}ms");
                 }
                 break;
@@ -49,7 +46,7 @@ public static class Commands
                 {
                     var result = await BenchmarkAsync(client, options.Number("requests", 100, 1, 100000),
                         options.Number("warmup", 5, 0, 1000), options.Number("max-tokens", 48, 1, Protocol.MaxTokens), ct,
-                        options.Get("model", options.Get("backend", "metal") == "simulation" ? Protocol.SyntheticModel : Protocol.Qwen3BModel), options.Get("backend", "metal"),
+                        options.Get("model", options.Get("backend", "metal") == "simulation" ? Protocol.SyntheticModel : Protocol.Qwen36Model), options.Get("backend", "metal"),
                         options.Get("prompt", "请用中文详细解释什么是机器学习，至少写五百字。"));
                     var json = JsonSerializer.Serialize(result, RpcJson.Default.BenchmarkResult);
                     Console.WriteLine(json);
@@ -59,13 +56,13 @@ public static class Commands
                 break;
             case "help": case "--help": case "-h":
                 Console.WriteLine("""
-                DeepInfer.NET — distributed Native AOT inference (Qwen 3B / 7B / Qwen3.6 MoE)
-                  demo         [--workers 2] [--base-port 5100] [--stay]   launch, exercise, benchmark, stop
+                DeepInfer.NET — distributed Native AOT inference (Qwen3.6-35B-A3B)
+                  demo         [--workers 1] [--base-port 5100] [--stay]   launch, exercise, benchmark, stop
                   coordinator  [--listen http://127.0.0.1:5100]
                   worker       [--listen http://127.0.0.1:5101] [--id worker-1]
-                               [--coordinator http://127.0.0.1:5100] [--backend simulation|cpu|metal|cuda]
+                               [--coordinator http://127.0.0.1:5100] [--backend simulation|metal|cuda]
                                [--capacity 1] [--advertise http://127.0.0.1:5101]
-                               [--weights models/stories15M.bin --tokenizer models/tokenizer.bin --model stories15m]
+                               [--weights models/qwen3.6-35b-a3b-8bit-mlx --model qwen3.6-35b-a3b]
                   split-serve  --config PRIVATE_MAC_WORKER_JSON   persistent Metal worker + API
                   split-agent  --config PRIVATE_WINDOWS_JSON      persistent CUDA agent
                   infer        --endpoint http://127.0.0.1:5200 --token-file FILE --stream
@@ -75,16 +72,13 @@ public static class Commands
                   split-worker --weights PREFIX_BUNDLE --endpoint tcp://MAC_INTERFACE:5210
                                experimental resident 20/20 handoff, <=2048 total tokens
                   devices      probe hardware and available compute backends
-                  verify-qwen  [--weights models/qwen2.5-3b-instruct] [--reference artifacts/qwen-reference.json]
                   verify-qwen36 [--weights models/qwen3.6-35b-a3b-5bit-mlx]
                                 [--reference artifacts/reference/qwen36/reference.json]
-                  verify-model --weights models/stories15M.bin --tokenizer models/tokenizer.bin
-                               compare CPU/Metal GEMV, full logits, and greedy generation
                   status       [--endpoint http://127.0.0.1:5100]
                   infer        [--endpoint ...] [--prompt "Hello"] [--max-tokens 48] [--json]
-                               [--backend metal] [--model qwen2.5-3b-instruct]
+                               [--backend metal] [--model qwen3.6-35b-a3b]
                   bench        [--endpoint ...] [--requests 100] [--warmup 5] [--max-tokens 48]
-                               [--output results.json] [--model stories15m --backend metal]
+                               [--output results.json] [--model qwen3.6-35b-a3b --backend metal]
                 Shared authentication: DEEPINFER_TOKEN environment variable or --token VALUE.
                 Remote endpoints require --allow-remote on servers and a token. Use a trusted network.
                 TUI: dotnet run --project src/DeepInfer.Tui -- http://127.0.0.1:5100
