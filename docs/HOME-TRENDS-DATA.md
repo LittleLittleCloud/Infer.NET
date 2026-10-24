@@ -219,17 +219,15 @@ declaring a boundary string is not itself measurement evidence.
 
 ## Historical inventory and limitations
 
-Both Pi runs measured **e017d84e805c016d5912b5051e4c69f758056363** on all three
-runtime components. `c5913cf...` and `1571071...` identify harness history, not new
-runtime measurements. The reports explicitly establish main provenance.
+The retained Pi rerun measured **e017d84e805c016d5912b5051e4c69f758056363**
+on all three runtime components. `1571071...` identifies harness history, not
+a new runtime measurement. Its report establishes main provenance.
 
 | Run | Official pass | Task wall rows | Task input/output rows | P/D/TTFT samples |
 |---|---:|---:|---:|---:|
-| `pi-main-20261023` | 20/20 | 20/20 | 20/20 | 0/98 |
 | `pi-main-rerun-20261023` | 19/20 | 20/20 | 0/20 | 0/103 |
 
-The first run's cumulative tokens are 222744 input / 19212 output. The rerun
-published only run-level 241162 input / 19949 output, **not per-task tokens or
+The rerun published only run-level 241162 input / 19949 output, **not per-task tokens or
 request counts**. All 20 rerun rows remain present, but those fields are null;
 their task totals are incomplete. Its 9.039 s error row remains in the cohort.
 Per-task wall values are rounded to milliseconds; reported run totals retain

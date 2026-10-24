@@ -1,23 +1,23 @@
 # Pi × HumanEval 固定 20 题复测：19/20，工具调用格式故障
 
-日期：2026-10-23（America/Los_Angeles）。关联 [工具调用 Issue #32](https://github.com/LittleLittleCloud/Infer.NET/issues/32)、[评测工具 PR #42](https://github.com/LittleLittleCloud/Infer.NET/pull/42) 和 [上轮 20 题基线](PI-HUMANEVAL-MAIN-20261023.md)。本轮没有更换推理二进制：coordinator、Mac split-serve 和 Windows split-agent 仍来自 `e017d84e805c016d5912b5051e4c69f758056363`；新合并的 `15710714e537372a59b3c1ba999f31337a37017d` 仅提供相同 SHA-256 的评测脚本。它不是新推理引擎的性能测量。
+日期：2026-10-23（America/Los_Angeles）。关联 [工具调用 Issue #32](https://github.com/LittleLittleCloud/Infer.NET/issues/32) 和 [评测工具 PR #42](https://github.com/LittleLittleCloud/Infer.NET/pull/42)。coordinator、Mac split-serve 和 Windows split-agent 来自 `e017d84e805c016d5912b5051e4c69f758056363`；新合并的 `15710714e537372a59b3c1ba999f31337a37017d` 仅提供评测脚本。它不是新推理引擎的性能测量。
 
 ## 结果
 
-| 指标 | 本轮 | 上轮同题基线 |
-|---|---:|---:|
-| Pi 任务完成 / 题数 | 19 / 20 | 20 / 20 |
-| 语法有效解答 | 19 / 20 | 20 / 20 |
-| 对应 HumanEval 官方 `test` 字段通过 | **19 / 20** | 20 / 20 |
-| 超时 | 0 | 0 |
-| 整轮串行 wall time | 774.288 秒 | 808.884 秒 |
-| 单题 wall 中位 / P90 | 31.798 / 64.703 秒 | 34.497 / 61.569 秒 |
-| 模型请求 | 103 | 98 |
-| Pi 报告输入 / 输出 token | 241162 / 19949 | 222744 / 19212 |
+| 指标 | 本轮 |
+|---|---:|
+| Pi 任务完成 / 题数 | 19 / 20 |
+| 语法有效解答 | 19 / 20 |
+| 对应 HumanEval 官方 `test` 字段通过 | **19 / 20** |
+| 超时 | 0 |
+| 整轮串行 wall time | 774.288 秒 |
+| 单题 wall 中位 / P90 | 31.798 / 64.703 秒 |
+| 模型请求 | 103 |
+| Pi 报告输入 / 输出 token | 241162 / 19949 |
 
 失败题 `HumanEval/149` 在首个模型请求中用约 9.039 秒返回 `stopReason=error`、`errorMessage=terminated`，无 `solution.py`。同时 coordinator 日志记录 `System.IO.InvalidDataException: Malformed model tool call`，栈位于 `DeepInfer.Runtime.ChatTools.ParseOutput` → `DeepInfer.Host.CompatibleChat.Writer.End`。单独重试相同题目再次以同一异常失败，耗时 9.068 秒。因此本轮 19/20 是实际端到端结果，不是代码答案被断言判错；单题重试**未**拼入 20 题统计。服务随后保持 Ready、agent connected，其余题正常完成。
 
-整轮 wall time 比上轮少 34.595 秒，但失败题提前结束，不能宣称提速。只看两轮共同成功的 19 题，总 wall time 为 **765.249 秒**（本轮）与 **763.662 秒**（上轮），差约 +0.21%；背景负载和工具路径可能变化，不能据此归因性能。逐题数据见 [公开摘要 JSON](../site/pi-humaneval-rerun-summary.json)。这仍是固定 20 题、有工具的 Pi 编码任务小样本，**不是**完整 164 题官方榜单 pass@1，也不是 128K prefill/decode 验收。
+失败题提前结束，整轮 wall time 不能用于推断 worker prefill/decode 速度。逐题数据见 [公开摘要 JSON](../site/pi-humaneval-rerun-summary.json)。这仍是固定 20 题、有工具的 Pi 编码任务小样本，**不是**完整 164 题官方榜单 pass@1，也不是 128K prefill/decode 验收。
 
 ## 配置与验证
 

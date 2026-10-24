@@ -16,7 +16,7 @@ FIXTURES = ROOT / "tests/home-trends/fixtures.json"
 
 def historical_runs(data):
     by_id = {run["id"]: run for run in data["runs"]}
-    return by_id["pi-main-20261023"], by_id["pi-main-rerun-20261023"]
+    return by_id["main-cd6f7da-humaneval20-20261023"], by_id["pi-main-rerun-20261023"]
 
 
 def fixture_data():
@@ -46,7 +46,8 @@ def fixture_data():
                            "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/44"},
             "baselineRunId": None if scenario["id"] == "fixture-main" else "fixture-main",
             "reportedTotals": {}, "requests": copy.deepcopy(fixture["requests"]),
-            "requestCount": 4, "binarySha256": {}, "binaryEvidence": None
+            "requestCount": 4, "binarySha256": {}, "binaryEvidence": None,
+            "links": []
         })
         if scenario["kind"] == "main":
             run["provenance"]["mainCommit"] = scenario["commit"]
@@ -92,21 +93,23 @@ class TrendTests(unittest.TestCase):
         self.data = load_data()
         self.first, self.rerun = historical_runs(self.data)
 
-    def test_production_only_real_history_and_same_measured_sha(self):
+    def test_production_only_real_history_and_measured_worker_speed(self):
+        self.assertEqual(self.first["measuredCommit"], "cd6f7da401fadf044dac13e87b415d27bb5eadfb")
+        self.assertEqual(self.rerun["measuredCommit"], "e017d84e805c016d5912b5051e4c69f758056363")
+        self.assertGreater(self.first["metrics"]["prefill"]["value"], 500)
+        self.assertGreater(self.first["metrics"]["decode"]["value"], 60)
+        for key in ("prefill", "decode", "ttft"):
+            self.assertIsNone(self.rerun["metrics"][key]["value"])
+            self.assertEqual(self.rerun["metrics"][key]["samples"], 0)
         for run in (self.first, self.rerun):
-            self.assertEqual(run["measuredCommit"], "e017d84e805c016d5912b5051e4c69f758056363")
-            self.assertNotEqual(run["measuredCommit"], run["harnessCommit"])
             self.assertEqual(len(run["tasks"]), 20)
-            for key in ("prefill", "decode", "ttft"):
-                self.assertIsNone(run["metrics"][key]["value"])
-                self.assertEqual(run["metrics"][key]["samples"], 0)
             self.assertEqual(len(run["binarySha256"]), 4)
         self.assertNotEqual(self.first["id"], self.rerun["id"])
 
     def test_source_rows_and_totals_exactly_mapped(self):
         manifest = json.loads((ROOT / "site/trends.json").read_text())
         specs = {spec["id"]: spec for spec in manifest["imports"]}
-        for run in (self.first, self.rerun):
+        for run in (self.rerun,):
             spec = specs[run["id"]]
             source = json.loads((ROOT / spec["source"]).read_text())
             rows = source["results"].get("rows", source.get("rows"))
@@ -118,8 +121,8 @@ class TrendTests(unittest.TestCase):
             self.assertAlmostEqual(run["totals"]["wallSeconds"]["value"],
                                    source["results"]["wallSeconds"]["total"], delta=.011)
         first, rerun = self.first, self.rerun
-        self.assertEqual(first["totals"]["inputTokens"]["value"], 222744)
-        self.assertEqual(first["totals"]["outputTokens"]["value"], 19212)
+        self.assertEqual(first["totals"]["inputTokens"]["value"], 211383)
+        self.assertEqual(first["totals"]["outputTokens"]["value"], 19892)
         self.assertIsNone(rerun["totals"]["inputTokens"]["value"])
         self.assertFalse(rerun["totals"]["inputTokens"]["complete"])
         self.assertEqual(rerun["reportedTotals"]["inputTokens"], 241162)
@@ -274,11 +277,11 @@ class TrendTests(unittest.TestCase):
 
     def test_invalid_source_totals_and_official_claim(self):
         self.first["tasks"][0]["inputTokens"] += 1
-        with self.assertRaisesRegex(ValueError, "differs from source"):
+        with self.assertRaisesRegex(ValueError, "differs from cumulative model requests"):
             validate(self.data)
         manifest = json.loads((ROOT / "site/trends.json").read_text())
-        spec = next(spec for spec in manifest["imports"] if spec["id"] == self.first["id"])
-        self.assertEqual(import_pi(spec, ROOT)["measuredCommit"], self.first["measuredCommit"])
+        spec = next(spec for spec in manifest["imports"] if spec["id"] == self.rerun["id"])
+        self.assertEqual(import_pi(spec, ROOT)["measuredCommit"], self.rerun["measuredCommit"])
 
     def test_links_require_explicit_roles(self):
         del self.first["links"][0]["role"]
@@ -328,7 +331,7 @@ class TrendTests(unittest.TestCase):
         self.assertNotIn('id="device-topology"', index)
         self.assertIn('id="device-topology"', (out / "progress.html").read_text())
         self.assertEqual(index.count('class="trend-card"'), 4)
-        for run in historical_runs(json.loads((out / "trends-data.json").read_text())):
+        for run in (historical_runs(json.loads((out / "trends-data.json").read_text()))[1],):
             for task in run["tasks"]:
                 filename, pointer = task["source"].split("#/")
                 source = json.loads((out / filename).read_text())

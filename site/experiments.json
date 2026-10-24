@@ -1,5 +1,20 @@
 [
   {
+    "id": "bf16-2048-issue54",
+    "kind": "2026-10-24 · 双机 CUDA BF16 + 2048 对照 / Pi 固定 20 题",
+    "title": "CUDA 算得更快，完整 prefill 反而回退",
+    "question": "当前 main 与 BF16 Tensor Core dense GEMM + 2048-token CUDA 外层分块，哪一组提供更快的完整双机 prefill？",
+    "setup": "Qwen3.6-35B-A3B affine8/group64，FP32 KV；Mac M5 Pro 全模接管与解码，Windows RTX 4090 前20层；Mac Wi-Fi、AC；同一20题、Pi 1.4.0。main 和候选的 serve/agent 分别为 99e9776 与 93414eb；coordinator 均为 cd6f7da。",
+    "change": "候选仅显式启用 CUDA BF16 Tensor Core dense projection 和 2048-token 外层块，默认 FP32 路径不变。固定8192/128 做预热+三次正式轮次，再跑20题HumanEval并逐请求采集worker指标。",
+    "result": "固定请求 CUDA compute 10.016→6.521秒，但完整 prefill 11.519→12.944秒。HumanEval prefill 570.26→417.36 tok/s（−26.8%），decode 66.94→67.09 tok/s；两组分别104/104、116/116请求指标完整。官方断言未运行。",
+    "validation": "Windows CUDA 原生检查及130项可运行单测，Mac候选131项单测；固定请求各3次输出稳定；两组Pi各20/20任务完成，原部署恢复后真实双机请求通过。没有BF16独立长前缀数值参考、Q8 KV、128K或资源峰值验收。",
+    "conclusion": "当前2048交付节奏破坏CUDA→Mac流水线重叠，抵消计算核收益；候选仍为opt-in，代码PR #51不宜合入。Wi-Fi传输和不同Pi请求数限制因果归因。",
+    "next": "在大计算tile内更早交付hidden块，固定相同精度做chunk隔离对照；补BF16同精度状态/logit参考后，再走有线与128K验收。",
+    "commands": [],
+    "source": "docs/EXPERIMENT-54-BF16-2048-20261024.md",
+    "evidence": "Result PR #55; raw manifests, telemetry, fixed-request JSON and logs retained in local ignored artifacts with hashes in report"
+  },
+  {
     "id": "main-run-cd6f7da-20",
     "kind": "2026-10-23 · main 实测 / Pi 固定 20 题",
     "title": "合并后 main Run：531.20 / 65.08 token/s，20/20 通过",
@@ -51,11 +66,11 @@
     "title": "Pi 固定 20 题复测：19/20，工具调用格式错误可复现",
     "kind": "2026-10-23 · e017d84 运行版本 · 真实复测",
     "source": "docs/PI-HUMANEVAL-RERUN-20261023.md",
-    "question": "合并评测工具后，在相同推理部署上重跑固定 20 题，正确率和耗时是否稳定？",
+    "question": "同一旧部署版本上重跑固定 20 题时，工具调用与任务完成情况如何？",
     "setup": "coordinator/serve/agent 仍为 e017d84；8bit 权重、FP32 KV、Wi-Fi，Mac AC/High Power；Pi 1.4.0；seed 0 固定 20 题，单题 300 秒，32768 context，4096 单次输出。",
     "change": "仅评测脚本已进入 main（1571071），SHA-256 与上轮完全相同；推理二进制未变。",
-    "result": "19/20 完成且对应官方断言通过；HumanEval/149 首请求因 Malformed model tool call 失败，单题重试同样失败。整轮 774.288 秒、中位 31.798 秒、P90 64.703 秒；失败题提前结束，不能与上轮总时间直接算提速。",
-    "validation": "19 份完整代码在断网受限容器通过官方逐题 test；负对照失败。两轮共同成功的19题总 wall：765.249 对 763.662 秒。原始事件与生成代码仅本机，摘要列出散列。",
+    "result": "19/20 完成且对应官方断言通过；HumanEval/149 首请求因 Malformed model tool call 失败，单题重试同样失败。整轮 774.288 秒是 Pi 端到端时间，不能作为 worker prefill/decode 速度。",
+    "validation": "19 份完整代码在断网受限容器通过官方逐题 test；负对照失败。原始事件与生成代码仅本机，摘要列出散列。",
     "conclusion": "本轮真实端到端结果为 19/20；工具调用解析是可复现的可靠性缺口。该小样本不是完整 164 题 pass@1 或 128K 性能验收。",
     "next": "修复并覆盖异常模型工具输出后，完整重跑同一20题；保留本次失败样本和单题重试。",
     "commands": [
@@ -63,23 +78,6 @@
       "python3 scripts/eval-pi-humaneval-docker.py --results RESULT_DIRECTORY --dataset PINNED_DATASET --output FUNCTIONAL_JSON"
     ],
     "evidence": "site/pi-humaneval-rerun-summary.json；原始JSONL/事件仅本机"
-  },
-  {
-    "id": "pi-humaneval-main-20",
-    "title": "main 三组件同版：Pi 固定 20 题 20/20，整题中位 34.5 秒",
-    "kind": "2026-10-23 · e017d84 实际部署 · Pi 端到端基线",
-    "question": "三组件统一部署 main 后，Pi 在固定 20 道 HumanEval 编码任务上的整题耗时与功能通过情况如何？",
-    "setup": "Mac M5 Pro 48 GiB + RTX 4090 24 GiB；coordinator/serve/agent 源码均为 e017d84；8bit 权重、FP32 KV、Mac AC、Wi-Fi 跨机；Pi 1.4.0；seed 0 固定 20 题，独立会话、串行、每题 300 秒超时、4096 单次输出上限。",
-    "change": "将三组件从不同旧部署包统一更新至 main 的 e017d84 包；保留旧包回退。测试驱动使用尚在 PR #42 的 c5913cf harness，不改变被测运行代码。",
-    "result": "20/20 Pi 任务完成，20/20 语法有效；隔离容器运行对应 HumanEval 断言 20/20 通过。整题 wall 合计 808.884 秒，中位 34.497 秒，P90 61.569 秒，最慢 83.232 秒；98 次模型请求，输入 222744、输出 19212 token。",
-    "validation": "Mac 128/128 单测；Windows 127/128 通过、1 项平台跳过；CUDA 数值检查和两端 Native AOT 包校验通过；真实部署验收 15/15；测试后 serve Ready、coordinator worker healthy、Windows agent connected。原始日志仅本机，摘要含原始文件 SHA-256。",
-    "conclusion": "这是固定 20 题、有工具 Pi 编码代理的当前 main 源码 e017d84 端到端观测基线，不能称为硬件性能极限、完整 164 题 pass@1 或 128K/GPU 吞吐验收。",
-    "next": "在相同 20 题、同等网络和配置下做候选版本配对 A/B；另测 Q8 KV、128K 和 Windows SCM 托管。",
-    "commands": [
-      "python3 scripts/benchmark-pi-humaneval.py --cohort cohort --seed 0 --timeout 300 --token-file PRIVATE_TOKEN_FILE --output NEW_LOCAL_DIRECTORY"
-    ],
-    "source": "docs/PI-HUMANEVAL-MAIN-20261023.md",
-    "evidence": "site/pi-humaneval-main-summary.json；原始 JSONL/事件仅本机"
   },
   {
     "id": "cuda-score-reuse",
