@@ -1,0 +1,222 @@
+[
+  {
+    "taskId": "HumanEval/156",
+    "attempt": 1,
+    "wallSeconds": 7.687057167000001,
+    "inputTokens": 9040,
+    "outputTokens": 690,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/0"
+  },
+  {
+    "taskId": "HumanEval/94",
+    "attempt": 1,
+    "wallSeconds": 10.463344916000002,
+    "inputTokens": 8392,
+    "outputTokens": 1332,
+    "modelRequests": 3,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/1"
+  },
+  {
+    "taskId": "HumanEval/72",
+    "attempt": 1,
+    "wallSeconds": 8.276542083000002,
+    "inputTokens": 9310,
+    "outputTokens": 763,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/2"
+  },
+  {
+    "taskId": "HumanEval/80",
+    "attempt": 1,
+    "wallSeconds": 7.510093583,
+    "inputTokens": 8593,
+    "outputTokens": 636,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/3"
+  },
+  {
+    "taskId": "HumanEval/149",
+    "attempt": 1,
+    "wallSeconds": 11.134370208,
+    "inputTokens": 12544,
+    "outputTokens": 1057,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/4"
+  },
+  {
+    "taskId": "HumanEval/2",
+    "attempt": 1,
+    "wallSeconds": 6.910835374999998,
+    "inputTokens": 10285,
+    "outputTokens": 387,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/5"
+  },
+  {
+    "taskId": "HumanEval/35",
+    "attempt": 1,
+    "wallSeconds": 6.153145500000001,
+    "inputTokens": 8331,
+    "outputTokens": 476,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/6"
+  },
+  {
+    "taskId": "HumanEval/32",
+    "attempt": 1,
+    "wallSeconds": 91.36600345900001,
+    "inputTokens": 123825,
+    "outputTokens": 7107,
+    "modelRequests": 17,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/7"
+  },
+  {
+    "taskId": "HumanEval/146",
+    "attempt": 1,
+    "wallSeconds": 10.940265583000013,
+    "inputTokens": 14095,
+    "outputTokens": 830,
+    "modelRequests": 6,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/8"
+  },
+  {
+    "taskId": "HumanEval/137",
+    "attempt": 1,
+    "wallSeconds": 10.973580958000014,
+    "inputTokens": 11872,
+    "outputTokens": 1027,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/9"
+  },
+  {
+    "taskId": "HumanEval/97",
+    "attempt": 1,
+    "wallSeconds": 7.1667400840000255,
+    "inputTokens": 8713,
+    "outputTokens": 586,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/10"
+  },
+  {
+    "taskId": "HumanEval/154",
+    "attempt": 1,
+    "wallSeconds": 7.957145166000004,
+    "inputTokens": 8795,
+    "outputTokens": 773,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/11"
+  },
+  {
+    "taskId": "HumanEval/6",
+    "attempt": 1,
+    "wallSeconds": 8.405019541999991,
+    "inputTokens": 10893,
+    "outputTokens": 651,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/12"
+  },
+  {
+    "taskId": "HumanEval/161",
+    "attempt": 1,
+    "wallSeconds": 9.000103166999992,
+    "inputTokens": 11295,
+    "outputTokens": 704,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/13"
+  },
+  {
+    "taskId": "HumanEval/115",
+    "attempt": 1,
+    "wallSeconds": 10.885765292000002,
+    "inputTokens": 13229,
+    "outputTokens": 1031,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/14"
+  },
+  {
+    "taskId": "HumanEval/131",
+    "attempt": 1,
+    "wallSeconds": 5.867565250000013,
+    "inputTokens": 8034,
+    "outputTokens": 406,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/15"
+  },
+  {
+    "taskId": "HumanEval/162",
+    "attempt": 1,
+    "wallSeconds": 7.926961167000002,
+    "inputTokens": 8635,
+    "outputTokens": 668,
+    "modelRequests": 4,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/16"
+  },
+  {
+    "taskId": "HumanEval/50",
+    "attempt": 1,
+    "wallSeconds": 8.65583087500002,
+    "inputTokens": 10880,
+    "outputTokens": 663,
+    "modelRequests": 5,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/17"
+  },
+  {
+    "taskId": "HumanEval/47",
+    "attempt": 1,
+    "wallSeconds": 17.288407790999997,
+    "inputTokens": 17497,
+    "outputTokens": 1505,
+    "modelRequests": 7,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/18"
+  },
+  {
+    "taskId": "HumanEval/148",
+    "attempt": 1,
+    "wallSeconds": 16.061489542000004,
+    "inputTokens": 19712,
+    "outputTokens": 1522,
+    "modelRequests": 7,
+    "status": "passed",
+    "officialValidation": "passed",
+    "source": "https://github.com/LittleLittleCloud/Infer.NET/blob/main/docs/evaluations/issue61/tasks-resident40g.json#/19"
+  }
+]

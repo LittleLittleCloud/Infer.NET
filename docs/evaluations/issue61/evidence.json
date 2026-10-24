@@ -30,5 +30,89 @@
   "fixture-observer/resources.jsonl": {
     "sha256": "93af0112830c26c8fe88bec685be20493708dbaaadc82fecc7cb33b889f1ce45",
     "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g.log": {
+    "sha256": "e9df570c05d0ad7adae8f9d8732282edeb82dd6e08be5895fc1579b9e77235a3",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "run-resident40g.py": {
+    "sha256": "2f594d4886f09c92663461c0c0fe4500bbd40586c4d34c5182986af101da3893",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "analyze-resident40g.py": {
+    "sha256": "e94118039d630af389a1a0b70b65f6ef2c9f16dd3615e9084cc8bba5d471c88c",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "publish-resident40g.py": {
+    "sha256": "221f1ef86abbc5d634e11ce5a5827c13a3059ad7669d6364c0227e42b929405b",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "observe.py": {
+    "sha256": "efef2877c2fa7f1431c17c306f52841bef16bac9857e2e0a863e4ee13fb5331f",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-before.json": {
+    "sha256": "ed6b9137ad7e4297f73e319cef8565fe1a90dfd8cf90f18a9ba4d7007c0d460f",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-initial-status.json": {
+    "sha256": "95f316c60c1451dd08be0efa295de153fec4d64647d106b71466c29203949b1e",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-warmup.json": {
+    "sha256": "b39c22bc6e41de765689e28e1405a74ef12088d63c025fea27df9a2d6c75b6e4",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-cohort-start.json": {
+    "sha256": "cc60fc15fc6e56853dc18b17cad94b257b7916b52f6e6494db561a81f3d5ffea",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-cohort-end.json": {
+    "sha256": "be5be3f6bd68a10c3e75f18a43bd199d23ac1de1c25cc18aa6646df98f8be9f1",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-final-status.json": {
+    "sha256": "accf327c8ab21db30c7bfa10aab01c39d9cb2c472a980e5c6de2509ef4f87cf4",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "resident40g-exit.json": {
+    "sha256": "1ce59cd075536a8a820ae8081c9445793f68ba6b0b2062f8c71274f3f0b51c8b",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "cohort40g.log": {
+    "sha256": "657fd5f04cd4d8abcd16f98c825b7af3bc7b38ce788955f1d3f4e05db4c26a5a",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "observer40g/requests.jsonl": {
+    "sha256": "0aeed00f726612697046cf7351849e6f9a53f04c8a9708c72953902a4ea1dcca",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "observer40g/resources.jsonl": {
+    "sha256": "e9686b62c394ee4b77ffad6fa4a4b0650fe7586ad7fbdebfdcb20c2d4fc15f21",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "cohort-20-resident40g/manifest.json": {
+    "sha256": "3f51b29219075df6f09c489477944de87ca54b0e80e8deb41833c986ac03a534",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "cohort-20-resident40g/tasks.jsonl": {
+    "sha256": "873e88dc5964615e48ff66f20f7090b177f52ff284fcfb8cea2c1d88c2e3f1e2",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "cohort-20-resident40g/summary.json": {
+    "sha256": "08c3cfaf0690df1f46134f0ce77697a56fb55a8257ae69b929a1e8b00985b239",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "functional40g.json": {
+    "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "functional40g.log": {
+    "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "performance40g.json": {
+    "sha256": "1d5f658b809c0d61698930ee9adcb74296a6e86afb11f0ec5010d51d1d0760f6",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
   }
 }

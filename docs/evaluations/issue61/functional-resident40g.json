@@ -1,0 +1,110 @@
+{
+  "method": "Official HumanEval test field against complete solution.py files; one offline restricted Docker container per task",
+  "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+  "image": "python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd",
+  "negative_control": "failed",
+  "count": 20,
+  "passed": 20,
+  "rows": [
+    {
+      "task_id": "HumanEval/156",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/94",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/72",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/80",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/149",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/2",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/35",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/32",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/146",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/137",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/97",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/154",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/6",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/161",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/115",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/131",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/162",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/50",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/47",
+      "status": "passed",
+      "exit_code": 0
+    },
+    {
+      "task_id": "HumanEval/148",
+      "status": "passed",
+      "exit_code": 0
+    }
+  ]
+}
