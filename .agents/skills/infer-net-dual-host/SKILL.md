@@ -69,6 +69,8 @@ Windows 命令按实际 shell 编写；不要把 POSIX 命令直接发送到 Pow
 
 ## GitHub 项目管理
 
+所有项目修改（包括代码、文档、技能、实验记录与站点内容）必须先在功能分支提交、推送并创建 PR，等待用户明确授权合并。只有用户明确要求直接推送 `main` 时，才允许绕过 PR；“提交并推送”“更新部署”“更新站点”等请求不构成直接推送 `main` 的授权。此规则同时适用于 Mac 和 Windows 的修改与同步；不能为触发部署或 Pages 发布而直接更新 `main`。
+
 当前仓库为 `https://github.com/LittleLittleCloud/Infer.NET`（公开），进展与实验笔记站点为 `https://littlelittlecloud.github.io/Infer.NET/`。仍须核对实际 remote 与发布状态。
 
 使用 GitHub Issues 跟踪任务、依赖、阻塞、验收与实测证据；聊天用于讨论和指令，不作为唯一任务记录。
