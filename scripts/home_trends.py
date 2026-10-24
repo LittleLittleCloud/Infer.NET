@@ -347,8 +347,9 @@ def homepage(data):
     )
     return f'''<div class="trends-home">
 <h1 class="trends-title">Commit trends</h1>
-<div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate · dashed branch</span>
-<span>◎ latest verified main baseline</span><span>□ selected · Tab + Enter/Space to select</span></div>
+<div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate</span>
+<span>◎ latest verified main baseline</span><span>▫ 未测</span>
+<span>□ selected · Tab + Enter/Space to select</span></div>
 <div class="run-controls"><label>Configuration filter <select id="configuration"></select></label>
 <label>Run · all configurations <select id="run"></select></label></div>
 <p id="selection-notice" role="status"></p>
