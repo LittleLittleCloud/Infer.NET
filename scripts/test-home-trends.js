@@ -7,10 +7,15 @@ const vm = require("node:vm");
 const {execFileSync} = require("node:child_process");
 const root = path.resolve(__dirname, "..");
 const ui = require("../site/trends.js");
-const production = JSON.parse(fs.readFileSync(path.join(root, "artifacts/pages/trends-data.json"), "utf8"));
-const fixtures = JSON.parse(execFileSync("python3", ["-c",
-  "import importlib.util,json; s=importlib.util.spec_from_file_location('fixture','scripts/test-home-trends.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(json.dumps(m.fixture_data()))"
+const {production, fixtures} = JSON.parse(execFileSync("python3", ["-c",
+  "import importlib.util,json; s=importlib.util.spec_from_file_location('fixture','scripts/test-home-trends.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(json.dumps({'production': m.load_data(), 'fixtures': m.fixture_data()}))"
 ], {cwd: root, env: {...process.env, PYTHONPATH: path.join(root, "scripts")}, encoding: "utf8"}));
+const historical = {...production, runs: ["pi-main-20261023", "pi-main-rerun-20261023"].map(id => {
+  const run = production.runs.find(run => run.id === id);
+  assert.ok(run, "historical run " + id);
+  return run;
+})};
+const historicalConfigId = historical.runs[0].configurationId;
 let checks = 0;
 function test(name, run) {
   run();
@@ -18,7 +23,8 @@ function test(name, run) {
   console.log("ok " + checks + " - " + name);
 }
 test("defaults to latest explicitly verified main baseline, not highest pass rate", () => {
-  assert.equal(ui.resolveSelection(production, "").run.id, "pi-main-rerun-20261023");
+  assert.ok(production.configurations[0].latestBaselineRun);
+  assert.equal(ui.resolveSelection(production, "").run.id, production.configurations[0].latestBaselineRun);
   assert.equal(ui.resolveSelection(fixtures, "").run.id, "fixture-repeat");
 });
 test("stable experiment/run deep link resolves both and rejects mismatched IDs", () => {
@@ -26,6 +32,10 @@ test("stable experiment/run deep link resolves both and rejects mismatched IDs",
     assert.equal(ui.resolveSelection(fixtures, ui.runHash(run)).run.id, run.id);
   }
   assert.equal(ui.resolveSelection(production, "#experiment=pi-humaneval-main-20").run.id, "pi-main-20261023");
+  assert.equal(ui.resolveSelection(production, "#experiment=pi-humaneval-rerun-20").run.id, "pi-main-rerun-20261023");
+  for (const run of historical.runs) {
+    assert.equal(ui.resolveSelection(production, ui.runHash(run)).run.id, run.id);
+  }
   const mismatch = ui.resolveSelection(fixtures, "#experiment=wrong&run=fixture-candidate");
   assert.ok(mismatch.error.includes("Unknown"));
   assert.equal(mismatch.run.id, "fixture-repeat");
@@ -38,7 +48,7 @@ test("deep link switches incompatible configurations without mixing series", () 
   assert.deepEqual(points.map(p => p.run.id), ["fixture-bf16"]);
 });
 test("repeated runtime SHA has one commit tick but individually selectable runs", () => {
-  const chart = ui.chartModel(production, production.configurations[0].id, "pass");
+  const chart = ui.chartModel(historical, historicalConfigId, "pass");
   assert.equal(chart.commits.length, 1);
   assert.equal(chart.points.length, 2);
   assert.equal(chart.counts[0], 2);
@@ -71,10 +81,10 @@ test("commit timeline and main lines ignore shuffled run and timeline input orde
 });
 test("same-value repeated runs retain nonoverlapping fine/coarse targets even in large cohorts", () => {
   for (const target of [34, 44]) {
-    const many = {...production, runs: Array.from({length: 12}, (_, i) => ({
-      ...production.runs[0], id: "repeat-" + String(i).padStart(2, "0")
+    const many = {...historical, runs: Array.from({length: 12}, (_, i) => ({
+      ...historical.runs[0], id: "repeat-" + String(i).padStart(2, "0")
     }))};
-    const chart = ui.chartModel(many, production.configurations[0].id, "pass", 280, target);
+    const chart = ui.chartModel(many, historicalConfigId, "pass", 280, target);
     assert.ok(chart.width > 280);
     chart.points.forEach((point, i) => {
       assert.ok(point.x - target / 2 >= 0);
@@ -142,7 +152,7 @@ function render(data, hash = "") {
     points: key => elements[key + "-chart"].children.filter(child => child.tagName === "button")};
 }
 test("production DOM renders honest empty metrics and all 20 rerun rows", () => {
-  const page = render(production);
+  const page = render(historical, "#run=pi-main-rerun-20261023");
   assert.equal(page.points("prefill").length, 0);
   assert.equal(page.points("ttft").length, 0);
   assert.equal(page.points("pass").length, 2);

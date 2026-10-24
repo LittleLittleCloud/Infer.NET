@@ -1,5 +1,20 @@
 [
   {
+    "id": "main-run-cd6f7da-20",
+    "kind": "2026-10-23 · main 实测 / Pi 固定 20 题",
+    "title": "合并后 main Run：531.20 / 65.08 token/s，20/20 通过",
+    "question": "为已合并的首页补充确切 main 版本的真实 Run，取得 P/D、客户端 TTFT、官方任务通过率与逐题耗时/token 数。",
+    "setup": "coordinator、Mac serve、Windows agent 实际运行 cd6f7da401fadf044dac13e87b415d27bb5eadfb；Qwen3.6-35B-A3B affine8/group64、FP32 KV；Pi 1.4.0 固定 20 题、seed 0，全部串行。",
+    "change": "重新构建校验并切换同 SHA 两端版本；以两处本地观测转发采集真实 worker stream timings 和客户端有效输出时间，不修改产品推理路径。全部正式请求走 CUDA→Metal，短输入本机路由禁用，packed CUDA、suffix/scratch 128。",
+    "result": "Prefill 531.199 token/s，decode 65.085 token/s，客户端 TTFT 中位数 6986.970 ms；92/92 请求指标完整。20/20 官方任务断言通过，整轮 wall time 711.369 秒；累计输入 211383、生成 19892 tokens，零任务超时或 Pi 执行错误。",
+    "validation": "两端包散列与版本核对，稳定就绪后真实部署验收 15 项通过；每请求 worker token 数与 Pi usage 一致。官方断言在固定镜像、断网只读容器中执行；错误答案负对照真实 AssertionError，正对照退出码 0。准备阶段失败单独保留，没有混入正式题组。",
+    "conclusion": "新 main 的真实应用负载基线。工具调用输出会被 API 缓冲，TTFT 是客户端有效输出时间；观测配置与旧历史不同，不能将 wall time 差异归因于单项优化。这不是 128K 正式验收或全量 164 题榜单。",
+    "next": "新增结果按实验 SOP review；发布后确认新 main Run 默认选中且四项数据、20 题明细可追溯，再完成 Issue #44 收尾。",
+    "commands": [],
+    "source": "docs/MAIN-RUN-CD6F7DA-20261023.md",
+    "evidence": ""
+  },
+  {
     "id": "homepage-trends-evaluation-44",
     "kind": "2026-10-23 · 首页展示验收（无新推理跑分）",
     "title": "四项 commit 趋势与逐任务明细：验收通过，待人工 review",

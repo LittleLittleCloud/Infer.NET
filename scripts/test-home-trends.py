@@ -14,17 +14,24 @@ from home_trends import ROOT, aggregate_requests, homepage, import_pi, load_data
 FIXTURES = ROOT / "tests/home-trends/fixtures.json"
 
 
+def historical_runs(data):
+    by_id = {run["id"]: run for run in data["runs"]}
+    return by_id["pi-main-20261023"], by_id["pi-main-rerun-20261023"]
+
+
 def fixture_data():
     fixture = json.loads(FIXTURES.read_text())
     data = load_data()
-    original = data["runs"][0]
+    original, _ = historical_runs(data)
+    config = copy.deepcopy(next(c for c in data["configurations"]
+                                if c["id"] == original["configurationId"]))
+    data["configurations"] = [config]
     data["runs"] = []
     data["commitTimeline"] = [
         {"sha": sha, "committedAt": f"2026-01-{i + 1:02d}T00:00:00Z",
          "evidence": "fixture-input.json"}
         for i, sha in enumerate(dict.fromkeys(s["commit"] for s in fixture["scenarios"]))
     ]
-    config = data["configurations"][0]
     config["label"] = "SYNTHETIC ACCEPTANCE FIXTURE · NOT PRODUCTION"
     config["latestBaselineRun"] = "fixture-repeat"
     for scenario in fixture["scenarios"]:
@@ -83,10 +90,10 @@ def fixture_data():
 class TrendTests(unittest.TestCase):
     def setUp(self):
         self.data = load_data()
+        self.first, self.rerun = historical_runs(self.data)
 
     def test_production_only_real_history_and_same_measured_sha(self):
-        self.assertEqual(len(self.data["runs"]), 2)
-        for run in self.data["runs"]:
+        for run in (self.first, self.rerun):
             self.assertEqual(run["measuredCommit"], "e017d84e805c016d5912b5051e4c69f758056363")
             self.assertNotEqual(run["measuredCommit"], run["harnessCommit"])
             self.assertEqual(len(run["tasks"]), 20)
@@ -94,20 +101,23 @@ class TrendTests(unittest.TestCase):
                 self.assertIsNone(run["metrics"][key]["value"])
                 self.assertEqual(run["metrics"][key]["samples"], 0)
             self.assertEqual(len(run["binarySha256"]), 4)
-        self.assertNotEqual(self.data["runs"][0]["id"], self.data["runs"][1]["id"])
+        self.assertNotEqual(self.first["id"], self.rerun["id"])
 
     def test_source_rows_and_totals_exactly_mapped(self):
         manifest = json.loads((ROOT / "site/trends.json").read_text())
-        for spec, run in zip(manifest["imports"], self.data["runs"]):
+        specs = {spec["id"]: spec for spec in manifest["imports"]}
+        for run in (self.first, self.rerun):
+            spec = specs[run["id"]]
             source = json.loads((ROOT / spec["source"]).read_text())
             rows = source["results"].get("rows", source.get("rows"))
+            self.assertEqual(len(run["tasks"]), len(rows))
             for index, (task, row) in enumerate(zip(run["tasks"], rows)):
                 for field in ("taskId", "wallSeconds", "inputTokens", "outputTokens", "modelRequests"):
                     self.assertEqual(task[field], row.get(field))
                 self.assertTrue(task["source"].endswith("/" + str(index)))
             self.assertAlmostEqual(run["totals"]["wallSeconds"]["value"],
                                    source["results"]["wallSeconds"]["total"], delta=.011)
-        first, rerun = self.data["runs"]
+        first, rerun = self.first, self.rerun
         self.assertEqual(first["totals"]["inputTokens"]["value"], 222744)
         self.assertEqual(first["totals"]["outputTokens"]["value"], 19212)
         self.assertIsNone(rerun["totals"]["inputTokens"]["value"])
@@ -115,7 +125,7 @@ class TrendTests(unittest.TestCase):
         self.assertEqual(rerun["reportedTotals"]["inputTokens"], 241162)
 
     def test_official_denominator_includes_failure(self):
-        first, rerun = self.data["runs"]
+        first, rerun = self.first, self.rerun
         self.assertEqual(first["metrics"]["pass"]["value"], 100)
         self.assertEqual(rerun["metrics"]["pass"]["value"], 95)
         self.assertEqual(rerun["metrics"]["pass"]["total"], 20)
@@ -127,9 +137,11 @@ class TrendTests(unittest.TestCase):
             validate(self.data)
 
     def test_missing_assertions_are_unverified_not_completion(self):
-        run = self.data["runs"][0]
+        run = self.first
         run["tasks"][0].update({"status": "unverified", "officialValidation": "unverified"})
-        self.data["configurations"][0]["latestBaselineRun"] = None
+        for config in self.data["configurations"]:
+            if config["latestBaselineRun"] == run["id"]:
+                config["latestBaselineRun"] = None
         validate(self.data)
         self.assertIsNone(run["metrics"]["pass"]["value"])
         run["tasks"][0]["status"] = "passed"
@@ -137,7 +149,7 @@ class TrendTests(unittest.TestCase):
             validate(self.data)
 
     def test_absence_zero_and_partial_fields(self):
-        tasks = self.data["runs"][0]["tasks"][:3]
+        tasks = self.first["tasks"][:3]
         tasks[0]["inputTokens"] = None
         tasks[1]["inputTokens"] = 0
         tasks[2]["inputTokens"] = 10
@@ -150,7 +162,7 @@ class TrendTests(unittest.TestCase):
         for field, invalid in (("inputTokens", -1), ("outputTokens", 1.5),
                                ("wallSeconds", float("nan")), ("inputTokens", True)):
             data = load_data()
-            data["runs"][0]["tasks"][0][field] = invalid
+            historical_runs(data)[0]["tasks"][0][field] = invalid
             with self.subTest(field=field, value=invalid), self.assertRaises(ValueError):
                 validate(data)
 
@@ -189,11 +201,13 @@ class TrendTests(unittest.TestCase):
                 self.assertEqual(mixed["samples"], 1)
 
     def test_commit_timeline_requires_valid_unique_full_coverage(self):
+        historical_commit = next(commit for commit in self.data["commitTimeline"]
+                                 if commit["sha"] == self.first["measuredCommit"])
         stamp = subprocess.check_output(
-            ["git", "show", "-s", "--format=%ct", self.data["commitTimeline"][0]["sha"]],
+            ["git", "show", "-s", "--format=%ct", historical_commit["sha"]],
             cwd=ROOT, text=True).strip()
         from datetime import datetime, timezone
-        self.assertEqual(self.data["commitTimeline"][0]["committedAt"],
+        self.assertEqual(historical_commit["committedAt"],
                          datetime.fromtimestamp(int(stamp), timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
         for timeline in ([], self.data["commitTimeline"] * 2,
                          [dict(self.data["commitTimeline"][0], committedAt="yesterday")]):
@@ -259,15 +273,15 @@ class TrendTests(unittest.TestCase):
             validate(data)
 
     def test_invalid_source_totals_and_official_claim(self):
-        self.data["runs"][0]["tasks"][0]["inputTokens"] += 1
+        self.first["tasks"][0]["inputTokens"] += 1
         with self.assertRaisesRegex(ValueError, "differs from source"):
             validate(self.data)
         manifest = json.loads((ROOT / "site/trends.json").read_text())
-        spec = manifest["imports"][0]
-        self.assertEqual(import_pi(spec, ROOT)["measuredCommit"], self.data["runs"][0]["measuredCommit"])
+        spec = next(spec for spec in manifest["imports"] if spec["id"] == self.first["id"])
+        self.assertEqual(import_pi(spec, ROOT)["measuredCommit"], self.first["measuredCommit"])
 
     def test_links_require_explicit_roles(self):
-        del self.data["runs"][0]["links"][0]["role"]
+        del self.first["links"][0]["role"]
         with self.assertRaisesRegex(ValueError, "Explicit link role"):
             validate(self.data)
 
@@ -314,7 +328,7 @@ class TrendTests(unittest.TestCase):
         self.assertNotIn('id="device-topology"', index)
         self.assertIn('id="device-topology"', (out / "progress.html").read_text())
         self.assertEqual(index.count('class="trend-card"'), 4)
-        for run in json.loads((out / "trends-data.json").read_text())["runs"]:
+        for run in historical_runs(json.loads((out / "trends-data.json").read_text())):
             for task in run["tasks"]:
                 filename, pointer = task["source"].split("#/")
                 source = json.loads((out / filename).read_text())
