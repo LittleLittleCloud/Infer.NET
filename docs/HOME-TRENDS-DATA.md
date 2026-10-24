@@ -265,3 +265,21 @@ and event handlers through a minimal offline DOM adapter; this is not a browser
 layout or assistive-technology test. Human/Codex browser acceptance should check
 desktop 2×2 and narrow stacked layouts, native keyboard selection, no page-level
 overflow (task table scrolls locally), focus retention, deep links and Back.
+
+## Homepage P/D SOTA summary
+
+The summary added for Issue #64 is derived from normalized observations at build
+time. Eligibility is the pinned affine8/group64 model revision `e06a74e`, the same
+fixed 20-task cohort, 20/20 official assertions, and complete request coverage.
+Prefill and decode select independent winning runs; the two values need not have
+been measured together or on the same topology. Missing observations, different
+model revisions, and faster correctness-unverified candidates are excluded.
+
+Infer.NET cards use the existing worker-timing aggregates. External Splash cards
+use summed `nativeCommandDelta` token counts divided by summed command wall time,
+with a separate clock label. Those numbers do not replace null standard-timing
+chart observations. Each card links to its source run and shows topology/KV,
+measured commit, coverage and expandable configuration/date evidence. “Known SOTA”
+means the highest eligible observation collected by this site, not a global
+leaderboard. FP32 KV/no DFlash2 project runs and INT8 KV/DFlash2 external runs must
+not acquire a cross-scope speedup ratio.

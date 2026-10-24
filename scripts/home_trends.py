@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import re
 import statistics
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlencode
 
 ROOT = Path(__file__).resolve().parents[1]
 SHA = re.compile(r"^[0-9a-f]{40}$")
@@ -331,6 +331,87 @@ def load_data(root=ROOT):
     return validate(data)
 
 
+def sota_summary(data):
+    """Best verified fixed-cohort observations; retain distinct timing scopes."""
+    configs = {c['id']: c for c in data['configurations']}
+    cohort = data['configurations'][0]['plannedTasks'] if configs else []
+    revision = 'e06a74e6236a60c8367e1a3214e83d8b61b637b0'
+    entries = []
+    for family in ('infernet', 'external'):
+        for metric in ('prefill', 'decode'):
+            candidates = []
+            for run in data['runs']:
+                config = configs[run['configurationId']]
+                passed = run['metrics']['pass']
+                if (config['modelRevision'] != revision or config['plannedTasks'] != cohort
+                        or len(cohort) != 20 or not passed['verified']
+                        or passed['passed'] != 20 or passed['total'] != 20
+                        or run['requestCount'] <= 0):
+                    continue
+                external = 'splash' in run['runtime']
+                if external != (family == 'external'):
+                    continue
+                if external:
+                    requests = run['requests'] or []
+                    if len(requests) != run['requestCount']:
+                        continue
+                    counters = [r.get('nativeCommandDelta', {}) for r in requests]
+                    token_key = 'prefill_input_tokens' if metric == 'prefill' else 'decode_output_tokens'
+                    time_key = metric + '_wall_ms'
+                    if (not all(r['outcome'] == 'completed' for r in requests)
+                            or not all(all(type(c.get(k)) in (int, float)
+                                           and math.isfinite(c[k]) and c[k] >= 0
+                                           for k in (token_key, time_key)) for c in counters)):
+                        continue
+                    seconds = sum(c[time_key] for c in counters) / 1000
+                    value = sum(c[token_key] for c in counters) / seconds if seconds > 0 else None
+                else:
+                    observed = run['metrics'][metric]
+                    if observed['samples'] != run['requestCount']:
+                        continue
+                    value = observed['value']
+                if value is not None:
+                    candidates.append((value, run['id'], run, config))
+            best = max(candidates, key=lambda c: (c[0], c[1])) if candidates else None
+            entries.append({'family': family, 'metric': metric,
+                            'value': best[0] if best else None,
+                            'run': best[2] if best else None,
+                            'config': best[3] if best else None})
+    return entries
+
+
+def sota_html(data):
+    from html import escape
+    cards = []
+    for entry in sota_summary(data):
+        family, metric, run = entry['family'], entry['metric'], entry['run']
+        title = ('Infer.NET · 已验证 SOTA' if family == 'infernet' else '已知 SOTA · 外部引擎')
+        label = 'Prefill / P' if metric == 'prefill' else 'Decode / D'
+        value = f"{entry['value']:,.2f}" if entry['value'] is not None else '未取得'
+        scope = ('Worker prefill' if metric == 'prefill' else 'Worker N−1 decode') if family == 'infernet' else 'Splash · native command · DFlash2'
+        if run:
+            config = entry['config']
+            href = '#' + urlencode({'experiment': run['experimentId'], 'run': run['id']})
+            status = run['provenance']['kind'] if family == 'infernet' else '外部参考'
+            identity = f"{status} {run['measuredCommit'][:7]} · 20/20 通过"
+            devices = '双机' if 'windowsAgent' in run['runtime'] else '单机'
+            hardware = f"{devices} · {config['kv'].split(';')[0]} · {run['requestCount']}/{run['requestCount']} 请求"
+            metadata = f"{config['kv']} · {config['topology']} · {run['date']}"
+            details = f'<details><summary>配置与测量日期</summary><p>{escape(metadata)}</p></details>'
+            link = f'<a href="{escape(href, quote=True)}">查看运行与证据 →</a>'
+        else:
+            identity, hardware, details, link = '尚无满足条件的完整实测', '', '', '<a href="experiments.html">查看实验记录 →</a>'
+        cards.append(f'''<article class="sota-card {family}" aria-labelledby="sota-{family}-{metric}">
+<p class="sota-family">{title}</p><h3 id="sota-{family}-{metric}">{label}</h3>
+<p class="sota-number">{value} <span>tok/s</span></p><p class="sota-scope">{scope}</p>
+<p class="sota-identity">{escape(identity)}<br>{escape(hardware)}</p>{details}{link}</article>''')
+    return '''<section class="sota-overview" aria-labelledby="sota-heading">
+<div class="sota-heading"><h2 id="sota-heading">P / D SOTA</h2><span>Qwen3.6-35B-A3B · affine8 / group64 · 固定 HumanEval 20</span></div>
+<p class="note">已收录实测中的最高值：20/20 官方断言通过，指标覆盖完整。P、D 分别选取最佳运行，不代表同一次测试。未验证候选不计入。</p>
+<div class="sota-grid">''' + ''.join(cards) + '''</div>
+<p class="note sota-comparison">源权重相同（e06a74e）：Infer.NET 为 FP32 KV、无 DFlash2、worker 计时；Splash 为 INT8 KV、DFlash2、原生 command 计时。设备配置也分别标注，不计算跨口径加速比；“已知”限于本站收录的可追溯实测，不代表全球排行榜。</p></section>'''
+
+
 def homepage(data):
     payload = json.dumps(data, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c")
     charts = "".join(
@@ -347,6 +428,7 @@ def homepage(data):
     )
     return f'''<div class="trends-home">
 <h1 class="trends-title">Commit trends</h1>
+{sota_html(data)}
 <div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate</span>
 <span>◎ latest verified main baseline</span><span>▫ 未测</span>
 <span>□ selected · Tab + Enter/Space to select</span></div>
