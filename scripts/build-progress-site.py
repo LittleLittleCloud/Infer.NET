@@ -101,7 +101,7 @@ body += '''<p class="note"> Short outputs at each tier are averages of three; lo
 <section><div class="section-head"><h2> Fixed acceptance targets </h2>''' + source('docs/QWEN36-8BIT-TARGETS.md', 'Specification v2') + '</div>'
 body += table(['Metrics', 'Stage acceptance', 'Final goal'], target_rows)
 body += '''<p class="note"> Target device: M5 Pro 48 GiB + RTX 4090 24 GiB. 128K = 131072 tokens, no prefix cache; each tier fully warmed up once, formally at least three times. Only when correctness, resources, stability, and performance all pass is it considered complete. </p>
-The 20/20 prefill of <p>128K remains only ideally estimated: short outputs take about 68 seconds, long outputs about 82 seconds. The network already has an independent baseline, and the real pipeline already has 8K/4096 FP32 KV measurements. Q8/128K has not yet been accepted; estimates cannot be treated as having reached the target. </p></section>
+<p>The 128K 20/20 prefill pipeline remains an ideal estimate: short outputs take about 68 seconds, long outputs about 82 seconds. The network already has an independent baseline, and the real pipeline already has 8K/4096 FP32 KV measurements. Q8/128K has not yet been accepted; estimates cannot be treated as having reached the target. </p></section>
 <section><div class="section-head"><h2> experiment notes </h2><a href="experiments.html"> View full notes → </a></div><div class="cards">'''
 for n in notes:
     body += f'<a class="card" href="experiments.html#{esc(n["id"])}"><span class="eyebrow">{esc(n["kind"])}</span><h3>{esc(n["title"])}</h3><p>{esc(n["conclusion"])}</p><span> Reading log → </span></a>'
