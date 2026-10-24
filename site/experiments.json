@@ -1,5 +1,23 @@
 [
   {
+    "id": "cuda-gemm-experts-20261023",
+    "title": "CUDA GEMM / 专家：前段计算略快，双机 prefill 未提速",
+    "kind": "2026-10-23 · 8bit权重 · FP32 KV · 双机20题A/B",
+    "question": "向量化 affine8 tile 读取、packed 专家和共享专家融合，能在保持前段结果一致时加速 RTX 4090 prefill 吗？",
+    "setup": "RTX 4090 SM89前20层、M5 Pro后20层及完整decode；8bit权重、FP32 KV、Wi-Fi。同一Mac进程保持不变，仅切Windows packed/fast agent。Pi 1.4.0固定HumanEval 20题各1轮；另用2325/18453输入、256固定输出，每模式预热1轮、正式3轮，长档再做A–B复测。",
+    "change": "BF16 Tensor Core tile读取改为向量化；FP32候选 mode 6 启用 packed dense/路由专家并融合小型共享专家 gate/up，较大的路由专家融合因实测退化已排除。",
+    "result": "HumanEval真实请求main/fast：prefill 561.6/532.3 tok/s，decode 66.1/64.3 tok/s，Pi总耗时753.9/759.3秒；请求组合不同，不单独归因。固定18453输入的两轮A–B复测，CUDA计算中位约快1%，完整prefill的合并中位27.578/27.559秒，基本持平。2325输入首次A/B完整prefill反而慢约2%。",
+    "validation": "HumanEval两轮各19/20 Pi完成，分别99/99、103/103模型请求有逐请求指标，全部走双机路径；两端包、运行commit与模型精度已核对。固定输入每模式一轮预热、三轮正式测量，长档再A–B回切复测；同Mac进程不重启。原始任务、服务日志和性能JSON只保留本机，完整证据见源码报告。",
+    "conclusion": "fast模式的CUDA前段计算有约1%稳定收益，但在当前Wi-Fi拓扑下没有可确认的端到端prefill或decode收益；不应以用户可见提速为由推广。正式128K与Q8 KV门槛未验收。",
+    "next": "继续优化较大的路由专家与Mac后段/交接临界路径；未来有线网络下按同题组和固定输入复测，并维持数值、内存及128K门槛。",
+    "commands": [
+      "python3 scripts/benchmark-pi-humaneval.py --cohort cohort --seed 0 --timeout 300 --context-window 32768 --max-tokens 4096 --dataset PINNED_DATASET --token-file PRIVATE_TOKEN_FILE --output NEW_RUN_DIRECTORY",
+      "python3 scripts/summarize-pi-humaneval-performance.py --run RUN_DIRECTORY --serve-log MAC_SERVE_LOG --mac-commit VERIFIED_SHA --windows-commit VERIFIED_SHA --change DESCRIPTION --output PERFORMANCE_JSON"
+    ],
+    "source": "docs/CUDA-GEMM-EXPERT-20261023.md",
+    "evidence": "artifacts/dual-host/humaneval-ab-6a0d55d-20261023/（原始数据仅本机）"
+  },
+  {
     "id": "main-run-cd6f7da-20",
     "kind": "2026-10-23 · main 实测 / Pi 固定 20 题",
     "title": "合并后 main Run：531.20 / 65.08 token/s，20/20 通过",

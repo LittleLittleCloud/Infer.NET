@@ -21,31 +21,43 @@ public static class SplitInference
         await using(var f=File.OpenRead(bundle))
             if(!Convert.ToHexStringLower(await SHA256.HashDataAsync(f,ct)).Equals(PrefixHash,StringComparison.Ordinal))throw new InvalidDataException("Pinned prefix bundle hash mismatch.");
         Console.Error.WriteLine("Loading resident CUDA prefix...");
-        if(options.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("Invalid cuda-prefill mode.");
-        using var gpu=new CudaPrefixSession(bundle,2048,kvBytes,layerBatch:options.Get("cuda-prefill", "batch-fp32")!="serial",packedWeights:options.Get("cuda-prefill", "batch-fp32")=="batch-fp32-packed");
+        var prefillMode=options.Get("cuda-prefill", "batch-fp32");
+        if(prefillMode is not ("serial" or "batch-fp32" or "batch-fp32-packed" or "batch-fp32-fast" or "batch-bf16-tensorcore")) throw new ArgumentException("Invalid cuda-prefill mode.");
+        var prefillChunk=options.Number("cuda-prefill-chunk",32,32,2048);
+        if(prefillChunk is not (32 or 256 or 512 or 1024 or 2048) || (prefillMode=="serial" && prefillChunk!=32)) throw new ArgumentException("Invalid cuda-prefill-chunk.");
+        using var gpu=new CudaPrefixSession(bundle,2048,kvBytes,layerBatch:prefillMode!="serial",packedWeights:prefillMode=="batch-fp32-packed",fastFp32:prefillMode=="batch-fp32-fast",bf16Projections:prefillMode=="batch-bf16-tensorcore",prefillChunkTokens:prefillChunk);
         using var client=new TcpClient{NoDelay=true};await client.ConnectAsync(endpoint.Host,endpoint.Port,ct);
         var wire=await SplitWire.ConnectAsync(client.GetStream(),token,false,Guid.NewGuid(),ct,kvBytes);
-        await ServePrefix(gpu, wire, ct);
+        await ServePrefix(gpu, wire, ct, prefillChunk:prefillChunk);
     }
-    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false)
+    internal static async Task ServePrefix(CudaPrefixSession gpu, SplitWire wire, CancellationToken ct, SplitWire.Frame? first = null, bool overlapSend = false, int prefillChunk = 32)
     {
+        if(prefillChunk is not (32 or 256 or 512 or 1024 or 2048)) throw new ArgumentException("Unsupported CUDA prefill chunk.");
         var start=first ?? await wire.ReceiveAsync(ct);if(start.Kind!=SplitWire.Start)throw new InvalidDataException("Expected split request.");
         var tokens=Ints(start.Data);gpu.Reserve(tokens.Length);var verify=(start.Tensor&1)!=0;var incremental=(start.Tensor&2)!=0;var timer=Stopwatch.StartNew();
         double computeMs=0, stateExportMs=0, sendMs=0;
         long sentBytes=0;
         IEnumerable<SplitWire.Frame[]> Chunks()
         {
-            for(var offset=0;offset<tokens.Length;offset+=32)
+            var step=verify?32:prefillChunk;
+            for(var offset=0;offset<tokens.Length;offset+=step)
             {
-                ct.ThrowIfCancellationRequested();var count=Math.Min(32,tokens.Length-offset);
+                ct.ThrowIfCancellationRequested();var count=Math.Min(step,tokens.Length-offset);
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
-                var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden)) };
-                if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset,count,Bytes(trace)));
-                if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
-                    frames.Add(new(SplitWire.KvRange,layer,kind,offset,count,gpu.KvRange(layer,kind,offset,count)));
                 computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                var frames=new List<SplitWire.Frame>();
+                for(var at=0;at<count;at+=32)
+                {
+                    var take=Math.Min(32,count-at);
+                    frames.Add(new(SplitWire.Hidden,20,0,offset+at,take,Bytes(hidden.AsSpan(at*2048,take*2048))));
+                    if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset+at,take,Bytes(trace.AsSpan(at*20*2048,take*20*2048))));
+                    began=Stopwatch.GetTimestamp();
+                    if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
+                        frames.Add(new(SplitWire.KvRange,layer,kind,offset+at,take,gpu.KvRange(layer,kind,offset+at,take)));
+                    computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                }
                 yield return frames.ToArray();
             }
         }
@@ -58,7 +70,7 @@ public static class SplitInference
         }
         if(overlapSend)await SplitFramePump.RunBatches(Chunks(),Send,ct);
         else foreach(var batch in Chunks())foreach(var frame in batch)await Send(frame,ct);
-        Console.Error.WriteLine($"PREFIX_CHUNKS overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
+        Console.Error.WriteLine($"PREFIX_CHUNKS chunk={(verify?32:prefillChunk)} overlap={overlapSend} incrementalKv={incremental} computeMs={computeMs:F3} sendMs={sendMs:F3} elapsedMs={timer.Elapsed.TotalMilliseconds:F3}");
         for(var layer=0;layer<20;layer++)for(var tensor=0;tensor<2;tensor++)
             if(!incremental||(layer+1)%4!=0)
             {
@@ -184,6 +196,7 @@ public static class SplitInference
     private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };
     private static string RequireToken(Options o)=>o.Token is {Length:>=32} t?t:throw new ArgumentException("Set DEEPINFER_TOKEN to a random secret of at least 32 characters.");
     private static byte[] Bytes(float[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
+    private static byte[] Bytes(ReadOnlySpan<float> x)=>MemoryMarshal.AsBytes(x).ToArray();
     private static byte[] Bytes(int[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
     private static int[] Ints(byte[] x)=>MemoryMarshal.Cast<byte,int>(x).ToArray();
     private static float[] Floats(byte[] x)=>MemoryMarshal.Cast<byte,float>(x).ToArray();

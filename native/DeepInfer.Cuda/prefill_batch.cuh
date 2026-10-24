@@ -13,7 +13,7 @@ __global__ void prefill_gemv_bf16(Matrix m, const float *x, float *y, int tokens
     total=sum32(total);if(lane==0)y[token*m.rows+row]=total;
 }
 // CTA output: 32 token rows x 64 output columns. Four warps each own two 16x16 tiles.
-__global__ void prefill_gemm_bf16(Matrix m, const float *x, float *y, int tokens) {
+template<bool Packed> __global__ void prefill_gemm_bf16(Matrix m, const float *x, float *y, int tokens) {
     using namespace nvcuda;
     __shared__ __align__(32) __nv_bfloat16 sa[32*32], sb[64*32];
     __shared__ __align__(32) float result[4*512];
@@ -26,9 +26,30 @@ __global__ void prefill_gemm_bf16(Matrix m, const float *x, float *y, int tokens
             int token=token0+i/32, col=base+i%32;
             sa[i]=__float2bfloat16_rn(token<tokens && col<m.cols ? x[token*m.cols+col] : 0.f);
         }
-        for(int i=tid;i<64*32;i+=128) {
-            int row=row0+i/32,col=base+i%32;
-            sb[i]=__float2bfloat16_rn(row<m.rows && col<m.cols ? weight(m,row,col) : 0.f);
+        if constexpr(Packed) {
+            // Eight adjacent weights share one affine scale and bias.
+            for(int i=tid*8;i<64*32;i+=128*8) {
+                int row=row0+i/32,col=base+i%32;
+                if(row<m.rows && col<m.cols && m.cols%64==0) {
+                    size_t index=size_t(row)*m.cols+col;
+                    uint2 packed=*reinterpret_cast<const uint2*>(m.w+index);
+                    float scale=bf(m.s[index/64]),bias=bf(m.b[index/64]);
+                    #pragma unroll
+                    for(int j=0;j<8;j++) {
+                        unsigned byte=(j<4?packed.x:packed.y)>>(8*(j&3));
+                        sb[i+j]=__float2bfloat16_rn((float(byte&255)*scale)+bias);
+                    }
+                } else {
+                    #pragma unroll
+                    for(int j=0;j<8;j++)
+                        sb[i+j]=__float2bfloat16_rn(row<m.rows && col+j<m.cols ? weight(m,row,col+j) : 0.f);
+                }
+            }
+        } else {
+            for(int i=tid;i<64*32;i+=128) {
+                int row=row0+i/32,col=base+i%32;
+                sb[i]=__float2bfloat16_rn(row<m.rows && col<m.cols ? weight(m,row,col) : 0.f);
+            }
         }
         __syncthreads();
         for(int k=0;k<32;k+=16) {

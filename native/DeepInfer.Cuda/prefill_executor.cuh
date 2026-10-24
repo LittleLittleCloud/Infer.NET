@@ -16,11 +16,13 @@ struct ChunkProfile {
 static void prepare_chunk(Model *g) {
     auto &p=g->chunk;
     if(!p.prepared) {
-#define CHUNK(name,n) p.name=g->alloc<float>(size_t(32)*(n))
+#define CHUNK(name,n) p.name=g->alloc<float>(size_t(g->prefillChunkTokens)*(n))
         CHUNK(x,2048);CHUNK(norm,2048);CHUNK(qkv,8192);CHUNK(z,4096);CHUNK(a,32);CHUNK(b,32);
         CHUNK(conv,8192);CHUNK(attention,4096);CHUNK(k,512);CHUNK(v,512);CHUNK(q,4096);CHUNK(out,2048);
         CHUNK(router,256);CHUNK(prob,8);CHUNK(eg,4096);CHUNK(eu,4096);CHUNK(eo,16384);
-        CHUNK(sg,512);CHUNK(su,512);CHUNK(so,2048);CHUNK(sr,1);p.ids=g->alloc<int>(32*8);p.tokens=g->alloc<int>(32);
+        CHUNK(sg,512);CHUNK(su,512);CHUNK(so,2048);CHUNK(sr,1);
+        p.ids=g->alloc<int>(size_t(g->prefillChunkTokens)*8);
+        p.tokens=g->alloc<int>(g->prefillChunkTokens);
 #undef CHUNK
         p.prepared=true;
     }
@@ -32,13 +34,13 @@ static void prepare_chunk(Model *g) {
 }
 static void chunk_mv(Model *g,Matrix m,const float *x,float *y,int count,const int *ids=nullptr,int experts=1,bool routed=false) {
     if(g->bf16Projections && !ids && m.rows>=256 && m.cols>=256)
-        prefill_gemm_bf16<<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
-    else if(g->densePacked && !ids && count>=4 && m.rows>=256 && m.cols%256==0) {
+        prefill_gemm_bf16<true><<<dim3((m.rows+63)/64,(count+31)/32),128>>>(m,x,y,count);
+    else if((g->fastFp32 || g->densePacked) && !ids && count>=4 && m.rows>=256 && m.cols%256==0) {
         if(m.cols<=2048)chunk_dense_reuse<8,true><<<dim3((m.rows+3)/4,(count+7)/8),128>>>(m,x,y,count);
         else chunk_dense_reuse<4,true><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
     } else if(g->denseReuse && !ids && count>=4 && m.rows>=256)
         chunk_dense_reuse<4><<<dim3((m.rows+3)/4,(count+3)/4),128>>>(m,x,y,count);
-    else if(g->expertPacked && m.cols%256==0)
+    else if((g->fastFp32 || g->expertPacked) && ids && m.cols%256==0)
         chunk_gemv_packed<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
     else chunk_gemv<<<dim3((m.rows+3)/4,experts,count),128>>>(m,x,y,ids,routed);
 }
@@ -63,18 +65,28 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
             profile.mark(0);
             if(g->kvBf16) {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
-                chunk_attend<<<dim3(16,count),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv,p.attention,pos,g->capacity);
+                for(int offset=0;offset<count;offset+=32){
+                    int tile=std::min(32,count-offset);
+                    chunk_scores<<<dim3((pos+offset+tile+3)/4,16,tile),128>>>(p.q+size_t(offset)*4096,(__nv_bfloat16*)v.keys,p.scores,pos+offset,g->capacity);
+                    chunk_attend<<<dim3(16,tile),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv+size_t(offset)*8192,p.attention+size_t(offset)*4096,pos+offset,g->capacity);
+                }
             } else {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(float*)v.keys,(float*)v.values,pos,g->eps,g->theta);
-                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(float*)v.keys,p.scores,pos,g->capacity);
-                chunk_attend<<<dim3(16,count),256>>>(p.scores,(float*)v.values,p.qkv,p.attention,pos,g->capacity);
+                for(int offset=0;offset<count;offset+=32){
+                    int tile=std::min(32,count-offset);
+                    chunk_scores<<<dim3((pos+offset+tile+3)/4,16,tile),128>>>(p.q+size_t(offset)*4096,(float*)v.keys,p.scores,pos+offset,g->capacity);
+                    chunk_attend<<<dim3(16,tile),256>>>(p.scores,(float*)v.values,p.qkv+size_t(offset)*8192,p.attention+size_t(offset)*4096,pos+offset,g->capacity);
+                }
             }
         }
         profile.mark((l+1)%4 ? 1 : 2);
         chunk_mv(g,m[6],p.attention,p.out,count);chunk_norm<<<count,256>>>(p.x,p.out,v.p+2048,p.norm,g->eps,2048);
         profile.mark(3);
-        chunk_mv(g,m[7],p.norm,p.router,count);chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);chunk_mv(g,m[14],p.norm,p.sr,count);
+        chunk_mv(g,m[7],p.norm,p.router,count);
+        if(g->fastFp32 && m[11].rows==m[12].rows && m[11].cols==m[12].cols && m[11].cols%256==0)
+            chunk_expert_gate_up_packed<<<dim3((m[11].rows+3)/4,1,count),128>>>(m[11],m[12],p.norm,p.sg,p.su,nullptr);
+        else {chunk_mv(g,m[11],p.norm,p.sg,count);chunk_mv(g,m[12],p.norm,p.su,count);}
+        chunk_mv(g,m[14],p.norm,p.sr,count);
         chunk_top8<<<count,32>>>(p.router,p.ids,p.prob);activation<<<count*4,128>>>(p.sg,p.su,count*512);
         profile.mark(4);
         chunk_mv(g,m[8],p.norm,p.eg,count,p.ids,8);chunk_mv(g,m[9],p.norm,p.eu,count,p.ids,8);
