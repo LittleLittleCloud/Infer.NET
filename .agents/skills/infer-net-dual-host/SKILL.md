@@ -16,6 +16,8 @@ description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务�
 
 在仓库中按任务读取：
 
+- `docs/EXPERIMENT-SOP.md`：用户已批准的实验提案、人工批准、代码/结果 PR、评测与基线更新流程；每个实验仍需单独 approve。
+
 - `docs/QWEN36-8BIT-TARGETS.md`：固定性能、精度、计时、正确性和资源门槛的唯一来源；开始调优或验收前必须读。
 - `docs/QWEN36-8BIT.md`：已有单机证据、失败记录、内存限制和双机估算。
 - `README.md`、`scripts/`、`native/`、`src/`：当前启动、构建和真实实现状态。文档中的计划不证明代码已经实现。

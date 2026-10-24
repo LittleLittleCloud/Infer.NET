@@ -1,0 +1,228 @@
+{
+  "browserVersion": "149.0.7827.55",
+  "playwrightVersion": "1.64.1",
+  "productionRuns": 2,
+  "plannedTasksPerRun": 20,
+  "checks": [
+    {
+      "name": "Four production panels, no former homepage sections",
+      "passed": true
+    },
+    {
+      "name": "Default main rerun retains failed task and fixed denominator",
+      "passed": true
+    },
+    {
+      "name": "Missing history not plotted as zero",
+      "passed": true
+    },
+    {
+      "name": "Original 20-task history matches source token totals and first row",
+      "passed": true
+    },
+    {
+      "name": "Run selection permalink reload and browser Back",
+      "passed": true
+    },
+    {
+      "name": "Keyboard selection updates all details without losing focus",
+      "passed": true
+    },
+    {
+      "name": "Responsive layout and readable chart labels at 1280px",
+      "passed": true,
+      "details": {
+        "viewport": 1280,
+        "width": 1280,
+        "labels": [
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15
+        ],
+        "charts": [
+          {
+            "w": 532,
+            "h": 286
+          },
+          {
+            "w": 532,
+            "h": 286
+          },
+          {
+            "w": 532,
+            "h": 286
+          },
+          {
+            "w": 532,
+            "h": 286
+          }
+        ]
+      }
+    },
+    {
+      "name": "Responsive layout and readable chart labels at 768px",
+      "passed": true,
+      "details": {
+        "viewport": 768,
+        "width": 768,
+        "labels": [
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15
+        ],
+        "charts": [
+          {
+            "w": 336,
+            "h": 286
+          },
+          {
+            "w": 336,
+            "h": 286
+          },
+          {
+            "w": 336,
+            "h": 286
+          },
+          {
+            "w": 336,
+            "h": 286
+          }
+        ]
+      }
+    },
+    {
+      "name": "Responsive layout and readable chart labels at 390px",
+      "passed": true,
+      "details": {
+        "viewport": 390,
+        "width": 390,
+        "labels": [
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15
+        ],
+        "charts": [
+          {
+            "w": 350,
+            "h": 286
+          },
+          {
+            "w": 350,
+            "h": 286
+          },
+          {
+            "w": 350,
+            "h": 286
+          },
+          {
+            "w": 350,
+            "h": 286
+          }
+        ]
+      }
+    },
+    {
+      "name": "Responsive layout and readable chart labels at 320px",
+      "passed": true,
+      "details": {
+        "viewport": 320,
+        "width": 320,
+        "labels": [
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15,
+          15
+        ],
+        "charts": [
+          {
+            "w": 280,
+            "h": 286
+          },
+          {
+            "w": 280,
+            "h": 286
+          },
+          {
+            "w": 280,
+            "h": 286
+          },
+          {
+            "w": 280,
+            "h": 286
+          }
+        ]
+      }
+    },
+    {
+      "name": "Synthetic fixture remains explicitly labeled",
+      "passed": true
+    },
+    {
+      "name": "Candidate click synchronizes all four charts and metadata",
+      "passed": true
+    },
+    {
+      "name": "Failure, real zero and unknown assertions remain distinguishable",
+      "passed": true
+    },
+    {
+      "name": "Incompatible BF16 series never mixed into FP32 charts",
+      "passed": true
+    },
+    {
+      "name": "Candidate fixture screenshot and same-SHA repeated runs preserved",
+      "passed": true
+    },
+    {
+      "name": "Measured fixture points selectable and readable at 390px",
+      "passed": true
+    },
+    {
+      "name": "Measured fixture points selectable and readable at 320px",
+      "passed": true
+    },
+    {
+      "name": "Local resources load and browser has no runtime errors",
+      "passed": true
+    }
+  ],
+  "passed": 18,
+  "failed": 0,
+  "errors": [],
+  "badResponses": []
+}
