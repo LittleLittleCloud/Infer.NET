@@ -9,8 +9,22 @@
   "independentCpuTests": 430,
   "managedIntegrationChecks": 70,
   "implementationProvider": "GitHub Copilot CLI1.0.103 / claude-sonnet-5.5",
-  "hardwareCorrectness": "not-yet-run",
+  "hardwareCorrectness": "real-model phases in progress",
   "formalPerformance": "not-yet-complete",
   "restoration": "pending end of evaluation",
-  "windowsParticipating": false
+  "windowsParticipating": false,
+  "baselineFormal": {
+    "runId": "issue72-main-human20-20261024",
+    "piCompleted": 20,
+    "officialPassed": 20,
+    "observedRequestCount": 98,
+    "prefillTokensPerSecond": 270.82991455030697,
+    "decodeTokensPerSecond": 67.44985753269998,
+    "clientTtftMedianMs": 10940.332500000011,
+    "piWallSeconds": 1148.529099958,
+    "piUsageMatchesWorker": true
+  },
+  "nativeBufferTransactionChecks": 587,
+  "nativeAotIntegrationChecks": 70,
+  "codeCi": "All macOS/Linux/Windows checks passed"
 }

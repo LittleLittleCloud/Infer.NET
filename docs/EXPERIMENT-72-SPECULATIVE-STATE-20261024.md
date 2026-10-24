@@ -22,3 +22,18 @@ For clean baseline/candidate-off, collect complete worker request timings and ag
 Fixed token fixtures compare tokens, terminal and checkpoint state digests/logits, rejection offsets, EOS/output-cap boundaries, cancellation/reset and poisoned invisible KV suffixes. Diagnostic copy/replay times are not acceleration measurements. Acceptance remains exactly the preapproved Issue plan, including20/20 official assertions, disabled-mode regression/resource limits and exact deterministic continuation. Failure or partial completion will remain explicit. HumanEval does not substitute for the fixed128K goals.
 
 No merge or adoption decision has been made. This record will be completed with actual results and restoration evidence before requesting review.
+
+## Formal main reference
+
+The replacement cohort passed Pi20/20 and official assertions20/20, with zero task timeouts/errors. All98 worker requests reconcile input/output token totals with Pi. [Audited baseline](evaluations/issue72/baseline.json).
+
+| Metric | Measured |
+|---|---:|
+| Worker prefill | 270.829915 tok/s |
+| Worker decode, N−1 intervals | 67.449858 tok/s |
+| Client TTFT median | 10940.3325 ms |
+| Pi wall time | 1148.529100 s |
+| Response-sampled Metal allocation maximum | 34.729813 GiB |
+| Largest per-model-request system swap-out | 377.062500 MiB |
+
+All request-boundary power samples were AC. The model process footprint and recorded peak were35.1G in vmmap. Metal figures are response samples, not a continuous allocator high-water trace; observed allocation and every per-request swap bracket were below their limits, without claiming unmeasured peaks. [Whole-cohort swap bracket](evaluations/issue72/baseline-resource-bracket.json) is separate from request-level sums. The original adopted baseline selection is unchanged.
