@@ -39,7 +39,7 @@ public static class SplitService
         var residency = o.Get("metal-residency", "on");
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
         _ = o.Number("residency-refresh-ms", 1000, 0, 60000);
-        _ = o.Number("short-prefill-tokens", 128, 0, 128);
+        _ = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         _ = SplitInference.IncrementalKv(o);
         _ = SplitInference.FusedDecode(o);
         if (o.Get("suffix-chunk-tokens", "128") is not ("32" or "128" or "512")) throw new ArgumentException("suffix-chunk-tokens must be 32, 128 or 512.");
@@ -103,7 +103,7 @@ public static class SplitService
     public static async Task RunMac(Options o, CancellationToken ct)
     {
         Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
-        var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, 128);
+        var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         var incrementalKv = SplitInference.IncrementalKv(o);
         var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
         var endpoint = o.Get("listen", "http://127.0.0.1:5201");
