@@ -11,6 +11,30 @@
   const format = value => value === null ? missing : new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 3
   }).format(value);
+  const plotLeft = 72;
+  // Separate vertical lanes (SVG units) so 44px touch targets never cover captions or axis text.
+  const layout = {pointTop: 40, pointBottom: 206, missingY: 252, captionY: 294, tickY: 320, axisY: 344,
+    height: 352, hitHalf: 22};
+  // Round axis maximum/step (1, 1.5, 2, 2.5, 3, 4, 5, 6, 8 x 10^n) so tick labels stay short and readable.
+  function axisModel(maxValue, key) {
+    if (key === "pass") return {max: 100, step: 25, decimals: 0, ticks: [0, 25, 50, 75, 100]};
+    const raw = (maxValue > 0 ? maxValue : 1) * 1.05 / 4, magnitude = 10 ** Math.floor(Math.log10(raw));
+    const step = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10].map(m => Number((m * magnitude).toPrecision(12))).find(candidate => candidate >= raw - 1e-12);
+    let decimals = 0;
+    while (decimals < 6 && Math.abs(step * 10 ** decimals - Math.round(step * 10 ** decimals)) > 1e-9) decimals++;
+    return {max: Number((step * 4).toPrecision(12)), step, decimals,
+      ticks: [0, 1, 2, 3, 4].map(i => Number((step * i).toFixed(decimals)))};
+  }
+  const tickLabel = (value, decimals) => new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimals, maximumFractionDigits: decimals
+  }).format(value);
+  // One label per commit group so neighbouring "Not measured" captions can never collide.
+  function missingLabels(model) {
+    return model.ticks.map((tick, i) => {
+      const count = model.points.filter(p => p.value === null && p.run.measuredCommit === tick.sha).length;
+      return {x: tick.x, text: count === 1 ? "Not measured" : `${count} not measured`, count};
+    }).filter(label => label.count > 0);
+  }
   const runHash = run => "#experiment=" + encodeURIComponent(run.experimentId) +
     "&run=" + encodeURIComponent(run.id);
   function defaultRun(data, configurationId) {
@@ -46,7 +70,7 @@
     const minimum = 90 + slots.reduce((sum, slot) => sum + slot, 0);
     const width = Math.max(availableWidth, minimum);
     const extra = (width - minimum) / Math.max(1, commits.length);
-    let left = 60;
+    let left = plotLeft;
     const ticks = commits.map((sha, i) => {
       const slot = slots[i] + extra;
       const tick = {sha, x: left + slot / 2};
@@ -61,7 +85,10 @@
     });
     return {commits, counts, points, ticks, width};
   }
-  const api = {format, runHash, defaultRun, resolveSelection, seriesRuns, chartModel};
+  const usesNativeClock = run => (run.requests || []).some(r => r.nativeCommandDelta);
+  // Explain only when native counters exist AND the standard worker metric is actually absent.
+  const workerMetricUnavailable = (run, key) => usesNativeClock(run) && run.metrics[key].value === null;
+  const api = {usesNativeClock, workerMetricUnavailable, format, axisModel, tickLabel, missingLabels, plotLeft, layout, runHash, defaultRun, resolveSelection, seriesRuns, chartModel};
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (!scope.document) return;
   const document = scope.document;
@@ -128,25 +155,28 @@
       const valid = model.points.filter(p => p.value !== null);
       const width = model.width;
       const x = value => value;
-      const max = key === "pass" ? 100 : Math.max(1, ...valid.map(p => p.value)) * 1.12;
+      const axis = axisModel(valid.length ? Math.max(...valid.map(p => p.value)) : 1, key);
+      const max = axis.max;
       // Keep better results higher on every chart: throughput/pass rise, TTFT falls.
-      const y = value => key === "ttft" ? 40 + value / max * 166 : 206 - value / max * 166;
-      const svg = svgNode("svg", {viewBox: `0 0 ${width} 300`, role: "img",
+      const span = layout.pointBottom - layout.pointTop;
+      const y = value => key === "ttft" ? layout.pointTop + value / max * span : layout.pointBottom - value / max * span;
+      const svg = svgNode("svg", {viewBox: `0 0 ${width} ${layout.height}`, role: "img",
         "aria-label": `${specs[key].label}; measured commit horizontal axis; ${specs[key].unit} vertical axis`});
       svg.style.width = width + "px";
-      for (let i = 0; i < 4; i++) {
-        const value = max * i / 3, yy = y(value);
-        svg.append(svgNode("line", {x1: 60, x2: width - 30, y1: yy, y2: yy, class: "grid-line"}));
-        if (valid.length) svg.append(svgNode("text", {x: 54, y: yy + 4, "text-anchor": "end"}, format(value)));
-      }
+      axis.ticks.forEach(value => {
+        const yy = y(value);
+        svg.append(svgNode("line", {x1: plotLeft, x2: width - 30, y1: yy, y2: yy, class: "grid-line"}));
+        if (valid.length) svg.append(svgNode("text", {x: plotLeft - 8, y: yy + 4, "text-anchor": "end"},
+          tickLabel(value, axis.decimals)));
+      });
       const visibleTicks = model.ticks.filter((tick, i) => i === 0 || i === model.ticks.length - 1 ||
         i % Math.max(1, Math.ceil(model.ticks.length / (width < 400 ? 3 : 5))) === 0);
       visibleTicks.forEach(tick => {
-        const text = svgNode("text", {x: x(tick.x), y: 266, "text-anchor": "middle"}, tick.sha.slice(0, 7));
+        const text = svgNode("text", {x: x(tick.x), y: layout.tickY, "text-anchor": "middle"}, tick.sha.slice(0, 7));
         text.append(svgNode("title", {}, tick.sha));
         svg.append(text);
       });
-      svg.append(svgNode("text", {x: width / 2, y: 290, "text-anchor": "middle"}, "Measured commit →"));
+      svg.append(svgNode("text", {x: width / 2, y: layout.axisY, "text-anchor": "middle"}, "Measured commit →"));
       // Connect only measurements from the same comparable configuration.
       const previousByConfig = new Map();
       model.points.forEach(point => {
@@ -164,17 +194,26 @@
           x1: x(base.x), y1: y(base.value), x2: x(point.x), y2: y(point.value), class: "candidate-line"
         }));
       });
-      model.points.filter(point => point.value === null).forEach(point =>
-        svg.append(svgNode("text", {x: x(point.x), y: 244, "text-anchor": "middle",
-          class: "missing-label"}, "Not measured")));
+      missingLabels(model).forEach(label =>
+        svg.append(svgNode("text", {x: x(label.x), y: layout.captionY, "text-anchor": "middle",
+          class: "missing-label"}, label.text)));
       container.append(svg);
+      const overflowing = width > container.clientWidth + 1;
+      container.setAttribute("role", "region");
+      container.setAttribute("aria-label", `${specs[key].label} chart, ${model.points.length} runs` +
+        (overflowing ? "; scrolls horizontally" : ""));
+      container.setAttribute("tabindex", "0");
+      const hint = byId(key + "-scroll-hint");
+      hint.hidden = !overflowing;
+      hint.textContent = overflowing ? `Scroll horizontally to see all ${model.points.length} runs ` +
+        "(focus the chart and use the arrow keys). Horizontal axis: measured commit →" : "";
       model.points.forEach(point => {
         const button = node("button", undefined, "trend-point " + point.run.provenance.kind +
           (point.value === null ? " missing" : ""));
         button.type = "button";
         button.dataset.run = point.run.id;
         button.style.left = x(point.x) + "px";
-        button.style.top = (point.value === null ? 220 : y(point.value)) + "px";
+        button.style.top = (point.value === null ? layout.missingY : y(point.value)) + "px";
         button.setAttribute("aria-label", `${point.run.title}; ${point.run.id}; measured ${point.run.measuredCommit}; ${metricText(point.run, key)}; ${state(point.run)}`);
         button.setAttribute("aria-controls", "run-detail");
         button.title = button.getAttribute("aria-label");
@@ -280,6 +319,13 @@
           `${metric.samples}/${metric.total} official checks · fixed cohort` :
           `${metric.samples}/${metric.total} ${key === "ttft" ? "client first-token" : "paired request"} samples`;
       });
+      ["prefill", "decode"].forEach(key => {
+        const note = byId(key + "-clock-note"), native = workerMetricUnavailable(selected, key);
+        note.hidden = !native;
+        note.textContent = native ? `Worker-clock ${specs[key].label.toLowerCase()} is ${missing.toLowerCase()} for this run: ` +
+          "standard worker timing boundaries were not recorded. The Splash native-command value in the SOTA summary " +
+          "uses a different clock and numerator, so it is not plotted or substituted here and no cross-scope ratio is computed." : "";
+      });
       document.querySelectorAll(".trend-point").forEach(button => {
         button.setAttribute("aria-pressed", String(button.dataset.run === selected.id));
       });
@@ -309,6 +355,23 @@
       const resolved = resolveSelection(data, scope.location.hash, selected.configurationId);
       select(resolved.run, false, resolved.error);
     };
+    function revealDetails() {
+      const section = byId("run-detail"), reduced = scope.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      section.scrollIntoView({block: "start", behavior: reduced ? "auto" : "smooth"});
+      byId("run-title").focus({preventScroll: true});
+    }
+    // Only deliberate SOTA evidence activation moves the viewport; chart selection and page load never do.
+    document.querySelectorAll("a[data-sota-evidence]").forEach(link => {
+      link.addEventListener("click", event => {
+        if (event.defaultPrevented || event.button > 0 || event.metaKey || event.ctrlKey ||
+            event.shiftKey || event.altKey) return;
+        const resolved = resolveSelection(data, link.getAttribute("href"), selected.configurationId);
+        if (resolved.error) return;
+        event.preventDefault();
+        select(resolved.run, true);
+        revealDetails();
+      });
+    });
     scope.addEventListener("hashchange", locationChanged);
     scope.addEventListener("popstate", locationChanged);
     updateControls();

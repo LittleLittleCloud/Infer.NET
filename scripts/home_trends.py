@@ -388,28 +388,55 @@ def sota_html(data):
         title = ('Infer.NET · verified SOTA' if family == 'infernet' else 'Known SOTA · external engine')
         label = 'Prefill / P' if metric == 'prefill' else 'Decode / D'
         value = f"{entry['value']:,.2f}" if entry['value'] is not None else 'Unavailable'
-        scope = ('Worker prefill' if metric == 'prefill' else 'Worker N−1 decode') if family == 'infernet' else 'Splash · native command · DFlash2'
+        if family == 'infernet':
+            clock = 'Worker prefill clock' if metric == 'prefill' else 'Worker N−1 decode clock'
+            scope = clock.replace(' clock', '')
+            qualifier = (f'{clock}: timings measured by the worker. Not comparable with native-command rates; '
+                         'no cross-scope ratio is computed.')
+        else:
+            clock = 'Native command clock'
+            scope = 'Splash · native command · DFlash2'
+            worker_missing = run is not None and run['metrics'][metric]['value'] is None
+            qualifier = ('Native-command rate: summed command tokens ÷ summed command wall time. ' +
+                         (f'Standard worker-clock {metric} is unavailable for this run and is not replaced by this value; '
+                          if worker_missing else
+                          'Any worker-clock value for this run is reported separately and is not replaced by this value; ') +
+                         'no cross-scope ratio is computed.')
         if run:
             config = entry['config']
             href = '#' + urlencode({'experiment': run['experimentId'], 'run': run['id']})
             status = run['provenance']['kind'] if family == 'infernet' else 'external reference'
             identity = f"{status} {run['measuredCommit'][:7]} · 20/20 passed"
             devices = 'Dual-host' if 'windowsAgent' in run['runtime'] else 'Single-host'
-            hardware = f"{devices} · {config['kv'].split(';')[0]} · {run['requestCount']}/{run['requestCount']} requests"
-            metadata = f"{config['kv']} · {config['topology']} · {run['date']}"
-            details = f'<details><summary>Configuration and measurement date</summary><p>{escape(metadata)}</p></details>'
-            link = f'<a href="{escape(href, quote=True)}">View run and evidence →</a>'
+            dflash = 'DFlash2' in config['label'] + ' ' + config['chunking']
+            chips = [f'Clock: {clock.replace(" clock", "")}', f"KV: {config['kv']}",
+                     'DFlash2: used' if dflash else 'DFlash2: not in configuration', f'Topology: {devices}']
+            chip_html = '<ul class="sota-chips" aria-label="Measurement configuration">' + ''.join(
+                f'<li>{escape(c)}</li>' for c in chips) + '</ul>'
+            details = (f'<p class="sota-topology">{escape(config["topology"])}</p>'
+                       f'<p class="sota-date">Measured {escape(run["date"])} · {run["requestCount"]}/{run["requestCount"]} requests</p>')
+            link_name = f"View run and evidence: {'Infer.NET' if family == 'infernet' else 'external'} {metric} SOTA, run {run['id']}"
+            link = (f'<a class="sota-evidence" data-sota-evidence href="{escape(href, quote=True)}" '
+                    f'aria-label="{escape(link_name, quote=True)}">View run and evidence →</a>')
         else:
-            identity, hardware, details, link = 'No complete qualifying measurement yet', '', '', '<a href="experiments.html">View experiment records →</a>'
+            identity, chip_html, details = 'No complete qualifying measurement yet', '', ''
+            link = f'<a href="experiments.html" aria-label="View experiment records: no qualifying {family} {metric} measurement">View experiment records →</a>'
         cards.append(f'''<article class="sota-card {family}" aria-labelledby="sota-{family}-{metric}">
 <p class="sota-family">{title}</p><h3 id="sota-{family}-{metric}">{label}</h3>
-<p class="sota-number">{value} <span>tok/s</span></p><p class="sota-scope">{scope}</p>
-<p class="sota-identity">{escape(identity)}<br>{escape(hardware)}</p>{details}{link}</article>''')
+<p class="sota-number">{value} <span>tok/s</span></p><p class="sota-scope">{scope}</p>{chip_html}
+<p class="sota-qualifier">{escape(qualifier)}</p>
+<p class="sota-identity">{escape(identity)}</p>{details}{link}</article>''')
     return '''<section class="sota-overview" aria-labelledby="sota-heading">
 <div class="sota-heading"><h2 id="sota-heading">P / D SOTA</h2><span>Qwen3.6-35B-A3B · affine8 / group64 · fixed HumanEval 20</span></div>
 <p class="note">Highest recorded measurements with 20/20 official assertions passed and complete metric coverage. Prefill and decode are selected independently and may come from different runs. Unverified candidates are excluded.</p>
 <div class="sota-grid">''' + ''.join(cards) + '''</div>
-<p class="note sota-comparison">Same source weights (e06a74e): Infer.NET uses FP32 KV, no DFlash2, and worker clocks; Splash uses INT8 KV, DFlash2, and native command clocks. Device topology is labeled for each result. No speedup ratio is computed across these measurement scopes. “Known” covers traceable observations collected on this site and is not a global leaderboard.</p></section>'''
+<p class="note sota-comparison">Same source weights (e06a74e). Each card states its clock, KV precision, DFlash2 setting and device topology; these differ between Infer.NET worker-clock results and Splash native-command results. No speedup ratio is computed across these measurement scopes. “Known” covers traceable observations collected on this site and is not a global leaderboard.</p></section>'''
+
+
+def clock_note(key):
+    if key not in ("prefill", "decode"):
+        return ""
+    return f'<p class="note clock-note" id="{key}-clock-note" hidden></p>'
 
 
 def homepage(data):
@@ -418,7 +445,8 @@ def homepage(data):
         f'<section class="trend-card" id="{anchor}" aria-labelledby="{key}-heading">'
         f'<div class="plot-head"><h2 id="{key}-heading">{label}</h2>'
         f'<span id="{key}-value" class="plot-value"></span></div>'
-        f'<div class="plot" id="{key}-chart"></div><p class="note" id="{key}-coverage"></p></section>'
+        f'<div class="plot" id="{key}-chart"></div><p class="scroll-hint" id="{key}-scroll-hint" hidden></p>'
+        f'<p class="note" id="{key}-coverage"></p>{clock_note(key)}</section>'
         for key, label, anchor in (
             ("prefill", "Prefill · token/s ↑", "prefill-trend"),
             ("decode", "Decode · token/s ↑", "decode-trend"),
@@ -440,7 +468,7 @@ def homepage(data):
 All runs appear by default. Lines connect only comparable configurations. No Pi wall-time-derived throughput.
 Higher positions indicate better results in every plot: faster prefill/decode, higher pass rate, or lower TTFT.
 Missing metrics are marked Not measured, not zero. The original issue #54 main and BF16/2048 runs did not record client first-token timestamps; a separate BF16/2048 retake supplies the observed TTFT point.</p>
-<section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title"></h2>
+<section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title" tabindex="-1"></h2>
 <span id="run-state"></span><a id="permalink">Link to this run</a></div>
 <p id="run-identity"></p><div class="run-summary"><div><h3>Change</h3><p id="run-change"></p></div>
 <div><h3>Results</h3><p id="run-result"></p></div></div>

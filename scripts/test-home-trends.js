@@ -110,27 +110,39 @@ class Element {
     this.textContent = "";
     this.value = "";
     this.classList = {add: name => { this.className += " " + name; }};
+    this.hidden = false;
+    this.focused = false;
+    this.scrolled = 0;
   }
+  focus(options) { this.focused = true; this.focusOptions = options; }
+  scrollIntoView(options) { this.scrolled++; this.scrollOptions = options; }
   append(...children) { this.children.push(...children); }
   replaceChildren(...children) { this.children = children; }
   setAttribute(key, value) { this.attributes[key] = value; }
   getAttribute(key) { return this.attributes[key]; }
   addEventListener(event, handler) { this.listeners[event] = handler; }
-  click() { this.listeners.click(); }
+  click(event = {button: 0}) { this.listeners.click({defaultPrevented: false, ...event, preventDefault() { this.defaultPrevented = true; event.preventDefault?.(); }}); }
   querySelector(tag) { return this.children.find(child => child.tagName === tag); }
 }
 function render(data, hash = "") {
   const elements = {};
   const ids = ["trend-data", "configuration", "run", "selection-notice", "run-title", "run-state",
     "run-identity", "run-change", "run-result", "permalink", "run-metadata", "run-links", "tasks",
-    "reported-totals"];
+    "reported-totals", "run-detail"];
   for (const metric of ["prefill", "decode", "ttft", "pass"]) {
-    ids.push(metric + "-chart", metric + "-value", metric + "-coverage");
+    ids.push(metric + "-chart", metric + "-value", metric + "-coverage", metric + "-scroll-hint");
   }
+  ids.push("prefill-clock-note", "decode-clock-note");
   ids.forEach(id => { elements[id] = new Element("div"); });
   elements["trend-data"].textContent = JSON.stringify(data);
   elements.tasks.append(new Element("tbody"), new Element("tfoot"));
   const listeners = {}, history = [];
+  const sotaLinks = [];
+  for (const run of data.runs.slice(0, 2)) {
+    const link = new Element("a");
+    link.setAttribute("href", ui.runHash(run));
+    sotaLinks.push(link);
+  }
   const location = {hash};
   const document = {
     readyState: "complete",
@@ -141,6 +153,7 @@ function render(data, hash = "") {
     createElement: tag => new Element(tag),
     createElementNS: (ns, tag) => new Element(tag),
     querySelectorAll: selector => {
+      if (selector === "a[data-sota-evidence]") return sotaLinks;
       assert.equal(selector, ".trend-point");
       return ["prefill", "decode", "ttft", "pass"].flatMap(key =>
         elements[key + "-chart"].children.filter(child => child.tagName === "button"));
@@ -150,7 +163,7 @@ function render(data, hash = "") {
     history: {pushState: (state, title, hash) => {location.hash = hash; history.push(hash);}}};
   vm.runInNewContext(fs.readFileSync(path.join(root, "site/trends.js"), "utf8"),
     {window, URLSearchParams, Intl, console});
-  return {elements, listeners, window, history,
+  return {elements, listeners, window, history, sotaLinks,
     points: key => elements[key + "-chart"].children.filter(child => child.tagName === "button")};
 }
 test("production DOM renders missing metrics as selectable unmeasured runs", () => {
@@ -278,5 +291,214 @@ test("default homepage exposes the BF16/2048 run across configurations", () => {
   assert.equal(page.elements["prefill-value"].textContent, "417.363 token/s");
   assert.equal(page.elements["ttft-value"].textContent, "Unavailable");
   assert.equal(page.elements["ttft-coverage"].textContent, "0/116 client first-token samples");
+});
+test("axis ticks are round, short and stay inside the left margin", () => {
+  for (const [max, key] of [[12224.66, "ttft"], [4074.887, "ttft"], [531.2, "prefill"], [66.43, "decode"], [0.37, "prefill"], [0, "ttft"]]) {
+    const axis = ui.axisModel(max, key);
+    assert.equal(axis.ticks.length, 5);
+    assert.ok(axis.max >= max, "axis must contain the maximum value");
+    assert.equal(axis.max, axis.ticks.at(-1));
+    for (const tick of axis.ticks) {
+      const label = ui.tickLabel(tick, axis.decimals);
+      assert.ok(label.length * 7 + 8 <= ui.plotLeft, `${label} fits the left margin`);
+    }
+  }
+  assert.deepEqual(ui.axisModel(12224.66, "ttft").ticks, [0, 4000, 8000, 12000, 16000]);
+  assert.deepEqual(ui.axisModel(100, "pass").ticks, [0, 25, 50, 75, 100]);
+  assert.equal(ui.tickLabel(2.5, ui.axisModel(8, "decode").decimals), "2.5");
+});
+test("missing labels are one per commit group and cannot overlap", () => {
+  const data = {...production};
+  const all = ui.chartModel(data, "all", "ttft");
+  const labels = ui.missingLabels(all);
+  const missingPoints = all.points.filter(p => p.value === null).length;
+  assert.equal(labels.reduce((sum, label) => sum + label.count, 0), missingPoints);
+  assert.ok(labels.length <= all.ticks.length);
+  labels.forEach((label, i) => {
+    assert.ok(label.text.length * 6.2 <= 90, "label fits the minimum commit slot");
+    if (i) assert.ok(label.x - labels[i - 1].x >= 90, "neighbouring labels are separated");
+  });
+  const many = {...fixtures, runs: fixtures.runs.filter(r => r.id === "fixture-failure" || r.id === "fixture-main")};
+  const grouped = ui.missingLabels(ui.chartModel(many, "all", "prefill"));
+  assert.equal(grouped.length, 1);
+  assert.equal(grouped[0].text, "Not measured");
+});
+test("chart regions are named, keyboard focusable and announce horizontal scrolling", () => {
+  const page = render(production);
+  for (const key of ["prefill", "decode", "ttft", "pass"]) {
+    const container = page.elements[key + "-chart"];
+    assert.equal(container.getAttribute("role"), "region");
+    assert.equal(container.getAttribute("tabindex"), "0");
+    assert.ok(container.getAttribute("aria-label").includes(`${production.runs.length} runs`));
+    const svg = container.children[0];
+    const wide = Number.parseFloat(svg.style.width) > container.clientWidth + 1;
+    assert.equal(page.elements[key + "-scroll-hint"].hidden, !wide);
+    if (wide) {
+      assert.ok(container.getAttribute("aria-label").includes("scrolls horizontally"));
+      assert.ok(page.elements[key + "-scroll-hint"].textContent.includes(`all ${production.runs.length} runs`));
+    }
+    assert.equal(page.points(key).length, production.runs.length, "no run point is dropped");
+  }
+  assert.ok(Number.parseFloat(page.elements["prefill-chart"].children[0].style.width) > 500, "production chart overflows 500px");
+  assert.equal(page.elements["prefill-scroll-hint"].hidden, false);
+});
+test("native-command runs explain unavailable worker-clock charts without substituting values", () => {
+  const external = production.runs.find(run => ui.usesNativeClock(run));
+  assert.ok(external, "production has a native-command run");
+  const page = render(production, ui.runHash(external));
+  for (const key of ["prefill", "decode"]) {
+    const note = page.elements[key + "-clock-note"];
+    assert.equal(note.hidden, false);
+    assert.ok(note.textContent.includes("unavailable"));
+    assert.ok(note.textContent.includes("no cross-scope ratio"));
+    assert.equal(page.elements[key + "-value"].textContent, "Unavailable");
+    assert.ok(!/\d/.test(note.textContent), "explanatory note contains no substituted number");
+  }
+  const worker = production.runs.find(run => !ui.usesNativeClock(run));
+  page.window.location.hash = ui.runHash(worker);
+  page.listeners.hashchange();
+  assert.equal(page.elements["prefill-clock-note"].hidden, true);
+});
+test("SOTA evidence activation selects, scrolls and focuses details; ordinary selection does not", () => {
+  const page = render(production);
+  assert.equal(page.elements["run-detail"].scrolled, 0, "page load never scrolls");
+  page.points("prefill")[1].click();
+  assert.equal(page.elements["run-detail"].scrolled, 0, "chart selection never scrolls");
+  assert.equal(page.elements["run-title"].focused, false);
+  const target = production.runs[1];
+  const link = page.sotaLinks[1];
+  const historyBefore = page.history.length;
+  let prevented = false;
+  link.click({button: 0, preventDefault() { prevented = true; }});
+  assert.ok(prevented);
+  assert.equal(page.elements.run.value, target.id);
+  assert.equal(page.elements["run-detail"].scrolled, 1);
+  assert.equal(page.elements["run-title"].focused, true);
+  assert.equal(page.elements["run-title"].focusOptions.preventScroll, true);
+  assert.ok(page.history.length >= historyBefore);
+  // Repeating the same activation still focuses details even though the hash is unchanged.
+  link.click({button: 0});
+  assert.equal(page.elements["run-detail"].scrolled, 2);
+  // Back/forward navigation is handled by selection only and does not scroll.
+  page.window.location.hash = ui.runHash(production.runs[0]);
+  page.listeners.popstate();
+  assert.equal(page.elements.run.value, production.runs[0].id);
+  assert.equal(page.elements["run-detail"].scrolled, 2);
+  // Modified clicks keep native browser behaviour.
+  link.click({button: 0, ctrlKey: true});
+  assert.equal(page.elements["run-detail"].scrolled, 2);
+});
+test("vertical lanes keep points, missing captions, ticks and axis caption disjoint inside the SVG", () => {
+  const L = ui.layout, half = L.hitHalf, glyph = 12;
+  assert.ok(L.pointBottom + half <= L.missingY - half, "value points end before the missing-point lane");
+  assert.ok(L.missingY + half <= L.captionY - glyph, "missing hit targets end before captions");
+  assert.ok(L.captionY + 4 < L.tickY - glyph, "captions end before commit ticks");
+  assert.ok(L.tickY + 4 < L.axisY - glyph, "ticks end before the axis caption");
+  assert.ok(L.axisY + 6 <= L.height, "axis caption is not clipped");
+  assert.ok(L.pointTop - half >= 0, "highest point target is not clipped");
+  const page = render(production);
+  for (const key of ["prefill", "decode", "ttft", "pass"]) {
+    const svg = page.elements[key + "-chart"].children[0];
+    assert.ok(svg.attributes.viewBox.endsWith(" " + L.height));
+    const captions = svg.children.filter(c => c.attributes.class === "missing-label");
+    assert.ok(captions.length > 0);
+    captions.forEach(c => assert.equal(Number(c.attributes.y), L.captionY));
+    page.points(key).forEach(button => {
+      const top = Number.parseFloat(button.style.top);
+      const missing = button.className.includes("missing");
+      assert.ok(top - half >= 0 && top + half <= L.height);
+      if (missing) assert.equal(top, L.missingY);
+      else assert.ok(top + half <= L.missingY - half, "value point target clears the missing lane");
+    });
+  }
+});
+test("worker metric is called unavailable only when native counters exist and the metric is null", () => {
+  const external = production.runs.find(run => ui.usesNativeClock(run));
+  assert.equal(ui.workerMetricUnavailable(external, "prefill"), true);
+  const both = JSON.parse(JSON.stringify(external));
+  both.id = "copy-with-both-clocks";
+  both.metrics.prefill.value = 1234.5;
+  assert.equal(ui.workerMetricUnavailable(both, "prefill"), false);
+  assert.equal(ui.workerMetricUnavailable(both, "decode"), true);
+  const data = {...production, runs: [both]};
+  const page = render(data, ui.runHash(both));
+  assert.equal(page.elements["prefill-clock-note"].hidden, true);
+  assert.equal(page.elements["prefill-clock-note"].textContent, "");
+  assert.equal(page.elements["prefill-value"].textContent, "1,234.5 token/s");
+  assert.equal(page.elements["decode-clock-note"].hidden, false);
+  assert.equal(page.elements["decode-value"].textContent, "Unavailable");
+});
+const notebook = require("../site/notebook.js");
+test("notebook matching requires every term, ignores case, and never filters on an empty query", () => {
+  const text = notebook.normalize("CUDA  QK reuse: values consistent\nFailed experiment");
+  assert.ok(notebook.matches(text, ""));
+  assert.ok(notebook.matches(text, "cuda FAILED"));
+  assert.ok(!notebook.matches(text, "cuda passed"));
+  assert.equal(notebook.countText(3, 48, ""), "Showing all 48 notes.");
+  assert.ok(notebook.countText(3, 48, " cuda ").includes("3 of 48"));
+});
+function notebookPage(hash = "") {
+  const mk = (extra = {}) => ({hidden: false, dataset: {}, listeners: {}, textContent: "", children: [],
+    addEventListener(event, handler) { this.listeners[event] = handler; }, focus() { this.focused = true; },
+    scrollIntoView() { this.scrolled = (this.scrolled || 0) + 1; }, querySelectorAll() { return this.entries || []; }, ...extra});
+  const notes = [["a-first", "CUDA reuse failed regression"], ["b-second", "Metal residency passed"], ["c-third", "Dual host cuda passed"]];
+  const articles = notes.map(([id, text]) => mk({id, textContent: text}));
+  const entries = notes.map(([id]) => mk({dataset: {noteLink: id}}));
+  const group = mk({entries});
+  const elements = {"notebook-tools": mk({hidden: true}), "notebook-filter": mk({value: ""}),
+    "notebook-reset": mk({hidden: true}), "notebook-count": mk(), "notebook-empty": mk({hidden: true})};
+  const listeners = {}, location = {hash};
+  const document = {readyState: "complete", getElementById: id => elements[id],
+    querySelectorAll: selector => selector === "article.experiment" ? articles :
+      selector === "[data-note-link]" ? entries : selector === ".notebook-group" ? [group] : assert.fail(selector)};
+  vm.runInNewContext(fs.readFileSync(path.join(root, "site/notebook.js"), "utf8"),
+    {window: {document, location, addEventListener: (event, handler) => {listeners[event] = handler;}}, console});
+  return {elements, articles, entries, group, listeners, location};
+}
+test("notebook filter keeps notes and failures visible by default, filters links and notes together, and resets", () => {
+  const page = notebookPage();
+  assert.equal(page.elements["notebook-tools"].hidden, false);
+  assert.ok(page.articles.every(a => !a.hidden) && page.entries.every(e => !e.hidden));
+  assert.equal(page.elements["notebook-count"].textContent, "Showing all 3 notes.");
+  page.elements["notebook-filter"].value = "cuda";
+  page.elements["notebook-filter"].listeners.input();
+  assert.deepEqual(page.articles.map(a => a.hidden), [false, true, false]);
+  assert.deepEqual(page.entries.map(e => e.hidden), [false, true, false]);
+  assert.equal(page.elements["notebook-reset"].hidden, false);
+  page.elements["notebook-filter"].value = "nothing-matches";
+  page.elements["notebook-filter"].listeners.input();
+  assert.equal(page.elements["notebook-empty"].hidden, false);
+  assert.equal(page.group.hidden, true);
+  page.elements["notebook-reset"].listeners.click();
+  assert.ok(page.articles.every(a => !a.hidden) && !page.group.hidden);
+  assert.equal(page.elements["notebook-filter"].focused, true);
+  assert.equal(page.elements["notebook-reset"].hidden, true);
+});
+test("deep links reveal a note hidden by the active filter", () => {
+  const page = notebookPage();
+  page.elements["notebook-filter"].value = "cuda";
+  page.elements["notebook-filter"].listeners.input();
+  assert.equal(page.articles[1].hidden, true);
+  page.location.hash = "#b-second";
+  page.listeners.hashchange();
+  assert.equal(page.elements["notebook-filter"].value, "");
+  assert.ok(page.articles.every(a => !a.hidden));
+  assert.equal(page.articles[1].scrolled, 1);
+  assert.ok(page.elements["notebook-count"].textContent.startsWith("Filter cleared"));
+  for (const hash of ["#%", "#%E0%A4%A", "#not-a-note", "#", ""]) {
+    const safe = notebookPage();
+    safe.elements["notebook-filter"].value = "cuda";
+    safe.elements["notebook-filter"].listeners.input();
+    safe.location.hash = hash;
+    safe.listeners.hashchange();
+    assert.equal(safe.elements["notebook-filter"].value, "cuda", "unrelated fragment keeps the filter: " + hash);
+    assert.deepEqual(safe.articles.map(a => a.hidden), [false, true, false]);
+    safe.elements["notebook-filter"].value = "metal";
+    safe.elements["notebook-filter"].listeners.input();
+    assert.deepEqual(safe.articles.map(a => a.hidden), [true, false, true], "filtering still works after: " + hash);
+  }
+  assert.doesNotThrow(() => notebookPage("#%"));
+  const initial = notebookPage("#c-third");
+  assert.ok(initial.articles.every(a => !a.hidden));
 });
 console.log(`${checks} homepage selection/render acceptance checks passed (offline DOM, no browser layout).`);

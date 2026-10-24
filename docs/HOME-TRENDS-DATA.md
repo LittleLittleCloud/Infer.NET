@@ -283,3 +283,28 @@ measured commit, coverage and expandable configuration/date evidence. “Known S
 means the highest eligible observation collected by this site, not a global
 leaderboard. FP32 KV/no DFlash2 project runs and INT8 KV/DFlash2 external runs must
 not acquire a cross-scope speedup ratio.
+
+## UI behavior contract (Issue #67, phase A)
+
+- **Charts.** Every run stays a point; missing values render as one “Not measured”
+  caption per commit group (never one per point) and real zero stays a plotted
+  value. Axes use round tick steps (`axisModel`) with at most the precision the
+  step needs, inside a 72 px left margin. Each chart is a focusable
+  `role="region"` with an accessible name; when it is wider than its container a
+  visible hint explains horizontal scrolling and arrow keys scroll it.
+- **SOTA cards.** Visible chips show the clock, KV precision, DFlash2 and topology,
+  all derived from the selected run/configuration (DFlash2 is “used” only when the
+  configuration text names it). Each card carries its own scope qualification.
+  When the selected worker metric is null and native-command counters exist, the
+  corresponding chart explains that worker-clock value is unavailable; native values are never plotted
+  there and no cross-scope ratio is computed.
+- **Evidence links.** Each SOTA link has a distinct accessible name. Activating one
+  selects the run (pushing history), scrolls to and focuses the run heading.
+  Page load, chart selection, the run selector, Back/forward and modified clicks
+  do not programmatically scroll or move focus; native browser history restoration remains intact.
+- **Experiment notebook.** `experiments.html` lists all notes grouped by the date
+  explicitly stated at the start of each note’s `kind`; notes without one are
+  grouped separately, and no date or outcome is inferred. Without JavaScript the
+  full grouped list and every note remain visible. `notebook.js` adds a text
+  filter (all terms must match, case-insensitive), a count and a reset button; a
+  deep link to a note hidden by the filter clears the filter and reveals it.
