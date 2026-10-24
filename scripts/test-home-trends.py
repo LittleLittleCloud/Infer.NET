@@ -4,6 +4,7 @@ import argparse
 import copy
 from html.parser import HTMLParser
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -380,6 +381,124 @@ class TrendTests(unittest.TestCase):
             for link in run["links"]:
                 if not link["url"].startswith("https://"):
                     self.assertTrue((out / link["url"].split("#")[0]).is_file())
+
+
+    def test_sota_cards_expose_derived_configuration_and_adjacent_qualification(self):
+        html = homepage(self.data)
+        cards = re.findall(r'<article class="sota-card.*?</article>', html, re.S)
+        self.assertEqual(len(cards), 4)
+        names = re.findall(r'data-sota-evidence href="[^"]+" aria-label="([^"]+)"', html)
+        self.assertEqual(len(names), 4)
+        self.assertEqual(len(set(names)), 4, "each SOTA link needs a distinct accessible name")
+        for entry, card in zip(sota_summary(self.data), cards):
+            config = entry["config"]
+            self.assertIn(f"KV: {config['kv']}", card)
+            self.assertIn(config["topology"], card)
+            self.assertIn("sota-chips", card)
+            self.assertIn("no cross-scope ratio is computed", card)
+            self.assertIn("DFlash2: used" if "DFlash2" in config["label"] + config["chunking"]
+                          else "DFlash2: not in configuration", card)
+            self.assertIn("Clock: Native command" if entry["family"] == "external" else "Clock: Worker", card)
+            self.assertNotIn("<details", card, "configuration chips must be visible without expansion")
+        self.assertNotRegex(re.sub(r"<[^>]+>", " ", html), r"\d+(\.\d+)?\s*[x×] (faster|speedup)")
+        self.assertIn('id="run-title" tabindex="-1"', html)
+        for key in ("prefill", "decode", "ttft", "pass"):
+            self.assertIn(f'id="{key}-scroll-hint" hidden', html)
+        for key in ("prefill", "decode"):
+            self.assertIn(f'id="{key}-clock-note" hidden', html)
+
+    def test_external_qualifier_depends_on_worker_metric_presence(self):
+        self.assertIn("is unavailable for this run", homepage(self.data))
+        external = next(r for r in self.data["runs"] if "splash" in r["runtime"])
+        external["metrics"]["prefill"]["value"] = 1234.5
+        html = homepage(self.data)
+        cards = re.findall(r'<article class="sota-card external.*?</article>', html, re.S)
+        self.assertEqual(len(cards), 2)
+        self.assertNotIn("unavailable", cards[0])
+        self.assertIn("reported separately", cards[0])
+        self.assertIn("unavailable", cards[1])
+
+    def test_external_card_describes_only_its_missing_worker_metric(self):
+        data = copy.deepcopy(self.data)
+        external = next(run for run in data["runs"] if "splash" in run["runtime"])
+        external["metrics"]["decode"]["value"] = 1.0
+        html = homepage(data)
+        self.assertIn("Standard worker-clock prefill is unavailable", html)
+        self.assertNotIn("Standard worker-clock decode is unavailable", html)
+        self.assertIn("Any worker-clock value for this run is reported separately", html)
+
+    def test_css_contrast_and_minimum_text_size(self):
+        css = (ROOT / "site/style.css").read_text()
+        def channel(value):
+            value /= 255
+            return value / 12.92 if value <= .03928 else ((value + .055) / 1.055) ** 2.4
+        def luminance(color):
+            r, g, b = (int(color[i:i + 2], 16) for i in (1, 3, 5))
+            return .2126 * channel(r) + .7152 * channel(g) + .0722 * channel(b)
+        def contrast(a, b):
+            high, low = sorted((luminance(a), luminance(b)), reverse=True)
+            return (high + .05) / (low + .05)
+        variables = dict(re.findall(r"--([a-z]+):(#[0-9a-f]{6})", css))
+        self.assertGreaterEqual(contrast(variables["gold"], variables["paper"]), 4.5)
+        self.assertGreaterEqual(contrast(variables["gold"], "#ffffff"), 4.5)
+        self.assertGreaterEqual(contrast(variables["muted"], variables["paper"]), 4.5)
+        self.assertGreaterEqual(contrast(variables["accent"], variables["paper"]), 4.5)
+        small = [int(v) for v in re.findall(r"font-size:(\d+)px", css)]
+        self.assertGreaterEqual(min(small), 12, "no text below 12px")
+
+    def test_notebook_groups_filter_fallback_and_anchors(self):
+        subprocess.run(["python3", "scripts/build-progress-site.py"], cwd=ROOT, check=True,
+                       capture_output=True, text=True)
+        out = ROOT / "artifacts/pages"
+        notes = json.loads((ROOT / "site/experiments.json").read_text())
+        html = (out / "experiments.html").read_text()
+        article_ids = re.findall(r'<article class="experiment" id="([^"]+)"', html)
+        self.assertEqual(article_ids, [n["id"] for n in notes])
+        self.assertEqual(len(article_ids), 48)
+        linked = re.findall(r'<li data-note-link="([^"]+)"><a href="#([^"]+)">', html)
+        self.assertEqual(sorted(a for a, _ in linked), sorted(article_ids))
+        self.assertTrue(all(a == b for a, b in linked))
+        # Without JavaScript the tools stay hidden and no note or link carries hidden.
+        self.assertIn('id="notebook-tools" hidden', html)
+        self.assertEqual(html.count("<article"), html.count("</article>"))
+        self.assertNotRegex(html, r'<(article|li)[^>]*\shidden')
+        self.assertIn('<script src="notebook.js" defer>', html)
+        self.assertTrue((out / "notebook.js").is_file())
+        dated = re.findall(r'<h2 id="notes-date-([^"]+)">[^<]* · (\d+) notes</h2>', html)
+        self.assertEqual(sum(int(c) for _, c in dated), 48)
+        self.assertEqual([d for d, _ in dated], sorted((d for d, _ in dated if d != "none"), reverse=True) +
+                         (["none"] if any(d == "none" for d, _ in dated) else []))
+        for note in notes:
+            match = re.match(r"(\d{4}-\d\d-\d\d)\b", note["kind"])
+            self.assertIn(note["id"], dict(linked))
+            section = re.search(rf'<h2 id="notes-date-{match.group(1) if match else "none"}">.*?</ul>', html, re.S).group(0)
+            self.assertIn(f'data-note-link="{note["id"]}"', section)
+        # Retained failures remain visible and no outcome badge is inferred from prose.
+        self.assertIn("first-public-ci", article_ids)
+        self.assertNotRegex(html, r'class="[^"]*(badge|outcome)')
+
+    def test_progress_preserves_evidence_and_separates_status_classes(self):
+        subprocess.run(["python3", "scripts/build-progress-site.py"], cwd=ROOT, check=True,
+                       capture_output=True, text=True)
+        html = (ROOT / "artifacts/pages/progress.html").read_text()
+        for token in ("e017d84", "58bf950", "2760e44", "9.92e-4", "8.01e-6", "0.00704", "774.3 seconds",
+                      "HumanEval/149", "issues/32", "pull/31", "pull/30", "pull/15", "pull/14", "pull/10",
+                      "0 of 20 layer checks passed", "262K full model is still not accepted",
+                      "Windows still ran as a foreground agent", "cannot be claimed"):
+            self.assertIn(token, html)
+        self.assertEqual(html.count('kicker">Snapshot finding<'), 3)
+        self.assertEqual(html.count('kicker">Historical result<'), 7)
+        self.assertIn("Recorded snapshot of 2026-10-23", html)
+        self.assertIn('href="index.html">commit trends page', html)
+        self.assertIn("Three BF16 high/low product terms for QKV", html)
+        self.assertNotIn("diagnosis is in progress", html)
+        self.assertIn("output token sequences matching across 8 requests", html)
+        self.assertNotIn("8 output tokens", html)
+        self.assertIn("Unmeasured target", html)
+        self.assertIn("Unmeasured estimate", html)
+        self.assertNotIn("<details", html.split('id="milestones"')[1].split('id="device-topology"')[0],
+                         "no accordion in this phase")
+        self.assertEqual(html.count("<p><p"), 0)
 
 
 def write_fixture(output):
