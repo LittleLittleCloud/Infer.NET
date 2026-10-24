@@ -16,6 +16,7 @@ import shutil
 import signal
 import statistics
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -174,10 +175,101 @@ def summarize(rows):
     }
 
 
-def kill_tree(process):
-    if os.name == "nt":
-        subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+class WindowsJob:
+    """Own only this capture's processes, including children outliving their parent."""
+
+    def __init__(self):
+        import ctypes
+        from ctypes import wintypes
+
+        class Limits(ctypes.Structure):
+            _fields_ = [
+                ("PerProcessUserTimeLimit", ctypes.c_longlong),
+                ("PerJobUserTimeLimit", ctypes.c_longlong),
+                ("LimitFlags", wintypes.DWORD),
+                ("MinimumWorkingSetSize", ctypes.c_size_t),
+                ("MaximumWorkingSetSize", ctypes.c_size_t),
+                ("ActiveProcessLimit", wintypes.DWORD),
+                ("Affinity", ctypes.c_size_t),
+                ("PriorityClass", wintypes.DWORD),
+                ("SchedulingClass", wintypes.DWORD),
+            ]
+
+        class ExtendedLimits(ctypes.Structure):
+            _fields_ = [
+                ("BasicLimitInformation", Limits),
+                ("IoInfo", ctypes.c_ulonglong * 6),
+                ("ProcessMemoryLimit", ctypes.c_size_t),
+                ("JobMemoryLimit", ctypes.c_size_t),
+                ("PeakProcessMemoryUsed", ctypes.c_size_t),
+                ("PeakJobMemoryUsed", ctypes.c_size_t),
+            ]
+
+        class Accounting(ctypes.Structure):
+            _fields_ = [
+                ("Times", ctypes.c_longlong * 4),
+                ("TotalPageFaultCount", wintypes.DWORD),
+                ("TotalProcesses", wintypes.DWORD),
+                ("ActiveProcesses", wintypes.DWORD),
+                ("TotalTerminatedProcesses", wintypes.DWORD),
+            ]
+
+        self.ctypes, self.Accounting = ctypes, Accounting
+        self.api = ctypes.WinDLL("kernel32", use_last_error=True)
+        for name, arguments, result in (
+            ("CreateJobObjectW", [ctypes.c_void_p, wintypes.LPCWSTR], wintypes.HANDLE),
+            ("SetInformationJobObject", [wintypes.HANDLE, ctypes.c_int,
+                                        ctypes.c_void_p, wintypes.DWORD], wintypes.BOOL),
+            ("AssignProcessToJobObject", [wintypes.HANDLE, wintypes.HANDLE], wintypes.BOOL),
+            ("TerminateJobObject", [wintypes.HANDLE, wintypes.UINT], wintypes.BOOL),
+            ("QueryInformationJobObject", [wintypes.HANDLE, ctypes.c_int,
+                                          ctypes.c_void_p, wintypes.DWORD,
+                                          ctypes.c_void_p], wintypes.BOOL),
+            ("CloseHandle", [wintypes.HANDLE], wintypes.BOOL),
+        ):
+            function = getattr(self.api, name)
+            function.argtypes, function.restype = arguments, result
+        self.handle = self.api.CreateJobObjectW(None, None)
+        self.check(self.handle)
+        limits = ExtendedLimits()
+        limits.BasicLimitInformation.LimitFlags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        try:
+            self.check(self.api.SetInformationJobObject(
+                self.handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
+            ))
+        except BaseException:
+            self.close()
+            raise
+
+    def check(self, result):
+        if not result:
+            raise self.ctypes.WinError(self.ctypes.get_last_error())
+
+    def assign(self, process):
+        self.check(self.api.AssignProcessToJobObject(self.handle, int(process._handle)))
+
+    def terminate(self):
+        self.check(self.api.TerminateJobObject(self.handle, 1))
+        deadline = time.monotonic() + 3
+        while True:
+            accounting = self.Accounting()
+            self.check(self.api.QueryInformationJobObject(
+                self.handle, 1, self.ctypes.byref(accounting),
+                self.ctypes.sizeof(accounting), None,
+            ))
+            if not accounting.ActiveProcesses:
+                return
+            if time.monotonic() >= deadline:
+                raise OSError("Windows job cleanup did not finish")
+            time.sleep(.01)
+
+    def close(self):
+        self.check(self.api.CloseHandle(self.handle))
+
+
+def kill_tree(process, job=None):
+    if job is not None:
+        job.terminate()
     else:
         try:
             os.killpg(process.pid, signal.SIGKILL)
@@ -200,15 +292,38 @@ def capture(command, cwd, env, timeout, token, event_path):
     records = []
     timed_out, error, returncode = False, None, None
     start_wall, start = utc_now(), time.monotonic()
-    process = None
+    process = job = None
+    readers = []
     with event_path.open("w", encoding="utf-8") as log:
         try:
+            if os.name == "nt":
+                executable = command[0]
+                if os.path.dirname(executable):
+                    executable = os.path.abspath(os.path.join(cwd, executable))
+                executable = shutil.which(executable)
+                if executable is None:
+                    raise FileNotFoundError("Capture executable not found")
+                job = WindowsJob()
+                # The gate prevents Pi spawning children before job assignment.
+                command = [
+                    sys.executable, "-I", "-c",
+                    "import subprocess,sys; "
+                    "gate=sys.stdin.buffer.read(1); "
+                    "sys.exit(subprocess.call(sys.argv[1:], stdin=subprocess.DEVNULL) "
+                    "if gate == b'1' else 1)",
+                    executable, *command[1:],
+                ]
             process = subprocess.Popen(
-                command, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
+                command, cwd=cwd, env=env,
+                stdin=subprocess.PIPE if job is not None else subprocess.DEVNULL,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                 start_new_session=os.name != "nt",
                 creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0,
             )
+            if job is not None:
+                job.assign(process)
+                process.stdin.write(b"1")
+                process.stdin.close()
             messages = queue.Queue()
 
             def read_pipe(pipe, stream):
@@ -220,7 +335,9 @@ def capture(command, cwd, env, timeout, token, event_path):
                     messages.put((stream, None, None))
 
             for name, pipe in (("stdout", process.stdout), ("stderr", process.stderr)):
-                threading.Thread(target=read_pipe, args=(pipe, name), daemon=True).start()
+                reader = threading.Thread(target=read_pipe, args=(pipe, name), daemon=True)
+                readers.append(reader)
+                reader.start()
             closed = 0
             while closed < 2:
                 remaining = timeout - (time.monotonic() - start)
@@ -253,9 +370,25 @@ def capture(command, cwd, env, timeout, token, event_path):
         except OSError as ex:
             error = type(ex).__name__
         finally:
-            if process is not None:
-                kill_tree(process)
-                process.wait()
+            try:
+                if process is not None:
+                    try:
+                        kill_tree(process, job)
+                    finally:
+                        # Also reap the gated launcher if job assignment failed.
+                        if process.poll() is None:
+                            process.kill()
+                        returncode = process.wait(timeout=3)
+                        if process.stdin is not None:
+                            process.stdin.close()
+                        if not readers:
+                            process.stdout.close()
+                            process.stderr.close()
+            except (OSError, subprocess.TimeoutExpired) as ex:
+                error = f"cleanup_failed:{type(ex).__name__}"
+            finally:
+                if job is not None:
+                    job.close()
     end, end_wall = time.monotonic(), utc_now()
     return {
         "start_utc": start_wall, "end_utc": end_wall,

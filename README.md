@@ -209,9 +209,17 @@ setup, and the harness's post-run syntax parsing are outside that interval.
 tools. Neither is server-only prefill/decode telemetry or GPU kernel timing.
 Older Pi streams may omit reported durations and `agent_settled`; the parser
 also accepts terminal `agent_end` with a final successful assistant response.
-Process-tree termination is best effort (POSIX process group / Windows
-`taskkill /T`); escaped descendants require the disposable environment's
-external cleanup. Unrelated services are never stopped.
+Windows runs each capture in a private, kill-on-close Job Object. A gated Python
+launcher starts Pi only after job assignment succeeds; Pi and its descendants
+are terminated even if Pi exits first. Breakaway is not enabled. Cleanup waits
+for the job to empty and reaps the launcher, using bounded three-second waits;
+cleanup errors are reported as `cleanup_failed:<exception type>`, not suppressed.
+Launcher startup and all cleanup remain included in wall time. Windows hosts
+whose existing job restrictions prevent nested job assignment fail before Pi
+starts; there is no uncontained fallback. POSIX uses a process group; descendants
+that deliberately escape it still require external disposable-environment
+cleanup. Neither mechanism contains work delegated to an existing external
+service. Unrelated processes/services are never stopped.
 
 **This is not HumanEval pass@1, even for the full run. A subset is not a standard
 leaderboard score.** No correctness claims are made without the official

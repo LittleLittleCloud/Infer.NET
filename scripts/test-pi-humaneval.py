@@ -1,6 +1,7 @@
 """Offline fixtures only: never start Pi or contact an inference endpoint."""
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import contextlib
 import importlib.util
 import io
@@ -9,6 +10,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -155,17 +157,119 @@ class BenchmarkTests(unittest.TestCase):
     def test_timeout_and_launch_failure(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "events.jsonl"
-            result = benchmark.capture(
-                [sys.executable, "-c", "import time; time.sleep(30)"],
-                temporary, os.environ.copy(), .15, "", path,
-            )
+            processes = []
+            popen = benchmark.subprocess.Popen
+
+            def track_process(*args, **kwargs):
+                process = popen(*args, **kwargs)
+                processes.append(process)
+                return process
+
+            with patch.object(benchmark.subprocess, "Popen", side_effect=track_process):
+                result = benchmark.capture(
+                    [sys.executable, "-c", "import time; time.sleep(30)"],
+                    temporary, os.environ.copy(), .15, "", path,
+                )
             self.assertTrue(result["timeout"])
             self.assertEqual(result["error"], "task_timeout")
             self.assertLess(result["wall_seconds"], 5)
+            self.assertIsNotNone(processes[0].returncode)
+            self.assertNotEqual(processes[0].returncode, 0)
+            self.assertEqual(result["returncode"], processes[0].returncode)
             result = benchmark.capture(
                 [str(Path(temporary) / "missing")], temporary, {}, 1, "", path
             )
             self.assertEqual(result["error"], "FileNotFoundError")
+
+    def test_cleanup_failure_is_reported_and_child_reaped(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with patch.object(benchmark, "kill_tree", side_effect=OSError):
+                result = benchmark.capture(
+                    [sys.executable, "-c", "import time; time.sleep(30)"],
+                    temporary, os.environ.copy(), .15, "",
+                    Path(temporary) / "events.jsonl",
+                )
+            self.assertTrue(result["timeout"])
+            self.assertEqual(result["error"], "cleanup_failed:OSError")
+            self.assertLess(result["wall_seconds"], 5)
+            self.assertIsNotNone(result["returncode"])
+            self.assertNotEqual(result["returncode"], 0)
+
+    @unittest.skipUnless(os.name == "nt", "Windows job-object regression")
+    def test_windows_timeout_stops_descendants_but_not_unrelated_process(self):
+        import ctypes
+        from ctypes import wintypes
+
+        api = ctypes.WinDLL("kernel32", use_last_error=True)
+        api.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        api.OpenProcess.restype = wintypes.HANDLE
+        api.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        api.WaitForSingleObject.restype = wintypes.DWORD
+        api.CloseHandle.argtypes = [wintypes.HANDLE]
+        api.CloseHandle.restype = wintypes.BOOL
+        program = (
+            "import json,os,pathlib,subprocess,sys,time\n"
+            "child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(30)'])\n"
+            "pathlib.Path('pids.tmp').write_text(json.dumps([os.getpid(),child.pid]))\n"
+            "pathlib.Path('pids.tmp').rename('pids.json')\n"
+            "while not pathlib.Path('release').exists(): time.sleep(.01)\n"
+            "if sys.argv[1] == 'sleep': time.sleep(30)\n"
+        )
+        unrelated = benchmark.subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(30)"]
+        )
+        try:
+            # The exited-parent case is where PID-based taskkill loses descendants.
+            for mode in ("sleep", "exit"):
+                with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
+                    root = Path(temporary)
+                    handles = []
+                    with ThreadPoolExecutor(max_workers=1) as executor:
+                        future = executor.submit(
+                            benchmark.capture, [sys.executable, "-c", program, mode],
+                            temporary, os.environ.copy(), 2, "", root / "events.jsonl",
+                        )
+                        try:
+                            ready = root / "pids.json"
+                            deadline = time.monotonic() + 5
+                            while not ready.exists() and not future.done():
+                                self.assertLess(time.monotonic(), deadline)
+                                time.sleep(.01)
+                            # Retain handles before exit: unlike PID probes, these
+                            # cannot accidentally refer to a reused process ID.
+                            for pid in json.loads(ready.read_text()):
+                                handle = api.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
+                                self.assertTrue(handle, ctypes.get_last_error())
+                                handles.append(handle)
+                                self.assertEqual(api.WaitForSingleObject(handle, 0), 258)
+                            (root / "release").touch()
+                            result = future.result(timeout=5)
+                            self.assertTrue(result["timeout"])
+                            self.assertEqual(result["error"], "task_timeout")
+                            self.assertLess(result["wall_seconds"], 5)
+                            for handle in handles:
+                                self.assertEqual(api.WaitForSingleObject(handle, 0), 0)
+                            self.assertIsNone(unrelated.poll())
+                        finally:
+                            for handle in handles:
+                                api.CloseHandle(handle)
+        finally:
+            unrelated.kill()
+            unrelated.wait(timeout=3)
+
+    @unittest.skipUnless(os.name == "nt", "Windows job-object regression")
+    def test_windows_job_assignment_failure_never_starts_command(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with patch.object(benchmark.WindowsJob, "assign", side_effect=OSError):
+                result = benchmark.capture(
+                    [sys.executable, "-c",
+                     "from pathlib import Path; Path('started').touch()"],
+                    temporary, os.environ.copy(), 5, "", root / "events.jsonl",
+                )
+            self.assertEqual(result["error"], "OSError")
+            self.assertFalse((root / "started").exists())
+            self.assertIsNotNone(result["returncode"])
 
     def test_task_has_fresh_config_and_only_prompt(self):
         token = "fixture-only-private-value"
