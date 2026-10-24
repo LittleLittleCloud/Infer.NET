@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from home_trends import homepage, load_data
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'artifacts/pages'
@@ -32,13 +33,14 @@ def table(headers, rows):
 
 def page(title, body, active):
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{'en' if active == 'trends' else 'zh-CN'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)} · Infer.NET</title><meta name="description" content="Infer.NET 项目进展、可复现实验笔记与 8bit 双机性能目标。">
 <link rel="stylesheet" href="style.css"></head><body>
 <a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
-<nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
+<nav aria-label="主导航"><a {'aria-current="page"' if active == 'trends' else ''} href="index.html">Commit trends</a>
+<a {'aria-current="page"' if active == 'progress' else ''} href="progress.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 8K 双机 prefill 累计提速约 3.66 倍；128K / BF16 与 Windows SCM 仍待完成</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 实测范围与缺项见逐次记录</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -108,7 +110,11 @@ body += '''</div></section><section><h2>证据与复现</h2><p>历史实验发�
 <p><a href="baseline-8bit.json">下载 8bit 测量摘要 JSON</a> · <a href="experiments.json">下载实验笔记 JSON</a></p>
 <p class="note">公开摘要不含原始提示词和完整 RPC 日志；这些原始文件仍保存在本地，摘要保留其文件名与散列。当前链接不意味着原始日志已公开。</p></section>'''
 OUT.mkdir(parents=True, exist_ok=True)
-(OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
+(OUT / 'progress.html').write_text(page('项目进展', body, 'progress'))
+trends = load_data()
+(OUT / 'index.html').write_text(page('Commit trends', homepage(trends), 'trends'))
+(OUT / 'trends-data.json').write_text(json.dumps(trends, ensure_ascii=False, indent=2, allow_nan=False))
+shutil.copyfile(ROOT / 'site/trends.js', OUT / 'trends.js')
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
 <p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增有线 CUDA 计算块 A/B，保留端到端退化、分段 KV 交接与 4096-token 持续生成记录；BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
@@ -132,4 +138,4 @@ for name in ['single-model-deployment-summary.json', 'baseline-8bit.json', 'kv-s
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
-print(f'Built {OUT}: 2 pages, {len(notes)} notes, {len(measurements)} measured baselines; revision {revision}')
+print(f'Built {OUT}: 3 pages, {len(notes)} notes, {len(trends["runs"])} trend runs; revision {revision}')
