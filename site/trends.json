@@ -111,7 +111,7 @@
         "decode": "sum request (output tokens - 1) / sum measured decode seconds",
         "ttft": "client-send-to-first-valid-output-token"
       },
-      "latestBaselineRun": "pi-main-rerun-20261023"
+      "latestBaselineRun": null
     },
     {
       "id": "pi-humaneval20-issue54-main-fp32-wifi",
@@ -206,51 +206,21 @@
   ],
   "imports": [
     {
-      "id": "pi-main-20261023",
-      "experimentId": "pi-humaneval-main-20",
-      "configurationId": "pi-humaneval20-affine8-fp32-wifi",
-      "source": "site/pi-humaneval-main-summary.json",
-      "report": "docs/PI-HUMANEVAL-MAIN-20261023.md",
-      "title": "main deployment · fixed 20-task baseline",
-      "state": "adopted",
-      "change": "Unified coordinator, Mac serve and Windows agent on main e017d84. Harness c5913cf was separate from the measured runtime.",
-      "result": "20/20 official task checks passed. 808.884 s end-to-end; 98 model requests. This is not a 164-task leaderboard or GPU throughput benchmark.",
-      "provenance": {
-        "kind": "main",
-        "mainCommit": "e017d84e805c016d5912b5051e4c69f758056363",
-        "evidence": "docs/PI-HUMANEVAL-MAIN-20261023.md"
-      },
-      "baselineRunId": null,
-      "links": [
-        {
-          "role": "issue",
-          "label": "Experiment Issue #40",
-          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/40"
-        },
-        {
-          "role": "code-pr",
-          "label": "Runtime code PR #37",
-          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/37"
-        }
-      ]
-    },
-    {
       "id": "pi-main-rerun-20261023",
       "experimentId": "pi-humaneval-rerun-20",
       "configurationId": "pi-humaneval20-affine8-fp32-wifi",
       "source": "site/pi-humaneval-rerun-summary.json",
-      "binarySource": "site/pi-humaneval-main-summary.json",
       "report": "docs/PI-HUMANEVAL-RERUN-20261023.md",
       "title": "Same-runtime rerun · tool-call failure retained",
       "state": "regressed",
       "change": "Reran the same fixed cohort after harness merge 1571071; harness hash and all three e017d84 runtime components unchanged. TUI was also open; environment not exclusive.",
-      "result": "19/20 official checks passed; HumanEval/149 failed with a malformed tool call. 774.288 s includes early failure, not a speedup. Separate 9.068 s retry is excluded. Per-task token counts were not published.",
+      "result": "19/20 official checks passed; HumanEval/149 failed with a malformed tool call. 774.288 s is Pi end-to-end time, not worker prefill/decode speed. Per-task token counts were not published.",
       "provenance": {
         "kind": "main",
         "mainCommit": "e017d84e805c016d5912b5051e4c69f758056363",
         "evidence": "docs/PI-HUMANEVAL-RERUN-20261023.md"
       },
-      "baselineRunId": "pi-main-20261023",
+      "baselineRunId": null,
       "links": [
         {
           "role": "issue",

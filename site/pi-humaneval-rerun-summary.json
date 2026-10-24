@@ -66,10 +66,6 @@
     "reason": "Malformed model tool call from coordinator; Pi error=terminated; no solution.py",
     "singleTaskRetry": "same failure after 9.068 s; excluded from cohort statistics"
   },
-  "pairedSuccessful19": {
-    "oldWallSeconds": 763.6624096240002,
-    "newWallSeconds": 765.249432833
-  },
   "rows": [
     {
       "taskId": "HumanEval/156",
@@ -232,5 +228,11 @@
       "priorWallSeconds": 27.127
     }
   ],
-  "rawEvidence": "Local ignored artifacts only; SHA-256 hashes in docs/PI-HUMANEVAL-RERUN-20261023.md"
+  "rawEvidence": "Local ignored artifacts only; SHA-256 hashes in docs/PI-HUMANEVAL-RERUN-20261023.md",
+  "binarySha256": {
+    "macExecutable": "01a9777455e9de54fb23e06259390cd159a58fa8f5cc192ff13082752067d151",
+    "macMetalLibrary": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+    "windowsExecutable": "a308532aca865617ff46c2007daa4b2fcc6be54db4cc66c71e7b56ce09fa1aa5",
+    "windowsCudaLibrary": "b9abdf0dee1517874654bbbdb6efb54eb26e4927131d3854f5c70f821cf09311"
+  }
 }

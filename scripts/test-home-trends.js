@@ -10,7 +10,7 @@ const ui = require("../site/trends.js");
 const {production, fixtures} = JSON.parse(execFileSync("python3", ["-c",
   "import importlib.util,json; s=importlib.util.spec_from_file_location('fixture','scripts/test-home-trends.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(json.dumps({'production': m.load_data(), 'fixtures': m.fixture_data()}))"
 ], {cwd: root, env: {...process.env, PYTHONPATH: path.join(root, "scripts")}, encoding: "utf8"}));
-const historical = {...production, runs: ["pi-main-20261023", "pi-main-rerun-20261023"].map(id => {
+const historical = {...production, runs: ["pi-main-rerun-20261023"].map(id => {
   const run = production.runs.find(run => run.id === id);
   assert.ok(run, "historical run " + id);
   return run;
@@ -31,7 +31,6 @@ test("stable experiment/run deep link resolves both and rejects mismatched IDs",
   for (const run of fixtures.runs) {
     assert.equal(ui.resolveSelection(fixtures, ui.runHash(run)).run.id, run.id);
   }
-  assert.equal(ui.resolveSelection(production, "#experiment=pi-humaneval-main-20").run.id, "pi-main-20261023");
   assert.equal(ui.resolveSelection(production, "#experiment=pi-humaneval-rerun-20").run.id, "pi-main-rerun-20261023");
   for (const run of historical.runs) {
     assert.equal(ui.resolveSelection(production, ui.runHash(run)).run.id, run.id);
@@ -48,12 +47,14 @@ test("deep link switches incompatible configurations without mixing series", () 
   assert.deepEqual(points.map(p => p.run.id), ["fixture-bf16"]);
 });
 test("repeated runtime SHA has one commit tick but individually selectable runs", () => {
-  const chart = ui.chartModel(historical, historicalConfigId, "pass");
+  const repeated = {...fixtures, runs: fixtures.runs.filter(r =>
+    r.id === "fixture-main" || r.id === "fixture-repeat")};
+  const chart = ui.chartModel(repeated, repeated.configurations[0].id, "pass");
   assert.equal(chart.commits.length, 1);
   assert.equal(chart.points.length, 2);
   assert.equal(chart.counts[0], 2);
   assert.notEqual(chart.points[0].x, chart.points[1].x);
-  assert.deepEqual(chart.points.map(p => p.value), [100, 95]);
+  assert.deepEqual(chart.points.map(p => p.value), [10, 10]);
 });
 test("missing and real zero remain distinct, failure runs remain selectable", () => {
   assert.equal(ui.format(null), "未取得");
@@ -155,7 +156,7 @@ test("production DOM renders honest empty metrics and all 20 rerun rows", () => 
   const page = render(historical, "#run=pi-main-rerun-20261023");
   assert.equal(page.points("prefill").length, 0);
   assert.equal(page.points("ttft").length, 0);
-  assert.equal(page.points("pass").length, 2);
+  assert.equal(page.points("pass").length, 1);
   assert.equal(page.elements["prefill-value"].textContent, "未取得");
   assert.equal(page.elements["pass-value"].textContent, "95% · 19/20");
   assert.equal(page.elements.tasks.querySelector("tbody").children.length, 20);
