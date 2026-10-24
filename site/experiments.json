@@ -1,5 +1,22 @@
 [
   {
+    "id": "humaneval20-m5pro-20261024",
+    "title": "M5 Pro 全本地 Pi / HumanEval 20：全部通过，存在换页",
+    "kind": "候选实测 · affine8 / FP32 KV · 单机",
+    "source": "docs/EXPERIMENT-58-M5PRO-HUMAN20-20261024.md",
+    "question": "最新 main 加显式全本地路由后，M5 Pro 独立执行真实 Pi 20 题的 prefill/decode 与正确性如何？",
+    "setup": "候选87c2b7d，基于main eaaf81f；M5 Pro 48 GB、AC/High Power；Pi1.4.0、seed0、context32768、output4096、timeout300s；无缓存，Windows不参与。",
+    "change": "仅放开现有本地路由阈值上限至262144，保留默认128、FP32部署路径与内核。代码PR #59，结果PR #60。",
+    "result": "20/20 Pi及官方断言通过，无任务超时/错误；107/107请求metal-local；prefill268.205、decode66.434 token/s；客户端TTFT中位10914.875ms；Pi总1202.992s。",
+    "validation": "131单测、44 Native AOT集成检查与三平台CI通过；两次518-token长聊天reset输出一致；逐请求timings/token数与Pi完整对账；原服务Ready已恢复。断言首次相对路径挂载失败保留，绝对路径复验20/20。",
+    "conclusion": "独立单机配置，不能据此宣称相对双机提速。Metal allocation峰值34.73GiB，整轮新增整机swap-out2.013GiB；加载/预热8.688GiB，未通过无换页或128K正式验收。",
+    "next": "等待人工review代码与结果PR，保留当前候选身份；后续如比较拓扑须固定可比配置并重测。",
+    "commands": [
+      "python3 scripts/import-issue58-local-humaneval.py --run-dir LOCAL_RUN --results-pr https://github.com/LittleLittleCloud/Infer.NET/pull/60"
+    ],
+    "evidence": "docs/evaluations/issue58/performance.json；docs/evaluations/issue58/evidence.json；原始日志仅本机artifacts/humaneval20-m5pro-20261024-preflight/"
+  },
+  {
     "id": "bf16-2048-issue54",
     "kind": "2026-10-24 · 双机 CUDA BF16 + 2048 对照 / Pi 固定 20 题",
     "title": "CUDA 算得更快，完整 prefill 反而回退",

@@ -1,0 +1,74 @@
+{
+  "artifacts/humaneval20-m5pro-20261024-preflight/cohort-20/manifest.json": {
+    "sha256": "96f7fccaf875253f8f55a24a073a3ce03be5e34638f7d8b10b147810d793a1d4",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/cohort-20/tasks.jsonl": {
+    "sha256": "812e4f72f5a4a27b19d507591eccf7b289aa9b6e070a840a194e3cc1e4e8ed3d",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/cohort-20/summary.json": {
+    "sha256": "0760dd0e8736a317e9219458b0ddef2fc9c72ebee8f42e1198722ad5a3a70fc8",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/cohort-observer/requests.jsonl": {
+    "sha256": "5566ce82f0ccbd95e63fd46af9f7f10c29f6305110d48d193b30a93119d37103",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/resources.jsonl": {
+    "sha256": "b139fda4e06687a277944db8acf9195144317b5f44e6a943a88750a2533b63d4",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/candidate-serve.log": {
+    "sha256": "dd75e47c842678352e22131a90e982826c4773e32f48bb9c09b3fd47d9cb5840",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/warmup.json": {
+    "sha256": "0063bec8896a8c9a6a944794657814ddb7f5b1dcf17950bd1f97a50d8a936918",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/functional.json": {
+    "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/performance.json": {
+    "sha256": "a2f0dd4eab932253a017bbd72650c0e25fa3e68df3e7027dad457530508e0f14",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/release/manifest.json": {
+    "sha256": "d7f9fc68987faec1573e9a46eb150deb2a8d78e6e8c3a0946879f4cc60a25de5",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/observe.py": {
+    "sha256": "05bebd76d19d7e2b3a95f920b91d4d7824f60ee0912cbe16e37e799670406cc0",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/run.py": {
+    "sha256": "0945512e51be0bd9dee3da807797471120cb223e9690935dba4e8c6ce93fd116",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/integration.log": {
+    "sha256": "f489b16f01c149d0e3ca88e3f29e25c3ef119be2d8fa7c44c00f750b5d8aef89",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/restored-health.json": {
+    "sha256": "d3a4dbcfdde946b373521badb261c7a118ada11b80b740e73866c70d6793e44b",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/final-resources.json": {
+    "sha256": "963e7a305306f027789c89a443b82098e0f969b6b94bc28563ffd871bce98a9f",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/environment.json": {
+    "sha256": "7470b09adf6c6e27dc5d622557c3f7a27c7c5f5f55319902860d4cad2ec7d5d2",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/functional-mount-error.json": {
+    "sha256": "d15c1b869c11bc4b28ee0361d54c9bd255f68f84382d280f1e4dcf69452a627d",
+    "availability": "Local ignored artifacts; not a public download"
+  },
+  "artifacts/humaneval20-m5pro-20261024-preflight/functional-mount-error.log": {
+    "sha256": "c4da63b4392da0d8b823d3072ec3a6fd6acee566f9cee2707294c1e4bbff6313",
+    "availability": "Local ignored artifacts; not a public download"
+  }
+}

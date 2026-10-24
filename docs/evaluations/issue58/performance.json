@@ -1,0 +1,32 @@
+{
+  "runId": "issue58-m5pro-local-human20-20261024",
+  "baselineSha": "eaaf81f630614b4d6416bc62776c13d36331fa57",
+  "macCommit": "87c2b7dcaf4a418dcb18707e1913562717b43cdc",
+  "windowsCommit": null,
+  "metrics_complete": true,
+  "piRequestCount": 107,
+  "workerMetricCount": 107,
+  "inputTokens": 243663,
+  "outputTokens": 19104,
+  "prefillSeconds": 908.496144,
+  "prefillTokensPerSecond": 268.2047707183224,
+  "decodeIntervals": 18997,
+  "decodeSeconds": 285.9545151999999,
+  "decodeTokensPerSecond": 66.4336423808985,
+  "clientTtftMedianMs": 10914.874874999981,
+  "piWallSeconds": 1202.991991753,
+  "officialPassed": 20,
+  "plannedTasks": 20,
+  "resources": {
+    "sampleIntervalSeconds": 10,
+    "allObservedCohortPowerAc": true,
+    "cohortStartUtc": "2026-10-24T17:51:21.704732+00:00",
+    "cohortEndUtc": "2026-10-24T18:11:24.857187+00:00",
+    "swapStartSampleUtc": "2026-10-24T17:51:18.457138+00:00",
+    "swapEndSampleUtc": "2026-10-24T18:11:24.974177+00:00",
+    "swapBracketComplete": true,
+    "sampledCohortSwapOutBytes": 2161508352,
+    "loadingAndWarmupSwapOutBytes": 9328230400,
+    "peakWorkerMetalAllocatedBytes": 37290852352
+  }
+}
