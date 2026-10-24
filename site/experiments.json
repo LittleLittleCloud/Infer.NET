@@ -1,5 +1,20 @@
 [
   {
+    "id": "splash-human20-20261024",
+    "title": "Splash 8bit 完整常驻：20/20通过，原生command 3066.61 /148.91 tok/s",
+    "kind": "2026-10-24 · 第三方参考 · Q8 KV /DFlash2 /40GiB预算",
+    "source": "docs/EXPERIMENT-61-SPLASH-HUMAN20-20261024.md",
+    "question": "Splash 1.4.0 在 M5 Pro 48GiB 上完整常驻 affine8，能否完成固定 Pi HumanEval20？",
+    "setup": "M5 Pro 20 GPU /48GiB，AC/High Power；固定 affine8 e06a74e；Q8 KV/FP32状态，DFlash2；完整专家常驻。用户提高system wired至41GiB，实际Splash预算40GiB。",
+    "change": "独立采集器代码PR #62；不改变产品执行后端。实验Issue #61。",
+    "result": "Pi及官方断言20/20通过，107/107请求计数与tokens完整对账；原生command prefill3066.611、decode148.914 tok/s；TTFT中位850.675ms；Pi总270.630s。",
+    "validation": "21个模型文件散列核对通过；全部cache matched=0、streamed_experts=null；错误实现负对照失败。原worker已恢复原版本Ready，sysctl已独立读回0，默认限额下真实聊天成功。",
+    "conclusion": "初始默认预算启动失败保留；40GiB配置成功。采样Metal峰值35.974GiB，正式整机新增swap-out256.25MiB。command计时和SOP N−1时钟分开，不作128K验收或产品基线。",
+    "next": "按用户授权合并独立结果PR #63并核对Pages。默认sysctl已恢复；采集器PR #62独立保留review，不将Splash接入产品。",
+    "commands": [],
+    "evidence": "docs/evaluations/issue61/summary.json；evidence.json；原始证据仅本机忽略artifacts目录。"
+  },
+  {
     "id": "humaneval20-m5pro-20261024",
     "title": "M5 Pro 全本地 Pi / HumanEval 20：全部通过，存在换页",
     "kind": "已采用代码的历史实测 · affine8 / FP32 KV · 单机",
