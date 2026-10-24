@@ -205,6 +205,12 @@ class BenchmarkTests(unittest.TestCase):
         api.OpenProcess.restype = wintypes.HANDLE
         api.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
         api.WaitForSingleObject.restype = wintypes.DWORD
+        api.IsProcessInJob.argtypes = [
+            wintypes.HANDLE, wintypes.HANDLE, ctypes.POINTER(wintypes.BOOL),
+        ]
+        api.IsProcessInJob.restype = wintypes.BOOL
+        api.TerminateProcess.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        api.TerminateProcess.restype = wintypes.BOOL
         api.CloseHandle.argtypes = [wintypes.HANDLE]
         api.CloseHandle.restype = wintypes.BOOL
         program = (
@@ -224,7 +230,17 @@ class BenchmarkTests(unittest.TestCase):
                 with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
                     root = Path(temporary)
                     handles = []
-                    with ThreadPoolExecutor(max_workers=1) as executor:
+                    assignments = []
+                    assign = benchmark.WindowsJob.assign
+
+                    def track_assignment(job, process):
+                        assign(job, process)
+                        assignments.append((job, process))
+
+                    with (
+                        patch.object(benchmark.WindowsJob, "assign", new=track_assignment),
+                        ThreadPoolExecutor(max_workers=1) as executor,
+                    ):
                         future = executor.submit(
                             benchmark.capture, [sys.executable, "-c", program, mode],
                             temporary, os.environ.copy(), 2, "", root / "events.jsonl",
@@ -238,20 +254,50 @@ class BenchmarkTests(unittest.TestCase):
                             # Retain handles before exit: unlike PID probes, these
                             # cannot accidentally refer to a reused process ID.
                             for pid in json.loads(ready.read_text()):
-                                handle = api.OpenProcess(0x00100000, False, pid)  # SYNCHRONIZE
+                                # SYNCHRONIZE | QUERY_LIMITED_INFORMATION | TERMINATE
+                                handle = api.OpenProcess(0x00101001, False, pid)
                                 self.assertTrue(handle, ctypes.get_last_error())
                                 handles.append(handle)
                                 self.assertEqual(api.WaitForSingleObject(handle, 0), 258)
+                            self.assertEqual(len(assignments), 1)
+                            job, launcher = assignments[0]
+                            for handle, expected in [
+                                (int(launcher._handle), True),
+                                *((handle, True) for handle in handles),
+                                (int(unrelated._handle), False),
+                            ]:
+                                member = wintypes.BOOL()
+                                self.assertTrue(api.IsProcessInJob(
+                                    handle, job.handle, ctypes.byref(member),
+                                ), ctypes.get_last_error())
+                                self.assertEqual(bool(member.value), expected)
                             (root / "release").touch()
+                            if mode == "exit":
+                                self.assertEqual(launcher.wait(timeout=1), 0)
                             result = future.result(timeout=5)
                             self.assertTrue(result["timeout"])
                             self.assertEqual(result["error"], "task_timeout")
                             self.assertLess(result["wall_seconds"], 5)
+                            self.assertIsNotNone(result["returncode"])
+                            self.assertEqual(result["returncode"], launcher.returncode)
+                            if mode == "sleep":
+                                self.assertNotEqual(result["returncode"], 0)
+                            else:
+                                self.assertEqual(result["returncode"], 0)
+                            # Job accounting can reach zero before process handles
+                            # signal. Bound final teardown across ALL retained handles.
+                            deadline = time.monotonic() + 1
                             for handle in handles:
-                                self.assertEqual(api.WaitForSingleObject(handle, 0), 0)
+                                wait_ms = max(0, int((deadline - time.monotonic()) * 1000))
+                                self.assertEqual(api.WaitForSingleObject(handle, wait_ms), 0)
+                            self.assertLess(time.monotonic() - result["start_monotonic"], 5)
                             self.assertIsNone(unrelated.poll())
                         finally:
                             for handle in handles:
+                                # Even a containment regression must not leak fixtures.
+                                if api.WaitForSingleObject(handle, 0) == 258:
+                                    api.TerminateProcess(handle, 1)
+                                    api.WaitForSingleObject(handle, 3000)
                                 api.CloseHandle(handle)
         finally:
             unrelated.kill()

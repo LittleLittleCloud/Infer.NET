@@ -214,6 +214,12 @@ launcher starts Pi only after job assignment succeeds; Pi and its descendants
 are terminated even if Pi exits first. Breakaway is not enabled. Cleanup waits
 for the job to empty and reaps the launcher, using bounded three-second waits;
 cleanup errors are reported as `cleanup_failed:<exception type>`, not suppressed.
+Windows termination is asynchronous: zero active job processes is not a barrier
+for every retained process handle to signal. The Windows regression verifies
+membership of the launcher, Pi stand-in, and descendant in the exact capture job
+(and excludes an unrelated process), then requires their exit signals within a
+shared one-second teardown deadline after capture, with total elapsed time under
+five seconds. It covers both a sleeping Pi and Pi exiting before its descendant.
 Launcher startup and all cleanup remain included in wall time. Windows hosts
 whose existing job restrictions prevent nested job assignment fail before Pi
 starts; there is no uncontained fallback. POSIX uses a process group; descendants

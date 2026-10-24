@@ -258,6 +258,8 @@ class WindowsJob:
                 self.ctypes.sizeof(accounting), None,
             ))
             if not accounting.ActiveProcesses:
+                # Accounting reaches zero before all process handles necessarily
+                # signal; Windows may still be completing asynchronous teardown.
                 return
             if time.monotonic() >= deadline:
                 raise OSError("Windows job cleanup did not finish")
