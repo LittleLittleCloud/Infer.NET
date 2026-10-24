@@ -347,14 +347,16 @@ def homepage(data):
     )
     return f'''<div class="trends-home">
 <h1 class="trends-title">Commit trends</h1>
-<div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate · dashed branch</span>
-<span>◎ latest verified main baseline</span><span>□ selected · Tab + Enter/Space to select</span></div>
-<div class="run-controls"><label>Comparable configuration <select id="configuration"></select></label>
-<label>Run (including missing metrics) <select id="run"></select></label></div>
+<div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate</span>
+<span>◎ latest verified main baseline</span><span>▫ 未测</span>
+<span>□ selected · Tab + Enter/Space to select</span></div>
+<div class="run-controls"><label>Configuration filter <select id="configuration"></select></label>
+<label>Run · all configurations <select id="run"></select></label></div>
 <p id="selection-notice" role="status"></p>
 <div class="trend-grid">{charts}</div>
 <p class="note">Measured commit axes; repeated runs at the same SHA are offset for visibility, not new commits.
-No Pi wall-time-derived throughput. Missing metrics are not zero.</p>
+All runs appear by default. Lines connect only comparable configurations. No Pi wall-time-derived throughput.
+Missing metrics are marked 未测, not zero. The issue #54 main and BF16/2048 runs did not record client first-token timestamps, so their TTFT is unavailable.</p>
 <section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title"></h2>
 <span id="run-state"></span><a id="permalink">Link to this run</a></div>
 <p id="run-identity"></p><div class="run-summary"><div><h3>Change</h3><p id="run-change"></p></div>

@@ -40,9 +40,10 @@ test("stable experiment/run deep link resolves both and rejects mismatched IDs",
   assert.equal(mismatch.run.id, "fixture-repeat");
   assert.equal(ui.resolveSelection(fixtures, "#prefill-trend").error, "");
 });
-test("deep link switches incompatible configurations without mixing series", () => {
+test("all runs are visible by default and optional filter narrows the view", () => {
   const other = fixtures.runs.at(-1);
   assert.equal(ui.resolveSelection(fixtures, ui.runHash(other)).run.configurationId, other.configurationId);
+  assert.equal(ui.chartModel(fixtures, "all", "prefill").points.length, fixtures.runs.length);
   const points = ui.chartModel(fixtures, other.configurationId, "prefill").points;
   assert.deepEqual(points.map(p => p.run.id), ["fixture-bf16"]);
 });
@@ -152,10 +153,13 @@ function render(data, hash = "") {
   return {elements, listeners, window, history,
     points: key => elements[key + "-chart"].children.filter(child => child.tagName === "button")};
 }
-test("production DOM renders honest empty metrics and all 20 rerun rows", () => {
+test("production DOM renders missing metrics as selectable unmeasured runs", () => {
   const page = render(historical, "#run=pi-main-rerun-20261023");
-  assert.equal(page.points("prefill").length, 0);
-  assert.equal(page.points("ttft").length, 0);
+  assert.equal(page.elements.configuration.value, "all");
+  assert.equal(page.points("prefill").length, 1);
+  assert.equal(page.points("ttft").length, 1);
+  assert.ok(page.points("ttft")[0].className.includes("missing"));
+  assert.ok(page.elements["ttft-chart"].children[0].children.some(child => child.textContent === "未测"));
   assert.equal(page.points("pass").length, 1);
   assert.equal(page.elements["prefill-value"].textContent, "未取得");
   assert.equal(page.elements["pass-value"].textContent, "95% · 19/20");
@@ -235,14 +239,36 @@ test("run controls select failures without speed points, real zero, and browser 
   assert.equal(page.elements.run.value, "fixture-main");
   assert.ok(page.elements["run-state"].textContent.startsWith("main"));
 });
-test("configuration selector and hash navigation redraw only the selected series", () => {
+test("configuration filter narrows, then deep link restores all runs if needed", () => {
   const page = render(fixtures);
+  assert.equal(page.elements.configuration.value, "all");
+  assert.equal(page.points("prefill").length, fixtures.runs.length);
   page.elements.configuration.value = "fixture-incompatible-bf16";
   page.elements.configuration.listeners.change();
   assert.deepEqual(page.points("prefill").map(p => p.dataset.run), ["fixture-bf16"]);
   page.window.location.hash = "#run=fixture-candidate";
   page.listeners.hashchange();
-  assert.equal(page.elements.configuration.value, fixtures.configurations[0].id);
-  assert.ok(!page.points("prefill").some(p => p.dataset.run === "fixture-bf16"));
+  assert.equal(page.elements.configuration.value, "all");
+  assert.equal(page.points("prefill").length, fixtures.runs.length);
+});
+test("default homepage exposes the BF16/2048 run across configurations", () => {
+  const page = render(production);
+  const candidateId = "issue54-bf16-2048-human20-20261024";
+  assert.equal(page.elements.configuration.value, "all");
+  assert.deepEqual(new Set(page.points("prefill").map(point => point.dataset.run)),
+    new Set(production.runs.map(run => run.id)));
+  const prefillSvg = page.elements["prefill-chart"].children[0];
+  assert.equal(prefillSvg.children.filter(child =>
+    ["main-line", "candidate-line"].includes(child.attributes.class)).length, 0,
+  "different configurations must not be connected as one trend");
+  assert.ok(page.points("ttft").find(point => point.dataset.run === candidateId).className.includes("missing"));
+  assert.ok(page.elements.run.children.some(option => option.value === candidateId));
+  page.elements.run.value = candidateId;
+  page.elements.run.listeners.change();
+  assert.equal(page.elements.configuration.value, "all");
+  assert.equal(page.points("prefill").length, production.runs.length);
+  assert.equal(page.elements["prefill-value"].textContent, "417.363 token/s");
+  assert.equal(page.elements["ttft-value"].textContent, "未取得");
+  assert.equal(page.elements["ttft-coverage"].textContent, "0/116 client first-token samples");
 });
 console.log(`${checks} homepage selection/render acceptance checks passed (offline DOM, no browser layout).`);
