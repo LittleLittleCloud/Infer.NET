@@ -2,8 +2,11 @@
 
 The homepage is four linked commit charts, selected-run details and **all** planned
 task rows. The previous homepage remains at `progress.html`; the full notebook
-and public evidence JSON files are retained. Nothing in this feature measures
-inference, deploys services or depends on a future results PR.
+and public evidence JSON files are retained. The BF16/2048 client-TTFT point
+comes from a separately observed retake; the chart code does not measure inference.
+Every chart places the better outcome higher: prefill/decode speed and official
+pass rate increase upward, while TTFT milliseconds decrease upward. The x-axis
+still follows measured commit time; it is never sorted by the metric value.
 
 Build and offline acceptance from the repository root:
 
@@ -65,9 +68,10 @@ same commit axis by default; an optional configuration filter narrows the view.
 Runs from different configurations appear together but are never connected by
 trend lines or treated as controlled comparisons. The run selector lists all
 runs. A missing metric gets a selectable "未测" marker with no numeric value;
-the Issue #54 main and BF16/2048 cohorts did not record client first-token
-timestamps, so both have null TTFT and 0 observed TTFT samples. Environment
-limitations (for example the rerun's open TUI/nonexclusive machine) also belong in
+the original Issue #54 main and BF16/2048 cohorts did not record client first-token
+timestamps, so both have null TTFT and 0 observed TTFT samples. The separate
+BF16/2048 retake has 121 observed client TTFT samples in its own configuration.
+Environment limitations (for example the rerun's open TUI/nonexclusive machine) also belong in
 the run description. These Pi histories are observations, not controlled A/B
 evidence of a speed change.
 

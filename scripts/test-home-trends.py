@@ -310,6 +310,22 @@ class TrendTests(unittest.TestCase):
         self.assertNotIn("</script><script>alert", payload)
         self.assertIn("\\u003c/script>", payload)
 
+    def test_issue54_retained_missing_ttft_and_separate_observed_retake(self):
+        by_id = {run["id"]: run for run in self.data["runs"]}
+        old = by_id["issue54-bf16-2048-human20-20261024"]
+        retake = by_id["issue54-bf16-2048-ttft-human20-20261024"]
+        self.assertIsNone(old["metrics"]["ttft"]["value"])
+        self.assertEqual(old["metrics"]["ttft"]["samples"], 0)
+        self.assertEqual(old["requestCount"], 116)
+        self.assertEqual(retake["measuredCommit"], old["measuredCommit"])
+        self.assertNotEqual(retake["configurationId"], old["configurationId"])
+        self.assertEqual(retake["requestCount"], 121)
+        self.assertEqual(retake["metrics"]["ttft"]["samples"], 121)
+        self.assertAlmostEqual(retake["metrics"]["ttft"]["value"], 7998.56475, places=4)
+        self.assertAlmostEqual(retake["metrics"]["prefill"]["value"], 413.43, delta=.01)
+        self.assertAlmostEqual(retake["metrics"]["decode"]["value"], 66.42, delta=.01)
+        self.assertIsNone(retake["metrics"]["pass"]["value"])
+
     def test_build_and_local_links(self):
         subprocess.run(["python3", "scripts/build-progress-site.py"], cwd=ROOT, check=True,
                        capture_output=True, text=True)
@@ -331,7 +347,7 @@ class TrendTests(unittest.TestCase):
         self.assertIn('issue54-bf16-2048-human20-20261024', index)
         self.assertIn('Configuration filter <select id="configuration"', index)
         self.assertIn('All runs appear by default', index)
-        self.assertIn('their TTFT is unavailable', index)
+        self.assertIn('a separate BF16/2048 retake supplies the observed TTFT point', index)
         self.assertNotIn('id="device-topology"', index)
         self.assertIn('id="device-topology"', (out / "progress.html").read_text())
         self.assertEqual(index.count('class="trend-card"'), 4)
