@@ -25,7 +25,7 @@ commit timestamp check works in CI as well as this checkout.
 ## Sources and output
 
 `site/trends.json` is the reviewed manifest. `scripts/home_trends.py` imports
-the two published Pi summaries, verifies their source/configuration and official
+the retained historical Pi summary, verifies its source/configuration and official
 counts, and validates the normalized data. It writes no source files. The build
 emits the same normalized object as `trends-data.json` and embeds it safely in
 `index.html` for offline use.
@@ -61,7 +61,10 @@ Each configuration has a stable slug `id`, `label`, and:
 
 Never reuse a configuration ID after changing precision, cohort, topology,
 network, cache, workload or timing scope. Configurations are separate selectable
-series: neither main lines nor candidate branches cross them. Environment
+series: neither main lines nor candidate branches cross them. A compact cross-configuration
+A/B shortcut shows the latest experiment with measured main and candidate prefill
+values and links to each separate curve. The run selector lists all configurations
+so a candidate remains discoverable from the default main view. Environment
 limitations (for example the rerun's open TUI/nonexclusive machine) also belong in
 the run description. These Pi histories are observations, not controlled A/B
 evidence of a speed change.
@@ -97,8 +100,8 @@ Required run fields:
   The current adapter requires all components on that measured SHA; mixed-runtime
   observations need a separately designed configuration/adapter.
 - `binarySha256`: map of artifact names to SHA-256, possibly empty if unacquired;
-  `binaryEvidence` records the source. The rerun reuses the original published
-  hashes because its report explicitly states that binaries did not change.
+  `binaryEvidence` records the source. The retained rerun carries its binary
+  hashes directly because its report explicitly states the deployed binaries.
 - `provenance`: `{kind: "main", mainCommit: fullSHA, evidence: URL-or-repo-path}`
   or `{kind: "candidate", evidence: URL-or-repo-path}`. Main status is a reviewed
   assertion supported by runtime/code-adoption evidence, **never inferred** from

@@ -179,8 +179,8 @@
     function updateControls() {
       configControl.value = selected.configurationId;
       runControl.replaceChildren();
-      seriesRuns(data, selected.configurationId).forEach(run => {
-        const option = node("option", `${run.measuredCommit.slice(0, 7)} · ${run.id} · ${state(run)}`);
+      data.runs.forEach(run => {
+        const option = node("option", `${run.title} · ${run.measuredCommit.slice(0, 7)} · ${metricText(run, "prefill")}`);
         option.value = run.id;
         runControl.append(option);
       });

@@ -245,4 +245,15 @@ test("configuration selector and hash navigation redraw only the selected series
   assert.equal(page.elements.configuration.value, fixtures.configurations[0].id);
   assert.ok(!page.points("prefill").some(p => p.dataset.run === "fixture-bf16"));
 });
+test("default homepage exposes the BF16/2048 run across configurations", () => {
+  const page = render(production);
+  const candidateId = "issue54-bf16-2048-human20-20261024";
+  assert.ok(page.elements.run.children.some(option => option.value === candidateId));
+  page.elements.run.value = candidateId;
+  page.elements.run.listeners.change();
+  assert.equal(page.elements.configuration.value,
+    production.runs.find(run => run.id === candidateId).configurationId);
+  assert.deepEqual(page.points("prefill").map(point => point.dataset.run), [candidateId]);
+  assert.equal(page.elements["prefill-value"].textContent, "417.363 token/s");
+});
 console.log(`${checks} homepage selection/render acceptance checks passed (offline DOM, no browser layout).`);
