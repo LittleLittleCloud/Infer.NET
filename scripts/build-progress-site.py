@@ -40,7 +40,7 @@ def page(title, body, active):
 <nav aria-label="主导航"><a {'aria-current="page"' if active == 'trends' else ''} href="index.html">Commit trends</a>
 <a {'aria-current="page"' if active == 'progress' else ''} href="progress.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 实测范围与缺项见逐次记录</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-24 · 实测范围与缺项见逐次记录</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -63,13 +63,14 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
                if line.startswith('|128K 输入')]
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
-body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p><h1>从单机基线，<br>走向双机推理。</h1>
+body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.24</p><h1>从单机基线，<br>走向双机推理。</h1>
 <p class="lead">项目仅保留 Qwen3.6-35B-A3B，默认使用 8bit 权重；同模型 5bit 检查点继续支持。<a href="https://github.com/LittleLittleCloud/Infer.NET/issues/45">模型清理 #45</a>。自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过；当前 Q8 KV 目标和 128K 性能仍未验收。</p>
 <div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机8K/32K已验证</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>尚未达标 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
+<div class="notice"><strong>CUDA 1024 分块复测：完整 prefill 变慢</strong><p>同一旧候选包、Wi-Fi 双机、Pi 固定 20 题：32 块 prefill 539.91 token/s，1024 块 445.13 token/s；decode 都约 67.1 token/s。固定 8K 输入复测显示 4090 计算快 7.82%，但完整 prefill 慢 9.78%。未切换默认值，也不是最新 main 或 128K 验收。<a href="experiments.html#cuda-chunk1024-humaneval-20-20261024">实验记录 →</a> · <a href="cuda-chunk1024-humaneval-summary.json">逐题摘要 JSON</a></p></div>
 <div class="notice"><strong>Pi 固定 20 题复测：19/20，工具调用错误可复现</strong><p>同一 e017d84 推理部署与同一评测脚本复测：19 题完成并通过官方逐题断言；HumanEval/149 在工具调用解析时报错，单题重试也失败。整轮 774.3 秒含提前失败题，不能当作比首次 808.9 秒更快。<a href="experiments.html#pi-humaneval-rerun-20">复测记录 →</a> · <a href="pi-humaneval-rerun-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/32">工具调用 Issue #32</a></p></div>
 <div class="notice"><strong>首次测量：固定 20 题全部通过</strong><p>coordinator、Mac serve 与 Windows agent 均运行 e017d84；Pi 1.4.0 串行完成固定 HumanEval 20 题，整题 wall time 合计 808.9 秒、中位 34.5 秒、P90 61.6 秒。20 份完整代码均通过对应题目断言。这是有工具的 Pi 端到端小样本基线，不是 164 题榜单成绩或 GPU 吞吐上限。<a href="experiments.html#pi-humaneval-main-20">实验记录 →</a> · <a href="pi-humaneval-main-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/40">Issue #40</a></p></div>
 <div class="notice"><strong>BF16 QKV补偿：局部更准，整层仍未通过</strong><p>同版4090诊断中，三项BF16高低位乘积让token16的QKV相对FP32误差从9.92e-4降至8.01e-6；首层相对独立FP32参考仍约0.00704，20层0项通过。开关默认关闭、未部署；目标BF16 KV、独立状态/logits和128K验收仍待完成。<a href="experiments.html#bf16-highlow-qkv">新A/B →</a> · <a href="experiments.html#bf16-independent-oracle">独立参考 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/31">诊断PR #31</a></p></div>
@@ -117,7 +118,7 @@ trends = load_data()
 shutil.copyfile(ROOT / 'site/trends.js', OUT / 'trends.js')
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
-<p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增有线 CUDA 计算块 A/B，保留端到端退化、分段 KV 交接与 4096-token 持续生成记录；BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
+<p class="note">整理日期：2026-10-24。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增 Wi-Fi 双机 CUDA 1024 分块 20 题与固定输入复测，保留有线 CUDA 计算块 A/B、分段 KV 交接与 4096-token 持续生成记录；BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
 body += ''.join(f'<a href="#{esc(n["id"])}">{esc(n["title"])}</a>' for n in notes) + '</nav>'
 for n in notes:
     body += f'<article class="experiment" id="{esc(n["id"])}"><p class="eyebrow">{esc(n["kind"])}</p><h2>{esc(n["title"])}</h2>'
@@ -134,7 +135,7 @@ for n in notes:
             body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['single-model-deployment-summary.json', 'baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'pi-humaneval-main-summary.json', 'pi-humaneval-rerun-summary.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'cuda-midchunk-summary.json', 'bf16-fp32-control-summary.json', 'bf16-fp32kv-control-summary.json', 'bf16-independent-oracle-summary.json', 'bf16-highlow-qkv-summary.json', 'bf16-all-projections-summary.json', 'cuda-query-reuse-summary.json', 'cuda-score-reuse-summary.json', 'style.css']:
+for name in ['cuda-chunk1024-humaneval-summary.json', 'single-model-deployment-summary.json', 'baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'pi-humaneval-main-summary.json', 'pi-humaneval-rerun-summary.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'cuda-midchunk-summary.json', 'bf16-fp32-control-summary.json', 'bf16-fp32kv-control-summary.json', 'bf16-independent-oracle-summary.json', 'bf16-highlow-qkv-summary.json', 'bf16-all-projections-summary.json', 'cuda-query-reuse-summary.json', 'cuda-score-reuse-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')

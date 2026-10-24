@@ -1,5 +1,20 @@
 [
   {
+    "id": "cuda-chunk1024-humaneval-20-20261024",
+    "kind": "2026-10-24 · 1024 CUDA 分块 / HumanEval 20 题",
+    "title": "1024 块让 CUDA 前段更快，双机完整 prefill 却变慢",
+    "question": "将 CUDA 外层 prefill 块从 32 提升到 1024，能否改善双机端到端 prefill 和 Pi 编码负载？",
+    "setup": "同一 47fe588 完整源码 SHA 的 Mac/Windows 候选包；Qwen3.6-35B-A3B affine8/group64、FP32 GEMM/KV，4090 前 20 层和 Mac 后 20 层；Mac AC、Wi-Fi LAN、0% prefix hit、短输入本机路由关闭。Pi 1.4.0 固定 HumanEval 20 题、seed 0、context 32768、单次输出最多 4096；两档串行测试。",
+    "change": "Windows agent 分别用 --cuda-prefill-chunk 32 和 1024；Mac serve 同一 PID 驻留。旧候选 PR #30 代码复测，本轮没有修改推理实现或部署默认值。",
+    "result": "HumanEval 32：20/20 完成，94/94 请求覆盖，prefill 539.91 tok/s，decode 67.15 tok/s，Pi wall 654.33s；1024：20/20 完成，101/101 请求覆盖，prefill 445.13 tok/s，decode 67.10 tok/s，Pi wall 830.08s。固定同一 8K/128 输入各三次：4090 计算中位快 7.82%，完整 prefill 中位慢 9.78%，Mac 等首批 hidden 多 1.102s。",
+    "validation": "两档各 20/20 语法有效、0 超时；未运行官方断言。HumanEval 只有 10/20 最终文件散列相同，Pi 请求数与 token 量不同，整轮 wall 差不能单独归因块长。固定输入两档所有输出 token 列表散列一致；两轮逐请求遥测计数连续且与 Pi 请求数一致。未测 128K、GPU 峰值与完整层状态数值误差。",
+    "conclusion": "在这套旧候选包和 Wi-Fi 拓扑下，1024 块未改善完整 prefill，不建议切换默认值；CUDA 局部计算变快被隐藏向量交付等待抵消。不能将数据视为当前 main、Tensor Core 或正式 Q8 KV 目标的成绩。",
+    "next": "若继续大块方向，应改进首批 hidden 的交付或有序流水线，再以同版同配置 20 题和固定输入复测。Issue #3 的正式精度、内存和 128K 门槛仍未通过。",
+    "commands": [],
+    "source": "docs/CUDA-1024-HUMANEVAL-RETAKE-20261024.md",
+    "evidence": "site/cuda-chunk1024-humaneval-summary.json"
+  },
+  {
     "id": "main-run-cd6f7da-20",
     "kind": "2026-10-23 · main 实测 / Pi 固定 20 题",
     "title": "合并后 main Run：531.20 / 65.08 token/s，20/20 通过",

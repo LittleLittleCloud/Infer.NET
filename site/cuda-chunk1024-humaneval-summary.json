@@ -1,0 +1,539 @@
+{
+  "id": "cuda-chunk1024-humaneval-20-20261024",
+  "date": "2026-10-24",
+  "issue": "https://github.com/LittleLittleCloud/Infer.NET/issues/3",
+  "formerCodePr": "https://github.com/LittleLittleCloud/Infer.NET/pull/30",
+  "source": "47fe588160fc748a8a3f0125b46308c3f03d52d3",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "model": "Qwen3.6-35B-A3B affine8/group64; FP32 GEMM/KV",
+  "piVersion": "1.4.0",
+  "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+  "seed": 0,
+  "contextWindow": 32768,
+  "maxTokens": 4096,
+  "taskTimeoutSeconds": 300,
+  "network": "Mac Wi-Fi home LAN to RTX 4090 Windows",
+  "power": "Mac AC",
+  "routing": "short-prefill-tokens=0, split for every request",
+  "cohorts": [
+    {
+      "chunk": 32,
+      "run": "humaneval-32-valid",
+      "tasks": [
+        {
+          "id": "HumanEval/156",
+          "wallSeconds": 28.639,
+          "requests": 3,
+          "inputTokens": 6033,
+          "outputTokens": 741,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/94",
+          "wallSeconds": 29.082,
+          "requests": 3,
+          "inputTokens": 7285,
+          "outputTokens": 1061,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/72",
+          "wallSeconds": 21.641,
+          "requests": 3,
+          "inputTokens": 6314,
+          "outputTokens": 660,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/80",
+          "wallSeconds": 20.879,
+          "requests": 3,
+          "inputTokens": 5820,
+          "outputTokens": 590,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/149",
+          "wallSeconds": 57.516,
+          "requests": 8,
+          "inputTokens": 20676,
+          "outputTokens": 1418,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/2",
+          "wallSeconds": 24.45,
+          "requests": 5,
+          "inputTokens": 9473,
+          "outputTokens": 463,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/35",
+          "wallSeconds": 23.114,
+          "requests": 4,
+          "inputTokens": 7593,
+          "outputTokens": 560,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/32",
+          "wallSeconds": 41.691,
+          "requests": 4,
+          "inputTokens": 10926,
+          "outputTokens": 1441,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/146",
+          "wallSeconds": 38.296,
+          "requests": 5,
+          "inputTokens": 10918,
+          "outputTokens": 1214,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/137",
+          "wallSeconds": 60.21,
+          "requests": 8,
+          "inputTokens": 20911,
+          "outputTokens": 1592,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/97",
+          "wallSeconds": 30.905,
+          "requests": 5,
+          "inputTokens": 10151,
+          "outputTokens": 807,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/154",
+          "wallSeconds": 30.706,
+          "requests": 5,
+          "inputTokens": 10421,
+          "outputTokens": 740,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/6",
+          "wallSeconds": 26.287,
+          "requests": 4,
+          "inputTokens": 8149,
+          "outputTokens": 740,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/161",
+          "wallSeconds": 20.249,
+          "requests": 3,
+          "inputTokens": 5828,
+          "outputTokens": 607,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/115",
+          "wallSeconds": 24.872,
+          "requests": 3,
+          "inputTokens": 6925,
+          "outputTokens": 815,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/131",
+          "wallSeconds": 26.976,
+          "requests": 5,
+          "inputTokens": 9793,
+          "outputTokens": 592,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/162",
+          "wallSeconds": 25.726,
+          "requests": 4,
+          "inputTokens": 7941,
+          "outputTokens": 728,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/50",
+          "wallSeconds": 51.374,
+          "requests": 9,
+          "inputTokens": 20537,
+          "outputTokens": 885,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/47",
+          "wallSeconds": 50.522,
+          "requests": 7,
+          "inputTokens": 16239,
+          "outputTokens": 1391,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/148",
+          "wallSeconds": 21.19,
+          "requests": 3,
+          "inputTokens": 6040,
+          "outputTokens": 615,
+          "completed": true,
+          "syntaxStatus": "ok"
+        }
+      ],
+      "requestCount": 94,
+      "metricsComplete": true,
+      "inputTokens": 207973,
+      "outputTokens": 17660,
+      "prefillTokensPerSecond": 539.915,
+      "decodeTokensPerSecond": 67.151,
+      "piWallSeconds": 654.325,
+      "completedTasks": 20,
+      "syntaxOkTasks": 20,
+      "errors": 0,
+      "timeouts": 0,
+      "executionPaths": {
+        "cuda-metal-split": 94
+      },
+      "hashes": {
+        "manifest": "2692d1fe6f86d315c289b002036da14943afecc317bb94213bf6ffeac246d725",
+        "tasks": "41f2e64485e5a18751e364b3ddc1e9a0d0b48761124c173ea69d95dac44a8c80",
+        "summary": "307dce447fcb08ec0628d2ae56ccee28f044d831c37fb6ffb114eaf090b4db44",
+        "telemetry": "cec939b4831a68fc32cdd71c27f019e6fc4adfd04d60634542b8b082dc017f8e",
+        "performance": "3082134baac4b102db83668ee87c4568a4c42d2c19fcb3f86e7eb4feec7cd86e"
+      }
+    },
+    {
+      "chunk": 1024,
+      "run": "humaneval-1024",
+      "tasks": [
+        {
+          "id": "HumanEval/156",
+          "wallSeconds": 36.773,
+          "requests": 4,
+          "inputTokens": 8806,
+          "outputTokens": 1018,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/94",
+          "wallSeconds": 31.676,
+          "requests": 3,
+          "inputTokens": 7285,
+          "outputTokens": 1053,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/72",
+          "wallSeconds": 25.07,
+          "requests": 3,
+          "inputTokens": 6322,
+          "outputTokens": 662,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/80",
+          "wallSeconds": 32.247,
+          "requests": 4,
+          "inputTokens": 8395,
+          "outputTokens": 850,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/149",
+          "wallSeconds": 72.884,
+          "requests": 9,
+          "inputTokens": 24088,
+          "outputTokens": 1392,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/2",
+          "wallSeconds": 39.9,
+          "requests": 5,
+          "inputTokens": 10665,
+          "outputTokens": 1019,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/35",
+          "wallSeconds": 27.096,
+          "requests": 4,
+          "inputTokens": 7580,
+          "outputTokens": 554,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/32",
+          "wallSeconds": 38.808,
+          "requests": 3,
+          "inputTokens": 7941,
+          "outputTokens": 1431,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/146",
+          "wallSeconds": 69.02,
+          "requests": 8,
+          "inputTokens": 20741,
+          "outputTokens": 1610,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/137",
+          "wallSeconds": 69.37,
+          "requests": 8,
+          "inputTokens": 21023,
+          "outputTokens": 1616,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/97",
+          "wallSeconds": 34.717,
+          "requests": 5,
+          "inputTokens": 10166,
+          "outputTokens": 702,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/154",
+          "wallSeconds": 65.608,
+          "requests": 9,
+          "inputTokens": 21879,
+          "outputTokens": 1156,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/6",
+          "wallSeconds": 52.597,
+          "requests": 7,
+          "inputTokens": 16046,
+          "outputTokens": 1085,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/161",
+          "wallSeconds": 24.149,
+          "requests": 3,
+          "inputTokens": 5872,
+          "outputTokens": 655,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/115",
+          "wallSeconds": 28.32,
+          "requests": 3,
+          "inputTokens": 6899,
+          "outputTokens": 819,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/131",
+          "wallSeconds": 32.655,
+          "requests": 5,
+          "inputTokens": 9748,
+          "outputTokens": 576,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/162",
+          "wallSeconds": 30.554,
+          "requests": 4,
+          "inputTokens": 7947,
+          "outputTokens": 732,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/50",
+          "wallSeconds": 20.801,
+          "requests": 3,
+          "inputTokens": 5604,
+          "outputTokens": 463,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/47",
+          "wallSeconds": 68.668,
+          "requests": 8,
+          "inputTokens": 20333,
+          "outputTokens": 1661,
+          "completed": true,
+          "syntaxStatus": "ok"
+        },
+        {
+          "id": "HumanEval/148",
+          "wallSeconds": 29.168,
+          "requests": 3,
+          "inputTokens": 6549,
+          "outputTokens": 940,
+          "completed": true,
+          "syntaxStatus": "ok"
+        }
+      ],
+      "requestCount": 101,
+      "metricsComplete": true,
+      "inputTokens": 233889,
+      "outputTokens": 19994,
+      "prefillTokensPerSecond": 445.128,
+      "decodeTokensPerSecond": 67.103,
+      "piWallSeconds": 830.082,
+      "completedTasks": 20,
+      "syntaxOkTasks": 20,
+      "errors": 0,
+      "timeouts": 0,
+      "executionPaths": {
+        "cuda-metal-split": 101
+      },
+      "hashes": {
+        "manifest": "3da1cb3ffd2c2b2f5a46ca94f351346a6e464dca40ebc1cc2b4bbba5676ee74c",
+        "tasks": "f74cc93f6f9c881713e7f5940eff30ec300a1c0911cc94b3fa9291c7cdc28067",
+        "summary": "136fa449c573b627f92711e1551913dd5c90f1528c4d99bf1a854fcbeb61e86c",
+        "telemetry": "6e8fc59b12b0dbbb8647be05c7d6db2f32ea47c00ce2e40ef4f8a4d27da5488a",
+        "performance": "6d78f24fe9ef9be845feef558fc7b9d5a11b9e4f39815d1425d95a5155baf311"
+      }
+    }
+  ],
+  "fixed8192x128": [
+    {
+      "chunk": 32,
+      "warmup": 1,
+      "formalTrials": 3,
+      "promptSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+      "outputSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc",
+      "deterministic": true,
+      "rows": [
+        {
+          "warmup": true,
+          "prefillMs": 12143.249,
+          "clientMs": 14289.376,
+          "cudaComputeMs": 10069.554,
+          "macHiddenWaitMs": 1239.998,
+          "macSuffixMs": 10383.904,
+          "decodeTokensPerSecond": 59.938,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 11595.405,
+          "clientMs": 13735.315,
+          "cudaComputeMs": 9992.106,
+          "macHiddenWaitMs": 737.163,
+          "macSuffixMs": 10301.77,
+          "decodeTokensPerSecond": 59.551,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 11907.562,
+          "clientMs": 14020.711,
+          "cudaComputeMs": 10142.556,
+          "macHiddenWaitMs": 960.949,
+          "macSuffixMs": 10317.006,
+          "decodeTokensPerSecond": 60.301,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 11471.479,
+          "clientMs": 13594.5,
+          "cudaComputeMs": 10022.073,
+          "macHiddenWaitMs": 640.728,
+          "macSuffixMs": 10304.202,
+          "decodeTokensPerSecond": 60.023,
+          "wirePayloadBytes": 267812864
+        }
+      ],
+      "rawSha256": "750f09ecfae6245570164dd79ca22647d183f22eaff1c183704d39d2c3547da1"
+    },
+    {
+      "chunk": 1024,
+      "warmup": 1,
+      "formalTrials": 3,
+      "promptSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d",
+      "outputSha256": "c63c2cf2159f018fb01f1fe836e3fc547b1a30ef83fac8b0d14913f9de0ad1cc",
+      "deterministic": true,
+      "rows": [
+        {
+          "warmup": true,
+          "prefillMs": 13897.881,
+          "clientMs": 16079.817,
+          "cudaComputeMs": 9169.21,
+          "macHiddenWaitMs": 2784.841,
+          "macSuffixMs": 10420.467,
+          "decodeTokensPerSecond": 59.123,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 12412.856,
+          "clientMs": 14530.402,
+          "cudaComputeMs": 9198.975,
+          "macHiddenWaitMs": 1584.293,
+          "macSuffixMs": 10321.019,
+          "decodeTokensPerSecond": 60.21,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 13680.834,
+          "clientMs": 15815.852,
+          "cudaComputeMs": 9246.083,
+          "macHiddenWaitMs": 2186.505,
+          "macSuffixMs": 10351.814,
+          "decodeTokensPerSecond": 59.766,
+          "wirePayloadBytes": 267812864
+        },
+        {
+          "warmup": false,
+          "prefillMs": 12729.762,
+          "clientMs": 14847.556,
+          "cudaComputeMs": 9238.538,
+          "macHiddenWaitMs": 1839.433,
+          "macSuffixMs": 10335.113,
+          "decodeTokensPerSecond": 60.221,
+          "wirePayloadBytes": 267812864
+        }
+      ],
+      "rawSha256": "c77ce7c914b454b75f8065c877416bc4edc690ff177d7bb505126fdb35dbfd83"
+    }
+  ],
+  "limits": "Old candidate source, not current main; HumanEval outputs diverged (10/20 matching solution SHA). Official assertions, peak memory, swap-out, 128K and Q8 KV not checked. Raw logs remain local only."
+}
