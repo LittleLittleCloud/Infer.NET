@@ -1,5 +1,23 @@
 [
   {
+    "id": "pi-humaneval-rerun-20",
+    "title": "Pi 固定 20 题复测：19/20，工具调用格式错误可复现",
+    "kind": "2026-10-23 · e017d84 运行版本 · 真实复测",
+    "source": "docs/PI-HUMANEVAL-RERUN-20261023.md",
+    "question": "合并评测工具后，在相同推理部署上重跑固定 20 题，正确率和耗时是否稳定？",
+    "setup": "coordinator/serve/agent 仍为 e017d84；8bit 权重、FP32 KV、Wi-Fi，Mac AC/High Power；Pi 1.4.0；seed 0 固定 20 题，单题 300 秒，32768 context，4096 单次输出。",
+    "change": "仅评测脚本已进入 main（1571071），SHA-256 与上轮完全相同；推理二进制未变。",
+    "result": "19/20 完成且对应官方断言通过；HumanEval/149 首请求因 Malformed model tool call 失败，单题重试同样失败。整轮 774.288 秒、中位 31.798 秒、P90 64.703 秒；失败题提前结束，不能与上轮总时间直接算提速。",
+    "validation": "19 份完整代码在断网受限容器通过官方逐题 test；负对照失败。两轮共同成功的19题总 wall：765.249 对 763.662 秒。原始事件与生成代码仅本机，摘要列出散列。",
+    "conclusion": "本轮真实端到端结果为 19/20；工具调用解析是可复现的可靠性缺口。该小样本不是完整 164 题 pass@1 或 128K 性能验收。",
+    "next": "修复并覆盖异常模型工具输出后，完整重跑同一20题；保留本次失败样本和单题重试。",
+    "commands": [
+      "python3 scripts/benchmark-pi-humaneval.py --cohort cohort --seed 0 --timeout 300 --token-file PRIVATE_TOKEN_FILE --output NEW_LOCAL_DIRECTORY",
+      "python3 scripts/eval-pi-humaneval-docker.py --results RESULT_DIRECTORY --dataset PINNED_DATASET --output FUNCTIONAL_JSON"
+    ],
+    "evidence": "site/pi-humaneval-rerun-summary.json；原始JSONL/事件仅本机"
+  },
+  {
     "id": "pi-humaneval-main-20",
     "title": "main 三组件同版：Pi 固定 20 题 20/20，整题中位 34.5 秒",
     "kind": "2026-10-23 · e017d84 实际部署 · Pi 端到端基线",
