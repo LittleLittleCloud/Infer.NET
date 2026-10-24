@@ -58,7 +58,7 @@ test("repeated runtime SHA has one commit tick but individually selectable runs"
   assert.deepEqual(chart.points.map(p => p.value), [10, 10]);
 });
 test("missing and real zero remain distinct, failure runs remain selectable", () => {
-  assert.equal(ui.format(null), "未取得");
+  assert.equal(ui.format(null), "Unavailable");
   assert.equal(ui.format(0), "0");
   const chart = ui.chartModel(fixtures, fixtures.configurations[0].id, "prefill");
   assert.equal(chart.points.find(p => p.run.id === "fixture-zero").value, 0);
@@ -159,13 +159,13 @@ test("production DOM renders missing metrics as selectable unmeasured runs", () 
   assert.equal(page.points("prefill").length, 1);
   assert.equal(page.points("ttft").length, 1);
   assert.ok(page.points("ttft")[0].className.includes("missing"));
-  assert.ok(page.elements["ttft-chart"].children[0].children.some(child => child.textContent === "未测"));
+  assert.ok(page.elements["ttft-chart"].children[0].children.some(child => child.textContent === "Not measured"));
   assert.equal(page.points("pass").length, 1);
-  assert.equal(page.elements["prefill-value"].textContent, "未取得");
+  assert.equal(page.elements["prefill-value"].textContent, "Unavailable");
   assert.equal(page.elements["pass-value"].textContent, "95% · 19/20");
   assert.equal(page.elements.tasks.querySelector("tbody").children.length, 20);
   const inputTotal = page.elements.tasks.querySelector("tfoot").children[0].children[2].textContent;
-  assert.ok(inputTotal.includes("未取得"));
+  assert.ok(inputTotal.includes("Unavailable"));
   assert.ok(inputTotal.includes("0/20"));
 });
 test("point clicks update every metric, all task rows and pressed state without recreating focus target", () => {
@@ -222,10 +222,10 @@ test("partial task totals and merge-not-remeasured identity are explicit", () =>
 });
 test("results absence uses explicit link role, never the display label", () => {
   const data = JSON.parse(JSON.stringify(fixtures));
-  data.runs[0].links.push({role: "results-pr", label: "评估记录",
+  data.runs[0].links.push({role: "results-pr", label: "Evaluation record",
     url: "https://github.com/LittleLittleCloud/Infer.NET/pull/42"});
   const present = render(data, "#run=fixture-main").elements["run-links"].children;
-  assert.ok(present.some(link => link.textContent === "评估记录"));
+  assert.ok(present.some(link => link.textContent === "Evaluation record"));
   assert.ok(!present.some(link => link.textContent === "Separate results PR: not recorded"));
   data.runs[0].links.at(-1).role = "harness-pr";
   data.runs[0].links.at(-1).label = "Results PR mentioned by harness";
@@ -236,7 +236,7 @@ test("run controls select failures without speed points, real zero, and browser 
   const page = render(fixtures);
   page.elements.run.value = "fixture-failure";
   page.elements.run.listeners.change();
-  assert.equal(page.elements["prefill-value"].textContent, "未取得");
+  assert.equal(page.elements["prefill-value"].textContent, "Unavailable");
   assert.ok(page.elements["run-state"].textContent.includes("failed"));
   page.elements.run.value = "fixture-zero";
   page.elements.run.listeners.change();
@@ -276,7 +276,7 @@ test("default homepage exposes the BF16/2048 run across configurations", () => {
   assert.equal(page.elements.configuration.value, "all");
   assert.equal(page.points("prefill").length, production.runs.length);
   assert.equal(page.elements["prefill-value"].textContent, "417.363 token/s");
-  assert.equal(page.elements["ttft-value"].textContent, "未取得");
+  assert.equal(page.elements["ttft-value"].textContent, "Unavailable");
   assert.equal(page.elements["ttft-coverage"].textContent, "0/116 client first-token samples");
 });
 console.log(`${checks} homepage selection/render acceptance checks passed (offline DOM, no browser layout).`);

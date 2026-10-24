@@ -7,7 +7,7 @@
     ttft: {unit: "ms", label: "TTFT request median"},
     pass: {unit: "%", label: "Official task pass rate"}
   };
-  const missing = "未取得";
+  const missing = "Unavailable";
   const format = value => value === null ? missing : new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 3
   }).format(value);
@@ -166,7 +166,7 @@
       });
       model.points.filter(point => point.value === null).forEach(point =>
         svg.append(svgNode("text", {x: x(point.x), y: 244, "text-anchor": "middle",
-          class: "missing-label"}, "未测")));
+          class: "missing-label"}, "Not measured")));
       container.append(svg);
       model.points.forEach(point => {
         const button = node("button", undefined, "trend-point " + point.run.provenance.kind +

@@ -1,65 +1,65 @@
-# CUDA 长 prefill 分块：1024 / 2048 与双机交接
+# CUDA Long Prefill Chunking: 1024 / 2048 and Dual-Node Handover
 
-日期：2026-10-23。关联 [Issue #3](https://github.com/LittleLittleCloud/Infer.NET/issues/3)；实现分支 `codex/cuda-1024-prefill`，有线对照源码 `45a51a1669d43b401c806342cebf3f1647d80080`。本报告是 8192 输入 / 8 输出的诊断，不是 `QWEN36-8BIT-TARGETS.md` 的 128K 验收。
+Date: 2026-10-23. Related to [Issue #3](https://github.com/LittleLittleCloud/Infer.NET/issues/3); implementation branch `codex/cuda-1024-prefill`, wired comparison source code `45a51a1669d43b401c806342cebf3f1647d80080`. This report is a diagnosis of 8192 input / 8 output, not a `QWEN36-8BIT-TARGETS.md` 128K acceptance test.
 
-## 问题与改动
+## Issues and Changes
 
-在固定的 affine 8bit 权重、FP32 KV、20/20 拆分下，扩大 Windows CUDA 的**计算**块是否能减少前段耗时？原生执行器现在接受 32、1024、2048 token；默认部署 `split-agent` 选择 1024，串行模式仍选 32。原生 attention 的 query 子块仍为 32，限制 score 工作区；1024/2048 是整个前段按层执行的外层块。每个外层块作为一个有界发送队列项，内部按 128-token hidden/KV 帧交给 Mac 的 128-token suffix。协议升至 split wire v5、CUDA ABI 7，两端必须同版。
+Under fixed affine 8bit weights, FP32 KV, and 20/20 splitting, can enlarging the **compute** block in Windows CUDA reduce front-end latency? The native executor now accepts 32, 1024, 2048 tokens; default deployment selects `split-agent` choosing 1024, while serial mode still selects 32. The query sub-blocks of native attention remain 32, limiting the score workspace; 1024/2048 is the outer block executing layer-by-layer across the entire front-end. Each outer block serves as a bounded send queue item, internally passing 128-token hidden/KV frames to the Mac's 128-token suffix. The protocol upgrades to split wire v5 and CUDA ABI 7; both ends must use the same version.
 
-## 数值差值先验分析
+## Numerical Difference Prior Analysis
 
-并行的 BF16 目标数值诊断见 [PR #29 的 BF16 路由记录](https://github.com/LittleLittleCloud/Infer.NET/blob/codex/bf16-target/docs/BF16-ROUTER-SHARED-20261023.md)。在 token 93、layer 1，Mac 与 CUDA 的路由 logits 相对 L2 只有 `6.67e-5`；第 8 名附近的 expert 167 与 54 顺序翻转（Mac 差 `+0.00172424`，CUDA 差 `−0.00018668`），layer 1 hidden 差值放大到相对 L2 `0.0376859`。因此异常大差值是近似并列专家的离散选择放大，而非长分块产生的随机结果。更早的算术差异尚未唯一定位；BF16 正确性门槛仍不通过，长分块不能替代该验收。
+Parallel BF16 target numerical diagnostics are documented in the [BF16 routing log of PR #29](https://github.com/LittleLittleCloud/Infer.NET/blob/codex/bf16-target/docs/BF16-ROUTER-SHARED-20261023.md). At token 93, layer 1, the relative L2 difference between Mac and CUDA routing logits is only `6.67e-5`; the expert 167 and 54 order near the 8 rank is flipped (Mac diff `+0.00172424`, CUDA diff `−0.00018668`), and layer 1 hidden differences amplify to relative L2 `0.0376859`. Therefore, the abnormally large difference is an amplification of discrete selection among approximately tied experts, not a random result from long chunking. Earlier arithmetic discrepancies have not yet been uniquely located; BF16 correctness threshold is still not met, so long chunking cannot replace this acceptance test.
 
-原生 Windows 独占测试使用固定 synthetic token IDs、相同 8bit 前段、20 层、40 份状态和完整 KV 范围。1024 token 的 32/1024 最终 hidden 与 40 份状态逐字节一致；正式三轮中位数分别 `1.107263 / 0.987767 s`，长块快 `10.8%`。2048 token 的 32/2048 亦逐字节一致，正式中位数 `2.256862 / 2.002092 s`，长块快 `11.3%`。各配置预热一次、正式三次。原始结果仅本地保存：`artifacts/dual-host/cuda-long-chunk-44d955b/1024.json` SHA-256 `59d5ac8cffa693d058a53330d0c68026972492eaad56ace04399ebfacefeddc4`；`2048.json` SHA-256 `ffa71e24d47700c2699eb0c2439206c1d42f459487fecb7401dd416136179d5a`。
+Native Windows exclusive testing uses fixed synthetic token IDs, the same 8bit front-end, 20 layers, 40 state partitions, and full KV range. The 32/1024 final hidden states for 1024 tokens and 40 state partitions are byte-for-byte identical; median values in the formal three rounds are `1.107263 / 0.987767 s` respectively, with long blocks being `10.8%` faster. The 32/2048 for 2048 tokens are also byte-for-byte identical, with formal medians `2.256862 / 2.002092 s`, and long blocks `11.3%` faster. Each configuration was warmed up once and run formally three times. Raw results are saved locally only: `artifacts/dual-host/cuda-long-chunk-44d955b/1024.json` SHA-256 `59d5ac8cffa693d058a53330d0c68026972492eaad56ace04399ebfacefeddc4`; `2048.json` SHA-256 `ffa71e24d47700c2699eb0c2439206c1d42f459487fecb7401dd416136179d5a`.
 
-## 完整双机 A/B
+## Complete Dual-Node A/B
 
-固定输入文件 SHA-256 `defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`，实际模板后 8192 token；固定 8 个输出、忽略 EOS、greedy、0% prefix hit；每次重置状态，预热 1 次、正式 3 次。Mac 接 AC / High Power；Windows RTX 4090，Mac M5 Pro 48 GiB。两端固定同一源码，Windows 只切换 `--cuda-prefill-chunk`。Mac serve PID 在有线 32/1024/2048 三档期间不变。用户响应中的 8 个 token ID 在全部轮次一致；其列表 JSON 的 SHA-256 前缀为 `86ba289e0b2e1415`。实际 payload 每次 `267,812,864` bytes。Mac allocation 约 `37,467,340,800` bytes；Windows 运行中总设备显存快照约 `19,987 MiB`，峰值和 swap-out 未采集，不能据此判定资源门槛通过。
+Fixed input file SHA-256 `defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`, actual template post-8192 tokens; fixed 8 outputs, ignoring EOS, greedy, 0% prefix hit; reset state each time, warm up 1 times, run formally 3 times. Mac connected to AC / High Power; Windows RTX 4090, Mac M5 Pro 48 GiB. Both ends fixed to the same source code, Windows only switches `--cuda-prefill-chunk`. Mac serve PID remains unchanged during the wired 32/1024/2048 three-tier period. The 8 token IDs in user responses are consistent across all rounds; the SHA-256 prefix of their list JSON is `86ba289e0b2e1415`. Actual payload is `267,812,864` bytes each time. Mac allocation is approximately `37,467,340,800` bytes; Windows total device VRAM snapshot during runtime is approximately `19,987 MiB`, with peak and swap-out not collected, so resource threshold pass cannot be determined based on this alone.
 
-|链路/配置|prefill 三次，秒|中位 prefill，秒|中位 CUDA compute，秒|中位 Mac hidden wait，秒|结论|
+|Link/Config|prefill 3 times, s|Median prefill, s|Median CUDA compute, s|Median Mac hidden wait, s|Conclusion|
 |---|---|---:|---:|---:|---|
-|Wi-Fi，经路由器，32，候选同版|12.225 / 13.073 / 11.567|12.225|9.734|1.031|对照|
-|Wi-Fi，经路由器，1024，最终队列|12.820 / 12.594 / 12.620|12.620|9.091|1.584|CUDA 快，整段慢|
-|Wi-Fi，经路由器，2048，最终队列|13.705 / 13.734 / 13.818|13.734|9.112|未单列|更慢|
-|Mac 1GbE ↔ Windows 有线，32|11.296 / 11.761 / 11.526|11.526|9.728|0.612|有线对照|
-|Mac 1GbE ↔ Windows 有线，1024|12.152 / 12.407 / 12.255|12.255|9.088|1.470|CUDA 快约 6.6%；整段慢约 6.3%|
-|Mac 1GbE ↔ Windows 有线，2048|13.548 / 13.298 / 13.392|13.392|9.080|2.483|整段慢约 16.2%|
+|Wi-Fi, via router, 32, candidate same version|12.225 / 13.073 / 11.567|12.225|9.734|1.031|Control|
+|Wi-Fi, via router, 1024, final queue|12.820 / 12.594 / 12.620|12.620|9.091|1.584|CUDA fast, whole segment slow|
+|Wi-Fi, via router, 2048, final queue|13.705 / 13.734 / 13.818|13.734|9.112|Not listed separately|Slower|
+|Mac 1GbE ↔ Windows wired, 32|11.296 / 11.761 / 11.526|11.526|9.728|0.612|Wired control|
+|Mac 1GbE ↔ Windows wired, 1024|12.152 / 12.407 / 12.255|12.255|9.088|1.470|CUDA fast by approx. 6.6%; whole segment slow by approx. 6.3%|
+|Mac 1GbE ↔ Windows wired, 2048|13.548 / 13.298 / 13.392|13.392|9.080|2.483|Whole segment slow by approx. 16.2%|
 
-有线测试前确认 Mac `en7` 为 `1000baseT full-duplex`，数据监听与已建立的 agent TCP 连接都使用此接口地址；Mac 到 Windows 的路由亦走 `en7`。此前虽然插上网线，私有部署配置仍指向 Mac Wi-Fi 地址，所以早先各轮必须保留为 Wi-Fi 结果。两端配置已留存受限备份后改到有线地址；认证、证书与权重路径未变。现有数据无法把 `cudaSendMs` 全部归于链路：它包括对端计算引发的 socket 反压。1024/2048 的 Mac 等待随大计算块增大，表明流水线粒度也限制端到端收益。选择 1024 默认是按用户指定的 CUDA 计算目标；不宣称当前 1GbE 下端到端加速。
+Before the wired test, it was confirmed that Mac `en7` is `1000baseT full-duplex`; both data listening and the established agent TCP connection use this interface address; the route from Mac to Windows also goes through `en7`. Although the network cable was plugged in earlier, the private deployment configuration still pointed to the Mac Wi-Fi address, so all previous rounds had to remain as Wi-Fi results. After saving restricted backups of the configurations on both ends, they were changed to the wired address; authentication, certificates, and weight paths remained unchanged. The current data cannot attribute all of `cudaSendMs` to the link: it includes socket backpressure caused by computation on the peer side. The Mac wait time for 1024/2048 increases with larger computation blocks, indicating that pipeline granularity also limits end-to-end gains. The choice of 1024 is based on the user-specified CUDA computation target; it does not claim end-to-end acceleration for the current 1GbE.
 
-有线正式原始 JSON 仅本地：`e2e-wired32.json` SHA-256 `665b51270173871ffdce5de4d3d56ec850c4a8f643506c70a8725ef67c406373`，`e2e-wired1024.json` `7eba84783132c6838b0c44b0375a52e85897aaf84c24e425d567f1d4f391bdca`，`e2e-wired2048.json` `878e79b04633db2fd3f1cda06bd30a7bb01166e6689ae67731207d7281689dfb`。路径位于忽略的 `artifacts/dual-host/cuda-long-chunk-927a254/`，不是公开下载链接。
+The official raw JSON for the wired test is only saved locally: `e2e-wired32.json` SHA-256 `665b51270173871ffdce5de4d3d56ec850c4a8f643506c70a8725ef67c406373`, `e2e-wired1024.json` `7eba84783132c6838b0c44b0375a52e85897aaf84c24e425d567f1d4f391bdca`, `e2e-wired2048.json` `878e79b04633db2fd3f1cda06bd30a7bb01166e6689ae67731207d7281689dfb`. The path is located in the ignored `artifacts/dual-host/cuda-long-chunk-927a254/`, not a public download link.
 
-两端 managed build 均为 `45a51a1`；Mac `deepinfer.dll` SHA-256 `256dd325ca4eba12c94cbe019b4de2017a986f8d0670ed9b9309c411c5da86e4`、Metal dylib `1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef`；Windows `deepinfer.dll` `8fc82e57c246f66478e9e78cb308668a9dcb3a24ba261c6b166b55b844d7488a`、CUDA DLL `f0b938ac60d671c950217061d195e3d2f002742b87e8a21032b6ce492c51023c`。Mac 129 项测试通过；Windows 128 通过、1 项 Metal 专属测试跳过。
+Both ends' managed builds are `45a51a1`; Mac `deepinfer.dll` SHA-256 `256dd325ca4eba12c94cbe019b4de2017a986f8d0670ed9b9309c411c5da86e4`, Metal dylib `1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef`; Windows `deepinfer.dll` `8fc82e57c246f66478e9e78cb308668a9dcb3a24ba261c6b166b55b844d7488a`, CUDA DLL `f0b938ac60d671c950217061d195e3d2f002742b87e8a21032b6ce492c51023c`. Mac 129 items passed tests; Windows 128 passed, 1 items (Metal-specific tests) were skipped.
 
-下一步是保留 32 对照，在更长输入与连续输出下验证容量、峰值内存、swap-out 与持续 decode；BF16 路由差异要继续从更早的算术点定位。128K 门槛、完整 logits 与长状态检查目前均未通过或未执行。
+The next step is to retain the 32 control and verify capacity, peak memory, swap-out, and continuous decode under longer inputs and continuous outputs; BF16 routing differences need to be located from earlier arithmetic points. The 128K threshold, complete logits, and long state checks have currently not passed or have not been executed.
 
-## 256/512 计算块的原生候选
+## 256/512 Native Candidates for Computation Blocks
 
-有线 1024 块缩短了 CUDA 计算，却增加了 Mac 等待，因此提交 `f36e71bf1f49986e1efea949b4875dcb8fda9288` 增加可选的 256/512 块，默认 1024 不变。它们继续按 128-token hidden/KV 帧发送，权重、FP32 算术及状态布局不变。以下是 Windows SM89 上、8bit 权重/FP32 KV、mode 5 的**独占原生前段诊断**，每档与 32 对照交替运行，预热 1 次、正式 3 次；不包含网络、Mac 后段或客户端时延。
+The wired 1024 block shortened CUDA computation but increased Mac wait time, so `f36e71bf1f49986e1efea949b4875dcb8fda9288` was submitted to add optional 256/512 blocks, with the default 1024 unchanged. They continue to send hidden/KV frames according to 128-token, with weights, FP32 arithmetic, and state layout unchanged. Below is the **exclusive native front-end diagnosis** on Windows SM89, with 8bit weights /FP32 KV, mode 5, alternating with 32 for comparison, preheated 1 times, and officially run 3 times; it does not include network, Mac back-end, or client latency.
 
-|合成输入|32 块正式中位|候选正式中位|前段改善|hidden 与 40 份最终状态|
-|---|---:|---:|---:|---|
-|256 tokens|0.271698 s|0.246584 s|约 9.24%|逐字节一致|
-|512 tokens|0.547551 s|0.491736 s|约 10.19%|逐字节一致|
+|Synthetic Input|32 Block Official Median|Candidate Official Median|Front-end Improvement|Final State of Hidden and 40 Shares|
+|---|---:|---:|---|---|
+|256 tokens|0.271698 s|0.246584 s|Approx. 9.24%|Byte-by-byte consistent|
+|512 tokens|0.547551 s|0.491736 s|Approx. 10.19%|Byte-by-byte consistent|
 
-原始结果仅 Windows 本机保存于 `artifacts/dual-host/cuda-mid-{256,512}-f36e71b/result.json`；SHA-256 分别为 `d6b2e8bba5266003c55a840a0a5823700caf920ea1a8bf9b75163e664e67001b` 和 `e1d816efa56f42d4bc37c56948d1f15915c02f7950b4425b6e3b86df8e35901b`。Mac 129 项测试通过；Windows 128 项通过、1 项平台跳过，CUDA DLL 在 Windows 同源编译成功。
+Raw results are only saved locally on Windows in `artifacts/dual-host/cuda-mid-{256,512}-f36e71b/result.json`; SHA-256 are `d6b2e8bba5266003c55a840a0a5823700caf920ea1a8bf9b75163e664e67001b` and `e1d816efa56f42d4bc37c56948d1f15915c02f7950b4425b6e3b86df8e35901b` respectively. Mac 129 items passed tests; Windows 128 items passed, 1 items skipped by platform, CUDA DLL compiled successfully on Windows with the same source.
 
-原生检查结束后先恢复原 `919259d` agent；Mac serve/coordinator 未换包。原 8192 输入/8 输出经真实 `cuda-metal-split` 请求返回 HTTP 200，8 个 token 的 SHA-256 为 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`，与有线对照相同；serve 与 coordinator 重新报告 agent 已连接及 worker 健康。后续同版双机 A/B 见下节。
+After the native check, the original `919259d` agent was restored; the Mac serve/coordinator package was not changed. The original 8192 input and /8 output were returned via a real `cuda-metal-split` request with HTTP 200, the 8 token SHA-256 was `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`, consistent with the wired baseline; serve and coordinator re-reported that the agent was connected and the worker was healthy. See the next section for subsequent dual-machine A/B testing with the same version.
 
-## 同版有线完整请求：中间块未改善端到端
+## Complete wired request with the same version: intermediate blocks did not improve end-to-end
 
-两端从同一提交 `47fe588160fc748a8a3f0125b46308c3f03d52d3` 构建 Native AOT；打包清单的 split protocol 为 v5，权重 affine8，GEMM/KV 为 FP32。Mac serve 在五档测试期间保持同一 PID，Windows agent 每档重启并明确记录块长。链路为 Mac `en7` 1000baseT 全双工直达既有 LAN，Windows agent 实际连接该接口地址；Mac 到 Windows 的路由也走 `en7`。固定 8192 输入/8 输出、0% prefix hit、greedy、忽略 EOS，每次重置状态；每档一次完整预热、三次正式请求。顺序 256→512→32→1024→256 确认，Mac 在开始前确认 AC。正式试验未逐次记录电源、swap-out 或 GPU 峰值，不能据此通过固定资源门槛。
+Both ends were built from the same commit `47fe588160fc748a8a3f0125b46308c3f03d52d3` for Native AOT; the split protocol in the package manifest is v5, weight affine8, GEMM/KV is FP32. The Mac serve maintained the same PID throughout the five test tiers, while the Windows agent restarted for each tier and explicitly logged the block length. The link is Mac `en7` 1000baseT full-duplex direct to the existing LAN, and the Windows agent actually connects to this interface address; routing from Mac to Windows also goes through `en7`. Fixed 8192 input, /8 output, 0% prefix hit, greedy, ignoring EOS, resetting state each time; one full warm-up and three formal requests per tier. Sequential 256→512→32→1024→256 confirmed, with Mac confirming AC before starting. The formal test did not record power, swap-out, or GPU peaks per iteration, so it cannot pass the fixed resource threshold based on this.
 
-|CUDA 计算块|prefill 三次，秒|中位 prefill|中位 CUDA 计算|中位 Mac hidden 等待|中位 Mac 后段|
+|CUDA Compute Block|prefill three times, seconds|Median prefill|Median CUDA Compute|Median Mac Hidden Wait|Median Mac Post-segment|
 |---|---|---:|---:|---:|---:|
 |32|10.972 / 10.936 / 11.071|10.972|9.764|0.411|10.290|
 |256|11.275 / 11.281 / 11.266|11.275|9.130|0.703|10.289|
 |512|11.551 / 11.480 / 11.474|11.480|9.077|0.913|10.292|
 |1024|12.096 / 12.089 / 12.061|12.089|9.164|1.505|10.309|
-|256 确认|11.303 / 11.290 / 11.266|11.290|9.192|0.719|10.291|
+|256 Confirmed|11.303 / 11.290 / 11.266|11.290|9.192|0.719|10.291|
 
-所有预热与正式轮次均返回同一 8-token ID 序列，SHA-256 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`。各档正式 decode 中位约 55–56 token/s，但只有 8 个输出，不能代替长 decode 验收。32 是本轮最快的完整 prefill；256 比它慢约 2.8%，512 慢约 4.6%，1024 慢约 10.2%。更大块减少 CUDA 纯计算，却增加 Mac 等首批 hidden 的时间；Mac 后段约 10.3 秒几乎不变。CUDA `sendMs` 包含 socket 反压，不等于纯网络传输时间。三项阶段时长重叠，不能直接求和。
+All warm-up and formal rounds returned the same 8-token ID sequence, SHA-256 `86ba289e0b2e1415b354ed6baaace9efb1f6b58e1083d3c6c46f605640623544`. The median decode speed for each tier's formal run was approximately 55–56 token/s, but with only 8 outputs, it cannot replace long decode acceptance. 32 is the fastest complete prefill in this round; 256 is slower by about 2.8%, 512 slower by about 4.6%, 1024 slower by about 10.2%. Larger blocks reduce pure CUDA compute but increase the time for the first batch of hidden states on Mac; the Mac post-segment is almost unchanged at about 10.3 seconds. CUDA `sendMs` includes socket backpressure and does not equal pure network transmission time. The durations of the three stages overlap and cannot be directly summed.
 
-本机原始响应仅保存在 `artifacts/dual-host/midchunk-e2e-20261023T2030Z/{32,256,512,1024,256-confirm}.json`，对应 SHA-256 依次为 `e05a1ec5e78bd2b078aa83331689e982367e0d43d21c624bffa3eec138de08b1`、`1fb20715933291d49eb96a38c56513232dd9af500e7bcc6b7970e947d36a3dd5`、`686b41c4d9ccead4d53cefecf749009a441730fb3eed56131a317da2091daf89`、`a0ada66ed09d069cd99309857a3b33b462c678a6b1d6d592443620714a36bd58`、`2743a03e9e77a6bfbe98a4973c3a4dfa2105a6da9a99d3ad025b472cf8241765`。Windows 原生输入/状态文件仅本机可用，不提供为公开下载。试验结束后原 `919259d` Mac LaunchAgents 与 Windows agent 已恢复；coordinator 报告 worker healthy/Ready、agent connected，真实 8192/8 跨机请求 HTTP 200 且输出 ID 哈希保持一致。
+The original response on this machine is only saved in `artifacts/dual-host/midchunk-e2e-20261023T2030Z/{32,256,512,1024,256-confirm}.json`, corresponding to SHA-256 in sequence as `e05a1ec5e78bd2b078aa83331689e982367e0d43d21c624bffa3eec138de08b1`, `1fb20715933291d49eb96a38c56513232dd9af500e7bcc6b7970e947d36a3dd5`, `686b41c4d9ccead4d53cefecf749009a441730fb3eed56131a317da2091daf89`, `a0ada66ed09d069cd99309857a3b33b462c678a6b1d6d592443620714a36bd58`, `2743a03e9e77a6bfbe98a4973c3a4dfa2105a6da9a99d3ad025b472cf8241765`. Windows native input/status files are only available locally and are not provided for public download. After the test, the original `919259d` Mac LaunchAgents and Windows agent were restored; the coordinator reported worker healthy/Ready, agent connected, real 8192/8 cross-machine request HTTP 200, and output ID hashes remained consistent.
 
-此轮不选择 256/512 为默认；默认 1024 是先前用户指定的 CUDA 计算块，并非当前有线 8K 端到端最优。需要继续改流水线发送粒度或 Mac 后段，再在 32K/128K、BF16 与长输出上重测，不能把这个短请求的速度外推为固定目标通过。
+256/512 is not selected as the default in this round; the default 1024 is the CUDA compute block previously specified by the user, not the current wired 8K end-to-end optimum. Further adjustments to the pipeline send granularity or the Mac post-segment are needed, followed by re-testing on 32K/128K, BF16, and long outputs. The speed of this short request cannot be extrapolated as a fixed target pass.

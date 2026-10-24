@@ -1,94 +1,94 @@
-# 实验 SOP
+# Experiment SOP
 
-状态：用户已于 2026-10-23 在聊天中确认采用。流程批准不等于具体实验 Issue 获批；每个实验仍须单独获得人工 approve。
+Status: The user confirmed adoption in chat on 2026-10-23. Process approval does not equal specific experiment Issue approval; each experiment still requires separate manual approval.
 
-## 流程
+## Process
 
-`main 基线 → 实验 Issue → 人工批准 → 代码 PR → evaluation → 结果 PR → 人工 review → 合入结果 → 按收益决定是否合入代码 → 关闭 Issue`
+`main baseline → experiment Issue → human approval → code PR → evaluation → results PR → human review → merge results → decide whether to merge code based on measured benefit → close Issue`
 
-每个实验使用一个 Issue、一个代码 PR 和一个独立结果 PR。失败、退化、无明显收益和中断均保留结果；结果是否合入与代码是否合入分开决定。
+Each experiment uses one Issue, one code PR, and one independent results PR. Failures, regressions, no obvious gains, and interruptions all retain results; whether results are merged and whether code is merged are decided separately.
 
-## 1. 从 main 建立实验 Issue
+## 1. Create Experiment Issue from main
 
-每次实验从最新 main 开始，固定完整基线 SHA；不从另一个未合并的实验分支继续叠加。
+Each experiment starts from the latest main, fixing the complete baseline SHA; do not continue stacking from another unmerged experiment branch.
 
-Issue 标题写明实验、主要改动和预期收益，例如：
+The Issue title must state the experiment, main changes, and expected benefits, for example:
 
-`[实验] CUDA 权重复用：减少重复加载，预期提升 prefill（幅度待测）`
+`[Experiment] CUDA weight reuse: reduce repeated loads to improve prefill (benefit to be measured)`
 
-Issue body 在实现前写清：
+The Issue body must clearly state before implementation:
 
-- 问题、假设，以及基线完整 SHA 和已有测量链接。
-- 需要的代码改动、涉及设备和不在本轮范围内的内容。
-- 预期 prefill / decode 收益；有依据时给出幅度及依据，没有依据时标为待测。
-- evaluation 配置、题组、主指标、正确性和资源检查，以及采用改动的判定条件。
-- 首页 prefill / decode 图的入口和本实验标识；有数据后回填具体测量点链接。
-- 待批准的实验计划，以及后续代码 PR、结果 PR 和证据位置。
+- Problem, hypothesis, and baseline complete SHA and existing measurement links.
+- Required code changes, involved devices, and content out of scope for this round.
+- Expected prefill / decode benefits; if there is basis, provide magnitude and basis; if no basis, mark as to-be-measured.
+- Evaluation configuration, question groups, main metrics, correctness and resource checks, and criteria for adopting changes.
+- Entry point for the first page prefill / decode chart and this experiment identifier; after data is available, fill in specific measurement point links.
+- Experiment plan awaiting approval, and subsequent code PR, results PR, and evidence locations.
 
-不要用预期收益在趋势图上填入实测点。尚无数据的实验展示为待评测，可在图旁的实验列表进入 Issue。
+Do not fill in measured points on the trend chart using expected benefits. Experiments with no data yet are displayed as to-be-evaluated and can be accessed via the Issue from the experiment list next to the chart.
 
-## 2. Issue 获人工批准后实现
+## 2. Implement after Issue receives manual approval
 
-Issue 必须有可追踪的人工 approve，记录批准者、时间及对应计划。创建 Issue、自动检查通过或代理自行认可不算批准。
+The Issue must have a traceable manual approval, recording the approver, time, and corresponding plan. Creating an Issue, automatic check passing, or agent self-approval does not count as approval.
 
-批准后从 main 创建 `codex/experiment-<issue>-<name>` 分支，提交实现并创建代码 PR，关联 Issue。若批准期间 main 已变化，更新基线 SHA、记录差异；影响假设或评价标准的变化须重新获得批准。
+After approval, create the `codex/experiment-<issue>-<name>` branch from main, commit the implementation, create a code PR, and link the Issue. If main has changed during the approval period, update the baseline SHA and record the differences; changes that affect assumptions or evaluation criteria must be re-approved.
 
-代码 PR 合入前保持候选身份。需要改变已批准的实验范围、精度或判定条件时，先更新 Issue 并取得相应批准。
+Maintain candidate status until the code PR is merged. If changes to the approved experiment scope, accuracy, or decision criteria are required, update the Issue first and obtain corresponding approval.
 
-代码 PR 和结果 PR 不使用会在合并时自动关闭实验 Issue 的关键字，避免提前关闭。
+Do not use keywords that automatically close the experiment Issue upon merging in either the code PR or the results PR, to avoid premature closure.
 
 ## 3. Evaluation
 
-同轮对照固定 main 基线与候选代码完整 SHA。核对实际运行的 Mac / Windows 版本与产物散列；Git checkout 的 HEAD 不能代替运行版本。每轮使用新的运行 ID 和结果目录。
+For each round of control, fix the main baseline and the complete SHA of the candidate code. Verify the actual Mac/Windows versions and artifact hashes used in the run; the Git checkout HEAD cannot substitute for the runtime version. Use a new run ID and result directory for each round.
 
-普通优化按固定 HumanEval 5 题迭代；正式与 main 比较、决定是否保留改动时用固定 20 题。相同题组、seed、模型、Pi 版本、精度、缓存、上下文和输出限制，并保持可比的供电与网络条件。同一 GPU 上的竞争基准串行执行。
+Standard optimizations iterate on the fixed HumanEval 5 problems; when comparing with main and deciding whether to retain changes, use the fixed 20 problems. Keep the same problem set, seed, model, Pi version, precision, cache, context, and output limits, and maintain comparable power and network conditions. Competing benchmarks on the same GPU are executed serially.
 
-取得完整逐请求 worker 指标后计算：
+After obtaining complete per-request worker metrics, calculate:
 
-- prefill token/s = 总输入 tokens / 总 prefill 秒数。
-- decode token/s = 总 decode 间隔数 / 总 decode 秒数；每次 N 个输出对应 N−1 个间隔。
+- prefill token/s = total input tokens / total prefill seconds.
+- decode token/s = total decode intervals / total decode seconds; each N outputs correspond to N−1 intervals.
 
-记录两项绝对值、相对基线变化、指标覆盖率、正确性、资源、失败情况及 Pi 总耗时。不能用 Pi wall time 或 Dashboard 最近一次请求替代整轮 worker 吞吐。
+Record both absolute values, relative changes from baseline, metric coverage, correctness, resources, failure cases, and total Pi time. Do not use Pi wall time or the Dashboard's most recent request to substitute for the full round of worker throughput.
 
-性能结论必须同时考虑正确性与资源条件；只有速度提高但输出错误不能判为改进。收益是否足以采用按 Issue 中事先批准的标准及人工 review 判断，不在看到结果后调整门槛。prefill 改善但 decode 退化等权衡须明确披露。
+Performance conclusions must consider both correctness and resource conditions; an increase in speed with incorrect output cannot be judged as an improvement. Whether the benefit justifies adoption is determined by pre-approved standards in the Issue and manual review, without adjusting thresholds after seeing results. Trade-offs, such as improved prefill but degraded decode, must be explicitly disclosed.
 
-128K 正式性能与正确性验收仍执行 [Qwen3.6 8bit 性能目标](QWEN36-8BIT-TARGETS.md)，不能用 HumanEval 结果替代。不同工作负载和计时口径分开展示。
+128K formal performance and correctness acceptance still executes [Qwen3.6 8bit performance goals](QWEN36-8BIT-TARGETS.md); HumanEval results cannot be used as a substitute. Different workloads and timing metrics are presented separately.
 
-## 4. 取得数据后创建结果 PR
+## 4. Create Results PR After Obtaining Data
 
-结果 PR 从 main 单独创建分支，包含实验记录、公开摘要和首页趋势图数据，不依赖候选实现才能合入。原始大文件保存在适当的 artifact 位置，附散列和可访问性说明。
+The results PR is created from a separate branch off main, containing experiment records, public summaries, and homepage trend chart data, without depending on the candidate implementation for merging. Original large files are stored in appropriate artifact locations, accompanied by hashes and accessibility notes.
 
-结果至少包含：实验 Issue、代码 PR、运行 ID、测量日期、基线和候选完整 SHA、实际两端运行版本与产物散列、评测驱动版本、配置与工作负载标识、prefill / decode、完整性与正确性状态、A/B 差值、简要分析及采用建议。
+Results must include at least: Experiment Issue, Code PR, Run ID, Measurement Date, Baseline and Candidate Complete SHAs, Actual Runtime Versions and Artifact Hashes for Both Ends, Evaluation Driver Version, Configuration and Workload Identifiers, Prefill/Decode, Integrity and Correctness Status, A/B Differences, Brief Analysis, and Adoption Recommendations.
 
-失败或中断时也创建结果 PR，说明失败原因与已取得的数据。缺失指标写“未取得”，不填零或估算值；不隐藏失败和有效的慢轮次。
+Create a results PR even for failures or interruptions, explaining the cause of failure and the data obtained. Write "Not Obtained" for missing metrics; do not fill in zeros or estimated values. Do not hide failures and valid slow rounds.
 
-## 5. 首页 prefill / decode 指标板
+## 5. Homepage Prefill/Decode Metrics Dashboard
 
-首页增加四个趋势图：prefill、decode、TTFT 和任务通过率。横轴为实际被测代码 commit，纵轴分别为 token/s、token/s、毫秒和百分比；按 commit 的时间排列，展示短 SHA，保留完整 SHA。结果记录或站点发布的 commit 不作为被测代码 commit。
+Add four trend charts to the homepage: prefill, decode, TTFT, and task pass rate. The x-axis represents the actual tested code commit, and the y-axes represent token/s, token/s, milliseconds, and percentage, respectively; arranged by commit time, displaying short SHAs while retaining complete SHAs. Commits recorded in results or published on the site are not treated as tested code commits.
 
-首页主体仅保留四个趋势图，以及选中实验点后展示的元数据、改动概述、结果概述和逐任务明细；原首页的进展、拓扑、目标表和实验卡片不继续占用首页。完整实验笔记与证据仍可从选中点访问。
+The homepage body retains only the four trend charts, along with metadata, change overview, results overview, and per-task details displayed when selecting an experiment point; the original homepage's progress, topology, target table, and experiment cards no longer occupy the homepage. Complete experiment notes and evidence remain accessible from the selected point.
 
-TTFT 使用客户端发送模型请求至实际收到首个有效模型输出 token 的时间，趋势图展示请求中位数并披露采集覆盖率；角色事件、心跳和 worker 内部 ready 不能替代首 token。任务通过率使用官方逐题断言通过数除以固定题组总数，超时、错误与未完成不从分母剔除；没有断言验证时标为未验证。历史缺少可靠指标时显示“未取得”。
+TTFT is defined as the time from when the client sends the model request to when the first valid model output token is actually received; the trend chart displays the request median and discloses collection coverage. Role events, heartbeats, and worker internal ready states cannot substitute for the first token. Task pass rate is calculated as the number of officially per-problem assertion passes divided by the total number of fixed problems; timeouts, errors, and incomplete tasks are not removed from the denominator; if no assertion verification exists, it is marked as unverified. When historical reliable metrics are missing, display "Not Obtained."
 
-逐任务明细展示 task ID、端到端耗时、prefill tokens、generate tokens 和结果状态。耗时覆盖整道 Pi 任务；token 数累计该题所有模型请求，包含重复上下文。记录失败、超时和重试身份，缺测不填零，合计与原始记录可核对。
+Per-task details display task ID, end-to-end latency, prefill tokens, generate tokens, and result status. Latency covers the entire Pi task; token counts accumulate all model requests for that problem, including repeated contexts. Record failure, timeout, and retry identities; do not fill in zeros for missing measurements, and ensure totals can be reconciled with original records.
 
-- main 上的被测代码点醒目标识，当前已采纳的基线另外突出；候选、未采纳实验使用不同样式和文字标签。
-- 结果 PR 合入 main 只表示实验记录被保存，不能据此将候选代码标为 main 基线。
-- 若采用 squash / rebase 合并，记录被测 SHA 与实际代码合并 SHA 的对应关系；合并产物尚未复测时明确标注，不能捏造该 commit 的实测点。
-- 每个测量点关联实验 Issue、代码 PR、结果 PR、配置、结果分析与证据；Issue 反向链接首页对应点。点链接使用稳定的实验标识和运行 ID。
-- 相同 commit 的多次运行全部保留，不挑最快值。不同精度、题组、网络、拓扑或计时范围使用独立系列或筛选，默认展示可比配置。
-- 失败但有可靠测量值的点保留失败状态；没有可靠值时仅在关联列表展示，不画为零。
+- Clearly mark tested code points on main; the currently adopted baseline is additionally highlighted; candidates and unadopted experiments use different styles and text labels.
+- Merging a results PR into main only indicates that experiment records are saved; it does not allow marking candidate code as the main baseline.
+- If squash/rebase merging is used, record the correspondence between the tested SHA and the actual code merge SHA; if the merge artifact has not been re-measured, explicitly mark it, and do not fabricate measured points for that commit.
+- Each measurement point is linked to the Experiment Issue, Code PR, Results PR, Configuration, Results Analysis, and Evidence; the Issue provides a reverse link to the corresponding point on the homepage. Point links use stable experiment identifiers and run IDs.
+- Multiple runs of the same commit are all retained; do not select only the fastest value. Different precisions, problem sets, networks, topologies, or timing ranges use independent series or filters, with comparable configurations displayed by default.
+- Points with failures but reliable measurement values retain the failure status; points without reliable values are only displayed in the associated list, not plotted as zero.
 
-历史数据只回填可核实的被测 SHA 和指标。仅有 Pi 总耗时的历史结果不能推导 prefill / decode；没有源码版本的记录保留在历史实验区。
+Historical data only backfills verifiable tested SHAs and metrics. Historical results with only total Pi time cannot derive prefill/decode; records without source code versions are retained in the historical experiment area.
 
-上述为首页待实现要求，不代表当前站点已经具备趋势图。
+The above are requirements to be implemented on the homepage and do not imply that the current site already possesses trend charts.
 
-## 6. 人工 review、合并与关闭
+## 6. Manual Review, Merge, and Closure
 
-实验结束后由人工 review 结果。结果 PR 无论正向、负向或失败，修正记录问题并通过 review 后始终合入 main。
+After the experiment ends, manually review the results. Regardless of whether the results PR is positive, negative, or a failure, correct any record issues and always merge into main after passing review.
 
-有经确认的改进时，代码 PR 经人工 review 并满足检查后合入 main，更新基线；无收益、退化或证据不足时不合入代码 PR，记录原因并关闭候选 PR。人工 review 是必要步骤，本 SOP 不授予代理自动合并权限。
+When a confirmed improvement exists, the Code PR is merged into main after manual review and passing checks, updating the baseline; if there is no benefit, degradation, or insufficient evidence, the Code PR is not merged, the reason is recorded, and the candidate PR is closed. Manual review is a necessary step; this SOP does not grant agents automatic merge permissions.
 
-若 main 在实验期间已加入影响性能的其他改动，在采用候选前重新对照当前 main；保留原始测量并追加复测。代码合并后核对实际合并版本、更新基线身份，需要时补测，结果回写同一实验。
+If main has incorporated other changes affecting performance during the experiment, re-compare with the current main before adopting the candidate; retain original measurements and append re-measurements. After code merging, verify the actual merged version, update the baseline identity, and perform supplementary measurements if necessary, writing results back to the same experiment.
 
-最后核对结果已合入、代码采用决定已落实、首页与证据链接正确、基线状态准确，在 Issue 写明结论及两个 PR 的去向，再关闭 Issue。
+Finally, verify that results are merged, the code adoption decision is implemented, homepage and evidence links are correct, and baseline status is accurate. Write the conclusion and the disposition of both PRs in the Issue, then close the Issue.

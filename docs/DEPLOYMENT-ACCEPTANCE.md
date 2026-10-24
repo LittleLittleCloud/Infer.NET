@@ -1,24 +1,24 @@
-# 常驻双机部署候选验收
+# Permanent Dual-Machine Deployment Candidate Acceptance
 
-测量日期：2026-10-22（America/Los_Angeles）。关联 [Issue #9](https://github.com/LittleLittleCloud/Infer.NET/issues/9)、[PR #10](https://github.com/LittleLittleCloud/Infer.NET/pull/10)，实现叠加于尚未合并的 PR #8。
+Measurement Date: 2026-10-22 (America/Los_Angeles). Associated with [Issue #9](https://github.com/LittleLittleCloud/Infer.NET/issues/9), [PR #10](https://github.com/LittleLittleCloud/Infer.NET/pull/10), implemented on top of the unmerged PR #8.
 
-两端构建与联合测试源码均为 `85c68efe50ceced6bb00a72ce8214e98dd168724`，测试时两端 checkout 干净。后续笔记/Pages commit 仅记录结果，不改变本轮安装包。
+Both ends' build and joint test source code are `85c68efe50ceced6bb00a72ce8214e98dd168724`, with both ends checked out cleanly during testing. Subsequent notes/Pages commits only record results and do not change the installation packages for this round.
 
-[部署与操作指南](https://github.com/LittleLittleCloud/Infer.NET/blob/85c68efe50ceced6bb00a72ce8214e98dd168724/docs/DEPLOYMENT.md) · [三平台 CI](https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39895496808)
+[Deployment and Operations Guide](https://github.com/LittleLittleCloud/Infer.NET/blob/85c68efe50ceced6bb00a72ce8214e98dd168724/docs/DEPLOYMENT.md) · [Three-Platform CI](https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39895496808)
 
-## 本轮交付
+## This Delivery
 
-Mac coordinator 与 Metal split-serve 独立常驻；Windows split-agent 保持 CUDA 前 20 层权重，逐请求重置状态并主动连接 Mac。模型仍为固定 Qwen3.6-35B-A3B affine 8bit/group64；模型 revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`。Mac 完整模型及 Windows prefix bundle 启动时校验固定散列。
+Mac coordinator and Metal split-serve run as independent persistent processes; Windows split-agent retains CUDA prefix 20 layer weights, resets state per request, and proactively connects to Mac. The model remains a fixed Qwen3.6-35B-A3B affine 8bit/group64; model revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`. The Mac full model and Windows prefix bundle verify fixed hashes at startup.
 
-数据通道采用固定证书的双向 TLS、SplitWire v2 HMAC/请求/布局/位置校验；本地 API token 鉴权、SSE 流式、自然 EOS、取消、deadline、1 个执行器加 2 个排队名额。配置文件、私钥和 token 不进入 Git。提供带文件散列的 Native AOT 版本目录、macOS LaunchAgent 和 Windows SCM 安装/卸载脚本、升级回退说明。
+The data channel uses fixed-certificate mutual TLS, SplitWire v2 HMAC/request/layout/location validation; local API token authentication, SSE streaming, natural EOS, cancellation, deadline, 1 executors, and 2 queue slots. Configuration files, private keys, and tokens are not committed to Git. A Native AOT version directory with file hashes, macOS LaunchAgent, and Windows SCM install/uninstall scripts are provided, along with upgrade and rollback instructions.
 
-当前能力边界：FP32 KV，输入加输出最多 2048 tokens，输出最多 256 tokens；不是 BF16/128K 正式性能交付。Mac LaunchAgent 已安装运行；Windows 原生前台服务已运行验证，SCM 安装/开机启动/服务账号 GPU 可见性仍需管理员执行后验收。Mac 用户退出登录或休眠也不保证可用性。日志持久化已提供，自动轮转仍未实现。
+Current capability boundaries: FP32 KV, input plus output totaling at most 2048 tokens, with output capped at 256 tokens; this is not a BF16/128K formal performance delivery. The Mac LaunchAgent is installed and running; the Windows native foreground service has been verified running. SCM installation, boot startup, and service account GPU visibility still require administrator execution for acceptance. Mac availability is not guaranteed upon user logout or sleep. Log persistence is provided; automatic log rotation is not yet implemented.
 
-## 验收证据
+## Acceptance Evidence
 
-原始文件仅本地保存于 `artifacts/deploy/acceptance-6/`，不将本地索引伪装成公开下载。下列为实际运行结果：
+Raw files are stored locally only at `artifacts/deploy/acceptance-6/`; local indexes are not disguised as public downloads. The following are actual runtime results:
 
-| 检查 | 结果 |
+| Check | Result |
 |---|---|
 | readiness advertises 8bit FP32 2K | PASS |
 | API rejects wrong authentication | PASS |
@@ -36,86 +36,86 @@ Mac coordinator 与 Metal split-serve 独立常驻；Windows split-agent 保持 
 | bounded queue provides explicit backpressure | PASS |
 | Mac model PID remains unchanged | PASS |
 
-8 个同步请求的响应为 3 × HTTP 200、5 × HTTP 429。Mac 同一进程连续完成测试，不重新载入模型。另验证重复启动使用相同配置被独占锁拒绝，原 worker 不受影响。
+The response for 8 synchronous requests is 3 × HTTP 200, 5 × HTTP 429. The Mac completes tests continuously within the same process without reloading the model. Additionally, repeated startups using the same configuration are rejected by an exclusive lock, and the original worker is unaffected.
 
-断线/重连复测：停止经过路径校验的 Windows agent 后，Mac `/ready` 和推理均返回 503；重启 agent 并等待两级就绪后返回 200，32 个输出 token 与此前完全相同，Mac PID 不变。原始摘要位于本地 `artifacts/deploy/reconnect-summary.json`。实际 Native AOT CLI 流式调用输出“好”，正常以 EOS 结束。
+Disconnect/reconnect retest: After stopping the Windows agent that passed path validation, Mac `/ready` and inference both return 503; after restarting the agent and waiting for two-level readiness, it returns 200, with 32 output tokens identical to before, and the Mac PID unchanged. The original summary is located locally at `artifacts/deploy/reconnect-summary.json`. The actual Native AOT CLI streaming call emitted the literal `好` (English: “Good”) and ended normally with EOS.
 
-Windows 私有配置已增加 `log-file`，SCM 启动后记录持久日志；日志轮转仍需运维归档。
+Windows private configuration has added `log-file`; SCM startup records persistent logs; log rotation still requires operations archiving.
 
-单元测试 85 项；Linux/macOS/Windows CI 各通过构建、25 项 RPC 和 25 项 Native AOT RPC；这些 RPC 检查使用模拟后端。上表另外使用两台实际设备与真实模型执行，二者不混算。CUDA reset 后的算子自检通过。
+Unit tests: 85 items; Linux/macOS/Windows CI each passed build, 25 RPC items, and 25 Native AOT RPC items; these RPC checks use simulated backends. The table above additionally uses two actual devices with real models for execution, which are not mixed in calculations. Operator self-checks after CUDA reset passed.
 
-## 短请求时延观察（不属于正式吞吐基准）
+## Short Request Latency Observations (Not Formal Throughput Benchmarks)
 
-提示词：`用一句话介绍你自己。`；17 个输入 token，固定 32 个输出 token；无 prefix cache，每轮清空 KV/Delta/卷积状态。Mac M5 Pro 48 GiB / Windows RTX 4090 24 GiB，经已有家庭路由网络；8bit 权重、FP32 KV。进程启动执行全层预热，但本轮没有完整的供电/换页同步采样，不作为正式性能验收。
+Prompt: `用一句话介绍你自己。`; 17 input tokens, fixed 32 output tokens; no prefix cache, KV/Delta/convolution state cleared each round. Mac M5 Pro 48 GiB / Windows RTX 4090 24 GiB, via existing home router network; 8bit weights, FP32 KV. Process startup executes full-layer warmup, but this delivery lacks complete power/page-sync sampling and does not serve as formal performance acceptance.
 
-| 连续请求 | prefill ms | decode token/s |
+| Consecutive Requests | prefill ms | decode token/s |
 |---|---:|---:|
 | 1 | 3336.6655 | 3.9375 |
 | 2 | 1092.8051 | 68.2377 |
 | 3 | 869.9283 | 72.0619 |
 
-第一轮第二个 token 的 wall time 为 7455.8398 ms，后续 token 恢复约 13–14 ms；不能因为后两轮较快就删去首轮。启动预热尚未消除所有首次请求停顿，原因未定位；没有同步换页证据，不能断言是 swap。
+The wall time for the second token of the first round is 7455.8398 ms; subsequent tokens recover to approximately 13–14 ms; the first round cannot be deleted simply because the latter two rounds are faster. Startup warmup has not eliminated all first-request stalls; the cause is unidentified; without evidence of page swapping, it cannot be asserted as swap.
 
-三轮输出 token IDs 一致，JSON 数组 SHA256 `64062696d8d9d6be39d78dc192aaeb80837d6ed43d99b1becc012037bc6d9936`。
+The token IDs from three rounds of output are consistent, JSON array SHA256 `64062696d8d9d6be39d78dc192aaeb80837d6ed43d99b1becc012037bc6d9936`.
 
-## 失败与修复记录
+## Failure and Repair Records
 
-- Windows EphemeralKeySet 不适用于当前 Schannel 路径；DefaultKeySet 在 SSH 身份下出现 AccessDenied。改用 Windows MachineKeySet 后真实 TLS 互通通过。Mac PFX 使用 DefaultKeySet。
-- Windows SSH 子进程可能随会话结束；尝试 WMI 脱离会话启动返回 AccessDenied，未修改权限。开发验证保留 SSH 会话，正式托管使用管理员安装的 SCM 服务。
-- 首次跨机 TLS 状态交接失败，Mac 报解密错误；仅增加 End ACK 仍失败。跳过 End 帧零长度 payload 的 SSL 写入后真实交接成功，保留回归测试。
-- EOS 后立即发并发验收撞上 peer 重连窗口；等待就绪后得到 3 成功/5 限流。Busy 状态改由执行器实际占用派生，避免前请求 finally 覆盖后请求状态。
-- 首次重连探针只等 worker ready、未等 coordinator 心跳恢复，断言失败；后续实际请求成功且输出一致。重连验收应等待 worker ready 和 coordinator healthy 两项。
+- Windows EphemeralKeySet is not suitable for the current Schannel path; DefaultKeySet encountered AccessDenied under SSH identity. After switching to Windows MachineKeySet, real TLS interoperability was achieved. Mac PFX uses DefaultKeySet.
+- Windows SSH subprocesses may terminate with the session; attempting to start outside the session via WMI returned AccessDenied, and permissions were not modified. Development verification retained the SSH session, while production hosting uses the SCM service installed by an administrator.
+- The first cross-machine TLS state handover failed, with Mac reporting a decryption error; adding only an End ACK still failed. Skipping the SSL write for the zero-length payload of the End frame resulted in a successful real handover, with regression tests retained.
+- Sending concurrent acceptance tests immediately after EOS collided with the peer's reconnection window; after waiting for readiness, 3 success/5 rate limiting was observed. The Busy state is now derived from the executor's actual occupation to avoid the finally block of the previous request overwriting the state of the subsequent request.
+- The first reconnection probe only waited for worker ready and did not wait for the coordinator heartbeat to recover, causing an assertion failure; subsequent actual requests succeeded and outputs were consistent. Reconnection acceptance should wait for both worker ready and coordinator healthy conditions.
 
-## 产物追踪
+## Artifact Tracking
 
-| 平台文件 | SHA256 |
+| Platform File | SHA256 |
 |---|---|
 | Mac deepinfer | `2c42b00cd9973cf9825144feba0ce9fb7dfcd4f2efa41bb07b0b95f565cb51fc` |
 | Mac Metal dylib | `701e01d6ccf99ddc9bf1fb46872658a960bea011c40da5020f4393bad57315ed` |
 | Windows deepinfer.exe | `bfbc0f6a979fa52647b3b1d49c177f123640b628b08946f6fd24d3ab6149ad87` |
 | Windows CUDA dll | `21bed60a06b4f52d1dc155e4d2c1e7d8a70207ff46e80baf78f352ee6b3ae706` |
 
-本地原始 summary.json SHA256：`a6c7a6ceb997af33cff3bb02409b5e91b02692e187c2ece40f08694a765f4303`。两端包清单各 9 个文件校验通过；模型、凭据、二进制与原始日志未上传普通 Git。
+Local original summary.json SHA256: `a6c7a6ceb997af33cff3bb02409b5e91b02692e187c2ece40f08694a765f4303`. Each side's package manifest had 9 files pass verification; models, credentials, binaries, and raw logs were not uploaded to standard Git.
 
-## 剩余验收
+## Remaining Acceptance
 
-- 管理员安装 Windows Service，验证启动/停止、退出 SSH 后驻留、故障恢复及重启主机后的 GPU 可见性。
-- 首次请求长停顿、日志自动轮转和更长运行稳定性。
-- BF16 KV 与 128K 双机数值、资源、正确性、性能验收仍依照 [固定目标](QWEN36-8BIT-TARGETS.md)，本轮不改阈值。
+- Install Windows Service as administrator, verify start/stop, residency after exiting SSH, fault recovery, and GPU visibility after host reboot.
+- Long pauses in the first request, automatic log rotation, and stability over longer runtimes.
+- BF16 KV and 128K dual-machine numerical, resource, correctness, and performance acceptance still follow the [fixed targets](QWEN36-8BIT-TARGETS.md); thresholds are not changed in this round.
 
-## 用户启动后的复测（2026-10-22，追加）
+## Retesting After User Startup (2026-10-22, Added)
 
-用户反馈“启动了”后，通过新建、随后关闭的 SSH 检查连接读取 Windows agent 日志；agent build 仍为上述 85c68ef 候选，Mac build 相同且模型 PID 未变。目标包 exe/CUDA DLL 散列与上表一致；当前账号无法读取该运行进程的 exe 路径，因此包散列验证不替代运行进程路径核验。
+After user feedback of "started," connections were checked by creating and then closing an SSH session to read Windows agent logs; the agent build remains the aforementioned 85c68ef candidate, the Mac build is the same, and the model PID has not changed. The hashes of the target package exe/CUDA DLL match the table above; the current account cannot read the exe path of the running process, so package hash verification does not replace running process path verification.
 
-15 项真实模型验收再次全部通过，原始证据位于本地 `artifacts/deploy/acceptance-scm-1/`。目录名只是运行标识，**不证明 Windows SCM 已通过**：`sc.exe queryex/qc/qfailure/qfailureflag InferNetCuda` 均返回 1060（服务不存在），指定名称的 Get-Service 同样未找到；日志中的 agent PID 位于桌面 Session 2。CIM 查询另因权限不足失败，未尝试改变权限。已向用户确认具体启动方式，服务安装、开机运行及 SCM 恢复仍保持未验收。
+The real model acceptance for 15 items passed again in full, with original evidence located locally at `artifacts/deploy/acceptance-scm-1/`. The directory name is merely a runtime identifier and **does not prove that Windows SCM has passed**: `sc.exe queryex/qc/qfailure/qfailureflag InferNetCuda` all returned 1060 (service does not exist), and Get-Service for the specified name also failed to find it; the agent PID in the logs is located in Desktop Session 2. CIM queries also failed due to insufficient permissions, and no attempt was made to change permissions. The specific startup method has been confirmed with the user; service installation, boot-time execution, and SCM recovery remain unaccepted.
 
-本轮连续三次 17 输入/32 固定输出请求：
+Three consecutive 17 input/32 fixed output requests in this round:
 
-| 请求 | prefill ms | decode token/s |
+| Request | prefill ms | decode token/s |
 |---|---:|---:|
 | 1 | 66435.5217 | 1.4843 |
 | 2 | 1300.6365 | 47.5921 |
 | 3 | 806.8059 | 72.2919 |
 
-首次 prefill 约 66.44 秒，decode 约 20.89 秒，单 token 最大约 20.47 秒；保留慢轮，不将第三轮恢复到约 72 t/s 表述为稳定性能。长停顿期间采样显示 Metal command queue 在提交系统调用中、模型线程在 `waitUntilCompleted`，只能定位等待发生在 Mac Metal 路径，不能单凭该采样确定根因。没有完整换页增量和供电对照，本轮不是正式性能实验，也不能证明 swap。未因验收重启两端 worker。
+The first prefill took approximately 66.44 seconds, decode approximately 20.89 seconds, and a single token maximum approximately 20.47 seconds; slow rounds are retained, and the third round is not described as stable performance at approximately 72 t/s. During the long pause, sampling showed the Metal command queue was in the submission system call and the model thread was in `waitUntilCompleted`; only the wait occurring in the Mac Metal path could be located, and the root cause cannot be determined solely based on this sampling. Without complete swap increment and power supply comparisons, this round is not a formal performance experiment, nor can it prove swap. Neither side's worker was restarted due to acceptance.
 
-本轮 summary SHA256：`bc19d603077b28c55388309f581b97260c7ff2884c4f9316e1085f5b31b9a3db`。采样及服务查询输出仅本地保留，公开记录省略账号、路径与网络地址。
+This round's summary SHA256: `bc19d603077b28c55388309f581b97260c7ff2884c4f9316e1085f5b31b9a3db`. Sampling and service query outputs are retained locally only; public records omit accounts, paths, and network addresses.
 
-## 前台 agent 再次复测（2026-10-22，追加）
+## Retesting of Front-end Agent Again (2026-10-22, Added)
 
-用户已澄清此前直接启动 exe，等待凭据的服务安装器已停止、没有创建 SCM 服务。本轮开始时旧 PID 已退出，Windows 无 deepinfer 进程，Mac 不就绪。确认无冲突后，重新启动同一已校验候选二进制，由保留 SSH 会话的开发 runner 维持前台进程；未改变服务托管方式，Mac 模型进程未重启。
+The user clarified that they previously started the exe directly; the service installer waiting for credentials has stopped, and no SCM service was created. At the start of this round, the old PID had exited, there were no deepinfer processes on Windows, and Mac was not ready. After confirming no conflicts, the same verified candidate binary was restarted, with the front-end process maintained by the development runner retaining the SSH session; the service hosting method was not changed, and the Mac model process was not restarted.
 
-本轮 15 项真实检查再次全部通过，队列 3 成功/5 个 429；输出状态重置、SSE、取消恢复与自然 EOS 正常。三次连续 17 输入/32 固定输出的原始结果：
+The real-check for this round of 15 items has again passed completely; the queue 3 successfully /5 429; output state reset, SSE, cancellation recovery, and natural EOS are normal. The original results of three consecutive 17 inputs /32 fixed outputs:
 
-| 请求 | prefill ms | decode token/s |
+| Request | prefill ms | decode token/s |
 |---|---:|---:|
 | 1 | 68665.6741 | 0.9847 |
 | 2 | 1688.1245 | 30.0251 |
 | 3 | 1050.1618 | 72.2015 |
 
-本轮开始时 Mac 为 AC Power。覆盖就绪等待及全套验收的整机 vm_stat 增量：swap-in 24.637 GiB，swap-out 22.562 GiB（16384 字节页）。该区间含启动等待且是整机计数，不能全部归因于模型，也不是单个请求的换页测量。它证明存在明显换页活动，不能独立证明慢请求全部由 swap 导致。
+At the start of this round, the Mac was on AC Power. The incremental vm_stat for the entire machine covering readiness wait and full acceptance testing: swap-in 24.637 GiB, swap-out 22.562 GiB (16384 byte pages). This interval includes startup wait and represents whole-machine counts; it cannot be entirely attributed to the model, nor is it a swap measurement for a single request. It proves that significant swapping activity exists, but cannot independently prove that slow requests are entirely caused by swap.
 
-首次 prefill 仍约 68.67 秒，decode 约 31.48 秒；第三次恢复约 72.20 t/s。保留三轮，结论是功能可用但首请求时延不稳定，不宣称性能达标。Windows 前台 agent 保留运行，Windows Service 安装继续待用户操作。
+The first prefill still took approximately 68.67 seconds, decode approximately 31.48 seconds; the third recovery was about 72.20 t/s. Retaining three rounds, the conclusion is that functionality is available but the latency of the first request is unstable; we do not claim performance compliance. The Windows foreground agent remains running; Windows Service installation continues pending user action.
 
-原始证据本地 `artifacts/deploy/acceptance-foreground-2/summary.json`、`foreground-2-environment.json` 与 Windows runner 日志；未公开原始日志。
-summary SHA256：`f4447c82fe98043c84492825408e1c88314c30217a9dcae081ce792500270a5d`。
+Original evidence locally at `artifacts/deploy/acceptance-foreground-2/summary.json`, `foreground-2-environment.json`, and Windows runner logs; raw logs are not publicly available.
+summary SHA256: `f4447c82fe98043c84492825408e1c88314c30217a9dcae081ce792500270a5d`.

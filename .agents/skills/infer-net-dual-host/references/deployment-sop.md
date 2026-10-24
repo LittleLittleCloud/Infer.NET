@@ -1,89 +1,89 @@
-# Infer.NET 部署、更新与回退 SOP
+# Infer.NET Deployment, Update, and Rollback SOP
 
-适用于用户要求部署、升级、重启或回退 Infer.NET 双机服务。仅要求编写 SOP 时只维护文档；不据此停止服务、安装系统组件或开始新部署。用户说自行安装并稍后反馈时，等待反馈再做依赖该安装的验收。
+Applies when users request deployment, upgrade, restart, or rollback of Infer.NET dual-machine services. When only asked to write the SOP, maintain only the documentation; do not stop services, install system components, or start new deployments based on this. When the user says they will install it themselves and provide feedback later, wait for the feedback before performing acceptance dependent on that installation.
 
-## 事实来源与角色
+## Source of Facts and Roles
 
-执行前阅读目标 checkout 的 `docs/DEPLOYMENT.md`、最近的 `docs/DEPLOYMENT-ACCEPTANCE.md`，以及实际要调用的 `scripts/deploy/` 安装、打包、验收脚本。能力、模型 revision、精度、容量和测试结果以目标版本源码、包清单和实测为准；不要把历史候选包或本 SOP 当作最新运行状态。
+Before execution, read the `docs/DEPLOYMENT.md`, recent `docs/DEPLOYMENT-ACCEPTANCE.md`, and the actual `scripts/deploy/` installation, packaging, and acceptance scripts from the target checkout. Capabilities, model revisions, precision, capacity, and test results are based on the target version's source code, package manifest, and actual measurements; do not treat historical candidate packages or this SOP as the latest running state.
 
-保留用户选定的命令名 `split-serve` / `split-agent`：
+Retain user-selected command names `split-serve` / `split-agent`:
 
-| 组件 | 位置 | 职责与接入 |
+| Component | Location | Responsibility and Integration |
 |---|---|---|
-| coordinator | Mac | CLI/TUI 的请求入口；注册、选择与转发，不加载模型 |
-| split-serve | Mac | 完整模型常驻；后 20 层 prefill、导入前段状态、完整 decode；向 coordinator 注册 |
-| split-agent | Windows | 前 20 层权重常驻；主动连接 serve 的数据端口，执行前段 prefill 并发送 hidden/KV/Delta/卷积状态 |
+| coordinator | Mac | CLI/TUI request entry point; registration, selection, and forwarding, does not load models |
+| split-serve | Mac | Full model resident; prefill for 20 layers, import frontend state, full decode; registers with coordinator |
+| split-agent | Windows | Front 20 layer weights resident; actively connects to serve's data port, executes frontend prefill, and sends hidden/KV/Delta/convolutional states |
 
-目前已验收拓扑是一对 serve/agent，serve 单执行器、有限排队。agent 不直接向 coordinator 注册；coordinator 看到的是由 serve 提供的双机推理 worker。默认配置是 coordinator 本机 HTTP 5200、serve 本机 HTTP 5201、serve LAN 数据端口 5210；实际地址从私有配置读取。Windows 主动连接 Mac，不需要为此增加 Windows 入站监听。
+The currently accepted topology is a pair of serve/agent, with serve having a single executor and limited queuing. The agent does not register directly with the coordinator; what the coordinator sees is a dual-machine inference worker provided by serve. The default configuration is coordinator local HTTP 5200, serve local HTTP 5201, and serve LAN data port 5210; actual addresses are read from private configuration. Windows actively connects to Mac, so there is no need to add Windows inbound listening for this purpose.
 
-一个 agent 一次连接一个 serve；不要把多条 TCP 连接、注册表容量或多个进程解释为已有多 agent 协同调度。多 serve 需要独立 ID、端口、锁、配置和模型内存，并需额外验收；当前 Mac 不能因增加进程而共享同一份模型。serve/agent 是计算和连接角色，前台、LaunchAgent、Windows Service 是进程托管方式。
+One agent connects to one serve at a time; do not interpret multiple TCP connections, registry capacity, or multiple processes as indicating multiple agents coordinating scheduling. Multiple serves require independent IDs, ports, locks, configurations, and model memory, and require additional acceptance testing; the current Mac cannot share the same model instance by adding processes. serve/agent are computing and connection roles, while foreground, LaunchAgent, and Windows Service are process hosting methods.
 
-## 部署前记录
+## Pre-deployment Records
 
-建立本地忽略的唯一运行目录，例如 `artifacts/deploy/<run-id>/`，记录：
+Establish a unique local running directory, for example `artifacts/deploy/<run-id>/`, and record:
 
-- 新旧两端包的绝对路径、source SHA、平台文件散列；实际进程路径、PID、托管方式、服务账号与启动命令。
-- 模型路径/revision/散列、私有配置位置、接口地址、协议/原生 ABI、精度与容量；不记录 token、密码或私钥内容。
-- 当前健康、活动请求与队列、GPU 占用、旧版本恢复方式、允许的维护窗口。保存旧配置和服务定义的受限权限备份。
+- Absolute paths of packages on both old and new ends, source SHA, platform file hashes; actual process paths, PIDs, hosting methods, service accounts, and startup commands.
+- Model paths/revisions/hashes, private configuration locations, interface addresses, protocols/native ABIs, precision, and capacity; do not record tokens, passwords, or private key contents.
+- Current health, active requests and queues, GPU usage, old version recovery methods, and allowed maintenance windows. Save restricted-permission backups of old configurations and service definitions.
 
-检查两端仓库改动，避免覆盖用户工作。检查现有服务/进程身份，不凭历史 PID 停进程。后台 shell 或保留 SSH 的前台 agent 不等同于 Windows Service。
+Check for changes in both ends' repositories to avoid overwriting user work. Check existing service/process identities; do not stop processes based on historical PIDs. Background shells or foreground agents with retained SSH are not equivalent to Windows Services.
 
-普通构建、准备包和现有权限内的验证按授权继续。需要管理员的 SCM 安装/删除，先完成可审查的新旧包、配置和具体操作命令；确认管理员步骤可执行后才进入依赖它的停机切换。账号凭据只在 Windows 本机输入。不要为绕过权限改用 WMI、计划任务或扩大账号权限；需要的权限由管理员处理。
+Continue with ordinary builds, package preparation, and verification within existing permissions as authorized. For SCM installation/removal requiring administrator privileges, first complete the reviewable new/old packages, configurations, and specific operation commands; only proceed to the dependent downtime switch after confirming the administrator steps are executable. Account credentials are entered only on the local Windows machine. Do not use WMI, scheduled tasks, or expanded account privileges to bypass permissions; required permissions are handled by the administrator.
 
-## 准备候选版本
+## Prepare Candidate Versions
 
-部署、站点发布所需的代码、配置模板、文档与实验记录修改同样先提交功能分支并创建 PR。请求“更新部署/站点”不授权直接推送 `main`；仅在用户明确要求直接推送 `main` 时例外。需要主线版本时，等待用户授权合并 PR 后再从实际合并 SHA 构建或发布。
+Code, configuration templates, documentation, and experiment record modifications required for deployment and site publishing must also be submitted to a feature branch and a PR created first. Requesting "update deployment/site" does not authorize direct pushes to `main`; the exception is only when the user explicitly requests a direct push to `main`. When a mainline version is needed, wait for user authorization to merge the PR, then build or publish from the actual merged SHA.
 
-1. 明确目标完整 SHA，通过 GitHub 同步两端源码，核对 remote、HEAD 和干净状态。未合并 PR 可作为明确标注的候选版本；不要自动合并 PR 或把 main 的页面发布当作运行代码升级。
-2. 在两端分别构建 Native AOT。Mac 使用部署文档中的 publish 入口；Windows 使用 `scripts/windows/build-deployment.ps1`，先检查其当前输出路径和环境前提。构建工具可能写固定 staging 目录：若正在运行的前台程序来自该目录，改用独立 checkout/staging，不能覆盖运行中的 exe、DLL 或 dylib。
-3. 执行对应单测、RPC/Native AOT 检查与必要原生数值检查。同 GPU 的性能或模型验收不要与线上请求竞争；需要独占 GPU 的检查放进维护窗口，不能把编译成功当作推理通过。
-4. 使用 `scripts/deploy/package.py` 输出全新的版本目录，再执行 `verify-package.py`。核对清单 source 与 `deepinfer version`、两端模型/协议/精度/容量/ABI 兼容性，以及平台原生库。清单声明还需与目标代码能力一致。
-5. 保留可恢复的旧包。只追加文档的 commit 不要求替换正在运行的二进制；记录包的真实构建 SHA，不能将旧包重标成新源码版本。
+1. clearly defines the target complete SHA, synchronizes source code on both ends via GitHub, and verifies remote, HEAD, and clean status. Unmerged PRs can serve as explicitly marked candidate versions; do not automatically merge PRs or treat main branch page publishing as a running code upgrade.
+2. builds Native AOT on both ends separately. Mac uses the publish entry in the deployment documentation; Windows uses `scripts/windows/build-deployment.ps1`, first checking its current output path and environmental prerequisites. Build tools may write to a fixed staging directory: if the running foreground program comes from that directory, use an independent checkout/staging instead, and do not overwrite running exe, DLL, or dylib files.
+3. executes corresponding unit tests, RPC/Native AOT checks, and necessary native numerical checks. Performance or model acceptance on the same GPU must not compete with online requests; checks requiring exclusive GPU access should be placed in maintenance windows; do not treat successful compilation as successful inference.
+4. uses `scripts/deploy/package.py` to output a brand new version directory, then executes `verify-package.py`. Verify the manifest source against `deepinfer version`, cross-end model/protocol/precision/capacity/ABI compatibility, and platform native libraries. Manifest declarations must also align with target code capabilities.
+5. retains recoverable old packages. Commits that only append documentation do not require replacing running binaries; record the actual build SHA of the package, and do not relabel old packages as new source code versions.
 
-包、模型和配置分开管理。相同 revision 的模型复用并校验，无需每次下载；重启 worker 仍需重新加载模型。
+Packages, models, and configurations are managed separately. Models with the same revision are reused and verified, eliminating the need to download them every time; restarting the worker still requires reloading the model.
 
-## 首次部署
+## First Deployment
 
-1. 使用 `scripts/deploy/prepare.py --help` 核对参数，再生成新的私有配置目录。只将 Windows 侧配置/证书传到 Windows；Mac 私钥留在 Mac。限制配置 ACL，保持 token、证书 pin 与请求数据通道认证。普通更新复用兼容配置，不重新随机生成集群凭据。
-2. 配置持久日志。Mac 安装器使用配置目录下的 `logs/`；Windows 服务在 `worker.json` 设置受限目录中的 `log-file`，确认服务账号可写。检查剩余磁盘空间及归档方式；除非代码实际实现，不宣称有自动轮转。
-3. 停掉经过身份校验的冲突实例。启动/托管 Mac coordinator 和 serve，再启动 Windows agent。Windows 配置的 endpoint 指向 Mac LAN 数据地址；固定双向证书和集群身份校验通过后才能执行任务。
-4. Mac 以部署文档中的 `install-macos.py` 安装用户 LaunchAgent。Windows 管理员以 `install-windows.ps1` 安装 SCM 服务，专用标准账号须具备目录访问和“作为服务登录”权限。安装器成功返回仍需做下面的真实验收。
-5. 若只能以前台方式运行，明确标记“开发前台运行”，保留其会话/PID/日志；不得描述为已完成开机启动或脱离 SSH 的系统托管。
+1. uses `scripts/deploy/prepare.py --help` to verify parameters, then generates a new private configuration directory. Only transmit Windows-side configurations/certificates to Windows; keep Mac private keys on Mac. Restrict configuration ACLs, maintaining token, certificate pinning, and request data channel authentication. Standard updates reuse compatible configurations without regenerating cluster credentials.
+2. configures persistent logging. The Mac installer uses `logs/` from the configuration directory; the Windows service sets `log-file` in a restricted directory within `worker.json`, ensuring the service account has write permissions. Check remaining disk space and archival methods; do not claim automatic rotation unless the code actually implements it.
+3. stops conflicting instances that have passed authentication. Start/host the Mac coordinator and serve, then start the Windows agent. The Windows configuration's endpoint points to the Mac LAN data address; tasks are executed only after fixed bidirectional certificates and cluster identity verification pass.
+4. Mac installs the user LaunchAgent using `install-macos.py` from the deployment documentation. Windows administrators install the SCM service using `install-windows.ps1`; the dedicated standard account must have directory access and 'Log on as a service' permissions. A successful installer return still requires the following real acceptance checks.
+5. If it can only run in the foreground, clearly mark it as 'Development foreground run', retaining its session/PID/logs; do not describe it as having completed boot startup or being system-hosted detached from SSH.
 
-## 更新：准备 → 排空 → 切换 → 验收
+## Update: Prepare → Drain → Switch → Accept
 
-当前升级是维护窗口内的停机切换，不是热加载或滚动升级。`git pull` 不会改变已启动的程序。
+The current upgrade is a downtime switch within the maintenance window, not a hot load or rolling upgrade. `git pull` will not change already running programs.
 
-1. 在停旧服务前准备好两端新包、配置兼容性检查、旧包与恢复命令。涉及服务账号交互的步骤也提前落实。
-2. 停止客户端提交新请求，等待活动请求和排队请求结束。当前没有已实现的通用 drain API；不要编造 drain 参数，或仅凭瞬间非 Busy 就断言队列为空。用已知客户端完成情况、请求日志和健康状态核对。超过维护期限时说明仍有的请求，按既有授权处理，保留部分输出，不自动重放。
-3. 停旧 Windows agent 与 Mac serve/coordinator。托管模式先通过对应管理器停用/卸载，避免自动重启旧进程；前台模式只停止已核对路径的任务 PID。确认进程已退出、GPU 资源释放，再加载新模型。
-4. 更新启动定义指向新包的绝对路径。当前安装器不会原地覆盖已有定义：Mac 先用旧路径/配置运行安装器 `--uninstall`，再安装新路径；Windows 先以管理员运行旧安装器 `-Uninstall`，确认 `InferNetCuda` 已删除，再用新包安装器安装。卸载服务不删除模型或私有配置。调用前重读脚本，参数以当前版本为准。
-5. 启动新 Mac coordinator/serve 与 Windows agent，等待加载、预热、认证连接和注册。不要同时加载新旧完整模型，也不要只更新一端后开始不兼容的联合请求。
-6. 按下一节验收，通过后恢复用户请求；失败则停止本次切换，保留日志并按回退流程处理。不无限循环重装或重启来掩盖失败。
+1. prepares new packages for both sides, configuration compatibility checks, old packages, and recovery commands before stopping the old service. Steps involving service account interactions are also implemented in advance.
+2. stops clients from submitting new requests, waiting for active and queued requests to finish. There is currently no implemented generic drain API; do not fabricate drain parameters, nor assert the queue is empty based solely on a momentary non-Busy state. Verify using known client completion status, request logs, and health status. If the maintenance period is exceeded, explain the remaining requests, handle them according to existing authorizations, retain partial output, and do not automatically replay.
+3. stops the old Windows agent and Mac serve/coordinator. In hosted mode, disable/uninstall via the corresponding manager first to avoid automatic restart of old processes; in foreground mode, only stop the task PID at the verified path. Confirm processes have exited and GPU resources are released before loading new models.
+4. updates the startup definition to point to the absolute path of the new package. The current installer does not overwrite existing definitions in place: Mac first runs the installer `--uninstall` with the old path/configuration, then installs the new path; Windows first runs the old installer `-Uninstall` as administrator, confirms `InferNetCuda` is deleted, then installs with the new package installer. Uninstalling services does not delete models or private configurations. Re-read the script before calling; parameters are based on the current version.
+5. starts the new Mac coordinator/serve and Windows agent, waiting for loading, warming up, authentication connection, and registration. Do not load both old and new full models simultaneously, nor start incompatible joint requests after updating only one side.
+6. Proceed to acceptance as per the next section; if passed, resume user requests; if failed, stop the current switch, retain logs, and handle according to the rollback process. Do not infinitely loop reinstallations or restarts to mask failures.
 
-安装途中失败时先检查哪些服务定义已经创建、哪个进程仍活着；只清理本次部分安装。Windows 服务标记删除未完成时先等待相关句柄释放并检查状态，不并行重复创建服务。
+When installation fails midway, first check which service definitions have been created and which processes are still alive; only clean up the partial installation of this session. When Windows service deletion is marked as incomplete, wait for related handles to be released and check status; do not create services in parallel repeatedly.
 
-## 验收与停止条件
+## Acceptance and Stop Conditions
 
-按实际范围逐项记录通过、失败或未执行：
+Record pass, fail, or not executed item by item according to the actual scope:
 
-- 运行版本：两端实际 exe/原生库散列与预期包一致，进程路径正确；没有旧模型 worker 竞争。确认 build、精度、模型和容量，不能只看源码 HEAD。
-- 就绪：serve `/health` 可读取，鉴权 `/ready` 返回成功；coordinator `/v1/workers` 中对应 ID 也已 healthy。两者可能因心跳存在时间差，不能只等 worker ready 就假定入口已经恢复。
-- 请求：运行 `scripts/deploy/acceptance.py`，选择新的证据目录，核对连续请求、状态 reset、SSE、自然 EOS、取消恢复、超限/错误鉴权与限流；另做 CLI/TUI 的相应入口检查。不要用固定旧测试数量代替查看结果。
-- 连接恢复：在维护窗口停止本次 Windows agent，确认 serve 撤销 ready、请求明确失败；重启并等两级健康恢复后，重复确定性输入，验证 token 一致、Mac 模型 PID 不变。失败保留首个错误及重试结果。
-- 托管：检查 LaunchAgent/SCM 状态、真实进程和日志。服务安装后关闭安装/SSH 控制会话，再用新连接检查 PID、就绪和真实请求；另验证服务停止/启动与故障恢复。仅服务注册成功不证明 GPU 在该账号会话可用。
-- 主机重启、退出 Mac 登录或故障注入会影响其他工作，仅在用户授权的相应范围内执行；未执行就标“未测”。LaunchAgent 仅用户登录会话启动，不宣称为开机无人值守服务。
+- Running version: The actual exe/native library hashes on both sides match the expected package, and process paths are correct; no old model worker competition. Confirm build, precision, model, and capacity; do not rely solely on source code HEAD.
+- Ready: serve `/health` is readable, auth `/ready` returns success; coordinator `/v1/workers` corresponding ID is also healthy. There may be a time difference in heartbeats between the two; do not assume the entry has recovered just because the worker is ready.
+- Requests: Run `scripts/deploy/acceptance.py`, select a new evidence directory, verify continuous requests, status reset, SSE, natural EOS, cancellation recovery, limit/exceed auth, and rate limiting; additionally perform corresponding entry checks for CLI/TUI. Do not use fixed old test quantities instead of viewing results.
+- Connection recovery: Stop the current Windows agent within the maintenance window, confirm serve revokes ready and requests explicitly fail; restart and wait for two-level health recovery, then repeat deterministic input to verify token consistency and unchanged Mac model PID. Retain the first error and retry results on failure.
+- Hosted: Check LaunchAgent/SCM status, real processes, and logs. After service installation, close the install/SSH control session, then check PID, readiness, and real requests with a new connection; additionally verify service stop/start and fault recovery. Successful service registration alone does not prove GPU availability in that account's session.
+- Host reboot, exiting Mac login, or fault injection will affect other work; execute only within the scope authorized by the user; if not executed, mark as 'Not Tested'. LaunchAgent starts only in the user login session, do not claim it as an unattended boot service.
 
-健康/认证/模型兼容性失败、原生错误或输出不符合基线时不恢复用户流量，不降精度或关闭 TLS 来“通过”。启动预热不保证首次请求时延；保留首轮异常，正式性能和长上下文门槛另按 `docs/QWEN36-8BIT-TARGETS.md` 验收。
+Do not resume user traffic when health/auth/model compatibility fails, native errors occur, or output does not match the baseline; do not lower precision or disable TLS to 'pass'. Startup warming does not guarantee first-request latency; retain first-round anomalies, and formal performance and long-context thresholds are accepted separately per `docs/QWEN36-8BIT-TARGETS.md`.
 
-## 回退
+## Rollback
 
-停止新版本接入并排空；停用新服务定义、确认进程退出，恢复旧版本兼容的私有配置及旧绝对启动路径，两端一起回退。证书轮换涉及双方 pin；不能只恢复一端配置。复用旧模型但校验匹配性，重新等待两级健康并跑真实短请求后再恢复接入。
+Stop new version access and drain; disable new service definitions, confirm processes have exited, restore old version-compatible private configurations and old absolute startup paths, rolling back both sides together. Certificate rotation involves both parties' pins; do not restore configuration on only one side. Reuse old models but verify compatibility, re-wait for two-level health, run real short requests, then resume access.
 
-旧包缺失、旧配置无法恢复或回退验收失败时，保持停服并报告具体原因和证据，不继续猜测版本或覆盖文件。保留失败新包与日志用于诊断。
+If the old package is missing, old configuration cannot be restored, or rollback acceptance fails, keep the service stopped and report specific reasons and evidence; do not continue guessing versions or overwriting files. Retain the failed new package and logs for diagnosis.
 
-## 记录与维护
+## Recording and Maintenance
 
-沿用已有 GitHub Issue/PR，记录目标与实际运行版本、两端产物散列、安装方式、验收证据、失败/回退和未完成项。成功切换或重要状态变化更新 Pages；仅修改 SOP 不伪造新的部署实验。公开记录排除私网地址、凭据和账号私有目录。
+Use existing GitHub Issue/PR to record target and actual running versions, hashes of artifacts on both sides, installation method, acceptance evidence, failures/rollbacks, and incomplete items. Update Pages upon successful switch or important state changes; only modify SOPs, do not fabricate new deployment experiments. Public records exclude private network addresses, credentials, and account private directories.
 
-本 SOP 随仓库技能版本维护；同时同步本机已安装的 `infer-net-dual-host` 技能入口、UI 元数据和本 reference。只做技能修改时执行技能验证与链接检查，不为验证文案重启真实服务。
+This SOP is maintained alongside the warehouse skill version; it also synchronizes the installed `infer-net-dual-host` skill entry, UI metadata, and this reference on this machine. When only skill modifications are made, perform skill validation and link checks; do not restart real services for text verification.

@@ -1,25 +1,25 @@
-# TUI 三段式布局与连接信息
+# TUI Three-Stage Layout and Connection Information
 
-2026-10-22，Issue #13 / PR #14。TUI 源码 `0ea14381f1ce98498c41fceb68543eafc3f550ac`，后端部署仍为 `506481445d3670d129ff3d101251f96357efb971`；本轮没有替换或重启模型进程。
+2026-10-22, Issue #13 / PR #14. TUI source code `0ea14381f1ce98498c41fceb68543eafc3f550ac`, backend deployment still `506481445d3670d129ff3d101251f96357efb971`; this round did not replace or restart model processes.
 
-## 改动
+## Changes
 
-Header 固定标题、Dashboard / Playground tabs 和连接状态；body 使用剩余终端空间；footer 固定请求统计与三个 API 入口。Playground 的输入框与操作行置于 footer，不再跟随对话内容移动。Dashboard 在至少 100 列时显示 worker 列表与详情双栏，80 列时上下排列。不使用边框，保留鼠标、键盘、滚轮、草稿、多轮历史及 Auto 输出。
+Header fixed title, Dashboard / Playground tabs, and connection status; body uses remaining terminal space; footer fixed request statistics and three API entry points. Playground's input box and action row are placed in the footer, no longer moving with conversation content. Dashboard displays worker list and details in two columns when at least 100 columns, and stacks vertically when 80 columns. No borders used, retaining mouse, keyboard, scroll wheel, drafts, multi-turn history, and Auto output.
 
-连接信息取自当前 coordinator 配置：Chat Completions、Responses 显示完整 URL；Claude Code 显示 base URL 与 `/v1/messages` 路径。界面不显示认证 token。当前仍只有文本 API，未实现工具调用及 Messages token-count，不能据此宣称完整 Claude Code 或编码 agent 兼容。
+Connection information is taken from the current coordinator configuration: Chat Completions, Responses display full URL; Claude Code displays base URL and `/v1/messages` path. The interface does not display authentication tokens. Currently, only text API is available, tool calling and Messages token-count are not implemented, so it cannot be claimed to have complete Claude Code or coding agent compatibility.
 
-## 验证
+## Verification
 
-Release 编译零警告、零错误。独立端口、受控文本 worker 的协议 / 官方 SDK / 真实 PTY 检查 **65 项通过**，新增完整 endpoint、凭据不泄露、底部输入区位置以及 80×24、100×30、120×40 缩放检查。原有鼠标点击、滚轮分页、流式输出、取消、多轮历史与 Auto 检查仍通过。
+Release compilation zero warnings, zero errors. Independent port, controlled text worker protocol / official SDK / real PTY checks **65 items passed**, added complete endpoint, credential not leaked, bottom input area position, and 80×24, 100×30, 120×40 scaling checks. Original mouse click, scroll wheel paging, streaming output, cancellation, multi-turn history, and Auto checks still passed.
 
-另以真实部署执行 100×30、80×24 的 Dashboard 只读终端检查：连接、prefill/decode 指标和 endpoint 均可见。未向生产模型提交测试推理，未更换 Windows 二进制。原始终端记录仅保留本地 `artifacts/chat/layout-current-deployment/` 和 `layout-three-part-checks.log`。
+Additionally, perform a read-only terminal check of the 100×30 and 80×24 Dashboard in a real deployment: connections, prefill/decode metrics, and endpoints are all visible. No test inferences were submitted to the production model, and no Windows binaries were replaced. Original terminal logs retain only local `artifacts/chat/layout-current-deployment/` and `layout-three-part-checks.log`.
 
-## 用户延迟观察，非基准
+## User Latency Observations, Not Benchmarks
 
-当时的运行遥测显示，一条 1997 输入 / 1685 输出请求 prefill 12.157 秒，decode 56.656 tokens/s，请求 41.897 秒；之后一条 3737 输入 / 241 输出请求 prefill 26.082 秒，请求 122.822 秒。当前 `prefillMs` 计时从发送 Start 到完成 state handoff，包含 Windows 前段、Mac 后段、隐藏向量与 KV / Delta 状态交接，不是纯 GPU 算子时间，也未包含更早的排队与 reset。
+Telemetry at the time showed that a 1997 input / 1685 output request took 12.157 seconds for prefill, 56.656 tokens/s for decode, and 41.897 seconds for the request; subsequently, a 3737 input / 241 output request took 26.082 seconds for prefill and 122.822 seconds for the request. Current `prefillMs` timing measures from sending Start to completing state handoff, including the Windows frontend, Mac backend, hidden vectors, and KV/Delta state handoff; it is not pure GPU operator time, nor does it include earlier queuing and reset.
 
-日志另有首步 decode 墙钟 92.542 秒、GPU 计时 22.877 毫秒的异常，因此不能把所有等待都归到 prefill。以上只是读取现有用户请求日志，不包含用户输入文本；没有控制缓存、预热、供电或内存压力，不构成正式吞吐基准，也没有证明具体换页原因。首字延迟尚未修复，需要进一步分阶段计时和内存驻留验证。
+Logs also show an anomaly with the first-step decode wall-clock time of 92.542 seconds and GPU timing of 22.877 milliseconds, so not all waiting time can be attributed to prefill. This merely reads existing user request logs and does not include user input text; it does not control for caching, warming up, power supply, or memory pressure, does not constitute a formal throughput benchmark, and does not prove specific paging causes. First-token latency has not yet been fixed and requires further phased timing and memory residency verification.
 
-## 使用
+## Usage
 
-从仓库运行 `dotnet run --project src/DeepInfer.Tui -c Release`。已打开的 TUI 需要退出后重新运行；后台 serve / agent 保持运行。
+Run `dotnet run --project src/DeepInfer.Tui -c Release` from the repository. The currently open TUI must be exited and re-run; the background serve/agent remains running.

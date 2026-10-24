@@ -1,54 +1,54 @@
-# CUDA 批量 prefill：8K 双机 A/B
+# CUDA Batch Prefill: 8K Dual-Machine A/B
 
-2026-10-23，关联 Issue #3。固定 Qwen3.6 35B A3B affine8/group64，revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`。
+2026-10-23, associated with Issue #3. Fixed Qwen3.6 35B A3B affine8/group64, revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`.
 
-**8K 输入、128 固定输出：worker prefill 从 52.503 秒降至 18.642 秒，2.82 倍；客户端整次请求从 54.782 秒降至 20.926 秒。** 这是 FP32 KV / FP32 乘法的部署诊断路径，尚未通过 BF16、128K 或 4096 输出正式门槛。
+**8K input, 128 fixed output: worker prefill reduced from 52.503 seconds to 18.642 seconds, a 2.82 times improvement; client entire request reduced from 54.782 seconds to 20.926 seconds.** This is the deployment diagnostic path for FP32 KV / FP32 multiplication, and has not yet passed the formal threshold of BF16, 128K, or 4096 output.
 
-## 改动与数值验证
+## Changes and Numerical Verification
 
-CUDA 原路径按 token 执行全部 20 层。新路径在每个 32-token 块内按层执行批量投影、卷积、attention、路由与专家计算；DeltaNet 把状态行留在寄存器中完成整块递推，减少重复读写与 kernel 启动。投影/专家仍保留原 FP32 GEMV 累加顺序。`cuda-prefill=serial|batch-fp32` 可同二进制切换，默认 batch-fp32。
+The original CUDA path executes all 20 layers per token. The new path executes batch projection, convolution, attention, routing, and expert calculations per layer within each 32-token block; DeltaNet keeps state rows in registers to complete the entire block recursion, reducing repeated reads/writes and kernel launches. Projection/experts still retain the original FP32 GEMV accumulation order. `cuda-prefill=serial|batch-fp32` can be switched with the same binary, defaulting to batch-fp32.
 
-另有自行实现的 SM89 affine8 → BF16 Tensor Core GEMM 原语，**不在本轮部署性能数据中**。独立 BF16 操作数对照：32/128/512-token 大矩阵约 3.0/10.1/14.4 倍；Delta 原语约 7–8 倍。这些算子比值不能当作完整模型收益。
+There are additionally self-implemented SM89 affine8 → BF16 Tensor Core GEMM primitives, **not included in this round of deployment performance data**. Independent BF16 operand comparison: 32/128/512-token large matrix is approximately 3.0/10.1/14.4 times; Delta primitive is approximately 7–8 times. These operator ratios cannot be taken as the complete model benefit.
 
-完整固定前段原生测试使用 131 个合成有效 token ID、1/7/17/32 非整齐分块，比较所有 20 层 trace、hidden、40 个 KV/Delta/卷积状态张量。FP32 与 BF16 KV 两档均有限且逐字节相同。512-token 前段 warmup 1 + 正式 3 次：FP32 KV 2.628705 → 0.764376 秒（3.44 倍）；BF16 KV 2.617131 → 0.765083 秒（3.42 倍）。这是同 CUDA 两条执行路径对照，**不解决 CUDA 与 Metal 的 BF16 跨主机误差门槛**。
+Complete fixed prefix native test uses 131 synthetic valid token IDs, 1/7/17/32 non-aligned chunking, comparing all 20 layer traces, hidden states, 40 KV/Delta/convolution state tensors. FP32 and BF16 KV two tiers are both limited and byte-identical. 512-token prefix warmup 1 + formal 3 times: FP32 KV 2.628705 → 0.764376 seconds (3.44 times); BF16 KV 2.617131 → 0.765083 seconds (3.42 times). This is a comparison of two execution paths within the same CUDA, **does not solve the BF16 cross-host error threshold between CUDA and Metal**.
 
-## 双机测量
+## Dual-machine measurement
 
-两端同一 source `cc19a65056f351e201f65901d285490ee24b11b1`、Native AOT / CUDA ABI 5，Mac M5 Pro 20 核 / 48 GiB + Windows RTX 4090。Mac AC、`pmset powermode=2`；既有 Mac Wi-Fi / Windows 有线 LAN，TLS 数据通道，无 SSH tunnel。只切 Windows 执行策略，Mac serve PID 和包不变。32-token wire chunk，无 prefix cache，每次 reset；输出忽略 EOS，greedy。
+Both ends use the same source `cc19a65056f351e201f65901d285490ee24b11b1`, Native AOT / CUDA ABI 5, Mac M5 Pro 20 cores / 48 GiB + Windows RTX 4090. Mac AC, `pmset powermode=2`; existing Mac Wi-Fi / Windows wired LAN, TLS data channel, no SSH tunnel. Only the Windows execution policy is switched; the Mac serve PID and packages remain unchanged. 32-token wire chunk, no prefix cache, reset each time; output ignores EOS, greedy.
 
-固定 8192-token 输入 SHA256：`defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`。
+Fixed 8192-token input SHA256: `defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`.
 
-|模式|预热 prefill 秒|正式 prefill 秒（三次）|中位 decode token/s|客户端整次中位秒|客户端首 token 中位秒|
+| Mode | Warmup prefill (s) | Formal prefill (s) (three times) | Median decode token/s | Client whole median (s) | Client first token median (s) |
 |---|---:|---|---:|---:|---:|
-|serial|52.711|52.573 / 52.482 / 52.503|55.97|54.782|52.513|
-|batch-fp32|18.305|18.592 / 18.642 / 18.871|55.83|20.926|18.650|
+| serial | 52.711 | 52.573 / 52.482 / 52.503 | 55.97 | 54.782 | 52.513 |
+| batch-fp32 | 18.305 | 18.592 / 18.642 / 18.871 | 55.83 | 20.926 | 18.650 |
 
-8 次请求全部 128 个输出 token ID 一致。每次新增整机 swap-out 为 0；Metal allocation 为 37,995,495,424 字节（35.39 GiB）。Windows GPU 以 500ms 采样，峰值见公开 JSON；采样不代表逐分配事件的精确峰值。未在此组采集进程 footprint，不能声明正式资源验收完整通过。
+All 8 requests produced consistent output token IDs for all 128 tokens. Each new machine swap-out was 0; Metal allocation was 37, 995, 495, 424 bytes (35.39 GiB). Windows GPU sampled at 500ms; peak values are in the public JSON; sampling does not represent precise peaks for each allocation event. Process footprint was not collected in this group, so formal resource acceptance cannot be declared fully passed.
 
-串行先测、批量后测，没有随机顺序；两组均完整预热。一次切换因普通账户 WMI 权限失败，误标为 batch 的尝试已中止并排除，失败记录保留。没有挑选最快一轮。
+Serial tested first, batch tested later, no random order; both groups fully warmed up. One switch failed due to ordinary account WMI permission issues; attempts mislabeled as batch were aborted and excluded, with failure records retained. No fastest run was selected.
 
-## 剩余瓶颈
+## Remaining bottlenecks
 
-正式三次阶段中位约为：
+The median for the three formal stages is approximately:
 
-|阶段|serial|batch-fp32|
+| Stage | serial | batch-fp32 |
 |---|---:|---:|
-|等待前段 hidden|31.77 s|0.43 s|
-|Mac 后 20 层计算|17.77 s|15.01 s|
-|最终状态接收等待|2.91 s|3.22 s|
-|状态导入|0.019 s|0.016 s|
+| Wait for frontend hidden | 31.77 s | 0.43 s |
+| Mac backend 20 layer computation | 17.77 s | 15.01 s |
+| Final state reception wait | 2.91 s | 3.22 s |
+| State import | 0.019 s | 0.016 s |
 
-接收端等待是流水线时间，不等于 CUDA 纯计算；各阶段中位相加也不替代整次中位。两组 Mac 计算相差约 2.8 秒仍需进一步分解，不能全部归因于 CUDA kernel 本身。前段加速后，Mac 后段和 200,704,000 字节最终状态交接成为当前可见瓶颈。
+Reception-side waiting is pipeline time, not equal to pure CUDA computation; summing the medians of each stage does not replace the whole median. The Mac computation difference of approximately 2.8 seconds between the two groups still needs further decomposition and cannot be entirely attributed to the CUDA kernel itself. After frontend acceleration, the Mac backend and the handover of the final state of 200, 704, 000 bytes have become the currently visible bottleneck.
 
-本轮报告 worker prefill 阶段与客户端 TTFT；规范所要求的 coordinator t2−t1 尚需完整打点。当前约 439 token/s 是 8K FP32 路径，不是 128K 目标成绩，也不能与历史 Mac BF16 2363 token/s 直接当作同配置对照。
+This round's report covers the worker prefill stage and client TTFT; the coordinator t2−t1 required by the specification still needs complete instrumentation. The current approximately 439 token/s is on the 8K FP32 path, not the 128K target result, and cannot be directly compared as a same-configuration benchmark with historical Mac BF16 2363 token/s.
 
-## 复现与证据
+## Reproduction and Evidence
 
-- `scripts/windows/benchmark-prefill-ops.ps1`：独立原语；不加载完整模型。
-- `scripts/split/benchmark-prefix-chunk.py`：停止已核对的 CUDA agent 后，执行完整前段数值与时间对照；同 GPU 不可加载第二份模型。
-- 双机使用同一发布包，分别传入 `--cuda-prefill serial` / `--cuda-prefill batch-fp32`，实际 ready 日志确认策略后，对固定输入发送 `/v1/infer/stream`，`maxTokens=128, benchmarkIgnoreEos=true, profile=true`。每档 warmup 1 + 正式 3 次，记录 SSE 时间、token IDs、vm_stat 与 GPU 采样。
-- 公开逐次摘要：`site/cuda-chunk-summary.json`。
-- 本地原始证据（未公开）：`artifacts/dual-host/chunk-e2e-serial-20261023T075202Z`、`chunk-e2e-batch-fp32-20261023T075943Z`、`cuda-prefill-chunk-387511b`；排除尝试 `chunk-e2e-batch-fp32-20261023T075701Z/INVALID.json`。
-- 107 项 Mac 单测、31 项部署前集成检查通过；随后增加 503/504 转发回归，34 项集成检查通过。原生前段及独立算子检查如上。两端 AOT 包已验证并部署 cc19a65；后续 HTTP 错误映射修复尚未部署到该包。
+- `scripts/windows/benchmark-prefill-ops.ps1`: Independent primitive; does not load the complete model.
+- `scripts/split/benchmark-prefix-chunk.py`: After stopping the verified CUDA agent, execute complete frontend numerical and time comparison; the same GPU cannot load a second model.
+- Dual machines use the same release package, passing `--cuda-prefill serial` / `--cuda-prefill batch-fp32` respectively; after confirming the policy via actual ready logs, send `/v1/infer/stream`, `maxTokens=128, benchmarkIgnoreEos=true, profile=true` to fixed inputs. Each tier: warmup 1 + formal 3 runs, recording SSE time, token IDs, vm_stat, and GPU sampling.
+- Public per-run summary: `site/cuda-chunk-summary.json`.
+- Local raw evidence (unpublished): `artifacts/dual-host/chunk-e2e-serial-20261023T075202Z`, `chunk-e2e-batch-fp32-20261023T075943Z`, `cuda-prefill-chunk-387511b`; excluded attempts `chunk-e2e-batch-fp32-20261023T075701Z/INVALID.json`.
+- 107 Mac unit tests, 31 pre-deployment integration checks passed; subsequently added 503/504 forwarding regression, 34 integration checks passed. Native frontend and independent operator checks as above. Both ends' AOT packages have been verified and deployed to cc19a65; subsequent HTTP error mapping fixes have not yet been deployed to this package.
 
-固定目标仍是 131072 输入 prefill ≥1600 再到2000 token/s，4096 输出 decode ≥37 token/s，整次请求 ≤200 再到180秒。下一步优化 Mac 后段块利用率、状态交接重叠，并完成 BF16 跨主机数值验证；不降量化位宽、不放宽数值门槛。
+Fixed targets remain: 131072 input prefill ≥1600 to 2000 token/s, 4096 output decode ≥37 token/s, total request ≤200 to 180 seconds. Next steps: optimize Mac backend block utilization, overlap state handover, and complete BF16 cross-host numerical verification; do not reduce quantization bit-width, do not relax numerical thresholds.

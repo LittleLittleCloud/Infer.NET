@@ -1,38 +1,38 @@
-# CUDA 计算与 hidden 发送重叠
+# CUDA computation and hidden sending overlap
 
-2026-10-23，继后段128-token合批，新增 `cuda-send-overlap=on|off`。同包 A/B 后选择 **on**：8K prefill 中位 17.365 → 16.624 秒，减少4.27%；客户端整次19.647 → 18.956秒，decode保持约56 token/s。模型仍为固定 affine8/group64，FP32 GEMM/KV；不是BF16或128K验收。
+2026-10-23, following backend 128-token batching, added `cuda-send-overlap=on|off`. After A/B testing the same package, selected **on**: 8K prefill median 17.365 → 16.624 seconds, reduced by 4.27%; client entire 19.647 → 18.956 seconds, decode remains about 56 token/s. Model remains fixed affine8/group64, FP32 GEMM/KV; not BF16 or 128K acceptance.
 
-## 实现与安全性
+## Implementation and Security
 
-一个生产任务独占 CUDA session，逐32-token块计算并读回；一个发送任务按原顺序通过已有TLS/HMAC协议发送。最多排队两个frame，另有当前生产/发送的frame；不缓存整个请求，不并发执行同一GPU模型。最终40个状态张量仍在全部hidden发送结束后交接，本轮没有提前传KV。
+A production task exclusively occupies a CUDA session, computing and reading back 32-token blocks sequentially; a sending task transmits via the existing TLS/HMAC protocol in the original order. At most two frames are queued, plus the currently producing/sending frame; the entire request is not cached, and concurrent execution on the same GPU model is not allowed. Finally, 40 state tensors are handed over after all hidden states have been sent; no KV transfer occurs early in this round.
 
-取消、发送错误或GPU错误时，先取消排队并等待生产任务结束，才返回调用者，避免下一次reset与在途GPU调用竞态。没有后台重试。四项新增测试覆盖顺序、背压、取消后join/dispose、生产异常传播，本机111项单测通过；36项HTTP集成检查通过。
+On cancellation, send error, or GPU error, queue cancellation is performed first and the production task is waited for before returning to the caller, avoiding a race between the next reset and in-flight GPU calls. There is no background retry. Four new tests cover ordering, backpressure, join/dispose after cancellation, and production exception propagation; 111 unit tests on this machine passed; 36 HTTP integration checks passed.
 
-## 同包实测
+## In-package actual tests
 
-两端Native AOT `2760e449364fbfd18f192d80aa66e41eb734a5da`；Mac进程与配置不变，只重启Windows agent切换显式开关。Mac后段128、scratch512；CUDA按层batch-fp32，wire32。固定8192输入、128输出，greedy忽略EOS、每次reset、0%prefix cache。每档预热1次、正式3次。Mac AC / High Power，既有Wi-Fi/Ethernet LAN及TLS，未用SSH tunnel。
+Both ends Native AOT `2760e449364fbfd18f192d80aa66e41eb734a5da`; Mac process and configuration unchanged, only restart Windows agent to switch explicit toggle. Mac backend 128, scratch512; CUDA layer-wise batch-fp32, wire32. Fixed 8192 input, 128 output, greedy ignores EOS, reset each time, 0%prefix cache. Each tier warmed up 1 times, formal run 3 times. Mac AC / High Power, existing Wi-Fi/Ethernet LAN and TLS, no SSH tunnel used.
 
-|发送重叠|正式prefill秒|中位prefill秒|客户端首token中位秒|客户端整次中位秒|decode中位token/s|
+|Send overlap|Formal prefill seconds|Median prefill seconds|Client first token median seconds|Client whole run median seconds|Decode median token/s|
 |---|---|---:|---:|---:|---:|
 |off|17.592 / 17.365 / 17.228|17.365|17.374|19.647|55.88|
 |on|16.624 / 16.547 / 16.790|16.624|16.636|18.956|55.84|
 
-8次请求的全部128个输出token与之前串行基线相同，每次新增整机swap-out为0；每次Metal allocation为37,572,984,832字节。Windows整GPU500ms采样峰值19,585MiB。逐次预热、资源、包散列、阶段数据见 `site/send-overlap-summary.json`。
+All 128 output tokens for 8 requests are identical to the previous serial baseline; each run adds a total machine swap-out of 0; each Metal allocation is 37, 572, 984, 832 bytes. Windows total GPU500ms sampling peak 19, 585MiB. Step-by-step warmup, resources, package hash, phase data see `site/send-overlap-summary.json`.
 
-CUDA前段计算/readback wall time仍约13.4秒；原累计约0.8–1.1秒发送现在能与下一块计算重叠。`computeMs`并非纯GPU事件时间，`sendMs`包括framing/TLS，重叠时间不能相加当总耗时。前段hidden全部发送约14.35 →13.59秒；最终状态交接仍约3秒。off先、on后，非随机次序。一个驱动启动时日志文件尚未建立的尝试发送了0个推理请求，保留但不计入数据。
+CUDA frontend compute/readback wall time still approx 13.4 seconds; original cumulative approx 0.8–1.1 seconds sending now overlaps with next block computation. `computeMs` is not pure GPU event time, `sendMs` includes framing/TLS, overlap time cannot be added as total duration. Frontend hidden all sent approx 14.35 →13.59 seconds; final state handover still approx 3 seconds. off first, on later, not random order. One driver startup attempt sent 0 inference requests when log file was not yet established, retained but not counted in data.
 
-## 真实取消及部署验收
+## Real cancellation and deployment acceptance
 
-开启重叠时，8192-token prefill进入Busy后约1.07秒主动断开客户端，2.38秒后新鲜遥测确认两端恢复。随后8192输入/8输出与基线前8个token相同，连续Mac短请求也确定性；Mac与Windows PID均未变。原始证据 `artifacts/dual-host/overlap-cancel-20261023T084752Z`。
+With overlap enabled, 8192-token prefill enters Busy then actively disconnects client after approx 1.07 seconds, fresh telemetry confirms both ends recovered after 2.38 seconds. Subsequently 8192 input /8 output same as baseline first 8 tokens, continuous Mac short requests also deterministic; Mac and Windows PIDs unchanged. Original evidence `artifacts/dual-host/overlap-cancel-20261023T084752Z`.
 
-另有15项部署验收全部通过：真实连续请求、流式一致、首token后取消与恢复、自然EOS、超限/鉴权及队列背压。切换前也验证a8ce025的ReadyLocal行为：Windows离线时短请求200（0.293s），长请求503（5.005s）。Windows仍以前台SSH控制方式运行，未冒充SCM服务。
+Additionally 15 deployment acceptance items all passed: real continuous requests, streaming consistency, cancel and resume after first token, natural EOS, overflow/auth and queue backpressure. Before switching also verified a8ce025 ReadyLocal behavior: Windows offline short requests 200 (0.293s), long requests 503 (5.005s). Windows still runs via foreground SSH control, does not impersonate SCM service.
 
-CI三平台通过：[2760e44运行](https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39926055286)。虚拟GPU的residency测试覆盖边界沿用后段合批报告；物理M5实际运行该测试。
+CI three platforms passed: [2760e44 run](https://github.com/LittleLittleCloud/Infer.NET/actions/runs/39926055286). Virtual GPU residency test covering boundary follows backend batching report; physical M5 actually runs this test.
 
-## 复现及边界
+## Reproduction and boundaries
 
-同一包保持Mac `suffix-chunk-tokens=128`，Windows分别 `--cuda-send-overlap off/on`，以agent Ready日志核对实际开关，再对固定8192输入执行 `/v1/infer/stream`，`maxTokens=128, profile=true, benchmarkIgnoreEos=true`，每档完整预热1+正式3。输入SHA256 `defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`，revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`。
+Same package keeps Mac `suffix-chunk-tokens=128`, Windows respectively `--cuda-send-overlap off/on`, verify actual switch via agent Ready log, then execute `/v1/infer/stream`, `maxTokens=128, profile=true, benchmarkIgnoreEos=true` on fixed 8192 input, each tier complete warmup 1+ formal 3. Input SHA256 `defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`, revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`.
 
-本地原始证据未公开：`artifacts/dual-host/overlap-e2e-off-20261023T084130Z`、`overlap-e2e-on-20261023T084415Z`、`overlap-release-2760e44`。公开JSON不含凭据或私网地址。
+Local original evidence not public: `artifacts/dual-host/overlap-e2e-off-20261023T084130Z`, `overlap-e2e-on-20261023T084415Z`, `overlap-release-2760e44`. Public JSON contains no credentials or private network addresses.
 
-从最初同精度串行的52.503秒到当前16.624秒，8K prefill累计约3.16倍，但128K prefill≥1600→2000 token/s、4096输出decode≥37 token/s、整次≤200→180秒仍待验收；不把短请求decode成绩当作长上下文通过。下一步将KV交接与计算重叠，并验证更长输入/输出。
+From initial same-precision serial 52.503 seconds to current 16.624 seconds, 8K prefill cumulative approx 3.16 times, but 128K prefill≥1600→2000 token/s, 4096 output decode≥37 token/s, whole run≤200→180 seconds still pending acceptance; do not treat short request decode results as long context pass. Next step will overlap KV handover with computation, and verify longer input/output.

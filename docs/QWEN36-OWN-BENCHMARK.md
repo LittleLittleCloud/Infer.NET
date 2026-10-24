@@ -421,10 +421,18 @@ exited before our process loaded the weights. The product never invokes it.
 The reference uses the same quantized weights with FP32 floating tensors to
 compare at our precision; this differs from its BF16 performance benchmark.
 
+English rendering of the recorded output:
+
 `verify-qwen36` verifies exact prompt token IDs and eight greedy generated token
 IDs. It also evaluates the 24-token prompt-plus-generated sequence, exporting
 all 40 layer outputs at token positions 0, 16 and 23. Independent generation:
-“我是通义千问，由阿里云”. Native AOT passed the greedy token comparison.
+“I am Tongyi Qianwen, from Alibaba Cloud.” Native AOT passed the greedy token comparison.
+
+Original output (verbatim):
+
+```text
+我是通义千问，由阿里云
+```
 
 | Comparison | Result |
 |---|---:|
@@ -444,7 +452,17 @@ and a multi-step delta recurrence with independent scalar arithmetic.
 
 An actual coordinator request generated 27 tokens, ended on EOS and returned:
 
-> 我是通义千问，由阿里云通义实验室独立研发的大语言模型，致力于成为您得力的思考伙伴与助手。
+English rendering of the recorded output:
+
+> I am Tongyi Qianwen, a large language model independently developed by Tongyi Lab, dedicated to being your capable thinking partner and assistant.
+
+Original output (verbatim):
+
+```text
+我是通义千问，由阿里云通义实验室独立研发的大语言模型，致力于成为您得力的思考伙伴与助手。
+```
+
+English rendering of the recorded input:
 
 Release build passed with zero warnings/errors; all 45 unit tests passed on
 this Mac. Native AOT publishing succeeded for host and TUI. The 24-check
@@ -455,10 +473,16 @@ and Ctrl+C removed all launcher-owned processes.
 The original Qwen 3B Native AOT end-to-end suite also passed all 12 checks,
 including its independent greedy token fixture, request-local KV reset,
 context-overflow error, default CLI and real-model benchmark.
-Additional own-MoE RPC checks returned exactly `4` for “计算2加2，只回答数字。”,
+Additional own-MoE RPC checks returned exactly `4` for “Calculate 2 plus 2; return only the number.”,
 repeated identical token IDs with fresh state, and returned HTTP 400 for an
 oversized tokenized context. The coordinator wraps the worker's
 `invalid_model_input` payload in its existing `worker_error` envelope.
+
+Original input (verbatim):
+
+```text
+计算2加2，只回答数字。
+```
 
 ## Reproduce
 

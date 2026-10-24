@@ -1,204 +1,204 @@
-# Qwen3.6-35B-A3B：8bit 验证与双机容量重估
+# Qwen3.6-35B-A3B: 8bit Verification and Dual-Machine Capacity Re-evaluation
 
-2026-10-22，M5 Pro 20 核 GPU / 48 GiB，macOS 26.6.2，AC / High Power。
+2026-10-22, M5 Pro 20-core GPU / 48 GiB, macOS 26.6.2, AC / High Power.
 
-后续双机实现的固定性能门槛与计时规则见 [8bit 性能目标 v1](QWEN36-8BIT-TARGETS.md)。本文保留既有实测与容量估算，不作为双机达标证据。
+See [8bit Performance Targets v1](QWEN36-8BIT-TARGETS.md) for the fixed performance thresholds and timing rules for subsequent dual-machine implementations. This document retains existing measurements and capacity estimates, which do not serve as evidence of dual-machine compliance.
 
-## 检查点与实现
+## Checkpoints and Implementation
 
-`mlx-community/Qwen3.6-35B-A3B-8bit`，固定 revision
-`e06a74e6236a60c8367e1a3214e83d8b61b637b0`，affine 8bit / group64。
-下载文件逐一验证 LFS SHA-256 或 Git blob hash；保留 LICENSE 和 provenance。
-检查点的 MLX 格式由 C# 读取，实际产品执行仍为 Native AOT + 自写 Metal kernel。
-MLX 仅用于独立数值参考，没有用于产品请求或下面的性能测量。
+`mlx-community/Qwen3.6-35B-A3B-8bit`, fixed revision
+`e06a74e6236a60c8367e1a3214e83d8b61b637b0`, affine 8bit / group64.
+Downloaded files are verified one by one for LFS SHA-256 or Git blob hash; LICENSE and provenance are retained.
+The checkpoint's MLX format is read by C#, but actual product execution remains Native AOT + custom Metal kernels.
+MLX is used only for independent numerical reference, not for product requests or the performance measurements below.
 
-此次补齐 embedding、classifier、批量 GEMM、共享专家和路由专家的 8bit 路径，
-同时保留 5bit 回归。模型量化配置和单矩阵覆盖值会校验。
-KV 容量从 2 的幂增长改为 2048-token 页，避免 128K 输入加输出就申请 256K KV。
-TUI 文案移除硬编码的“5-bit”。
+This time, the 8bit path for embedding, classifier, batch GEMM, shared experts, and routing experts is completed,
+while retaining 5bit regression. Model quantization configuration and single matrix coverage values will be verified.
+KV capacity changes from 2 power-of-two growth to 2048-token pages, avoiding allocating 256K KV for just 128K input plus output.
+The TUI text removes the hardcoded “5-bit”.
 
-## 正确性
+## Correctness
 
-独立 FP32 参考与自写引擎：120 组逐层状态、完整 logits、8 个 greedy token。
-8bit 逐层最大 relative L2 = `3.559540353840437e-6`，
-logits relative L2 = `2.2151446631205613e-6`；8 个输出 token 完全一致。
-阈值保持 relative L2 < 1e-4、max absolute < 0.01。
-5bit 实际模型回归同样通过。短数值参考不等于验证长上下文语义质量。
-这证明实现复现了该 8bit 检查点，不是 8bit 对原始 BF16 模型的任务质量评测。
+Independent FP32 reference vs. custom engine: 120 group layer-by-layer state, full logits, 8 greedy tokens.
+8bit layer-by-layer max relative L2 = `3.559540353840437e-6`,
+logits relative L2 = `2.2151446631205613e-6`; 8 output tokens are completely consistent.
+Thresholds remain relative L2 < 1e-4, max absolute < 0.01.
+5bit actual model regression also passes. Short numerical reference does not equal verification of long-context semantic quality.
+This proves the implementation reproduces this 8bit checkpoint, not a task quality evaluation of 8bit against the original BF16 model.
 
-Release 构建和 Native AOT 发布成功；68 项 .NET 单元测试通过。
-Metal 检查覆盖 5/8bit GEMV、FP32/BF16 专家 GEMM、M5 packed/fused 路径、
-attention、DeltaNet 以及 KV 页边界；各检查原始日志在 `artifacts/qwen36-8bit-*.log`。
-8bit 参考与比较结果在 `artifacts/reference/qwen36-8bit/`。
+Release build and Native AOT publish successful; 68 .NET unit tests passed.
+Metal checks cover 5/8bit GEMV, FP32/BF16 expert GEMM, M5 packed/fused paths,
+attention, DeltaNet, and KV page boundaries; raw logs for each check are in `artifacts/qwen36-8bit-*.log`.
+8bit reference and comparison results are in `artifacts/reference/qwen36-8bit/`.
 
-## 测量口径
+## Measurement Standards
 
-单 worker、单请求，加载模型后预热，再测量；每个请求清空 KV/Delta 状态，
-**没有跨请求 prefix cache hit**。权重 8bit，GEMM 输入和 KV 为 BF16，
-残差、路由、Delta 状态和累加仍为 FP32。attention query batch=128，
-key tile=128，partition=1024；hybrid dense GEMM、packed/adaptive/fused 专家、device DeltaNet。
+Single worker, single request: load the model, warm up, then measure; clear KV/Delta state for each request,
+**no cross-request prefix cache hit**. Weights 8bit, GEMM inputs and KV are BF16,
+residuals, routing, Delta state, and accumulators remain FP32. Attention query batch=128,
+key tile=128, partition=1024; hybrid dense GEMM, packed/adaptive/fused experts, device DeltaNet.
 
-128 个固定输出测量 127 个 decode 间隔。长输出也忽略 EOS 以得到固定长度吞吐，
-不能当作模型自然生成了这么长的有意义答案。prefill 不包括模型加载，
-首次请求的 GPU 驻留开销单独保留在预热记录中。
-128-output 各档是一次预热、三次测量。4096-output 改用 512 分块，
-完整预热一次再测一次，单独列为容量/持续解码验证，不与 2048 分块混算。
+128 fixed outputs measure 127 decode intervals. Long outputs also ignore EOS to obtain fixed-length throughput,
+which cannot be treated as the model naturally generating such a long meaningful answer. Prefill does not include model loading;
+the GPU residency overhead for the first request is kept separately in the warm-up record.
+128-output each tier involves one warm-up and three measurements. 4096-output uses 512 chunking instead,
+with one complete warm-up followed by one measurement, listed separately for capacity/continuous decoding verification, not mixed with 2048 chunking calculations.
 
-结果与原始请求见 `artifacts/baselines/qwen36-8bit-*`。
-系统 swap 观测是整机计数，不能把别的进程的换入归因于 worker。
+Results and original requests are in `artifacts/baselines/qwen36-8bit-*`.
+System swap observations are whole-machine counts; you cannot attribute page-ins from other processes to the worker.
 
-最终独立 classifier 提交版本的 128K / 128 输出：预热一次、测三次，
-prefill 为 **135.775 / 136.170 / 135.954 秒**，均值 **135.966 秒**，
-解码合并吞吐 **37.520 token/s**，三个输出 token 序列完全一致。
-Metal allocation **37.938 GiB**，KV capacity **133120**。
-首轮预热 prefill **166.358 秒**，不能与稳态混算。
-三轮系统新增 Swapouts 页数为 **0 / 0 / 8428**（16 KiB/page，末轮约 131.69 MiB）；
-Swapins 为 **29570 / 9315 / 12049**。这是整机环境中的结果，未关闭用户应用。
+Final independent classifier submission version 128K / 128 output: one warm-up, three measurements,
+prefill is **135.775 / 136.170 / 135.954 seconds**, mean **135.966 seconds**,
+decode merged throughput **37.520 token/s**, three output token sequences are completely identical.
+Metal allocation **37.938 GiB**, KV capacity **133120**.
+First-round warm-up prefill **166.358 seconds**, cannot be mixed with steady-state calculations.
+Three rounds of system new Swapouts pages are **0 / 0 / 8428** (16 KiB/page, last round approx 131.69 MiB);
+Swapins are **29570 / 9315 / 12049**. These are results from the whole-machine environment, with user applications not closed.
 
-同一最终二进制、相同配置下的稳态结果（每档 3 次）：
+Steady-state results under the same final binary and configuration (3 times per tier):
 
-|输入|固定输出|prefill 秒|prefill token/s|decode token/s|Metal allocation GiB|
+|Input|Fixed Output|Prefill (s)|Prefill token/s|Decode token/s|Metal allocation GiB|
 |---|---:|---:|---:|---:|---:|
 |8192|128|3.467|2362.7|66.34|35.351|
 |32768|128|17.743|1846.8|60.51|35.868|
 |131072|128|135.966|964.0|37.52|37.938|
 
-长输出独立配置（512 分块，一次完整预热、一次正式测量）：
+Long output independent configuration (512 chunking, one complete warm-up, one formal measurement):
 
-|输入|固定输出|prefill 秒|prefill token/s|decode 秒|decode token/s|Metal allocation GiB|
+|Input|Fixed Output|Prefill (s)|Prefill token/s|Decode (s)|Decode token/s|Metal allocation GiB|
 |---|---:|---:|---:|---:|---:|---:|
 |131072|4096|164.157|798.5|105.123|38.95|37.541|
 
-worker 首 token 到请求生成结束共 **269.355 秒**（含前置处理）；预热 prefill **206.333 秒**。
-KV capacity **135168**，KV bytes **2,768,240,640**。两遍 4096 个输出 token 完全一致；
-正式测量 16 个解码窗口约 **38.30–39.19 token/s**。
-随后 4 项真实 RPC 验收通过：8K 远距离校验码、超限请求拒绝、长请求后短参考 token 一致、
-重复算术请求确定性。验收不等于 128K 自然语言质量评测。
+Worker first token to request generation end takes **269.355 seconds** (including pre-processing); warm-up prefill **206.333 seconds**.
+KV capacity **135168**, KV bytes **2,768,240,640**. Two passes of 4096 output tokens are completely identical;
+formal measurement 16 decode windows approx **38.30–39.19 token/s**.
+Subsequently, 4 real RPC validations passed: 8K long-distance checksums, rejection of out-of-limit requests, consistency of short reference tokens after long requests,
+determinism of repeated arithmetic requests. Validation does not equal 128K natural language quality evaluation.
 
-长输出正式测量整机新增 swap-out **16639 页 = 259.98 MiB**，换入 **39669 页**。
-首次完整预热则新增 swap-out **620469 页 ≈ 9.47 GiB**，换入 **885357 页**。
-这说明本机正常应用环境下加载/驻留 8bit 模型会造成明显内存压力，不能宣传成“48 GiB 下无 swap”。
+Long output formal measurement whole-machine new swap-out **16639 pages = 259.98 MiB**, page-in **39669 pages**.
+First complete warm-up adds new swap-out **620469 pages ≈ 9.47 GiB**, page-in **885357 pages**.
+This indicates that loading/residing 8bit model in the normal application environment of this machine causes significant memory pressure, and it cannot be advertised as "no swap under 48 GiB".
 
-8K 最后一轮整机新增 6340 个 swap-out 页（99.06 MiB），32K 三轮均为零。
-所有档位内部的三次输出 token 序列一致。
-本轮没有测量 MLX 的 8bit 性能，不能沿用历史 5bit 成绩判断框架间的差距。
+8K last round whole-machine new 6340 swap-out pages (99.06 MiB), 32K three rounds are all zero.
+All three output token sequences within each tier are consistent.
+This round did not measure MLX's 8bit performance, so historical 5bit results cannot be used to judge the gap between frameworks.
 
-## 128K 的内存边界
+## Memory boundaries of 128K
 
-按实际 safetensors header 计算，语言权重 **34.298735 GiB**，
-全部 10 层 full-attention 的 128K BF16 KV 为 **2.50 GiB**，
-30 层 DeltaNet/卷积状态约 **62.81 MiB**，另需临时缓冲、运行时和输出容量。
-Metal 返回推荐 working-set budget 为 `40,200,896,512` bytes（37.44 GiB），
-并不是用户可任意独占的 48 GiB。
+Calculated based on actual safetensors header, language weights **34.298735 GiB**,
+all 10 layers full-attention 128K BF16 KV is **2.50 GiB**,
+30 layers DeltaNet/convolutional state approx **62.81 MiB**, plus temporary buffers, runtime, and output capacity.
+Metal returns recommended working-set budget of `40,200,896,512` bytes (37.44 GiB),
+which is not 48 GiB exclusively available to the user.
 
-2048-token prefill chunk 的首轮 128K 在最后一个分块报 Metal
-`kIOGPUCommandBufferCallbackErrorOutOfMemory`；129024 token 的中间进度不算完成。
-原始失败记录保留，不能用其时长作为成功的基准。
-512-token 分块仍在最后一步失败。最终修复是将 8bit 的词表投影单独提交：
-每个请求只增加一次 GPU 提交，层间数据不回 CPU，计算精度不变。
-同一提交不再同时引用 prefill 工作区和完整词表矩阵；128K 已用 2048 分块完成
-prefill 和 decode。总 Metal allocation 仍可超过推荐 working-set 数值，
-关键是提交时需要同时驻留的资源集合；推荐值不是总 allocation 的绝对上限。
-失败记录分别保留在 `qwen36-8bit-128k-128out`、`qwen36-8bit-128k-chunk512-pilot`。
-最终二进制测量用 `qwen36-8bit-split-*` 前缀，与旧结果分开。
+The first round of 128K in the 2048-token prefill chunk reports Metal
+`kIOGPUCommandBufferCallbackErrorOutOfMemory` at the last chunk; intermediate progress for 129024 tokens does not count as completion.
+Original failure records are retained and their duration cannot be used as a baseline for success.
+The 512-token chunk still fails at the final step. The ultimate fix was to submit the 8bit vocabulary projection separately:
+Each request incurs only one GPU submission, inter-layer data does not return to the CPU, and computational precision remains unchanged.
+The same submission no longer simultaneously references the prefill workspace and the full vocabulary matrix; 128K has completed
+prefill and decode using 2048 chunks. Total Metal allocation can still exceed the recommended working-set value,
+the key is the set of resources that must reside simultaneously at submission time; the recommended value is not an absolute upper limit for total allocation.
+Failure records are retained separately in `qwen36-8bit-128k-128out` and `qwen36-8bit-128k-chunk512-pilot`.
+The final binary measurements use the `qwen36-8bit-split-*` prefix, separated from old results.
 
-128K + 4096 输出若仍用 2048 分块，预留容量从 133120 增至 135168，
-额外 KV 加上工作区仍会触发首个提交 OOM。该失败记录在
-`qwen36-8bit-split-128k-4096out`。长输出重测同时采用 **512 分块 + 独立 classifier 提交**，
-报告前缀为 `qwen36-8bit-split-128k-chunk512-4096out`。
-所以“128K 输入可用”必须连同输出预算和工作区配置说明，不能泛化为任意长度均可用。
+If 128K + 4096 output still uses 2048 chunks, the reserved capacity increases from 133120 to 135168,
+and the additional KV plus workspace will still trigger an OOM in the first submission. This failure record is in
+`qwen36-8bit-split-128k-4096out`. Long output retesting simultaneously adopts **512 chunks + independent classifier submission**,
+with the report prefix `qwen36-8bit-split-128k-chunk512-4096out`.
+Therefore, "128K input is available" must be accompanied by output budget and workspace configuration details; it cannot be generalized to availability for arbitrary lengths.
 
-## 4090 + Mac：先检查容量
+## 4090 + Mac: Check capacity first
 
-目标是 4090 常驻前若干层，Mac 常驻完整模型并负责后半 prefill 和完整 decode。
-因此不是把 24 GiB 与 48 GiB 当作透明的 72 GiB 显存池。
-GPU 完成前半层 prefill 后，Mac 必须取得这些层的 KV 与最终 Delta/卷积状态，
-才能继续完整模型解码；只传 hidden vector 不够。
+The goal is for 4090 to residently hold the first few layers, while Mac residently holds the full model and is responsible for the latter half of prefill and full decode.
+Therefore, 24 GiB and 48 GiB are not treated as a transparent pool of 72 GiB VRAM.
+After the GPU completes the first half of layer prefill, Mac must obtain the KV and final Delta/convolution states for these layers
+to continue decoding the full model; transmitting only hidden vectors is insufficient.
 
-128K 输入，GPU 前段含 embedding；状态按 BF16 KV / FP32 recurrence 计算：
+For 128K input, the GPU front-end includes embedding; states are calculated via BF16 KV / FP32 recurrence:
 
-|4090 / Mac prefill 层数|4090 权重|128K 状态|合计|距 24 GiB 余量|
+|4090 / Mac prefill layers|4090 weights|128K state|Total|Remaining from 24 GiB|
 |---|---:|---:|---:|---:|
 |20 / 20|17.149 GiB|1.281 GiB|18.430 GiB|5.570 GiB|
 |24 / 16|20.479 GiB|1.537 GiB|22.015 GiB|1.985 GiB|
-|28 / 12|23.808 GiB|1.793 GiB|25.601 GiB|超出|
+|28 / 12|23.808 GiB|1.793 GiB|25.601 GiB|Exceeds|
 
-上述余量尚未扣 Windows 显示占用、CUDA 工作区、传输缓冲和 allocator 开销。
-优先验证 20/20；24/16 须实测峰值后决定；28/12 已不满足容量。
-8bit Mac 单机能否完成目标长度，是这个方案的前提。
+The above margin has not yet deducted Windows display usage, CUDA workspace, transfer buffers, and allocator overhead.
+Priority is given to verifying 20/20; 24/16 must be decided after measuring peak values; 28/12 no longer satisfies capacity.
+Whether a single 8bit Mac can complete the target length is the prerequisite for this scheme.
 
-每 token 边界 hidden vector 为 2048 × FP32 = 8192 bytes。
-128K hidden 合计 1 GiB；加上 GPU 前段 KV 与最终 recurrence 状态，
-20 层共 **2.281 GiB**、24 层共 **2.537 GiB**。
-假设有效吞吐为 110 MB/s 或 1 GB/s，链路服务时间分别为：
+The hidden vector per token boundary is 2048 × FP32 = 8192 bytes.
+128K hidden totals 1 GiB; adding the GPU front-end KV and final recurrence states,
+20 layers total **2.281 GiB**, and 24 layers total **2.537 GiB**.
+Assuming an effective throughput of 110 MB/s or 1 GB/s, the link service times are respectively:
 
-|前段|110 MB/s|1 GB/s|
+|Front-end|110 MB/s|1 GB/s|
 |---|---:|---:|
-|20 层|22.26 s|2.45 s|
-|24 层|24.76 s|2.72 s|
+|20 layers|22.26 s|2.45 s|
+|24 layers|24.76 s|2.72 s|
 
-这是字节数除假设吞吐，不是家中网络实测。可分块重叠传输与计算，不能把全部网络时间
-简单加到计算时长上；也不能忽略 CPU staging、GPU readback/upload 和流水线首尾开销。
+This is byte count divided by assumed throughput, not a real-world home network measurement. Chunks can overlap transfer and computation, but one cannot simply add all network time
+to the computation duration; nor can one ignore CPU staging, GPU readback/upload, and pipeline head/tail overhead.
 
-若 90% prefix 在两端都已有正确缓存，仍需完整容量，但只需发送新后缀 hidden/KV
-与最终 recurrence 状态，理论流量降至约 0.256 / 0.287 GiB（20/24 层）。
-若 GPU 没有对应 prefix，需先补齐状态；解码新增状态也须在下一轮同步。
-命中位置还必须有对应的 DeltaNet/卷积状态快照，只有 KV 或更长前缀的最终 recurrent 状态不能任意回退。
-当前产品没有这套双端 prefix cache，因此这里只分析容量和协议，未声称测得 cache-hit 吞吐。
+If the 90% prefix already has correct caching at both ends, full capacity is still required, but only the new suffix hidden/KV
+and final recurrence states need to be sent, reducing theoretical traffic to approximately 0.256 / 0.287 GiB (for 20/24 layers).
+If the GPU lacks the corresponding prefix, states must first be filled; newly decoded states must also be synchronized in the next round.
+The hit location must also have the corresponding DeltaNet/convolution state snapshot; one cannot arbitrarily fall back with only KV or the final recurrent state of a longer prefix.
+Current products do not have this dual-end prefix cache, so this analysis only covers capacity and protocol, without claiming measured cache-hit throughput.
 
-## 如何判断双机值得实现
+## How to determine if dual-machine implementation is worthwhile
 
-设单机实测 prefill 为 T，假设同类层耗时可按层数拆分且两端流水线充分重叠，
-20/20 的 Mac 后段约 T/2，24/16 约 0.4T。
-这些是乐观的计算瓶颈估计，还需等待 4090、网络和首尾流水线开销，不能当作双机实测。
-20/20 的 prefill 加速上限约 2 倍，24/16 约 2.5 倍；实际可能更低。
+Let the single-machine measured prefill be T. Assuming similar layer times can be split by layer count and both ends' pipelines are fully overlapped,
+the Mac back-end for 20/20 is approximately T/2, and 24/16 is approximately 0.4T.
+These are optimistic computational bottleneck estimates; one must still wait for 4090, network, and pipeline head/tail overhead, so they cannot be treated as dual-machine measurements.
+The prefill acceleration upper limit for 20/20 is approximately 2 times, and for 24/16 approximately 2.5 times; actual results may be lower.
 
-128K 下，按实际投影矩阵形状和 causal full-attention QK/AV 计数，
-全模型约 2046.16 TFLOP；这不含 DeltaNet、反量化、归一化、路由和传输开销。
-前 20/24 层分别约 1023.08/1227.69 TFLOP。
-以“这些工作量 / 实测 Mac 后段估计时间”给出所需有效吞吐，
-比直接套 4090 的广告峰值更有用。真正的下一道门槛是用相同 8bit 格式和分块
-测出 4090 前段的实际时长、峰值显存及状态导出成本。
-CUDA 原型应保留相同 affine 8bit 权重、BF16 乘法输入和 FP32 累加；
-若改成 W8A8 或 FP8 算法，必须重新验证，不能直接当作相同精度的吞吐对照。
+Under 128K, based on actual projection matrix shapes and causal full-attention QK/AV counts,
+the full model requires approximately 2046.16 TFLOP; this excludes DeltaNet, dequantization, normalization, routing, and transmission overhead.
+The first 20/24 layers require approximately 1023.08/1227.69 TFLOP respectively.
+Using "this workload / measured Mac back-end estimated time" to derive the required effective throughput
+is more useful than directly applying 4090's advertised peak. The true next hurdle is using the same 8bit format and chunks
+to measure the actual duration, peak VRAM, and state export cost of the 4090 front-end.
+The CUDA prototype should retain the same affine 8bit weights, BF16 multiplication inputs, and FP32 accumulation;
+if changed to W8A8 or FP8 algorithms, re-verification is mandatory and cannot be directly treated as a throughput comparison at the same precision.
 
-以本次 **135.966 秒** 代入，20/20 的 Mac 后段下限估计 **67.98 秒**，
-24/16 为 **54.39 秒**。要追上它们，4090 对上述投影/attention 工作的有效吞吐
-分别须达到约 **15.05 / 22.57 TFLOP/s**，并额外承担未计入的其他算子开销。
-这些是原型的验收目标，不是对 RTX 4090 已有的实测结论。
-千兆链路的 22–25 秒总服务时间可与计算重叠，所以不能仅凭该数字就判定千兆必然无收益；
-10GbE 提供更大余量，但是否值得购买仍取决于实际 CUDA 前段与网络测量。
+Substituting this round's **135.966 seconds**, 20/20 Mac back-end lower bound estimate **67.98 seconds**,
+24/16 is **54.39 seconds**. To catch up with them, 4090 effective throughput for the above projection/attention work
+must reach approximately **15.05 / 22.57 TFLOP/s**, and additionally bear other operator overhead not included.
+These are the prototype acceptance goals, not existing actual measurement conclusions for RTX 4090.
+The total service time of 22–25 seconds on a gigabit link can overlap with computation, so one cannot judge that gigabit necessarily yields no benefit based solely on this number;
+10GbE provides greater margin, but whether it is worth purchasing still depends on actual CUDA front-end and network measurements.
 
-长输出的整次请求时间应看 `prefill + (输出数−1)/decode速度`。
-如果 decode 完全留在 Mac，prefill 加速不会加速这一段；90% prefix 命中时，
-剩余 prefill 更短，长输出场景的总耗时收益也会进一步变小。
-冷 prefill 的最后 10% 分块耗时仅可作为 suffix 计算量的近似，不是实际 cache-hit 测量。
+The total request time for long outputs should be viewed in terms of `prefill + (outputTokens−1)/decodeThroughput`.
+If decoding remains entirely on the Mac, prefill acceleration will not speed up this segment; when the 90% prefix hits,
+the remaining prefill is shorter, and the total time savings in long-output scenarios will decrease further.
+The time taken by the last 10% blocks of cold prefill serves only as an approximation of suffix computation volume, not as an actual cache-hit measurement.
 
-以**实际长输出的 512 分块配置**做同口径估算，prefill 164.157 秒、decode 105.123 秒：
+Using the **actual long-output 512 block configuration** for a consistent estimation, prefill takes 164.157 seconds, decode takes 105.123 seconds:
 
-|方案|Mac prefill 按层数估算|保持现有 decode 后的理想总时间|相对单机 269.28 秒|
+|Scheme|Mac prefill estimated by layer count|Ideal total time maintaining existing decode|Relative to single-machine 269.28 seconds|
 |---|---:|---:|---:|
 |20/20|82.08 s|187.20 s|1.44×|
-|24/16|65.66 s|170.79 s|1.58×，显存余量小|
+|24/16|65.66 s|170.79 s|1.58×, small VRAM margin|
 
-前提是 GPU 和网络能跟上且充分重叠，尚未计流水线首尾、状态导出/导入和调度开销。
-因此优先做 20/20 前段 CUDA 微基准；以上数字不是实际双机结果。
-这次 512 分块的最后 10% prefill 约 **24.09 秒**。假设未来正确命中 90% prefix，
-沿用 105.12 秒长 decode，20/20 理想总时间仅从约 **129.21 秒**降到 **117.17 秒（1.10×）**。
-这是根据分块时长推算的场景，不是 prefix-cache 实测。
+This assumes the GPU and network can keep up and fully overlap, without yet accounting for pipeline start/end, state export/import, and scheduling overheads.
+Therefore, prioritize running the 20/20 front-end CUDA micro-benchmarks; the above numbers are not actual dual-machine results.
+The last 10% prefill of the 512 blocks took approximately **24.09 seconds**. Assuming correct future hits on the 90% prefix,
+and continuing with 105.12 seconds of long decoding, the 20/20 ideal total time would drop only from approximately **129.21 seconds** to **117.17 seconds (1.10×)**.
+This is a scenario derived from block durations, not an actual prefix-cache measurement.
 
-当前 CUDA 后端尚未执行该模型的前段；跨机器层切分、KV/Delta 状态传输、
-双端 prefix cache 均未实现。因此当前结论用于筛选原型，不能宣称已经获得双机加速。
+The current CUDA back-end has not yet executed the front-end of this model; cross-machine layer splitting, KV/Delta state transmission,
+and dual-end prefix caching have not been implemented. Therefore, current conclusions are used to filter prototypes and cannot claim that dual-machine acceleration has already been achieved.
 
-若还要降低 Mac 的常驻内存，就需要两端在 decode 阶段也各跑自己的层，
-而不是让 Mac 保留完整模型接管 decode。那是另一种方案，需要测每 token 的两段计算和网络往返；
-本文的 68/54 秒估计只针对 prefill 分流，不能证明分层 decode 的速度。
+If one still wishes to reduce the resident memory on the Mac, both ends must run their own layers during the decode phase,
+rather than having the Mac retain the complete model to take over decoding. That is a different scheme, requiring measurement of per-token computation and network round-trips for both segments;
+The 68/54 seconds estimate in this article applies only to prefill offloading and cannot prove the speed of layered decoding.
 
-## 复现
+## Reproduction
 
-先运行下载器 `scripts/download-qwen36-mlx.py --bits 8`。
-使用独立的 `artifacts/native/qwen36-8bit/deepinfer`，避免替换已有 5bit 服务二进制。
-原始权重在 `models/qwen3.6-35b-a3b-8bit-mlx`。
+First, run the downloader `scripts/download-qwen36-mlx.py --bits 8`.
+Use an independent `artifacts/native/qwen36-8bit/deepinfer` to avoid replacing the existing 5bit service binary.
+The original weights are located in `models/qwen3.6-35b-a3b-8bit-mlx`.
 
 ```sh
 artifacts/baselines/mlx-env/bin/python scripts/reference-qwen36.py \
@@ -212,20 +212,20 @@ artifacts/baselines/mlx-env/bin/python scripts/benchmark-qwen36-8bit.py --label 
 python3 scripts/summarize-qwen36-8bit.py
 ```
 
-基准需要 Python tokenizers 做输入核对，不导入 MLX 执行推理。
-已有结果须先归档，驱动器拒绝覆盖同名报告。GPU 工作负载串行运行。
+The benchmark requires Python tokenizers for input verification and does not import MLX for inference.
+Existing results must be archived first; the drive refuses to overwrite reports with the same name. GPU workloads run serially.
 
-最终 8bit 产物 SHA-256：
+The final 8bit artifact SHA-256:
 
 - Native AOT host：`c6f28d325c85ebad4ba5f2767a9bc490d8b05a2d73ce5069dab6c07ebe8cb81b`
 - Metal dylib：`4ea6561b9436f626c34c539c6680e03ae7f340423aafd6e3d20ecc8928d0794c`
 
-所有报告记录二进制、tokenizer、输入及输出散列。汇总脚本标记当前 dylib 对应的结果，
-保留早期成功和失败的证据，不把旧二进制的测量合并为新版本成绩。
+All reports record hashes for the binary, tokenizer, input, and output. The summary script marks results corresponding to the current dylib,
+preserving evidence of early successes and failures, and does not merge measurements from old binaries into new version scores.
 
-测试结束恢复原有 5100 端口的 5bit 服务，保留用户正在运行的 TUI；
-8bit 保存在上述独立产物中。本次没有把旧启动器的默认模型悄悄改成 8bit。
+After testing, restore the 5bit service on the 5100 port, preserving the TUI currently running for users;
+8bit is saved in the aforementioned independent artifact. This time, the default model of the old launcher was not quietly changed to 8bit.
 
-## 后续：实际链路传输基线（2026-10-22）
+## Next Steps: Actual Link Transmission Baseline (2026-10-22)
 
-[KV/递归状态同步实测](KV-SYNC-BENCHMARK.md) 已补充本文原先未测的传输底座：Mac Wi-Fi ↔ Windows 物理千兆网口，128K 前 20 层完整状态的正向中位 55.77 MB/s、24.659 s，反向 33.37 MB/s、41.203 s。40 次合成状态传输校验通过；这些结果不实现模型状态恢复或真实 prefix cache。按正向中位速率投影 hidden 加状态的链路服务约 43.91 s，本文原来的 110 MB/s / 22.26 s 保留为假设场景，不能代表当前链路。完整 CUDA 模型前段与双机 prefill 仍未实测。
+[KV/Recursive State Sync Benchmark](KV-SYNC-BENCHMARK.md) has supplemented the transmission base previously untested in this article: Mac Wi-Fi ↔ Windows physical Gigabit Ethernet port, 128K to 20 layer complete state forward median 55.77 MB/s, 24.659 s, reverse 33.37 MB/s, 41.203 s. 40 composite state transmission verification passed; these results do not implement model state recovery or real prefix cache. Projecting based on the forward median rate, the hidden plus state link service takes approximately 43.91 s. The original 110 MB/s / 22.26 s in this article is retained as a hypothetical scenario and cannot represent the current link. Complete CUDA model frontend and dual-machine prefill remain untested.

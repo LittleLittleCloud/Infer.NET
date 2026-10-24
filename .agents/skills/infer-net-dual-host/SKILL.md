@@ -1,159 +1,162 @@
 ---
 name: infer-net-dual-host
-description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务、GitHub Pages 展示项目进展与实验笔记，通过 SSH 开发及验证 Mac Metal 与 Windows RTX 4090 推理。用于该项目的双机接入、实现、调优、部署更新与回退、进展与实验记录维护，不用于普通远程运维。"
+description: "Use GitHub to synchronize Infer.NET dual-host code, manage Issues, display project progress and experiment notes via GitHub Pages, and conduct development and verification of Mac Metal and Windows RTX 4090 inference via SSH. This is used for dual-host onboarding, implementation, tuning, deployment updates and rollbacks, and progress/experiment record maintenance; it is not for general remote operations."
 ---
 
-# Infer.NET 双机开发
+# Infer.NET Dual-Host Development
 
-## 工作范围与事实来源
+## Scope and Sources of Truth
 
-保持当前 Mac 会话作为主控，通过用户配置的 SSH 操作 Windows。普通双机开发不要求在 Windows 另外启动 Codex，也不自动创建新会话或委派代理。
-用户此刻的任务决定操作范围；本技能不是对远程机器所有管理操作的永久授权。
+Maintain the current Mac session as the controller, operating Windows via user-configured SSH. Standard dual-host development does not require starting Codex separately on Windows, nor does it automatically create new sessions or delegate agents.
+The user's current task determines the scope of operation; this skill is not a permanent authorization for all management operations on the remote machine.
 
-已知开发组合为 M5 Pro 20 核 GPU / 48 GiB 与 Windows RTX 4090 / 24 GiB。先核对当前设备；不要把 72 GiB 当作统一显存池。
-仓库首选位置 `/Users/littlecloud/repos/Infer.NET`；历史会话工作目录可能仍是已迁移的 `Documents/ChatGPT/Infer.NET`。
-显式使用有效工作目录，读取适用的 AGENTS.md 和两端改动状态。路径失效时先查找已有仓库，不创建空仓库替代。
+The known development configuration is M5 Pro 20-core GPU / 48 GiB and Windows RTX 4090 / 24 GiB. First, verify the current devices; do not treat 72 GiB as a unified VRAM pool.
+The preferred repository location is `/Users/littlecloud/repos/Infer.NET`; historical session working directories may still be the migrated `Documents/ChatGPT/Infer.NET`.
+Explicitly use valid working directories, read applicable AGENTS.md files, and check the change status on both ends. If a path is invalid, first look for existing repositories; do not create empty repositories as substitutes.
 
-在仓库中按任务读取：
+Read within the repository according to tasks:
 
-- `docs/EXPERIMENT-SOP.md`：用户已批准的实验提案、人工批准、代码/结果 PR、评测与基线更新流程；每个实验仍需单独 approve。
+- `docs/EXPERIMENT-SOP.md`: User-approved experiment proposals, manual approvals, code/result PRs, evaluation, and baseline update processes; each experiment still requires separate approval.
 
-- `docs/QWEN36-8BIT-TARGETS.md`：固定性能、精度、计时、正确性和资源门槛的唯一来源；开始调优或验收前必须读。
-- `docs/QWEN36-8BIT.md`：已有单机证据、失败记录、内存限制和双机估算。
-- `README.md`、`scripts/`、`native/`、`src/`：当前启动、构建和真实实现状态。文档中的计划不证明代码已经实现。
+- `docs/QWEN36-8BIT-TARGETS.md`: The sole source for fixed performance, accuracy, timing, correctness, and resource thresholds; must be read before starting tuning or acceptance.
+- `docs/QWEN36-8BIT.md`: Existing single-machine evidence, failure records, memory limits, and dual-host estimates.
+- `README.md`, `scripts/`, `native/`, `src/`: Current startup, build, and actual implementation status. Plans in documentation do not prove that code has been implemented.
 
-不在技能中复制性能阈值或模型 revision。规范缺失时查找迁移后的文件；找不到则说明缺少验收依据，不自定替代指标。
+Do not copy performance thresholds or model revisions into the skill. If specifications are missing, look for migrated files; if not found, it indicates a lack of acceptance criteria, and do not invent substitute metrics.
 
-## 部署、更新与回退
+## Deployment, Updates, and Rollbacks
 
-涉及首次部署、更新运行版本、服务重启、回退或托管验收时，读取 [部署与更新 SOP](references/deployment-sop.md)，并以目标版本的部署文档、安装脚本和包清单核对实际能力。
-保留 `split-serve` / `split-agent` 命令名；当前验收拓扑为 Mac serve 与 Windows agent 一对一，Windows 经 serve 间接接入 coordinator。
-只编写 SOP 不触发部署；用户明确自行安装并稍后反馈时，等待反馈再执行依赖安装的验证。常规更新沿用已有授权，管理员步骤遵循下文权限边界。
+When involving initial deployment, updating running versions, service restarts, rollbacks, or hosting acceptance, read the [Deployment and Update SOP](references/deployment-sop.md) and verify actual capabilities against the target version's deployment documentation, installation scripts, and package manifests.
+Retain `split-serve` / `split-agent` command names; the current acceptance topology is a one-to-one mapping between Mac serve and Windows agent, with Windows accessing the coordinator indirectly via serve.
+Only write SOPs without triggering deployment; when the user explicitly installs themselves and provides feedback later, wait for the feedback before executing dependency installation verification. Routine updates follow existing authorizations, and administrator steps adhere to the permission boundaries below.
 
-## SSH 接入与环境发现
+## SSH Access and Environment Discovery
 
-用户负责首次配置 SSH。仅使用用户提供或已有、明确对应该设备的 SSH alias、用户名和路径；不猜 IP，不扫描家庭网络。
-确认本机 SSH 配置可以解析目标后，用有限超时、非交互方式测试，例如 `BatchMode=yes` 和 `ConnectTimeout=10`。
-保留 host key 校验；首次信任或 host key 变化须通过用户核对或已有可信指纹解决，不能关闭校验绕过。
+The user is responsible for initial SSH configuration. Only use SSH aliases, usernames, and paths provided by the user or already existing that explicitly correspond to the device; do not guess IPs or scan home networks.
+After confirming that local SSH configuration can resolve the target, test with a limited timeout and non-interactively, e.g., `BatchMode=yes` and `ConnectTimeout=10`.
+Retain host key verification; first-time trust or host key changes must be resolved through user verification or existing trusted fingerprints, and cannot be bypassed by disabling verification.
 
-没有连接信息时，一次询问 SSH alias（或地址与用户名）以及期望的远端工作目录。
-不索取密码、私钥或登录 token。不要输出 SSH 私钥、完整凭据环境或包含秘密的配置。
-用户尚在配置、认证失败或连接超时时，报告具体缺项，继续独立的本地实现；配置有变化后再试，不无限重试。
+If connection information is missing, ask once for the SSH alias (or address and username) and the desired remote working directory.
+Do not request passwords, private keys, or login tokens. Do not output SSH private keys, full credential environments, or configurations containing secrets.
+If the user is still configuring, authentication fails, or the connection times out, report the specific missing items and continue with independent local implementation; retry after configuration changes, but do not retry infinitely.
 
-连接成功后的首轮只读检查要确定：
+The first read-only check after a successful connection must determine:
 
-- Windows 用户、默认 shell、工作目录、磁盘空间与仓库改动。
-- RTX 4090 是否可见、实际显存、驱动版本、已有 GPU 负载；以 `nvidia-smi` 为据。
-- .NET SDK、MSVC/C++ Build Tools、CUDA toolkit、构建工具和实际可用编译器；驱动报告的 CUDA 版本不等于已安装 toolkit。
-- Windows 原生还是 WSL 执行环境。默认先检查用户提供的 Windows 原生环境；不静默迁移到 WSL，也不把两种环境的 benchmark 混算。
-- 当前 LAN 类型和链路状态；有线、Wi-Fi、千兆、万兆均以实测为准。
+- Windows user, default shell, working directory, disk space, and repository changes.
+- Whether RTX 4090 is visible, actual VRAM, driver version, and existing GPU load; refer to `nvidia-smi`.
+- .NET SDK, MSVC/C++ Build Tools, CUDA toolkit, build tools, and actual available compilers; the CUDA version reported by the driver does not equal the installed toolkit.
+- Whether the execution environment is native Windows or WSL. Default to checking the user-provided native Windows environment first; do not silently migrate to WSL, nor mix benchmarks from both environments.
+- Current LAN type and link status; wired, Wi-Fi, Gigabit, and 10-Gigabit are all based on actual measurements.
 
-连接通了不等于 CUDA、RPC、模型或双机推理已可用，分别记录验证结果。
-授权开发中的普通编译、同步、测试可继续；需要管理员权限的安装、驱动更换、防火墙或系统设置修改，应说明具体需求，不借普通 SSH 身份强行变更。
+A successful connection does not mean CUDA, RPC, models, or dual-host inference are available; record verification results separately.
+Standard compilation, synchronization, and testing during development are authorized to continue; installations requiring admin privileges, driver changes, firewall modifications, or system setting changes should specify the exact requirements and not force changes using a standard SSH identity.
 
-## 两端职责与执行边界
+## Responsibilities and Execution Boundaries on Both Ends
 
-GitHub 保存两端共享的版本历史。Mac 作为主控开发 Metal、协调器与统一测试驱动；Windows 使用独立 Git checkout 开发、构建与运行 CUDA。
-CUDA 在 Windows 构建运行；Metal 在 Mac 构建运行。联合验证以同一完整 commit SHA 为准，但可执行文件及平台依赖分别生成。
+GitHub stores the shared version history for both ends. The Mac acts as the controller for developing Metal, the coordinator, and unified test drivers; Windows uses an independent Git checkout for development, building, and running CUDA.
+CUDA is built and run on Windows; Metal is built and run on Mac. Joint verification is based on the same complete commit SHA, but executables and platform dependencies are generated separately.
 
-本轮预期架构从仓库规范读取：20/20 prefill 流水线、4090 前段权重常驻、Mac 完整模型接管 decode。
-产品必须使用自写 .NET/C#/Metal/CUDA 路径；MLX、llama.cpp、vLLM 等可以做独立数值或性能参考，不能冒充产品执行后端。
-不默认动态搬运专家权重、不自动降量化精度、不静默回退到 CPU 或其他后端。
+Read the expected architecture for this round from repository specifications: 20/20 prefill pipeline, 4090 front-end weights resident, Mac takes over full model decoding.
+The product must use self-written .NET/C#/Metal/CUDA paths; MLX, llama.cpp, vLLM, etc., can serve as independent numerical or performance references but cannot impersonate the product's execution backend.
+Do not dynamically move expert weights by default, do not automatically downgrade quantization precision, and do not silently fall back to CPU or other backends.
 
-SSH 是开发控制通道，用于远端 Git 操作、构建、启动、日志和进程管理；源码通过 GitHub 同步。模型 hidden/KV/Delta 数据走实现的 RPC/数据通道。
-通过 SSH 命令逐块搬运文件或模拟网络耗时不算实现推理流水线。若实验使用 SSH tunnel，明确记录该拓扑及其开销。
-跨主机监听遵循当前产品的远程访问与认证配置，不为测量便利关掉认证或公开到互联网。
+SSH is the development control channel, used for remote Git operations, building, starting, logging, and process management; source code is synchronized via GitHub. Model hidden/KV/Delta data travels through the implemented RPC/data channels.
+Moving files in chunks via SSH commands or simulating network latency does not count as implementing the inference pipeline. If an experiment uses an SSH tunnel, explicitly record that topology and its overhead.
+Cross-host listening follows the current product's remote access and authentication configuration; do not disable authentication or expose to the internet for measurement convenience.
 
-Windows 命令按实际 shell 编写；不要把 POSIX 命令直接发送到 PowerShell/cmd。
-复杂操作优先编写纳入版本控制的脚本，通过 GitHub 同步后调用，避免嵌套插值和多层引号。不要假设 Windows 有 rsync、bash 或与 Mac 相同的路径语法。
+Windows commands are written according to the actual shell; do not directly send POSIX commands to PowerShell/cmd. For complex operations, prioritize writing scripts included in version control, call them after synchronization via GitHub, to avoid nested interpolation and multi-layer quotes. Do not assume Windows has rsync, bash, or the same path syntax as Mac.
 
-## GitHub 项目管理
+## GitHub Project Management
 
-所有项目修改（包括代码、文档、技能、实验记录与站点内容）必须先在功能分支提交、推送并创建 PR，等待用户明确授权合并。只有用户明确要求直接推送 `main` 时，才允许绕过 PR；“提交并推送”“更新部署”“更新站点”等请求不构成直接推送 `main` 的授权。此规则同时适用于 Mac 和 Windows 的修改与同步；不能为触发部署或 Pages 发布而直接更新 `main`。
+All project modifications (including code, documentation, skills, experiment records, and site content) must first be committed and pushed on a feature branch, and a PR must be created, waiting for explicit user authorization to merge. Only when the user explicitly requests direct push to `main` is it allowed to bypass the PR; requests such as "commit and push," "update deployment," or "update site" do not constitute authorization for direct push to `main`. This rule applies to modifications and synchronization on both Mac and Windows; `main` must not be updated directly to trigger deployment or Pages publishing.
 
-当前仓库为 `https://github.com/LittleLittleCloud/Infer.NET`（公开），进展与实验笔记站点为 `https://littlelittlecloud.github.io/Infer.NET/`。仍须核对实际 remote 与发布状态。
+The current repository is `https://github.com/LittleLittleCloud/Infer.NET` (public), and the progress and experiment notes site is `https://littlelittlecloud.github.io/Infer.NET/`. The actual remote and publishing status still need to be verified.
 
-使用 GitHub Issues 跟踪任务、依赖、阻塞、验收与实测证据；聊天用于讨论和指令，不作为唯一任务记录。
-先核对 Git remote、用户指定的仓库及可用身份，再搜索已有相关 Issue/PR，优先继续已有任务，避免重复创建。
-没有目标仓库时完成可独立的本地工作，并询问 GitHub 仓库地址或新仓库的 owner/name 与可见性；不猜目标、不自行公开项目。
+Use GitHub Issues to track tasks, dependencies, blockers, acceptance criteria, and empirical evidence; chat is for discussion and instructions, not as the sole task record.
+First, verify the Git remote, the user-specified repository, and available identities, then search for existing related Issues/PRs, prioritizing continuation of existing tasks to avoid creating duplicates.
+When no target repository is available, complete locally independent work and ask for the GitHub repository address or the owner/name and visibility of the new repository; do not guess the target or publicly expose projects on your own.
 
-一个可独立验收的工作项对应一个 Issue，记录具体问题、范围、依赖、验收条件以及性能规范的版本/链接。
-较大的双机目标用父 Issue 关联子任务；每个子任务写明作用于 Mac、Windows 还是两端。
-实现分支关联 Issue，提交和 PR 引用相关编号。重要进展、失败原因、阻塞及实测结果回写 Issue；避免每个命令都产生评论。
-使用已有标签、里程碑和 Projects 约定；没有约定时用 Issue 正文或 checklist 表达状态，不额外创建管理体系。
+A work item that can be independently accepted corresponds to one Issue, recording the specific problem, scope, dependencies, acceptance criteria, and the version/link of performance specifications.
+Larger dual-machine targets use a parent Issue to link sub-tasks; each sub-task specifies whether it acts on Mac, Windows, or both.
+Associate implementation branches with Issues, and reference relevant numbers in commits and PRs. Significant progress, failure reasons, blockers, and empirical results are written back to the Issue; avoid generating comments for every command.
+Use existing labels, milestones, and Projects conventions; if no conventions exist, express status in the Issue body or checklist, without creating additional management systems.
 
-PR 记录改动、两端验证、准确 commit SHA、benchmark 配置与证据位置。任务验收实际通过后才关闭对应 Issue；合并代码本身不证明性能目标完成。
-未满足验收的工作保持未完成状态并注明剩余项，不能因阶段结束或 CUDA 编译成功就关闭总目标。
-当前任务授权范围内创建/更新 Issue、提交和同步实现分支；不要据此自动合并 PR、强推共享分支或变更仓库可见性。
+PRs record changes, dual-machine verification, accurate commit SHA, benchmark configuration, and evidence location. The corresponding Issue is closed only after the task acceptance is actually passed; merging the code itself does not prove that performance goals are met.
+Work that does not meet acceptance criteria remains in an incomplete state with remaining items noted; the overall goal cannot be closed just because a phase ends or CUDA compilation succeeds.
+Create/update Issues, commits, and synchronize implementation branches within the scope of the current task authorization; do not automatically merge PRs, force-push shared branches, or change repository visibility based on this.
 
-## GitHub Pages 项目进展与实验笔记
+## GitHub Pages Project Progress and Experiment Notes
 
-项目进展与实验笔记的统一展示入口使用 GitHub Pages。Issues 保存任务明细和验收证据，Git 保存代码、规范及笔记源文件，Pages 汇总当前状态并展示实验过程、结果和证据链接；不把 GitHub Projects 看板或聊天摘要当作 Pages 的替代品。
-沿用仓库已有站点目录、框架和部署 workflow；尚未建立时在同一 GitHub 仓库维护轻量静态进展页，避免另建独立后端。
-站点源码及展示数据纳入 Git，通过仓库配置的 GitHub Pages 发布流程部署，不手工维护另一份脱离版本控制的线上内容。
+Use GitHub Pages as the common entry point for project progress and experiment notes. Issues hold task details and acceptance evidence; Git holds code, specifications, and note sources; Pages summarizes current status and presents experimental methods, results, and evidence links. A GitHub Projects board or chat summary does not replace Pages.
+Reuse the repository's existing site directory, framework, and deployment workflow. If none exists, maintain a lightweight static progress site in the same GitHub repository rather than adding a separate backend.
+Track site sources and display data in Git, and deploy through the repository's configured GitHub Pages workflow. Do not maintain a separate, unversioned copy of the live content.
 
-进展页展示当前阶段、已完成/进行中/阻塞项、下一步、里程碑，以及单机/双机实测与固定目标的对照。
-每项状态关联 Issue/PR；性能记录附实际模型精度、输入/输出长度、缓存条件、设备、测量日期、commit SHA 与证据链接。
-目标、理论估算、实测必须明确区分。指标从仓库规范及已验证结果汇总，未测项目显示“未测”，不能填成零或用估算代替。
-页面显示内容更新时间和对应源码版本；有意义的任务状态变化、新基准、验收完成或阻塞变化时同步更新，不只更新 Issue 后让首页过期。
+The progress page displays the current phase, completed/in-progress/blocked items, next steps, milestones, and a comparison of single-machine/dual-machine empirical results with fixed targets.
+Each item's status is associated with an Issue/PR; performance records include actual model accuracy, input/output length, cache conditions, device, measurement date, commit SHA, and evidence links.
+Targets, theoretical estimates, and empirical results must be clearly distinguished. Metrics are summarized from repository specifications and verified results; untested items display "Untested" and cannot be filled with zeros or replaced by estimates.
+The page displays the content update time and the corresponding source code version; meaningful task status changes, new benchmarks, acceptance completion, or blocker changes are synchronized and updated, not just updating the Issue and letting the homepage expire.
 
-实验笔记按日期和实验标识组织，每轮有意义的实验独立记录，并从进展页链接到相关笔记。沿用仓库文档结构，避免与既有 benchmark 报告维护重复的结果副本。
-笔记至少包含：要验证的问题与假设、基线和本轮改动、可复现配置/命令、模型与输入散列、两端源码与产物版本、原始结果、正确性检查、分析结论及下一步。
-性能实验记录预热和正式轮次、分块、缓存、精度、网络、供电与内存条件；A/B 对照说明哪些变量改变，只有测量支持时才归因于该改动。
-成功、退化、无显著收益、中断和失败实验都保留；未运行的计划明确标为计划，不能填入预期数值冒充结果。
-关联 Issue/PR、commit SHA、运行标识及原始日志链接；无法公开的原始数据标注访问限制，不把本机路径伪装为可访问下载链接。
-后续结论变化时追加复测或更正，保留原始观察并标明被什么证据修正；不要覆盖失败实验来制造连续提速的记录。
+Experiment notes are organized by date and experiment identifier; each meaningful experiment is recorded independently, and links to relevant notes are provided from the progress page. Follow the repository's document structure to avoid duplicating result copies with existing benchmark reports.
+Notes must include at least: the problem and hypothesis to be verified, baseline and changes in this round, reproducible configuration/commands, model and input hashes, source code and artifact versions on both ends, raw results, correctness checks, analytical conclusions, and next steps.
+Performance experiment records include warm-up and formal rounds, chunking, cache, precision, network, power supply, and memory conditions; A/B comparisons explain which variables changed, and attribution to that change is made only when supported by measurements.
+Successful, degraded, no significant gain, interrupted, and failed experiments are all retained; unrun plans are clearly marked as planned, and expected values cannot be filled in to fake results.
+Associate Issues/PRs, commit SHAs, run identifiers, and raw log links; raw data that cannot be made public is marked with access restrictions, and local machine paths are not disguised as accessible download links.
+When subsequent conclusions change, add re-tests or corrections, retain original observations, and indicate what evidence corrected them; do not overwrite failed experiments to create a record of continuous speedup.
 
-发布前检查展示数据、构建结果和链接；站点中的链接须适用于 GitHub Pages，不能使用本机绝对路径，也不能嵌入凭据或私网连接信息。
-部署后核对 workflow 结果、实际页面及版本，只有成功才报告“已发布”；构建或部署失败时保留上次可用页面并说明尚未上线。
-目标仓库未确定或缺少发布权限时，继续完成本地可预览内容并说明缺项，不编造站点 URL，不为开通 Pages 自动改变仓库可见性。
+Check display data, build results, and links before publishing; links in the site must be suitable for GitHub Pages, cannot use local absolute paths, and cannot embed credentials or private network connection information.
+After deployment, verify workflow results, actual pages, and versions; only report "Published" upon success; if build or deployment fails, retain the last available page and explain that it is not yet online.
+When the target repository is undetermined or publishing permissions are missing, continue to complete locally previewable content and explain the missing items; do not fabricate site URLs or automatically change repository visibility to enable Pages.
 
-## 代码同步与产物追踪
+## Code Synchronization and Artifact Tracking
 
-源码同步固定采用 GitHub：开发端在 Issue 对应分支提交并 push，另一端 fetch 后在独立 checkout/worktree 检出该完整 SHA，再构建验证。
-接收端核对 remote 和实际 HEAD；分支名相同不代表源码相同。联合验收要求两端源码干净且 HEAD 相同，分别记录平台产物散列。
-Windows 上产生的 CUDA 修改也必须提交、push，再由 Mac fetch 接收。两端同时修改时先通过正常合并解决，不能直接覆盖文件。
+Source code synchronization strictly uses GitHub: the development end commits and pushes on the branch corresponding to the Issue, and the other end fetches and checks out that complete SHA in an independent checkout/worktree, then builds and verifies.
+The receiving end verifies the remote and actual HEAD; identical branch names do not imply identical source code. Joint acceptance requires clean source code on both ends and identical HEADs, with platform artifact hashes recorded separately.
+CUDA modifications made on Windows must also be committed and pushed, then fetched and received by Mac. When both ends modify simultaneously, resolve through normal merging first; do not directly overwrite files.
 
-同步前检查两端未提交及未跟踪文件。历史仓库可能全部尚未跟踪；首次建立版本历史前检查忽略规则、敏感信息和大文件，按明确文件范围暂存，不能直接全量上传目录。
-远端有未提交修改时先识别归属并保留，使用独立 worktree 或归并修改后再同步。不要用 `reset --hard`、`clean`、强推或删除式镜像消除冲突。
-不以 scp/rsync/压缩包旁路同步源码；GitHub 暂时不可用时可以继续本地开发，但双机同步应标为阻塞，除非用户明确授权临时替代方式。
+Before syncing, check for uncommitted and untracked files on both ends. The historical repository may have all files untracked; before establishing version history for the first time, check ignore rules, sensitive information, and large files, stage by explicit file scope, and do not upload the entire directory directly.
+When there are uncommitted modifications on the remote, first identify ownership and preserve them; use an independent worktree or merge modifications before syncing. Do not use `reset --hard`, `clean`, force push, or deletion-style mirroring to eliminate conflicts.
+Do not bypass source code synchronization via scp/rsync/archives; when GitHub is temporarily unavailable, local development can continue, but dual-machine synchronization should be marked as blocking unless the user explicitly authorizes a temporary alternative method.
 
-纳入 Git 的内容包括源码、构建属性、项目/依赖锁文件、原生代码、测试脚本和必要文档。
-模型权重、凭据、构建产物、Python 环境和庞大原始日志不进入普通 Git 历史。模型单独下载固定 revision 或传输并验证散列。
-小型 benchmark 摘要与复现配置可以纳入仓库；原始日志通过适当的 artifact 存储保留，在 Issue/PR 中记录可访问链接或明确标注仅本机可用的位置与散列。
-公开 Issue/PR 中不附带私网连接信息、token 或用户私有输入；代码和证据遵循仓库既定可见性。
+Content included in Git includes source code, build attributes, project/dependency lock files, native code, test scripts, and necessary documentation.
+Model weights, credentials, build artifacts, Python environments, and large raw logs do not enter the standard Git history. Model weights are downloaded at a fixed revision or transferred and hash-verified separately.
+Small benchmark summaries and reproduction configurations can be included in the repository; raw logs are retained via appropriate artifact storage, with accessible links recorded in Issues/PRs or locations marked as local-only with hashes.
+Public Issues/PRs must not include private network connection information, tokens, or user private inputs; code and evidence follow the repository's established visibility settings.
 
-每轮记录 GitHub 仓库、Issue/PR、完整 commit SHA、两端产物散列；本地另存 Mac 仓库位置、SSH alias 与 Windows 源码/构建/模型路径。
-连接映射仅记录非秘密字段到本地忽略文件，例如仓库内 `artifacts/dual-host/connection.local.json`；先确认路径被 Git 忽略。
-禁止把用户名、地址或目录的示例占位值当成已配置事实。
+Record the GitHub repository, Issue/PR, full commit SHA, and hashes of artifacts on both ends for each round; locally save the Mac repository location, SSH alias, and Windows source/build/model paths.
+Connection mappings record only non-secret fields to local ignore files, such as `artifacts/dual-host/connection.local.json` within the repository; first confirm the path is ignored by Git.
+Do not treat example placeholder values for usernames, addresses, or directories as configured facts.
 
-实验产物使用独立版本目录和端口，不覆盖用户正在使用的服务二进制、模型默认值或 TUI。
-只停止本轮启动且身份已核对的 PID，不按进程名批量结束 dotnet、Python 或 GPU 进程。
-远程长任务应有持久日志、退出码及运行标识；SSH 断开后先确认旧任务状态，不重复启动占用 GPU 的副本。
+Experimental artifacts use independent version directories and ports, without overwriting user services binaries, model defaults, or TUI currently in use.
+Only stop the PID started in this round after identity verification; do not batch terminate dotnet, Python, or GPU processes by process name.
+Remote long-running tasks should have persistent logs, exit codes, and run identifiers; after SSH disconnection, first confirm the status of old tasks and do not restart duplicate copies that occupy GPU resources.
 
-## 状态传输与验证顺序
+## Status Transfer and Verification Order
 
-Mac 接管完整 decode 需要 4090 前段的 KV，以及正确位置的 DeltaNet/卷积状态；只有 hidden vector 不够。
-协议明确模型/revision、请求 ID、层范围、token 位置、dtype、shape/layout、字节序、分块序号及版本，拒绝不匹配和不完整状态。
-首 token 就绪和完整状态可解码就绪分别观测；状态导入未完成时不得宣布 prefill 完成。
+Mac taking over full decoding requires the KV from the 4090 frontend, as well as the correct position of DeltaNet/convolutional states; hidden vectors alone are insufficient.
+The protocol explicitly specifies model/revision, request ID, layer range, token position, dtype, shape/layout, endianness, chunk sequence number, and version, rejecting mismatched and incomplete states.
+First token readiness and complete state decodability are observed separately; prefill completion must not be declared until state import is complete.
 
-按能定位错误的顺序推进：CUDA 算子数值检查 → 前段层输出及状态检查 → 跨机传输与导入 → 完整短输入生成 → 长输入与持续解码 → 正式性能验收。
-验证所用参考和容差按仓库规范；短输入数值正确不能替代长请求状态连续性、容量与稳定性测试。
-出现 token 分歧时先定位首处分歧和对应 logits/状态，不能只用文本“看起来合理”判定通过。
+Proceed in an order that enables error localization: CUDA operator numerical checks → frontend layer output and state checks → cross-machine transfer and import → complete short input generation → long input and continuous decoding → formal performance acceptance.
+References and tolerances for verification follow repository specifications; numerical correctness for short inputs cannot replace tests for long request state continuity, capacity, and stability.
+When token divergence occurs, first locate the first point of divergence and the corresponding logits/state; do not pass based solely on text that "looks reasonable."
 
-## 测量与完成标准
+## Measurement and Completion Criteria
 
-正式测量严格执行目标文档的输入、量化、缓存、分块、预热、次数、供电、内存和稳定性规则。
-同一 GPU 上的竞争基准串行运行；流水线中的两端重叠计算属于被测系统本身，不应人为串行化。
-用户要求电池或其他供电模式时可以另测，但明确分类；不能混入固定插电基准。
+Formal measurements strictly follow the target document's rules for input, quantization, caching, chunking, warm-up, iterations, power supply, memory, and stability.
+Competitive benchmarks on the same GPU run serially; overlapping computation at both ends of the pipeline belongs to the system under test and should not be artificially serialized.
+When users request battery or other power modes, separate measurements can be taken, but they must be clearly categorized; they cannot be mixed into fixed plugged-in benchmarks.
 
-端到端间隔由同一控制端单调时钟计量，两端各自记录本地阶段耗时；不相减未经校准的跨机时间戳。
-总时长包含实际派发、通信、读回/上传、状态交接和流水线首尾；单独列纯 GPU 算子耗时。
-内部首 token 就绪不能当作非流式 API 的用户可见 TTFT。
+End-to-end intervals are measured by a monotonic clock on the same control end, with each end recording local phase durations; do not subtract uncalibrated cross-machine timestamps.
+Total duration includes actual dispatch, communication, read-back/upload, state handover, and pipeline start/end; list pure GPU operator durations separately.
+Internal first-token readiness cannot be treated as user-visible TTFT for non-streaming APIs.
 
-源日志保存在带运行标识的 `artifacts/dual-host/` 目录，带上源码/产物/输入散列、实际拓扑及退出状态，收集两端日志再做结论。
-保留失败轮次和原因，不挑选最快一次、不把理论上限写成实测、不将短输出档冒充长输出档，也不跨精度或缓存条件宣称持平。
-OOM 或断连后先定位资源/任务状态，调整有因可查再重测；改变精度、模型或目标必须明确说明，不为通过而静默降低门槛。
+Source logs are saved in the `artifacts/dual-host/` directory with run identifiers, including source/artifact/input hashes, actual topology, and exit status; collect logs from both ends before drawing conclusions.
+Retain failed rounds and reasons; do not select only the fastest run, do not write theoretical limits as measured results, do not pass off short outputs as long outputs, and do not claim parity across different precision or caching conditions.
+After OOM or disconnection, first locate resource/task status, adjust with traceable reasons, and retest; changing precision, model, or targets must be explicitly stated; do not silently lower thresholds to pass.
 
-报告本次实现了什么、哪些检查实际通过、每档实测与目标的差距、尚未验证项和下一处瓶颈。
-只有仓库规范全部门槛实际通过才能宣布最终完成；阶段通过、CUDA 编译成功或 SSH 连通都不是端到端完成。
+Report what was achieved this time, which checks actually passed, the gap between each measured tier and the target, unverified items, and the next bottleneck.
+Final completion can only be declared when all repository specification thresholds are actually passed; stage passes, successful CUDA compilation, or SSH connectivity are not end-to-end completion.
+
+## Project Writing Language
+
+Follow the repository root `AGENTS.md`: use English for documentation, reports, experiment records, website content, code comments, commits, Issues, and PRs. Preserve literal benchmark/test inputs and raw evidence, including their original language, hashes, identifiers, and numerical results.

@@ -33,9 +33,19 @@ case is retained in the raw evidence.
 Model loading took 3.42 seconds, excluded from request timings. Loaded text-model
 MLX memory was approximately 23.84 GB. The natural-EOS functional answer was:
 
-> 17乘以23等于391。
+English rendering of the recorded output:
+
+> 17 multiplied by 23 equals 391.
 >
-> 机器学习是一种人工智能技术，它使计算机系统能够通过分析数据自动学习规律并改进性能，而无需进行显式的编程指令。
+> Machine learning is an artificial intelligence technology that enables computer systems to automatically learn patterns and improve performance by analyzing data, without requiring explicit programming instructions.
+
+Original output (verbatim):
+
+```text
+17乘以23等于391。
+
+机器学习是一种人工智能技术，它使计算机系统能够通过分析数据自动学习规律并改进性能，而无需进行显式的编程指令。
+```
 
 The raw report passed 62 consistency checks covering the model revision,
 hardware, benchmark source hash, request/output lengths, monotonically increasing

@@ -385,31 +385,31 @@ def sota_html(data):
     cards = []
     for entry in sota_summary(data):
         family, metric, run = entry['family'], entry['metric'], entry['run']
-        title = ('Infer.NET · 已验证 SOTA' if family == 'infernet' else '已知 SOTA · 外部引擎')
+        title = ('Infer.NET · verified SOTA' if family == 'infernet' else 'Known SOTA · external engine')
         label = 'Prefill / P' if metric == 'prefill' else 'Decode / D'
-        value = f"{entry['value']:,.2f}" if entry['value'] is not None else '未取得'
+        value = f"{entry['value']:,.2f}" if entry['value'] is not None else 'Unavailable'
         scope = ('Worker prefill' if metric == 'prefill' else 'Worker N−1 decode') if family == 'infernet' else 'Splash · native command · DFlash2'
         if run:
             config = entry['config']
             href = '#' + urlencode({'experiment': run['experimentId'], 'run': run['id']})
-            status = run['provenance']['kind'] if family == 'infernet' else '外部参考'
-            identity = f"{status} {run['measuredCommit'][:7]} · 20/20 通过"
-            devices = '双机' if 'windowsAgent' in run['runtime'] else '单机'
-            hardware = f"{devices} · {config['kv'].split(';')[0]} · {run['requestCount']}/{run['requestCount']} 请求"
+            status = run['provenance']['kind'] if family == 'infernet' else 'external reference'
+            identity = f"{status} {run['measuredCommit'][:7]} · 20/20 passed"
+            devices = 'Dual-host' if 'windowsAgent' in run['runtime'] else 'Single-host'
+            hardware = f"{devices} · {config['kv'].split(';')[0]} · {run['requestCount']}/{run['requestCount']} requests"
             metadata = f"{config['kv']} · {config['topology']} · {run['date']}"
-            details = f'<details><summary>配置与测量日期</summary><p>{escape(metadata)}</p></details>'
-            link = f'<a href="{escape(href, quote=True)}">查看运行与证据 →</a>'
+            details = f'<details><summary>Configuration and measurement date</summary><p>{escape(metadata)}</p></details>'
+            link = f'<a href="{escape(href, quote=True)}">View run and evidence →</a>'
         else:
-            identity, hardware, details, link = '尚无满足条件的完整实测', '', '', '<a href="experiments.html">查看实验记录 →</a>'
+            identity, hardware, details, link = 'No complete qualifying measurement yet', '', '', '<a href="experiments.html">View experiment records →</a>'
         cards.append(f'''<article class="sota-card {family}" aria-labelledby="sota-{family}-{metric}">
 <p class="sota-family">{title}</p><h3 id="sota-{family}-{metric}">{label}</h3>
 <p class="sota-number">{value} <span>tok/s</span></p><p class="sota-scope">{scope}</p>
 <p class="sota-identity">{escape(identity)}<br>{escape(hardware)}</p>{details}{link}</article>''')
     return '''<section class="sota-overview" aria-labelledby="sota-heading">
-<div class="sota-heading"><h2 id="sota-heading">P / D SOTA</h2><span>Qwen3.6-35B-A3B · affine8 / group64 · 固定 HumanEval 20</span></div>
-<p class="note">已收录实测中的最高值：20/20 官方断言通过，指标覆盖完整。P、D 分别选取最佳运行，不代表同一次测试。未验证候选不计入。</p>
+<div class="sota-heading"><h2 id="sota-heading">P / D SOTA</h2><span>Qwen3.6-35B-A3B · affine8 / group64 · fixed HumanEval 20</span></div>
+<p class="note">Highest recorded measurements with 20/20 official assertions passed and complete metric coverage. Prefill and decode are selected independently and may come from different runs. Unverified candidates are excluded.</p>
 <div class="sota-grid">''' + ''.join(cards) + '''</div>
-<p class="note sota-comparison">源权重相同（e06a74e）：Infer.NET 为 FP32 KV、无 DFlash2、worker 计时；Splash 为 INT8 KV、DFlash2、原生 command 计时。设备配置也分别标注，不计算跨口径加速比；“已知”限于本站收录的可追溯实测，不代表全球排行榜。</p></section>'''
+<p class="note sota-comparison">Same source weights (e06a74e): Infer.NET uses FP32 KV, no DFlash2, and worker clocks; Splash uses INT8 KV, DFlash2, and native command clocks. Device topology is labeled for each result. No speedup ratio is computed across these measurement scopes. “Known” covers traceable observations collected on this site and is not a global leaderboard.</p></section>'''
 
 
 def homepage(data):
@@ -430,7 +430,7 @@ def homepage(data):
 <h1 class="trends-title">Commit trends</h1>
 {sota_html(data)}
 <div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate</span>
-<span>◎ latest verified main baseline</span><span>▫ 未测</span>
+<span> ◎ latest verified main baseline </span><span>▫ Not measured </span>
 <span>□ selected · Tab + Enter/Space to select</span></div>
 <div class="run-controls"><label>Configuration filter <select id="configuration"></select></label>
 <label>Run · all configurations <select id="run"></select></label></div>
@@ -439,7 +439,7 @@ def homepage(data):
 <p class="note">Measured commit axes; repeated runs at the same SHA are offset for visibility, not new commits.
 All runs appear by default. Lines connect only comparable configurations. No Pi wall-time-derived throughput.
 Higher positions indicate better results in every plot: faster prefill/decode, higher pass rate, or lower TTFT.
-Missing metrics are marked 未测, not zero. The original issue #54 main and BF16/2048 runs did not record client first-token timestamps; a separate BF16/2048 retake supplies the observed TTFT point.</p>
+Missing metrics are marked Not measured, not zero. The original issue #54 main and BF16/2048 runs did not record client first-token timestamps; a separate BF16/2048 retake supplies the observed TTFT point.</p>
 <section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title"></h2>
 <span id="run-state"></span><a id="permalink">Link to this run</a></div>
 <p id="run-identity"></p><div class="run-summary"><div><h3>Change</h3><p id="run-change"></p></div>

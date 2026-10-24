@@ -1,117 +1,117 @@
-# Qwen3.6 35B A3B 8bit 性能目标
+# Qwen3.6 35B A3B 8bit Performance Goals
 
-版本 v2，2026-10-23 修订 KV 精度验收；v1 的 BF16 KV 目标与对 FP32 的统一数值门槛保留在 Git 历史中。目标设备为 M5 Pro 20 核 GPU / 48 GiB 与 Windows RTX 4090 / 24 GiB。
+Version v2, 2026-10-23 revision KV precision acceptance; v1's BF16 KV goals and unified numerical threshold for FP32 retained in Git history. Target devices M5 Pro 20 core GPU / 48 GiB and Windows RTX 4090 / 24 GiB.
 
-本轮最终目标是：**131072 token 完整输入，无前缀缓存，端到端 prefill 达到 2000 token/s；131072 输入加 4096 输出的整次请求不超过 180 秒。**
-先通过 1600 token/s、长请求 200 秒的阶段验收，再继续优化至最终目标。阶段通过不代表最终目标达成。
-这里固定的是工程目标，不是承诺或双机达标实测；当前已有 8bit 权重、FP32 KV 的双机执行与短/中输入实测，Q8 KV 和 128K 正式验收尚未完成。
+The final target for this round is: **a complete 131072-token input, no prefix cache, and end-to-end prefill of 2000 token/s; the entire request with 131072 input tokens and 4096 output tokens must complete within 180 seconds.**
+First pass the intermediate acceptance thresholds of 1600 token/s and 200 seconds for the long request, then continue optimizing toward the final target. Passing the intermediate thresholds does not establish final completion.
+These are engineering targets, not promises or measured dual-host achievements. Dual-host execution and short/medium-input measurements already exist with 8bit weights and FP32 KV; Q8 KV and formal 128K acceptance remain incomplete.
 
-## 固定模型与执行方案
+## Fixed Model and Execution Plan
 
-- 模型：`mlx-community/Qwen3.6-35B-A3B-8bit`，revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`，affine 8bit / group64。保留检查点已有的逐矩阵量化配置。
-- 精度：权重仍为 affine 8bit / group64；GEMM 乘法输入为 BF16，残差、路由、Delta/卷积状态及累加保持 FP32。**KV 默认 Q8，可显式选 BF16 16-bit**；FP32 KV 仅作对照和当前部署回退。Q8 的块格式、量化比例、舍入及跨机字节布局须在实现前固定，两端必须使用同一种格式并拒绝精度不匹配；不得以 Q4/Q5 或有损压缩其他状态替代本轮验收。Q8 与 BF16 的性能、内存和质量结果分别报告，不跨精度宣称提速。
-- 拓扑：4090 常驻前 20 层并执行前段 prefill；Mac 常驻完整模型，执行后 20 层 prefill，接收前段 KV 与最终 Delta/卷积状态后执行完整 decode。GPU 不动态换入换出专家权重。
-- 单请求、并发 1、greedy、固定输出长度。吞吐测试忽略 EOS，质量测试正常处理 EOS；固定长度吞吐不代表自然回答质量。
-- 模型已加载并完成预热，但每个正式请求清空 KV/Delta 状态。主指标为 0% prefix cache hit，禁用 speculative prefill、MTP 和答案缓存。
-- 使用现有家庭局域网，记录有线/Wi-Fi、协商速率及实际有效带宽。10GbE 是可另行测量的配置，不是默认前提；不同链路的成绩分开保存。
+- Model: `mlx-community/Qwen3.6-35B-A3B-8bit`, revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`, affine 8bit / group64. Retain the per-matrix quantization configuration already present in the checkpoint.
+- Precision: Weights remain affine 8bit / group64; GEMM multiplication inputs are BF16, residuals, routing, Delta/convolution states, and accumulators remain FP32. **KV defaults to Q8, can explicitly select BF16 16-bit**; FP32 KV is only for comparison and current deployment rollback. The block format, quantization scale, rounding, and cross-machine byte layout of Q8 must be fixed before implementation; both ends must use the same format and reject precision mismatches; Q4/Q5 or lossy compression of other states cannot be used to replace this round's acceptance. Performance, memory, and quality results for Q8 and BF16 are reported separately, with no cross-precision speedup claims.
+- Topology: 4090 stays resident for the first 20 layers and executes the front-end prefill; Mac stays resident with the complete model, executes the back-end 20 layers prefill, and after receiving the front-end KV and final Delta/convolution states, executes the complete decode. GPU does not dynamically swap expert weights in and out.
+- Single request, concurrency 1, greedy, fixed output length. Throughput tests ignore EOS, quality tests handle EOS normally; fixed-length throughput does not represent natural response quality.
+- The model is loaded and warmed up, but each formal request clears the KV/Delta state. The main metric is 0% prefix cache hit rate; speculative prefill, MTP, and answer caching are disabled.
+- Use the existing home LAN, record wired/Wi-Fi, negotiated rate, and actual effective bandwidth. 10GbE is a separately measurable configuration, not a default premise; results for different links are saved separately.
 
-Q8 KV 的待接入格式固定为每个 K 或 V token 的 512 个元素按连续 32 元素分成 16 块。每块按 little-endian FP16 比例值、32 个有符号 int8 值排列，共 34 字节；零块全零。比例值是 `round_fp16(max(abs(x))/127)`，非零量化值是 `clamp(round_even(x/float(scale)), -127, 127)`；非有限输入和无效比例值拒绝。每个 K 或 V token 为 544 字节，两者共 1088 字节，约为 FP32 布局的 26.6%。协议已可校验该布局，但 CUDA/Metal 原生存取尚未接通；**当前在线部署仍为 FP32 KV，不能将此格式说明当作已上线功能**。
+The format to be connected for Q8 KV is fixed as: each K or V token's 512 elements are divided into 16 blocks of continuous 32 elements. Each block is arranged according to little-endian FP16 scale value, 32 signed int8 values, totaling 34 bytes; zero blocks are all zeros. The scale value is `round_fp16(max(abs(x))/127)`, non-zero quantized values are `clamp(round_even(x/float(scale)), -127, 127)`; non-finite inputs and invalid scale values are rejected. Each K or V token is 544 bytes, both together 1088 bytes, approximately 26.6% of the FP32 layout. The protocol can verify this layout, but CUDA/Metal native access is not yet connected; **current online deployment is still FP32 KV, do not treat this format description as an online feature**.
 
-## 验收指标
+## Acceptance Metrics
 
-128K 在本文始终等于 **131072 tokens**，不使用 128000 代替。下表各项必须同时通过，不能只选择最好的一项。
+128K in this document always equals **131072 tokens**, do not use 128000 as a substitute. The items in the table below must all pass simultaneously, you cannot just choose the best one.
 
-|指标|阶段验收线|最终目标|
+|Metric|Stage Acceptance Line|Ultimate Goal|
 |---|---:|---:|
-|128K 输入 + 128 输出，端到端 prefill|≥ 1600 token/s，即 ≤ 81.920 s|≥ 2000 token/s，即 ≤ 65.536 s|
-|128K 输入 + 4096 输出，端到端 prefill|≥ 1600 token/s，即 ≤ 81.920 s|≥ 2000 token/s，即 ≤ 65.536 s|
-|128K 输入后的 4096 输出持续 decode|≥ 37 token/s|≥ 37 token/s|
-|128K 输入 + 4096 输出，客户端整次请求|≤ 200 s|≤ 180 s|
+|128K input + 128 output, end-to-end prefill|≥ 1600 tokens/s, i.e., ≤ 81.920 s|≥ 2000 tokens/s, i.e., ≤ 65.536 s|
+|128K input + 4096 output, end-to-end prefill|≥ 1600 tokens/s, i.e., ≤ 81.920 s|≥ 2000 tokens/s, i.e., ≤ 65.536 s|
+|Continuous decode of 4096 output after 128K input|≥ 37 tokens/s|≥ 37 tokens/s|
+|128K input + 4096 output, client-side complete request|≤ 200 s|≤ 180 s|
 
-最终目标 65.536 秒 prefill 加上 4095 / 37 = 110.676 秒 decode，合计约 176.212 秒，
-剩余约 3.788 秒覆盖尚未包含的前后处理与请求传输。整次请求仍以客户端实测为准，不能靠相加两个最优成绩验收。
-解码最后 1024 个 token 的吞吐须至少达到整段 decode 吞吐的 90%，防止均值掩盖后段持续降速。
+Ultimate goal: 65.536 seconds prefill plus 4095 / 37 = 110.676 seconds decode, totaling about 176.212 seconds,
+remaining about 3.788 seconds cover pre/post-processing and request transmission not yet included. The complete request is still based on client-side actual measurement, and cannot pass acceptance by adding two best-case scores.
+The throughput of the last 1024 tokens of decoding must reach at least 90% of the throughput of the entire decode segment, to prevent the mean from masking the continuous slowdown in the latter half.
 
-这些门槛高于当前理想拆分估算，尤其是长输出档。当前 20/20 理想估算约为短输出档 1928 token/s、长输出档 1597 token/s，
-还没有计入流水线开销。因此最终目标需要进一步优化计算或工作区，不能仅靠把现有执行路径分到两台设备。
+These thresholds are higher than current ideal split estimates, especially for the long output tier. Current 20/20 ideal estimate is about short output tier 1928 tokens/s, long output tier 1597 tokens/s,
+pipeline overhead has not yet been included. Therefore, the ultimate goal requires further optimization of computation or workspace, and cannot rely solely on splitting the existing execution path across two devices.
 
-## 单机基线与回归边界
+## Single-Device Baseline and Regression Boundary
 
-历史结果来自 [8bit 验证报告](QWEN36-8BIT.md) 与 `artifacts/baselines/qwen36-8bit-summary.json`。
-短输出各档为一次预热、三次正式测量；长输出历史结果只有一次正式测量。
+Historical results come from [8bit Verification Report](QWEN36-8BIT.md) and `artifacts/baselines/qwen36-8bit-summary.json`.
+Short output tiers are one warm-up and three formal measurements; long output historical results have only one formal measurement.
 
-|输入 / 输出|历史 prefill|历史 decode|prefill 分块|
+|Input / Output|Historical Prefill|Historical Decode|Prefill Chunking|
 |---|---:|---:|---:|
-|8192 / 128|3.467 s，2362.7 token/s|66.34 token/s|2048|
-|32768 / 128|17.743 s，1846.8 token/s|60.51 token/s|2048|
-|131072 / 128|135.966 s，964.0 token/s|37.52 token/s|2048|
-|131072 / 4096|164.157 s，798.5 token/s|38.95 token/s|512|
+|8192 / 128|3.467 s, 2362.7 tokens/s|66.34 tokens/s|2048|
+|32768 / 128|17.743 s, 1846.8 tokens/s|60.51 tokens/s|2048|
+|131072 / 128|135.966 s, 964.0 tokens/s|37.52 tokens/s|2048|
+|131072 / 4096|164.157 s, 798.5 tokens/s|38.95 tokens/s|512|
 
-长输出历史 worker 请求耗时为 269.355 秒。历史 prefill 是 worker 内部计时，不能直接当作本目标的分布式端到端计时；
-正式计算加速比前，必须用下述同一计时方式重测 Mac 单机对照。
+Long output historical worker request time is 269.355 seconds. Historical prefill is worker-internal timing, cannot be directly treated as this goal's distributed end-to-end timing;
+before formally calculating the speedup ratio, you must re-test the Mac single-device control using the same timing method below.
 
-单机回归要求：同轮、相同配置对照下，四档 prefill 耗时增加不超过 5%，decode 吞吐下降不超过 5%。
-若新配置降低内存并提高整次吞吐，也必须报告各分项变化，不能自动豁免回归边界。
-双机小输入可选择显式路由至单机；结果必须记录实际执行设备，单机路由不算双机加速。
+Single-machine regression requirements: Under the same round and identical configuration, the increase in prefill latency across four tiers must not exceed 5%, and the decode throughput decrease must not exceed 5%.
+If the new configuration reduces memory and increases overall throughput, changes in each component must still be reported; regression boundaries cannot be automatically exempted.
+For dual-machine small inputs, explicit routing to a single machine is optional; the actual execution device must be recorded. Routing to a single machine does not count as dual-machine acceleration.
 
-## 计时定义
+## Timing Definitions
 
-每个请求记录以下时间点。端到端间隔使用同一客户端或协调器的单调时钟；禁止相减两台机器未经校准的时间戳。
+Record the following timestamps for each request. End-to-end intervals use the monotonic clock of the same client or coordinator; subtracting uncalibrated timestamps from two different machines is prohibited.
 
-- `t0`：客户端开始发送请求。输入已准备好，读取测试文件的时间不在请求内。
-- `t1`：协调器准备好实际 token IDs，开始向 worker 派发；模型加载及预热在此之前完成。
-- `t2`：Mac 生成首个输出 token，且完成接管完整 decode 所需的所有状态导入后，协调器收到 ready 确认。
-- `t3`：Mac 生成最后一个输出 token。
-- `t4`：客户端收到完整响应。
+- `t0`: The client starts sending the request. The input is ready; the time to read the test file is not included in the request.
+- `t1`: The coordinator is ready with actual token IDs and starts dispatching to workers; model loading and warming up are completed before this point.
+- `t2`: The Mac generates the first output token, and after completing the import of all states required for taking over full decode, the coordinator receives the ready confirmation.
+- `t3`: The Mac generates the last output token.
+- `t4`: The client receives the complete response.
 
-**端到端 prefill 时间 = t2 − t1；吞吐 = 实际输入 token 数 / 此时间。**
-它包含派发、两端计算、hidden/KV/Delta 传输、CPU staging、GPU 上传下载、状态导入、流水线排空和 ready 确认。
-不能在 4090 前段完成、Mac 后段完成或后台状态传输尚未结束时提前停止计时。
+**End-to-end prefill time = t2 − t1; throughput = actual input token count / this time.**
+It includes dispatching, computation on both ends, hidden/KV/Delta transmission, CPU staging, GPU upload/download, state import, pipeline draining, and ready confirmation.
+Timing must not be stopped prematurely before the 4090 front-end is completed, the Mac back-end is completed, or background state transmission has not finished.
 
-**decode 吞吐 = (输出数 − 1) / Mac 本地首末输出 token 的生成间隔。**
-`t2` 用于协调器端 prefill 计时，decode 的首 token 时间另在 Mac 本地记录，避免跨机时钟相减。
-**整次请求耗时 = t4 − t0**，包含模板、分词、RPC 及响应传输。
-另报 worker 纯计算时间与各阶段时间，但不能用它们替换上述主指标。
-当前 API 非流式；内部首 token 就绪不能称为用户可见 TTFT。将来流式实现后另测客户端首 token 到达时间。
+**Decode throughput = (output count − 1) / generation interval between the first and last output tokens locally on the Mac.**
+`t2` is used for coordinator-side prefill timing; the time for the first decode token is recorded separately on the Mac locally to avoid subtracting cross-machine clocks.
+**Total request time = t4 − t0**, including templates, tokenization, RPC, and response transmission.
+Report worker pure computation time and time for each stage separately, but these cannot replace the above primary metrics.
+The current API is non-streaming; internal first-token readiness cannot be called user-visible TTFT. Once streaming is implemented in the future, the client-side first-token arrival time will be measured separately.
 
-## 输入与复测规则
+## Input and Re-measurement Rules
 
-沿用当前基线输入文件，按实际模板和 tokenizer 校验总 token 数，包含模板 token；输入不足、截断或长度不符的请求不参与验收。
+Use the current baseline input files, verify the total token count according to the actual template and tokenizer, including template tokens; requests with insufficient input, truncation, or length mismatch do not participate in acceptance.
 
-|输入 tokens|路径，相对仓库根目录|文件 SHA-256|
+|Input tokens|Path, relative to repository root|File SHA-256|
 |---|---|---|
 |8192|`artifacts/baselines/qwen36-context-fixed-data/8192-4096-prompt.txt`|`defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d`|
 |32768|`artifacts/baselines/qwen36-context-large-fixed-data/32768-8192-prompt.txt`|`4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8`|
 |131072|`artifacts/baselines/qwen36-context-plan-data/131072-8192-prompt.txt`|`0231f23f623809679e93ded59d9d70f04f7cf821ae5823c3996ae997b9cda767`|
 
-每档、每配置完整预热一次，正式测量至少三次，包括 4096 输出档。每次都清空请求状态；预热与加载时长单独报告。
-历史长输出结果只测一次，不符合本规范。`benchmark-qwen36-8bit.py` 现将 `--trials` 同时用于长输出档（默认三次）；显式设置少于三次的诊断运行不能标记为正式验收。双机端到端仍须另按本文件计时和资源规则验收，单机脚本结果不能替代。
+Warm up completely once per tier and per configuration; perform formal measurements at least three times, including the 4096 output tier. Clear request state every time; warm-up and loading durations are reported separately.
+Historical long-output results are measured only once, which does not comply with this specification. `benchmark-qwen36-8bit.py` now uses `--trials` simultaneously for the long-output tier (default three times); diagnostic runs with explicitly set fewer than three times cannot be marked as formal acceptance. Dual-machine end-to-end must still be accepted separately according to the timing and resource rules in this document; single-machine script results cannot replace them.
 
-性能门槛按三次中位数验收，同时每次 prefill/整次请求耗时不得超过对应门槛的 110%，每次 decode 吞吐不得低于 37 token/s。
-正确性、稳定性和内存门槛逐次验收。报告每次原始值、最慢值与均值，不从三次样本推断 p95。
-测试串行进行；Mac 插电且 High Power，记录两端温度/功耗模式、Windows 显示占用、后台 GPU 工作负载和链路信息。
-正式轮次中供电变化、模型配置变化或输入错误使整组无效，原因必须保留；不能删除有效的慢轮次。
+Performance thresholds are accepted based on the median of three measurements, while each prefill/total request time must not exceed 110% of the corresponding threshold, and each decode throughput must not be lower than 37 token/s.
+Correctness, stability, and memory thresholds are accepted sequentially. Report the raw value, slowest value, and mean for each time; do not infer p95 from the three samples.
+Tests are performed serially; the Mac is plugged in and set to High Power. Record temperatures/power modes on both ends, Windows display usage, background GPU workload, and link information.
+In formal rounds, power supply changes, model configuration changes, or input errors invalidate the entire set; reasons must be retained; valid slow rounds cannot be deleted.
 
-记录模型 revision、tokenizer/模板/token IDs 散列、两端二进制散列、驱动/系统版本、分块长度、精度、各阶段时间、输出 token IDs 及内存/换页数据。
-长输出允许优化分块长度，但必须保留旧配置对照，不能用 128 输出档代替长输出档。
+Record model revision, tokenizer/template/token IDs hashes, binary hashes on both ends, driver/OS versions, chunk length, precision, time for each stage, output token IDs, and memory/swap data.
+Long outputs allow optimizing chunk length, but the old configuration comparison must be retained; the 128 output tier cannot replace the long-output tier.
 
-## 正确性与资源门槛
+## Correctness and Resource Thresholds
 
-- **同精度实现正确性**：FP32 诊断路径对独立 FP32 参考沿用 relative L2 < 1e-4、max absolute < 0.01。Q8 正式路径须对独立定义的 Q8 KV 参考逐块核对量化字节与比例，并在相同 Q8 语义下验证 CUDA 前段、跨机导入后的层边界/状态和完整 logits；BF16 可选路径同理使用 BF16 KV 参考。独立参考及同精度容差在正式验收前固定并公布，不能拿 FP32 的容差直接约束 Q8/BF16 相对 FP32 的正常量化漂移。
-- **跨精度质量**：Q8、BF16 与 FP32 的层/状态/logits 相对 L2、最大绝对差、首个 greedy 分歧和长上下文任务结果均原样报告，但不把一个统一的跨精度 L2 截断值当作质量证明。使用事先固定的短提示、128K 检索/一致性提示和长输出任务，与 BF16/FP32 对照；任务集、评分方法及可接受退化幅度须在性能验收前独立固定，不根据本轮成绩回填。当前尚无合格的 Q8 质量结果，不能标记正式验收通过。
-- 现有 8 个 FP32 greedy 参考 token 继续用于 FP32 回归，不要求 Q8/BF16 与 FP32 逐 token 一致；每种精度的长请求重复运行须确定性。跨后端同精度的长 greedy 序列若有分歧，必须定位首处分歧并验证状态/logits，未解释前不能标记验收通过。
-- 保留长请求后的短参考一致、远距离校验码、超限拒绝等真实 RPC 检查；固定输出压力测试之外另测自然 EOS，避免只证明吞吐。
-- 正式轮次零 OOM、零崩溃、零 NaN/Inf、零静默截断、零 CPU 权重 offload。模型加载期间的 CPU 文件读取不属于权重 offload。
-- 4090 全设备峰值显存目标 ≤ 22 GiB，包含系统显示占用，给 24 GiB 卡保留至少 2 GiB；必须报告设备总峰值和 worker 分配量。
-- Mac Metal allocation 峰值 ≤ 38.5 GiB，并报告进程 footprint 与系统内存压力；总 allocation 不能替代每次 GPU 提交驻留安全性检查。
-- 每次稳态正式请求的整机新增 swap-out ≤ 512 MiB；超过则该组不通过资源验收。该计数不能归因于单一进程，须保留后台环境记录。首次加载/预热换页单独完整披露，不能宣传成“无 swap”。
+- **Same-precision correctness**: The FP32 diagnostic path uses independent FP32 references, adhering to relative L2 < 1e-4 and max absolute < 0.01. The Q8 formal path must verify quantization bytes and scales block-by-block against independently defined Q8 KV references, and validate CUDA frontend, layer boundaries/state, and full logits after cross-machine import under the same Q8 semantics; the BF16 optional path similarly uses BF16 KV references. Independent references and same-precision tolerances are fixed and published before formal acceptance; one cannot use FP32 tolerances to directly constrain Q8/BF16's normal quantization drift relative to FP32.
+- **Cross-precision quality**: Layer/state/logits of Q8, BF16, and FP32 relative to L2, maximum absolute difference, first greedy divergence, and long-context task results are reported as-is, but a unified cross-precision L2 truncation value is not treated as proof of quality. Using pre-fixed short prompts, 128K retrieval/consistency prompts, and long-output tasks, comparisons are made against BF16/FP32; the task set, scoring methods, and acceptable degradation magnitude must be independently fixed before performance acceptance, without backfilling based on this round's results. Currently, there are no qualified Q8 quality results, so formal acceptance cannot be marked as passed.
+- Existing 8 FP32 greedy reference tokens continue to be used for FP32 regression; Q8/BF16 and FP32 are not required to be token-by-token consistent; long requests of each precision must be deterministic upon repeated runs. If long greedy sequences of the same precision across different backends diverge, the first point of divergence must be located and state/logits verified; acceptance cannot be marked as passed until explained.
+- Retain real RPC checks such as short-reference consistency after long requests, long-range checksums, and overflow rejection; in addition to fixed output stress tests, measure natural EOS to avoid proving only throughput.
+- Formal rounds must have zero OOM, zero crashes, zero NaN/Inf, zero silent truncation, and zero CPU weight offload. CPU file reads during model loading do not constitute weight offload.
+- 4090 full-device peak VRAM target ≤ 22 GiB, including system display usage, reserving at least 2 GiB for 24 GiB cards; device total peak and worker allocation must be reported.
+- Mac Metal allocation peak ≤ 38.5 GiB, and process footprint and system memory pressure must be reported; total allocation cannot replace per-GPU submission residency safety checks.
+- For each steady-state formal request, the whole machine's new swap-out ≤ 512 MiB; exceeding this means the group fails resource acceptance. This count cannot be attributed to a single process; background environment records must be retained. First-load/warmup swapping must be disclosed completely and separately; it cannot be marketed as "no swap".
 
-## 本轮范围与完成定义
+## Scope and Completion Definition for This Round
 
-本轮验收范围为 0% cache hit、128K 完整输入、最长 4096 固定输出、20/20 prefill 分流和 Mac 完整 decode。
-90% prefix hit、256K 输入、8192/32768 输出、24/16 切分及分层 decode 不纳入本轮性能承诺，后续分别建立基线和目标。
+This round's acceptance scope covers 0% cache hit, 128K full input, longest 4096 fixed output, 20/20 prefill sharding, and Mac full decode.
+90% prefix hit, 256K input, 8192/32768 output, 24/16 sharding, and layered decode are not included in this round's performance commitments; baselines and targets will be established separately later.
 
-必须先通过正确性和资源门槛，再判断性能。阶段门槛全部通过只能标记“阶段验收通过”；最终目标全部通过才可标记“本轮性能目标完成”。
-本文件只固定验收规范，尚未接入自动判定器，也没有新增性能实测。
-不能用估算、第三方成绩、较低精度或缓存命中成绩更新为通过。
-若硬件实测证明目标不可达，保留失败数据与瓶颈分析，显式修订目标版本及原因，不悄悄降低门槛。
+Correctness and resource thresholds must be passed first before judging performance. Passing all stage thresholds only marks "Stage Acceptance Passed"; only when all final targets are passed can it be marked "This Round's Performance Target Completed".
+This document only fixes acceptance specifications; it has not yet integrated an automatic judge, nor has it added new performance measurements.
+Estimates, third-party results, lower precision, or cache-hit results cannot be used to update to "Passed".
+If hardware measurements prove the target is unattainable, retain failure data and bottleneck analysis, explicitly revise the target version and reasons, and do not quietly lower the threshold.
