@@ -1,0 +1,16 @@
+{
+  "issue": 72,
+  "codePr": 74,
+  "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "candidateCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+  "date": "2026-10-24 America/Los_Angeles",
+  "status": "evaluation-in-progress",
+  "scope": "Synthetic speculative-state correctness reference; no real draft or acceleration claim.",
+  "independentCpuTests": 430,
+  "managedIntegrationChecks": 70,
+  "implementationProvider": "GitHub Copilot CLI1.0.103 / claude-sonnet-5.5",
+  "hardwareCorrectness": "not-yet-run",
+  "formalPerformance": "not-yet-complete",
+  "restoration": "pending end of evaluation",
+  "windowsParticipating": false
+}

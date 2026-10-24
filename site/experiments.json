@@ -1,5 +1,20 @@
 [
   {
+    "id": "speculative-state-issue72-20261024",
+    "title": "Speculative state transactions: evaluation in progress",
+    "kind": "2026-10-24 · Approved experiment #72 · Candidate, not adopted",
+    "source": "docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md",
+    "question": "Can rejection recover full target state and exact greedy continuation before native DFlash2 integration?",
+    "setup": "Fixed affine8/FP32 KV, fully local M5 Pro, fused-fp32/chunk32/scratch128. Baseline4ca29eed, candidateafdb36f.",
+    "change": "Default-off synthetic proposal verification with all-layer snapshots and rejection replay; no real draft. Code PR #74.",
+    "result": "Evaluation in progress; no new performance point yet. CPU430 and managed integration70 passed.",
+    "validation": "Retained invalid scheduling/readiness attempts; replacement uses authenticated readiness and real warmup before cohort.",
+    "conclusion": "No acceleration or adoption claim. GPU fixtures and fixed5/20 comparisons remain pending.",
+    "next": "Complete serialized evaluation, restore original worker, then submit final results for human review.",
+    "commands": [],
+    "evidence": "docs/evaluations/issue72/status.json; setup-failures.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",
