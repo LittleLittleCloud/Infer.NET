@@ -1,7 +1,6 @@
 """Normalized homepage data, historical adapters and strict stdlib validation."""
 import copy
 from datetime import datetime
-import html
 import json
 import math
 from pathlib import Path
@@ -334,34 +333,6 @@ def load_data(root=ROOT):
 
 def homepage(data):
     payload = json.dumps(data, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c")
-    esc = lambda value: html.escape(str(value), quote=True)
-    commit_order = {entry["sha"]: index for index, entry in enumerate(sorted(
-        data["commitTimeline"], key=lambda entry: (entry["committedAt"], entry["sha"])
-    ))}
-    comparisons = []
-    for experiment_id in dict.fromkeys(run["experimentId"] for run in data["runs"]):
-        group = [run for run in data["runs"] if run["experimentId"] == experiment_id]
-        mains = [run for run in group if run["provenance"]["kind"] == "main"
-                 and run["metrics"]["prefill"]["value"] is not None]
-        candidates = [run for run in group if run["provenance"]["kind"] == "candidate"
-                      and run["metrics"]["prefill"]["value"] is not None]
-        if mains and candidates:
-            main = max(mains, key=lambda run: commit_order[run["measuredCommit"]])
-            candidate = max(candidates, key=lambda run: commit_order[run["measuredCommit"]])
-            if main["configurationId"] != candidate["configurationId"]:
-                comparisons.append((commit_order[candidate["measuredCommit"]], main, candidate))
-    comparison_shortcut = ""
-    if comparisons:
-        _, main, candidate = max(comparisons, key=lambda item: item[0])
-        def shortcut(run, label):
-            href = f'#experiment={run["experimentId"]}&run={run["id"]}'
-            speed = run["metrics"]["prefill"]["value"]
-            return f'<a href="{esc(href)}">{esc(label)} · {speed:.2f} prefill token/s ↗</a>'
-        comparison_shortcut = (
-            '<nav class="comparison-shortcut" aria-label="Cross-configuration experiment">'
-            f'<span><strong>{esc(candidate["title"])}</strong><small>不同配置分别绘图；选择结果即可切换曲线。</small></span>'
-            + shortcut(main, "main") + shortcut(candidate, candidate["title"]) + '</nav>'
-        )
     charts = "".join(
         f'<section class="trend-card" id="{anchor}" aria-labelledby="{key}-heading">'
         f'<div class="plot-head"><h2 id="{key}-heading">{label}</h2>'
@@ -378,13 +349,13 @@ def homepage(data):
 <h1 class="trends-title">Commit trends</h1>
 <div class="trend-legend"><span>● main</span><span class="candidate-key">◆ candidate · dashed branch</span>
 <span>◎ latest verified main baseline</span><span>□ selected · Tab + Enter/Space to select</span></div>
-<div class="run-controls"><label>Comparable configuration <select id="configuration"></select></label>
+<div class="run-controls"><label>Configuration filter <select id="configuration"></select></label>
 <label>Run · all configurations <select id="run"></select></label></div>
-{comparison_shortcut}
 <p id="selection-notice" role="status"></p>
 <div class="trend-grid">{charts}</div>
 <p class="note">Measured commit axes; repeated runs at the same SHA are offset for visibility, not new commits.
-No Pi wall-time-derived throughput. Missing metrics are not zero.</p>
+All runs appear by default. Lines connect only comparable configurations. No Pi wall-time-derived throughput.
+Missing metrics are marked 未测, not zero. The issue #54 main and BF16/2048 runs did not record client first-token timestamps, so their TTFT is unavailable.</p>
 <section id="run-detail" aria-labelledby="run-title"><div class="selected-head"><h2 id="run-title"></h2>
 <span id="run-state"></span><a id="permalink">Link to this run</a></div>
 <p id="run-identity"></p><div class="run-summary"><div><h3>Change</h3><p id="run-change"></p></div>

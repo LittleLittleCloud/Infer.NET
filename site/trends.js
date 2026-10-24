@@ -29,15 +29,15 @@
     return {run: defaultRun(data, configurationId),
       error: requested ? "Unknown experiment/run link. Showing the configured default run." : ""};
   }
-  function seriesRuns(data, configId) {
+  function seriesRuns(data, configId = "all") {
     const timeline = [...data.commitTimeline].sort((a, b) =>
       a.committedAt.localeCompare(b.committedAt) || a.sha.localeCompare(b.sha));
     const rank = new Map(timeline.map((commit, i) => [commit.sha, i]));
-    return data.runs.filter(r => r.configurationId === configId).sort((a, b) =>
+    return data.runs.filter(r => configId === "all" || r.configurationId === configId).sort((a, b) =>
       rank.get(a.measuredCommit) - rank.get(b.measuredCommit) ||
       a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
   }
-  function chartModel(data, configId, key, availableWidth = 640, targetSize = 34) {
+  function chartModel(data, configId = "all", key, availableWidth = 640, targetSize = 34) {
     const runs = seriesRuns(data, configId);
     const commits = [...new Set(runs.map(r => r.measuredCommit))];
     const counts = commits.map(sha => runs.filter(r => r.measuredCommit === sha).length);
@@ -85,10 +85,14 @@
     const configControl = byId("configuration"), runControl = byId("run");
     const initial = resolveSelection(data, scope.location.hash);
     let selected = initial.run;
+    let filterId = "all";
     if (!selected) {
       byId("selection-notice").textContent = "No measured runs available. See the experiment notebook.";
       return;
     }
+    const allOption = node("option", "All runs");
+    allOption.value = "all";
+    configControl.append(allOption);
     data.configurations.forEach(config => {
       const option = node("option", config.label);
       option.value = config.id;
@@ -119,14 +123,14 @@
       const container = byId(key + "-chart");
       container.replaceChildren();
       const targetSize = scope.matchMedia?.("(pointer: coarse)").matches ? 44 : 34;
-      const model = chartModel(data, selected.configurationId, key,
+      const model = chartModel(data, filterId, key,
         Math.max(240, container.clientWidth), targetSize);
       const valid = model.points.filter(p => p.value !== null);
       const width = model.width;
       const x = value => value;
       const max = key === "pass" ? 100 : Math.max(1, ...valid.map(p => p.value)) * 1.12;
       const y = value => 206 - value / max * 166;
-      const svg = svgNode("svg", {viewBox: `0 0 ${width} 270`, role: "img",
+      const svg = svgNode("svg", {viewBox: `0 0 ${width} 300`, role: "img",
         "aria-label": `${specs[key].label}; measured commit horizontal axis; ${specs[key].unit} vertical axis`});
       svg.style.width = width + "px";
       for (let i = 0; i < 4; i++) {
@@ -137,19 +141,21 @@
       const visibleTicks = model.ticks.filter((tick, i) => i === 0 || i === model.ticks.length - 1 ||
         i % Math.max(1, Math.ceil(model.ticks.length / (width < 400 ? 3 : 5))) === 0);
       visibleTicks.forEach(tick => {
-        const text = svgNode("text", {x: x(tick.x), y: 234, "text-anchor": "middle"}, tick.sha.slice(0, 7));
+        const text = svgNode("text", {x: x(tick.x), y: 266, "text-anchor": "middle"}, tick.sha.slice(0, 7));
         text.append(svgNode("title", {}, tick.sha));
         svg.append(text);
       });
-      svg.append(svgNode("text", {x: width / 2, y: 258, "text-anchor": "middle"}, "Measured commit →"));
-      // Break the main line at missing observations; candidates only branch from their explicit baseline.
-      let previous = null;
+      svg.append(svgNode("text", {x: width / 2, y: 290, "text-anchor": "middle"}, "Measured commit →"));
+      // Connect only measurements from the same comparable configuration.
+      const previousByConfig = new Map();
       model.points.forEach(point => {
         if (point.run.provenance.kind !== "main") return;
+        const configId = point.run.configurationId;
+        const previous = previousByConfig.get(configId);
         if (point.value !== null && previous) svg.append(svgNode("line", {
           x1: x(previous.x), y1: y(previous.value), x2: x(point.x), y2: y(point.value), class: "main-line"
         }));
-        previous = point.value === null ? null : point;
+        previousByConfig.set(configId, point.value === null ? null : point);
       });
       valid.filter(p => p.run.provenance.kind === "candidate").forEach(point => {
         const base = valid.find(p => p.run.id === point.run.baselineRunId);
@@ -157,27 +163,28 @@
           x1: x(base.x), y1: y(base.value), x2: x(point.x), y2: y(point.value), class: "candidate-line"
         }));
       });
+      model.points.filter(point => point.value === null).forEach(point =>
+        svg.append(svgNode("text", {x: x(point.x), y: 244, "text-anchor": "middle",
+          class: "missing-label"}, "未测")));
       container.append(svg);
-      if (!valid.length) {
-        container.append(node("p", key === "pass" ? "Official validation not acquired" :
-          `${missing} · no ${key === "ttft" ? "client first-token samples" : "worker timings"}`, "empty-plot"));
-      }
-      valid.forEach(point => {
-        const button = node("button", undefined, "trend-point " + point.run.provenance.kind);
+      model.points.forEach(point => {
+        const button = node("button", undefined, "trend-point " + point.run.provenance.kind +
+          (point.value === null ? " missing" : ""));
         button.type = "button";
         button.dataset.run = point.run.id;
         button.style.left = x(point.x) + "px";
-        button.style.top = y(point.value) + "px";
+        button.style.top = (point.value === null ? 220 : y(point.value)) + "px";
         button.setAttribute("aria-label", `${point.run.title}; ${point.run.id}; measured ${point.run.measuredCommit}; ${metricText(point.run, key)}; ${state(point.run)}`);
         button.setAttribute("aria-controls", "run-detail");
         button.title = button.getAttribute("aria-label");
-        if (point.run.id === config().latestBaselineRun) button.classList.add("latest-baseline");
+        if (point.run.id === data.configurations.find(c => c.id === point.run.configurationId).latestBaselineRun)
+          button.classList.add("latest-baseline");
         button.addEventListener("click", () => select(point.run, true));
         container.append(button);
       });
     }
     function updateControls() {
-      configControl.value = selected.configurationId;
+      configControl.value = filterId;
       runControl.replaceChildren();
       data.runs.forEach(run => {
         const option = node("option", `${run.title} · ${run.measuredCommit.slice(0, 7)} · ${metricText(run, "prefill")}`);
@@ -278,17 +285,24 @@
       runControl.value = selected.id;
     }
     function select(run, push, error = "") {
-      const changedConfig = run.configurationId !== selected.configurationId;
+      const changedFilter = filterId !== "all" && run.configurationId !== filterId;
+      if (changedFilter) filterId = "all";
       selected = run;
       byId("selection-notice").textContent = error || `Selected ${run.id} · ${state(run)}`;
-      if (changedConfig) {
+      if (changedFilter) {
         updateControls();
         Object.keys(specs).forEach(drawChart);
       }
       details();
       if (push && scope.location.hash !== runHash(run)) scope.history.pushState(null, "", runHash(run));
     }
-    configControl.addEventListener("change", () => select(defaultRun(data, configControl.value), true));
+    configControl.addEventListener("change", () => {
+      filterId = configControl.value;
+      Object.keys(specs).forEach(drawChart);
+      if (filterId !== "all" && selected.configurationId !== filterId)
+        select(defaultRun(data, filterId), true);
+      else details();
+    });
     runControl.addEventListener("change", () => select(data.runs.find(r => r.id === runControl.value), true));
     const locationChanged = () => {
       const resolved = resolveSelection(data, scope.location.hash, selected.configurationId);

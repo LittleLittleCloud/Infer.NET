@@ -60,11 +60,13 @@ Each configuration has a stable slug `id`, `label`, and:
 | `latestBaselineRun` | Explicit verified main run ID, or null if none |
 
 Never reuse a configuration ID after changing precision, cohort, topology,
-network, cache, workload or timing scope. Configurations are separate selectable
-series: neither main lines nor candidate branches cross them. A compact cross-configuration
-A/B shortcut shows the latest experiment with measured main and candidate prefill
-values and links to each separate curve. The run selector lists all configurations
-so a candidate remains discoverable from the default main view. Environment
+network, cache, workload or timing scope. The homepage shows every run on the
+same commit axis by default; an optional configuration filter narrows the view.
+Runs from different configurations appear together but are never connected by
+trend lines or treated as controlled comparisons. The run selector lists all
+runs. A missing metric gets a selectable "未测" marker with no numeric value;
+the Issue #54 main and BF16/2048 cohorts did not record client first-token
+timestamps, so both have null TTFT and 0 observed TTFT samples. Environment
 limitations (for example the rerun's open TUI/nonexclusive machine) also belong in
 the run description. These Pi histories are observations, not controlled A/B
 evidence of a speed change.
