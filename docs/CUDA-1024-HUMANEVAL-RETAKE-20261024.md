@@ -1,10 +1,10 @@
 # CUDA 1024 分块复测：HumanEval 20 题与固定 8K 双机对照
 
-关联 [Issue #3](https://github.com/LittleLittleCloud/Infer.NET/issues/3)；复用已关闭的长块代码 [PR #30](https://github.com/LittleLittleCloud/Infer.NET/pull/30)。用户于 2026-10-23 明确要求重新测试 1024 块，并指定 HumanEval 20 题。本轮运行 ID 为 `chunk1024-retake-20261024T064506Z`；实验从当地时间 10 月 23 日深夜跨至 24 日凌晨。**结论：在这一套旧候选包及当前 Wi-Fi 拓扑下，1024 块不是端到端 prefill 改进，不建议切换部署。**
+关联 [Issue #3](https://github.com/LittleLittleCloud/Infer.NET/issues/3)；复用已关闭的长块代码 [PR #30](https://github.com/LittleLittleCloud/Infer.NET/pull/30)；独立结果 [PR #53](https://github.com/LittleLittleCloud/Infer.NET/pull/53)。用户于 2026-10-23 明确要求重新测试 1024 块，并指定 HumanEval 20 题。本轮运行 ID 为 `chunk1024-retake-20261024T064506Z`；实验从当地时间 10 月 23 日深夜跨至 24 日凌晨。**结论：在这一套旧候选包及当前 Wi-Fi 拓扑下，1024 块不是端到端 prefill 改进，不建议切换部署。**
 
 ## 问题与受控条件
 
-此前 1024 块让 4090 前段计算缩短，却因 Mac 等待首批 hidden 更久而使 8K 双机请求变慢。本次检查这种退化是否也出现在真实 Pi 编码工作负载。32/1024 两档都使用同一套不可变的 Mac 与 Windows Native AOT 包，源码 `47fe588160fc748a8a3f0125b46308c3f03d52d3`；只重启 Windows agent 并改变 `--cuda-prefill-chunk`。Mac serve 在两轮及固定输入复测期间保持 PID `83246`。coordinator 始终为原部署 `cd6f7da401fadf044dac13e87b415d27bb5eadfb`，不承载模型。两个候选包均为 split wire v5、affine8/group64 权重、FP32 GEMM/KV；没有测试 BF16 Tensor Core、Q8 KV 或最新 `main` 的推理代码。
+此前 1024 块让 4090 前段计算缩短，却因 Mac 等待首批 hidden 更久而使 8K 双机请求变慢。本次检查这种退化是否也出现在真实 Pi 编码工作负载。32/1024 两档都使用同一套不可变的 Mac 与 Windows Native AOT 包，源码 `47fe588160fc748a8a3f0125b46308c3f03d52d3`；只重启 Windows agent 并改变 `--cuda-prefill-chunk`。**本轮 32 块是同一候选包的参数对照，不是 `main` 运行基线。**结果分支从 `main` 的 `99e97761df6ace50e5ca0894da5e3c51772ae20b` 建立；该提交仅是记录基底，未参与推理测量。Mac serve 在两轮及固定输入复测期间保持 PID `83246`。coordinator 始终为原部署 `cd6f7da401fadf044dac13e87b415d27bb5eadfb`，不承载模型。两个候选包均为 split wire v5、affine8/group64 权重、FP32 GEMM/KV；没有测试 BF16 Tensor Core、Q8 KV 或最新 `main` 的推理代码。
 
 Mac 经 `en0` Wi-Fi 与 Windows RTX 4090 通信，测量期间 Mac 为 AC；没有把这组数据标作有线结果。模型 revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`。Mac 包中的 `deepinfer` SHA-256 为 `64968e78583c311abb429a47f4e85b1a93109639a021f9073bc2399644cc4087`，Metal dylib 为 `1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef`；Windows exe 为 `15d79b0496c9ea597d1b681901b8d52a593824ee1e016bb7735491e987d531ef`，CUDA DLL 为 `2e6149805dd684b398107c3d18aa2e7bfd9f296f843c1b8ace3fb2c5be899061`。两端 package manifest 与文件散列已核对。短输入本机路由在候选 Mac serve 中显式设为 0，两个 HumanEval 轮次的所有请求均为 `cuda-metal-split`；每次请求重置状态，0% prefix hit。固定输入复测也走双机路径。
 
@@ -38,6 +38,6 @@ Pi 1.4.0 使用官方 HumanEval 数据集压缩文件 SHA-256 `b796127e635a67f93
 
 原始运行文件仅在本机忽略目录 `artifacts/dual-host/chunk1024-retake-20261024T064506Z/`，不是公开下载链接。HumanEval 32/1024 的任务 JSONL SHA-256 分别为 `41f2e64485e5a18751e364b3ddc1e9a0d0b48761124c173ea69d95dac44a8c80` / `f74cc93f6f9c881713e7f5940eff30ec300a1c0911cc94b3fa9291c7cdc28067`；逐请求遥测分别为 `cec939b4831a68fc32cdd71c27f019e6fc4adfd04d60634542b8b082dc017f8e` / `6e8fc59b12b0dbbb8647be05c7d6db2f32ea47c00ce2e40ef4f8a4d27da5488a`；固定输入原始 JSON 分别为 `750f09ecfae6245570164dd79ca22647d183f22eaff1c183704d39d2c3547da1` / `c77ce7c914b454b75f8065c877416bc4edc690ff177d7bb505126fdb35dbfd83`。serve 原始日志 SHA-256 为 `a05d03cd8b45b8f2ec206f4ec612d5f462ac76fd2f162ac8a405b9585c8286a4`。首次启动时传给评测脚本的 `endpoint_build` 元数据少了一段 SHA；该未完成轮被立即中止、原文件保留并从对照排除，随后以正确完整 SHA 重启。
 
-没有本轮独立的完整层/状态/logit 数值复核，也未采集每次请求的 GPU 峰值、Mac swap-out 或 128K 数据；这些结果不通过正式 [8bit 目标](QWEN36-8BIT-TARGETS.md)的正确性、内存和长上下文门槛。实验期间使用旧候选源码是为了让 32/1024 在同一可切换二进制上可比；不能把上表直接当作最新 `main` 或 Tensor Core 分支的速度。下一步若仍希望使用大块，需在最新源码上改善首批 hidden 交付或建立有序流水线，再用同一 20 题和固定输入复测，而不是直接切换默认值。
+没有本轮独立的完整层/状态/logit 数值复核，也未采集每次请求的 GPU 峰值、Mac swap-out 或 128K 数据；这些结果不通过正式 [8bit 目标](QWEN36-8BIT-TARGETS.md)的正确性、内存和长上下文门槛。实验期间使用旧候选源码是为了让 32/1024 在同一可切换二进制上可比；不能把上表直接当作最新 `main` 或 Tensor Core 分支的速度。因缺少独立 `INFERENCE_METRIC` 与官方断言，本轮不在首页趋势图制造可与正式 `main` 基线比较的性能或通过率点；进展页和实验笔记保留诊断结果。下一步若仍希望使用大块，需在最新源码上改善首批 hidden 交付或建立有序流水线，再用同一 20 题和固定输入复测，而不是直接切换默认值。
 
 实验后候选 Windows agent 与 Mac serve 均已停止，原 `cd6f7da401fadf044dac13e87b415d27bb5eadfb` 部署恢复。Mac serve PID `94700`、Windows agent PID `38408` 均 Ready/已连接；经原 coordinator 的真实 558-token 双机请求返回 HTTP 200、`cuda-metal-split`。本结果 PR 只保存实验记录，不部署 1024 或修改 `main` 的计算路径。

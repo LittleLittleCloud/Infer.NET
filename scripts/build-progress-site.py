@@ -70,7 +70,7 @@ body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.24</p>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>尚未达标 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
-<div class="notice"><strong>CUDA 1024 分块复测：完整 prefill 变慢</strong><p>同一旧候选包、Wi-Fi 双机、Pi 固定 20 题：32 块 prefill 539.91 token/s，1024 块 445.13 token/s；decode 都约 67.1 token/s。固定 8K 输入复测显示 4090 计算快 7.82%，但完整 prefill 慢 9.78%。未切换默认值，也不是最新 main 或 128K 验收。<a href="experiments.html#cuda-chunk1024-humaneval-20-20261024">实验记录 →</a> · <a href="cuda-chunk1024-humaneval-summary.json">逐题摘要 JSON</a></p></div>
+<div class="notice"><strong>CUDA 1024 分块复测：完整 prefill 变慢</strong><p>同一旧候选包、Wi-Fi 双机、Pi 固定 20 题：32 块 prefill 539.91 token/s，1024 块 445.13 token/s；decode 都约 67.1 token/s。固定 8K 输入复测显示 4090 计算快 7.82%，但完整 prefill 慢 9.78%。未切换默认值，也不是最新 main 或 128K 验收。<a href="experiments.html#cuda-chunk1024-humaneval-20-20261024">实验记录 →</a> · <a href="cuda-chunk1024-humaneval-summary.json">逐题摘要 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/53">结果 PR #53 ↗</a></p></div>
 <div class="notice"><strong>Pi 固定 20 题复测：19/20，工具调用错误可复现</strong><p>同一 e017d84 推理部署与同一评测脚本复测：19 题完成并通过官方逐题断言；HumanEval/149 在工具调用解析时报错，单题重试也失败。整轮 774.3 秒含提前失败题，不能当作比首次 808.9 秒更快。<a href="experiments.html#pi-humaneval-rerun-20">复测记录 →</a> · <a href="pi-humaneval-rerun-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/32">工具调用 Issue #32</a></p></div>
 <div class="notice"><strong>首次测量：固定 20 题全部通过</strong><p>coordinator、Mac serve 与 Windows agent 均运行 e017d84；Pi 1.4.0 串行完成固定 HumanEval 20 题，整题 wall time 合计 808.9 秒、中位 34.5 秒、P90 61.6 秒。20 份完整代码均通过对应题目断言。这是有工具的 Pi 端到端小样本基线，不是 164 题榜单成绩或 GPU 吞吐上限。<a href="experiments.html#pi-humaneval-main-20">实验记录 →</a> · <a href="pi-humaneval-main-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/40">Issue #40</a></p></div>
 <div class="notice"><strong>BF16 QKV补偿：局部更准，整层仍未通过</strong><p>同版4090诊断中，三项BF16高低位乘积让token16的QKV相对FP32误差从9.92e-4降至8.01e-6；首层相对独立FP32参考仍约0.00704，20层0项通过。开关默认关闭、未部署；目标BF16 KV、独立状态/logits和128K验收仍待完成。<a href="experiments.html#bf16-highlow-qkv">新A/B →</a> · <a href="experiments.html#bf16-independent-oracle">独立参考 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/31">诊断PR #31</a></p></div>
@@ -126,7 +126,10 @@ for n in notes:
         body += f'<h3>{label}</h3><p>{esc(n[key])}</p>'
     if n['commands']:
         body += '<details><summary>复现入口与前提</summary><p>先按完整报告准备固定模型、输入与数值参考；GPU 测试串行运行，保留已有服务，使用新的运行标识。汇总命令需要历史原始产物；本页面不提供这些大文件。</p><pre><code>' + esc('\n'.join(n['commands'])) + '</code></pre></details>'
-    body += '<p>' + source(n['source']) + f' · <a href="{REPO}/issues/1">关联总目标 #1</a></p>'
+    body += '<p>' + source(n['source']) + f' · <a href="{REPO}/issues/1">关联总目标 #1</a>'
+    if n.get('resultsPr'):
+        body += f' · <a href="{esc(n["resultsPr"])}">结果 PR ↗</a>'
+    body += '</p>'
     if n.get('evidence'):
         public = re.match(r'^site/([A-Za-z0-9._-]+\.json)', n['evidence'])
         if public:
