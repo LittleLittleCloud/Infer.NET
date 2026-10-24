@@ -114,5 +114,33 @@
   "performance40g.json": {
     "sha256": "1d5f658b809c0d61698930ee9adcb74296a6e86afb11f0ec5010d51d1d0760f6",
     "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restoration40g.json": {
+    "sha256": "133d8fbdb12c04a97d6ce122df81719cb7cd31e02c868b199a2006486ab0da8c",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "record-restoration.py": {
+    "sha256": "b37f0600f4e66b7e9d60addfc315ffb233dfded0f335c5095ed64fd98e3d3a20",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "reset-memory-limit.log": {
+    "sha256": "80cb25844f2db470f891f181dd4843dcc67c839fcee299b532299257dec9dd4f",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restored-worker-health40g.json": {
+    "sha256": "e0afac805741f18d411f0745fb6e78dc5a54e9d8d90b5876acce325f919f551a",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restored-coordinator-workers40g.json": {
+    "sha256": "c707eb47c7736a5630fa60e3cdec41be3dac2e9cdf55916212da3fdafcb9631b",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restored-smoke40g.json": {
+    "sha256": "f6b82d86b0ce86bbbebe736d19898afdce98b6fca7800e79f65f5c4fcb452908",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
+  },
+  "restored-smoke-default-limit.json": {
+    "sha256": "ef9191f83c20eb679181c04f9bbee8f8424d17af36f271d62942e00615ace5cc",
+    "availability": "Local ignored artifacts/splash-human20-20261024/; not a public download"
   }
 }

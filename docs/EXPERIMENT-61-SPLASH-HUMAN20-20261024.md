@@ -26,6 +26,8 @@
 
 所有正式请求使用独立 `cache_salt`，最终 cache matched tokens 全部为 0；Pi cacheRead/cacheWrite 同为 0。DFlash2 开启，verify-rows 为默认 auto；原生提示此 MoE 模式下 greedy 输出可能不完全重复，本轮未证明重复确定性。temperature=0、reasoning_effort=none。保持固定 target/draft、Q8 KV、FP32 recurrent state、单请求串行，`--expert-memory off` 且所有快照的 `streamed_experts=null`。`--max-context 32768` 实际生效，完整 target 常驻。
 
+实际每请求输入 1,771–11,527 tokens，中位数 2,341；输出 13–1,699 tokens。窗口上限 32K 不代表每次请求输入达到 32K。最长 Pi 任务耗时 91.366 秒，低于预设的 300 秒上限。
+
 启动加载 7.14 秒后首次 Metal pipeline 编译约数分钟；加载、引擎启动 warmup 和额外 24 输入 /31 输出 token 的独立预热均不计入正式题组。较长的 HumanEval/32 Pi 自检会话及其全部请求保留，没有重试题组或换题。
 
 ## 正确性与资源
@@ -40,7 +42,9 @@
 
 在原参数基础上增加 `--max-memory 40G`，先核对上述系统 wired limit 和实际 `/status.memory_plan.budget`。复用 [观测适配器说明](https://github.com/LittleLittleCloud/Infer.NET/blob/b0bad3155468961ca0cdf6ee55cb710b515dfd7c/docs/SPLASH-HUMANEVAL.md)，固定 cohort/seed0、Pi1.4.0、context32768、max output4096、timeout300。manifest、逐请求计数、逐题结果和公式原始分量见 [公开性能摘要](evaluations/issue61/performance-resident40g.json)、[题组 manifest](evaluations/issue61/manifest-resident40g.json)、[官方断言摘要](evaluations/issue61/functional-resident40g.json)。原始 Pi 会话/答案、完整引擎日志、status 和资源样本在本机忽略目录 `artifacts/splash-human20-20261024/`；公开证据散列标明仅本机可用。
 
-测试完成已停止本轮 Splash 和 observer，再恢复原 worker；默认内存限额的恢复结果以最终 restoration 摘要为准。结果 PR 只保存第三方参考，不将 Splash 标为 Infer.NET 产品 main 基线。首页独立系列的标准 prefill/decode 图不混入 command 口径数值；选中该运行可查看原生速度、TTFT、20 题明细与证据。
+测试完成已停止本轮 Splash 和 observer，恢复原 worker，核对原 build `0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb`、Ready、协调器注册和真实聊天成功。用户在终端恢复系统默认限额，执行者独立读取确认 **`iogpu.wired_limit_mb=0`**，并在默认限额下再次完成真实协调器聊天。先前 GUI 管理员辅助命令被取消（-128），保留日志，没有伪称该辅助命令成功；系统默认恢复以真实 sysctl 读回为据。详见 [restoration 摘要](evaluations/issue61/restoration-resident40g.json)。
+
+结果 PR 只保存第三方参考，不将 Splash 标为 Infer.NET 产品 main 基线。首页独立系列的标准 prefill/decode 图不混入 command 口径数值；选中该运行可查看原生速度、TTFT、20 题明细与证据。独立观测工具 PR #62 保留 review，不在本次“结果 PR 合入”授权中自动合并；不影响保存本轮原始结果。
 
 以下保留最初默认预算失败阶段的配置、数字及恢复证据；不是后续 40GiB 题组的测量数据。
 

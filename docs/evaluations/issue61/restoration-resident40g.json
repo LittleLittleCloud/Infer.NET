@@ -1,0 +1,13 @@
+{
+  "verifiedUtc": "2026-10-24T19:06:30.967550+00:00",
+  "iogpuWiredLimitMb": 0,
+  "defaultLimitRestored": true,
+  "method": "User restored in terminal; independent sysctl readback=0. GUI helper cancelled (-128); not a successful helper execution.",
+  "splashAndObserverStopped": true,
+  "originalWorkerReady": true,
+  "originalWorkerBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+  "originalWorkerRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "realCoordinatorChatAfterDefaultRestoreSucceeded": true,
+  "windowsRuntimeChanged": false,
+  "verificationNote": "First post-chat health read raced request cleanup; later independent health read confirms Ready. Chat itself returned READY. successfully."
+}

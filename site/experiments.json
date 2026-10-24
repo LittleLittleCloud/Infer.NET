@@ -8,9 +8,9 @@
     "setup": "M5 Pro 20 GPU /48GiB，AC/High Power；固定 affine8 e06a74e；Q8 KV/FP32状态，DFlash2；完整专家常驻。用户提高system wired至41GiB，实际Splash预算40GiB。",
     "change": "独立采集器代码PR #62；不改变产品执行后端。实验Issue #61。",
     "result": "Pi及官方断言20/20通过，107/107请求计数与tokens完整对账；原生command prefill3066.611、decode148.914 tok/s；TTFT中位850.675ms；Pi总270.630s。",
-    "validation": "21个模型文件散列核对通过；全部cache matched=0、streamed_experts=null；错误实现负对照失败。原worker已恢复原版本Ready，默认内存限额恢复以报告restoration摘要为准。",
+    "validation": "21个模型文件散列核对通过；全部cache matched=0、streamed_experts=null；错误实现负对照失败。原worker已恢复原版本Ready，sysctl已独立读回0，默认限额下真实聊天成功。",
     "conclusion": "初始默认预算启动失败保留；40GiB配置成功。采样Metal峰值35.974GiB，正式整机新增swap-out256.25MiB。command计时和SOP N−1时钟分开，不作128K验收或产品基线。",
-    "next": "按用户授权合并独立结果PR #63并核对Pages；恢复默认sysctl。采集器PR #62独立保留，不将Splash接入产品。",
+    "next": "按用户授权合并独立结果PR #63并核对Pages。默认sysctl已恢复；采集器PR #62独立保留review，不将Splash接入产品。",
     "commands": [],
     "evidence": "docs/evaluations/issue61/summary.json；evidence.json；原始证据仅本机忽略artifacts目录。"
   },
