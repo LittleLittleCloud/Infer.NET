@@ -1,0 +1,404 @@
+"""Offline fixtures only: never start Pi or contact an inference endpoint."""
+
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import contextlib
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import sys
+import tempfile
+import time
+import unittest
+from unittest.mock import patch
+
+
+spec = importlib.util.spec_from_file_location(
+    "benchmark", Path(__file__).with_name("benchmark-pi-humaneval.py")
+)
+benchmark = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(benchmark)
+
+
+def fixture():
+    message = {
+        "role": "assistant", "provider": "infernet", "model": benchmark.MODEL,
+        "usage": {"input": 10, "output": 3, "cacheRead": 2, "totalTokens": 15},
+        "stopReason": "stop", "durationMs": 1200,
+    }
+    return [
+        {"seconds": 0, "event": {"type": "turn_start"}},
+        {"seconds": .1, "event": {"type": "message_start", "message": {"role": "assistant"}}},
+        {"seconds": .2, "event": {"type": "message_update", "usage": message["usage"]}},
+        {"seconds": 1.3, "event": {"type": "message_end", "message": message}},
+        {"seconds": 1.4, "event": {
+            "type": "tool_execution_start", "toolCallId": "a", "toolName": "write",
+            "args": {"path": "solution.py", "content": "def f(): pass\n"},
+        }},
+        {"seconds": 1.5, "event": {
+            "type": "tool_execution_end", "toolCallId": "a", "toolName": "write",
+            "isError": False, "durationMs": 100,
+        }},
+        {"seconds": 1.6, "event": {"type": "turn_end", "message": message}},
+        {"seconds": 1.7, "event": {"type": "agent_end", "messages": [message]}},
+        {"seconds": 1.8, "event": {"type": "agent_settled", "aborted": False}},
+    ]
+
+
+class BenchmarkTests(unittest.TestCase):
+    def test_usage_is_not_double_counted(self):
+        parsed = benchmark.parse_events(fixture())
+        self.assertEqual(parsed["usage"]["totalTokens"], 15)
+        self.assertEqual(len(parsed["requests"]), 1)
+        self.assertAlmostEqual(parsed["requests"][0]["observed_seconds"], 1.2)
+        self.assertEqual(parsed["requests"][0]["duration_ms"], 1200)
+        self.assertEqual(parsed["turn_seconds"], [1.6])
+        self.assertEqual(len(parsed["tool_calls"]), 2)
+        self.assertTrue(parsed["agent_ok"])
+
+    def test_failures_stay_in_denominator(self):
+        rows = [
+            {"wall_seconds": seconds, "completed": ok, "syntax_status": syntax,
+             "timeout": timeout, "error": error, "pi": benchmark.parse_events(events)}
+            for seconds, ok, syntax, timeout, error, events in [
+                (2, True, "ok", False, None, fixture()),
+                (10, False, "missing", True, "task_timeout", []),
+                (3, False, "invalid", False, "failed", []),
+            ]
+        ]
+        summary = benchmark.summarize(rows)
+        self.assertEqual(summary["count"], 3)
+        self.assertEqual(summary["completion_count"], 1)
+        self.assertEqual(summary["syntax_ok_count"], 1)
+        self.assertEqual(summary["timeout_count"], 1)
+        self.assertEqual(summary["error_count"], 2)
+        self.assertEqual(summary["wall_seconds"], {"median": 3, "p90": 10, "total": 15})
+        self.assertEqual(summary["tokens"]["totalTokens"], 15)
+        self.assertFalse(summary["correctness_evaluated"])
+        self.assertIsNone(benchmark.summarize([])["wall_seconds"]["p90"])
+
+    def test_malformed_truncated_and_failed_streams(self):
+        for reason in ("error", "aborted", "length", "toolUse"):
+            events = fixture()
+            events[3]["event"]["message"]["stopReason"] = reason
+            self.assertFalse(benchmark.parse_events(events)["agent_ok"])
+        self.assertFalse(benchmark.parse_events(fixture()[:4])["agent_ok"])
+        self.assertFalse(benchmark.parse_events(fixture() + [{"seconds": 2, "event": None}])["agent_ok"])
+        self.assertFalse(benchmark.parse_events([{"seconds": 0, "event": []}])["agent_ok"])
+        events = fixture()
+        events[3]["event"]["message"]["provider"] = "another-provider"
+        self.assertTrue(benchmark.parse_events(events)["model_mismatch"])
+
+    def test_two_requests_and_aborted_settlement(self):
+        events = fixture() + [
+            {"seconds": 2, "event": {"type": "turn_start"}},
+            {"seconds": 2.1, "event": {
+                "type": "message_start", "message": {"role": "assistant"},
+            }},
+            {"seconds": 3, "event": fixture()[3]["event"]},
+            {"seconds": 3.1, "event": {"type": "turn_end"}},
+        ]
+        parsed = benchmark.parse_events(events)
+        self.assertEqual(parsed["usage"]["input"], 20)
+        self.assertEqual(len(parsed["requests"]), 2)
+        events.append({"seconds": 4, "event": {"type": "agent_settled", "aborted": True}})
+        self.assertFalse(benchmark.parse_events(events)["agent_ok"])
+
+    def test_selection_is_stable_and_nested(self):
+        tasks = {f"HumanEval/{i}": "" for i in range(164)}
+        pilot = benchmark.select_ids(tasks, "pilot", 0)
+        cohort = benchmark.select_ids(tasks, "cohort", 0)
+        self.assertEqual(len(pilot), 5)
+        self.assertEqual(len(cohort), 20)
+        self.assertEqual(pilot, cohort[:5])
+        self.assertEqual(cohort, benchmark.select_ids(dict(reversed(list(tasks.items()))), "cohort", 0))
+        self.assertNotEqual(pilot, benchmark.select_ids(tasks, "pilot", 1))
+        self.assertEqual(len(benchmark.select_ids(tasks, "full", 0)), 164)
+        self.assertEqual(benchmark.select_ids(tasks, "pilot", 0, "HumanEval/2"), ["HumanEval/2"])
+        for ids in ("HumanEval/2,HumanEval/2", "../test", ""):
+            with self.assertRaises(ValueError):
+                benchmark.select_ids(tasks, "pilot", 0, ids)
+
+    def test_node_entrypoint_preserves_prompt_as_one_argument(self):
+        prompt = 'def f():\n    """A & B | C %PATH%."""\n'
+        command = benchmark.pi_command(["node", "C:\\Pi Space\\cli.js"], prompt)
+        self.assertEqual(command[:2], ["node", "C:\\Pi Space\\cli.js"])
+        self.assertEqual(command[-2:], ["-p", prompt])
+
+    def test_dataset_pin_rejects_other_bytes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "dataset.gz"
+            path.write_bytes(b"not the pinned dataset")
+            with self.assertRaisesRegex(ValueError, "SHA-256"):
+                benchmark.load_dataset(path)
+
+    def test_capture_redacts_decoded_json_and_stderr(self):
+        token = 'fixture-only-"quoted-credential'
+        event = {"type": "session", "text": token + "\u2028still one record"}
+        program = (
+            "import sys; print(" + repr(json.dumps(event)) + "); "
+            "print(" + repr(token) + ", file=sys.stderr)"
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "events.jsonl"
+            result = benchmark.capture(
+                [sys.executable, "-c", program], temporary, os.environ.copy(), 5, token, path
+            )
+            self.assertEqual(result["returncode"], 0)
+            records = [json.loads(line) for line in path.read_text().split("\n") if line]
+            stdout = [r for r in records if "event" in r]
+            self.assertEqual(len(stdout), 1)
+            self.assertIn("[REDACTED]", stdout[0]["event"]["text"])
+            self.assertNotIn(token, json.dumps(records))
+            self.assertEqual(result["pi"]["malformed_records"], 0)
+
+    def test_timeout_and_launch_failure(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "events.jsonl"
+            processes = []
+            popen = benchmark.subprocess.Popen
+
+            def track_process(*args, **kwargs):
+                process = popen(*args, **kwargs)
+                processes.append(process)
+                return process
+
+            with patch.object(benchmark.subprocess, "Popen", side_effect=track_process):
+                result = benchmark.capture(
+                    [sys.executable, "-c", "import time; time.sleep(30)"],
+                    temporary, os.environ.copy(), .15, "", path,
+                )
+            self.assertTrue(result["timeout"])
+            self.assertEqual(result["error"], "task_timeout")
+            self.assertLess(result["wall_seconds"], 5)
+            self.assertIsNotNone(processes[0].returncode)
+            self.assertNotEqual(processes[0].returncode, 0)
+            self.assertEqual(result["returncode"], processes[0].returncode)
+            result = benchmark.capture(
+                [str(Path(temporary) / "missing")], temporary, {}, 1, "", path
+            )
+            self.assertEqual(result["error"], "FileNotFoundError")
+
+    def test_cleanup_failure_is_reported_and_child_reaped(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with patch.object(benchmark, "kill_tree", side_effect=OSError):
+                result = benchmark.capture(
+                    [sys.executable, "-c", "import time; time.sleep(30)"],
+                    temporary, os.environ.copy(), .15, "",
+                    Path(temporary) / "events.jsonl",
+                )
+            self.assertTrue(result["timeout"])
+            self.assertEqual(result["error"], "cleanup_failed:OSError")
+            self.assertLess(result["wall_seconds"], 5)
+            self.assertIsNotNone(result["returncode"])
+            self.assertNotEqual(result["returncode"], 0)
+
+    @unittest.skipUnless(os.name == "nt", "Windows job-object regression")
+    def test_windows_timeout_stops_descendants_but_not_unrelated_process(self):
+        import ctypes
+        from ctypes import wintypes
+
+        api = ctypes.WinDLL("kernel32", use_last_error=True)
+        api.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        api.OpenProcess.restype = wintypes.HANDLE
+        api.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        api.WaitForSingleObject.restype = wintypes.DWORD
+        api.IsProcessInJob.argtypes = [
+            wintypes.HANDLE, wintypes.HANDLE, ctypes.POINTER(wintypes.BOOL),
+        ]
+        api.IsProcessInJob.restype = wintypes.BOOL
+        api.TerminateProcess.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        api.TerminateProcess.restype = wintypes.BOOL
+        api.CloseHandle.argtypes = [wintypes.HANDLE]
+        api.CloseHandle.restype = wintypes.BOOL
+        program = (
+            "import json,os,pathlib,subprocess,sys,time\n"
+            "child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(30)'])\n"
+            "pathlib.Path('pids.tmp').write_text(json.dumps([os.getpid(),child.pid]))\n"
+            "pathlib.Path('pids.tmp').rename('pids.json')\n"
+            "while not pathlib.Path('release').exists(): time.sleep(.01)\n"
+            "if sys.argv[1] == 'sleep': time.sleep(30)\n"
+        )
+        unrelated = benchmark.subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(30)"]
+        )
+        try:
+            # The exited-parent case is where PID-based taskkill loses descendants.
+            for mode in ("sleep", "exit"):
+                with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temporary:
+                    root = Path(temporary)
+                    handles = []
+                    assignments = []
+                    assign = benchmark.WindowsJob.assign
+
+                    def track_assignment(job, process):
+                        assign(job, process)
+                        assignments.append((job, process))
+
+                    with (
+                        patch.object(benchmark.WindowsJob, "assign", new=track_assignment),
+                        ThreadPoolExecutor(max_workers=1) as executor,
+                    ):
+                        future = executor.submit(
+                            benchmark.capture, [sys.executable, "-c", program, mode],
+                            temporary, os.environ.copy(), 2, "", root / "events.jsonl",
+                        )
+                        try:
+                            ready = root / "pids.json"
+                            deadline = time.monotonic() + 5
+                            while not ready.exists() and not future.done():
+                                self.assertLess(time.monotonic(), deadline)
+                                time.sleep(.01)
+                            # Retain handles before exit: unlike PID probes, these
+                            # cannot accidentally refer to a reused process ID.
+                            for pid in json.loads(ready.read_text()):
+                                # SYNCHRONIZE | QUERY_LIMITED_INFORMATION | TERMINATE
+                                handle = api.OpenProcess(0x00101001, False, pid)
+                                self.assertTrue(handle, ctypes.get_last_error())
+                                handles.append(handle)
+                                self.assertEqual(api.WaitForSingleObject(handle, 0), 258)
+                            self.assertEqual(len(assignments), 1)
+                            job, launcher = assignments[0]
+                            for handle, expected in [
+                                (int(launcher._handle), True),
+                                *((handle, True) for handle in handles),
+                                (int(unrelated._handle), False),
+                            ]:
+                                member = wintypes.BOOL()
+                                self.assertTrue(api.IsProcessInJob(
+                                    handle, job.handle, ctypes.byref(member),
+                                ), ctypes.get_last_error())
+                                self.assertEqual(bool(member.value), expected)
+                            (root / "release").touch()
+                            if mode == "exit":
+                                self.assertEqual(launcher.wait(timeout=1), 0)
+                            result = future.result(timeout=5)
+                            self.assertTrue(result["timeout"])
+                            self.assertEqual(result["error"], "task_timeout")
+                            self.assertLess(result["wall_seconds"], 5)
+                            self.assertIsNotNone(result["returncode"])
+                            self.assertEqual(result["returncode"], launcher.returncode)
+                            if mode == "sleep":
+                                self.assertNotEqual(result["returncode"], 0)
+                            else:
+                                self.assertEqual(result["returncode"], 0)
+                            # Job accounting can reach zero before process handles
+                            # signal. Bound final teardown across ALL retained handles.
+                            deadline = time.monotonic() + 1
+                            for handle in handles:
+                                wait_ms = max(0, int((deadline - time.monotonic()) * 1000))
+                                self.assertEqual(api.WaitForSingleObject(handle, wait_ms), 0)
+                            self.assertLess(time.monotonic() - result["start_monotonic"], 5)
+                            self.assertIsNone(unrelated.poll())
+                        finally:
+                            for handle in handles:
+                                # Even a containment regression must not leak fixtures.
+                                if api.WaitForSingleObject(handle, 0) == 258:
+                                    api.TerminateProcess(handle, 1)
+                                    api.WaitForSingleObject(handle, 3000)
+                                api.CloseHandle(handle)
+        finally:
+            unrelated.kill()
+            unrelated.wait(timeout=3)
+
+    @unittest.skipUnless(os.name == "nt", "Windows job-object regression")
+    def test_windows_job_assignment_failure_never_starts_command(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            with patch.object(benchmark.WindowsJob, "assign", side_effect=OSError):
+                result = benchmark.capture(
+                    [sys.executable, "-c",
+                     "from pathlib import Path; Path('started').touch()"],
+                    temporary, os.environ.copy(), 5, "", root / "events.jsonl",
+                )
+            self.assertEqual(result["error"], "OSError")
+            self.assertFalse((root / "started").exists())
+            self.assertIsNotNone(result["returncode"])
+
+    def test_task_has_fresh_config_and_only_prompt(self):
+        token = "fixture-only-private-value"
+        workspaces = []
+        with tempfile.TemporaryDirectory() as temporary:
+            args = argparse.Namespace(
+                output=Path(temporary), endpoint="http://localhost:5200",
+                timeout=5, context_window=32768, max_tokens=4096,
+                endpoint_build=None, model_revision=None,
+            )
+
+            def fake_capture(command, workspace, env, timeout, secret, event_path):
+                workspaces.append(str(workspace))
+                self.assertEqual(list(workspace.iterdir()), [])
+                self.assertIn("--no-session", command)
+                self.assertIn("read,write,bash,edit", command)
+                self.assertNotIn("--no-tools", command)
+                self.assertIn("def f():", command[-1])
+                self.assertNotIn("canonical_solution", command[-1])
+                config = (Path(env["PI_CODING_AGENT_DIR"]) / "models.json").read_text()
+                self.assertNotIn(token, config)
+                provider = json.loads(config)["providers"]["infernet"]
+                self.assertEqual(provider["apiKey"], "$INFERNET_BENCH_TOKEN")
+                self.assertTrue(provider["authHeader"])
+                self.assertEqual(provider["api"], "openai-completions")
+                self.assertEqual(provider["baseUrl"], args.endpoint + "/v1")
+                model, = provider["models"]
+                self.assertEqual(model["id"], "qwen3.6-35b-a3b")
+                self.assertEqual(model["contextWindow"], args.context_window)
+                self.assertEqual(model["maxTokens"], args.max_tokens)
+                self.assertEqual(model["compat"], {
+                    "maxTokensField": "max_tokens",
+                    "supportsDeveloperRole": False,
+                    "supportsReasoningEffort": False,
+                    "supportsStore": False,
+                })
+                self.assertNotIn("UNRELATED_SECRET", env)
+                (workspace / "solution.py").write_text("def f():\n    return 1\n")
+                return {
+                    "returncode": 0, "error": None, "timeout": False,
+                    "wall_seconds": 2, "pi": benchmark.parse_events(fixture()),
+                }
+
+            with patch.object(benchmark, "capture", side_effect=fake_capture):
+                rows = [
+                    benchmark.run_task(args, f"HumanEval/{i}", "def f():\n", "pi", "fixture", token)
+                    for i in range(2)
+                ]
+            self.assertNotEqual(workspaces[0], workspaces[1])
+            self.assertTrue(all(r["completed"] and r["syntax_status"] == "ok" for r in rows))
+            self.assertEqual(rows[0]["solution_sha256"], rows[1]["solution_sha256"])
+            self.assertTrue(all(not Path(w).exists() for w in workspaces))
+
+    def test_main_retains_unexpected_failure_and_refuses_reuse(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            token_file, output = root / "token", root / "output"
+            token_file.write_text("fixture-only-private-value")
+            argv = [
+                "benchmark", "--token-file", str(token_file), "--output", str(output),
+                "--ids", "HumanEval/0,HumanEval/1",
+            ]
+            with (
+                patch.object(sys, "argv", argv),
+                patch.object(benchmark, "load_dataset", return_value={
+                    "HumanEval/0": "def f():\n", "HumanEval/1": "def g():\n",
+                }),
+                patch.object(benchmark.shutil, "which", return_value=sys.executable),
+                patch.object(benchmark.subprocess, "check_output", return_value=b"fixture"),
+                patch.object(benchmark, "run_task", side_effect=OSError("private error text")),
+                contextlib.redirect_stdout(io.StringIO()),
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                self.assertEqual(benchmark.main(), 1)
+                rows = [json.loads(line) for line in (output / "tasks.jsonl").read_text().splitlines()]
+                self.assertEqual(len(rows), 2)
+                self.assertTrue(all(r["error"] == "OSError" for r in rows))
+                self.assertTrue(all(r["command"] and r["prompt_sha256"] for r in rows))
+                self.assertEqual(json.loads((output / "summary.json").read_text())["count"], 2)
+                with self.assertRaises(SystemExit) as raised:
+                    benchmark.main()
+                self.assertEqual(raised.exception.code, 2)
+
+
+if __name__ == "__main__":
+    unittest.main()

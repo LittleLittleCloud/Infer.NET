@@ -77,6 +77,165 @@ python3 scripts/benchmark-qwen36-own.py
 
 目前为单机 GPU 执行基线：默认最多 2048-token 分块批量 prefill、所选专家分组 GEMM、分块 DeltaNet、长输入使用自写融合注意力、贪心非思考模式；已开放配置中的 262,144 token 总窗口、最多生成 32,768 token，输入输出共用预算。开放容量不代表最大长度已经实测；长上下文测试见 [长序列基准](docs/LONG-CONTEXT-BENCHMARK.md)。不支持图像、MTP、YaRN 或跨设备模型切分。正确性验证、实测速度和复现方式见 [自写引擎基线](docs/QWEN36-OWN-BENCHMARK.md)。
 
+## Pi + HumanEval wall-time harness
+
+`scripts/benchmark-pi-humaneval.py` measures the **real Pi CLI** using
+`infernet/qwen3.6-35b-a3b`, serially, with standard read/write/bash/edit tools.
+It never starts, restarts, or deploys a server. Python 3.9+ and a separately
+installed Pi are required; no Python packages are needed.
+
+**Dataset pin:** official [OpenAI HumanEval](https://github.com/openai/human-eval),
+revision `b9453e8f1865df0a0057a1383767caa400acfbcf`,
+[`data/HumanEval.jsonl.gz`](https://raw.githubusercontent.com/openai/human-eval/b9453e8f1865df0a0057a1383767caa400acfbcf/data/HumanEval.jsonl.gz),
+compressed-file SHA-256
+`b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`.
+The runner verifies the digest and all 164 IDs before running any task. Use
+`--dataset /absolute/path/HumanEval.jsonl.gz` for an offline copy of those exact
+bytes. The dataset is not bundled; its upstream MIT license applies.
+Only task IDs and prompts are retained after loading; tests and reference
+solutions are never supplied in Pi's prompt or workspace.
+
+### Reproduce
+
+Use a disposable environment with only the intended local Infer.NET endpoint
+reachable. Pi's bash tool runs generated commands: **a fresh workspace is not
+a security sandbox**. Do not run this with unrelated credentials, private
+files, or a local HumanEval checkout accessible to the agent. No official
+evaluator or generated solution is executed by the harness; Pi itself may run
+commands or syntax checks while solving the task.
+
+The Pi CLI interface was checked against upstream
+[`136b87e8a7f5a3e5186de0289523ba327dc592fc`](https://github.com/badlogic/pi-mono/tree/136b87e8a7f5a3e5186de0289523ba327dc592fc/packages/coding-agent)
+(package version 1.4.0). Install a Pi release supporting the recorded flags,
+including `--no-context-files` and `--no-approve`; unsupported flags are task
+failures, not grounds to silently weaken isolation. Keep the **same exact Pi
+version** for baseline and candidate. `--pi /absolute/path/to/pi` selects the
+executable. On Windows, where npm normally installs a `.cmd` wrapper, pass
+`--pi C:\absolute\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js`
+(use the actual installed package path). The harness invokes that entry point
+with `node` from PATH, without shell quoting of prompts. `.cmd`/`.bat` wrappers
+are rejected. Bash must also be available for Pi's bash tool.
+
+Start and validate the authenticated local server separately using its normal
+deployment instructions. Its OpenAI-compatible chat endpoint must support
+tool calls. Supply the existing token **file path**, never a token in command
+arguments. The runner does not read your normal Pi config: it generates a
+fresh `models.json` for the loopback endpoint using the
+`$INFERNET_BENCH_TOKEN` key reference and explicit HTTP authentication. It disables
+discovery of extensions/MCP/skills/context files,
+disables retry/compaction, uses `--thinking off`, and uses `--no-session`.
+Each task gets a new temporary workspace, home, and agent directory, removed
+after collection. The child environment is restricted, but the local API
+token is necessarily available to Pi (and hence its tools).
+
+The generated `infernet/qwen3.6-35b-a3b` model uses `openai-completions` with
+explicit endpoint compatibility: `maxTokensField="max_tokens"`,
+`supportsDeveloperRole=false`, `supportsReasoningEffort=false`, and
+`supportsStore=false`. The current Infer.NET endpoint requires `max_tokens`
+rather than `max_completion_tokens`, does not support the developer role, and
+rejects `reasoning_effort` and `store` parameters (including `store=false`).
+These settings prevent Pi from sending unsupported parameters; they match the
+working Pi model configuration without reading or modifying your normal config.
+The offline fixture checks these fields in each task's generated `models.json`.
+
+From the repository root (replace paths/build labels with verified local values):
+
+```sh
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort pilot --seed 0 --timeout 600 \
+  --endpoint http://127.0.0.1:5200 --token-file /absolute/private/token \
+  --endpoint-build VERIFIED_BUILD --model-revision VERIFIED_MODEL_REVISION \
+  --output artifacts/pi-humaneval/baseline-pilot
+
+# Run only after reviewing pilot evidence; use a fresh directory every time:
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort cohort --seed 0 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/baseline-20
+
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort full --seed 0 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/baseline-164
+
+# Explicit IDs override cohort selection:
+python3 scripts/benchmark-pi-humaneval.py \
+  --ids HumanEval/0,HumanEval/1 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/explicit
+
+# Offline fixtures, also run in CI; no Pi, model, network, or GPU:
+python3 scripts/test-pi-humaneval.py
+```
+
+Selection sorts IDs by SHA-256 of UTF-8 `SEED:HumanEval/N`, ascending;
+`pilot` takes 5, `cohort` takes 20, and `full` takes 164. Thus the pilot is
+contained in the fixed 20-task cohort for the same seed. Explicit IDs preserve
+the supplied order. The seed controls **selection only**, not server sampling.
+Defaults are a 32,768-token context declaration and 4,096 output tokens per
+request; set `--context-window` / `--max-tokens` to the real endpoint limits.
+Do not change them between comparisons. Build/model revision fields default
+to `null`: supply verified non-secret provenance when available, not guesses.
+
+### Evidence and interpretation
+
+The new output directory contains:
+
+- `manifest.json`: exact source/digest, ordered IDs, seed, Pi version,
+  endpoint/build/model revision, limits, timeout, and harness digest.
+- `tasks.jsonl`: one record per attempted task, including failures/timeouts;
+  prompt hashes (both dataset and complete user prompt), exact Pi command,
+  version/provider/model, UTC start/end and monotonic process wall time,
+  return/finish status, authoritative assistant-message usage, request and
+  turn timings, tool lifecycle records, solution hash and syntax status.
+- `HumanEval-N/events.jsonl`: raw Pi event objects wrapped with harness-observed
+  monotonic receive offsets; stderr and malformed lines are retained separately.
+  API credentials are redacted before writing, including JSON-escaped values.
+  Streaming usage snapshots are **not** summed: only assistant `message_end`
+  usage is counted, once per response, not duplicate `turn_end`/`agent_end` data.
+- `HumanEval-N/solution.py`: collected implementation, never evaluated. Syntax
+  means only `ast.parse` succeeded, not that the answer is correct. Original
+  bytes are hashed; if credentials are redacted, `stored_solution_sha256`
+  records the different stored bytes.
+- `summary.json`: task/completion/syntax/timeout/error counts, median,
+  nearest-rank p90 and total task wall time, token totals, request count and
+  observed request-time statistics. All failed/timed-out tasks remain in the
+  wall-time denominator. Partial usage is retained when reported; missing
+  usage is not estimated. In-flight requests lacking `message_end` have no
+  completed-request usage/duration record. Nonzero exit indicates task failure.
+
+Wall time runs from Pi process launch through exit/timeout cleanup, including
+startup, model requests, tools, and orchestration; dataset download, directory
+setup, and the harness's post-run syntax parsing are outside that interval.
+`observed_seconds` measures assistant `message_start` to `message_end` receipt;
+`duration_ms` is Pi's optional reported request duration. Turn duration includes
+tools. Neither is server-only prefill/decode telemetry or GPU kernel timing.
+Older Pi streams may omit reported durations and `agent_settled`; the parser
+also accepts terminal `agent_end` with a final successful assistant response.
+Windows runs each capture in a private, kill-on-close Job Object. A gated Python
+launcher starts Pi only after job assignment succeeds; Pi and its descendants
+are terminated even if Pi exits first. Breakaway is not enabled. Cleanup waits
+for the job to empty and reaps the launcher, using bounded three-second waits;
+cleanup errors are reported as `cleanup_failed:<exception type>`, not suppressed.
+Windows termination is asynchronous: zero active job processes is not a barrier
+for every retained process handle to signal. The Windows regression verifies
+membership of the launcher, Pi stand-in, and descendant in the exact capture job
+(and excludes an unrelated process), then requires their exit signals within a
+shared one-second teardown deadline after capture, with total elapsed time under
+five seconds. It covers both a sleeping Pi and Pi exiting before its descendant.
+Launcher startup and all cleanup remain included in wall time. Windows hosts
+whose existing job restrictions prevent nested job assignment fail before Pi
+starts; there is no uncontained fallback. POSIX uses a process group; descendants
+that deliberately escape it still require external disposable-environment
+cleanup. Neither mechanism contains work delegated to an existing external
+service. Unrelated processes/services are never stopped.
+
+**This is not HumanEval pass@1, even for the full run. A subset is not a standard
+leaderboard score.** No correctness claims are made without the official
+evaluator in an appropriate isolated execution environment. No live-model
+results are asserted by these fixtures. Before publication, the orchestrator
+must review the five-task pilot, then run baseline/candidate 20-task cohorts
+with matched IDs/order, Pi version, harness digest, token/context limits,
+model revision/precision, server state/cache policy, hardware, power and load.
+Keep failed evidence and publish only validated results.
+
 ## 独立 MLX 参考结果
 
 已在本机 M5 Pro 20核 GPU / 48GB 上测量 Qwen3.6-35B-A3B 的 MLX community 5-bit 权重：短输入解码 **90.45 tokens/s**，4K输入 **86.91 tokens/s**，16K输入 **79.97 tokens/s**。单请求、每种输入预热一次再测三次，每次固定生成256 token。
