@@ -1,61 +1,61 @@
-# 合并后 main Run：Pi 固定 20 题，2026-10-23
+# Merged main Run: Pi fixed 20 questions, 2026-10-23
 
-关联 [Issue #44](https://github.com/LittleLittleCloud/Infer.NET/issues/44)。用户 review 通过后，先合并结果 [PR #47](https://github.com/LittleLittleCloud/Infer.NET/pull/47)，再合并首页代码 [PR #46](https://github.com/LittleLittleCloud/Infer.NET/pull/46)，并确认 Pages 发布成功。用户随后要求补充合并后 main 的真实 Run。
+Related to [Issue #44](https://github.com/LittleLittleCloud/Infer.NET/issues/44). After user review, first merge the results [PR #47](https://github.com/LittleLittleCloud/Infer.NET/pull/47), then merge the homepage code [PR #46](https://github.com/LittleLittleCloud/Infer.NET/pull/46), and confirm successful Pages deployment. The user subsequently requested a real Run of the post-merge main.
 
-## 实测结果
+## Actual Test Results
 
-| 指标 | 本轮实测 | 覆盖 |
+| Metric | This Round Actual Test | Coverage |
 |---|---:|---:|
-| Worker prefill | **531.199 token/s** | 92/92 请求 |
-| Worker decode | **65.085 token/s** | 92/92 请求 |
-| 客户端首个有效输出 TTFT 中位数 | **6986.970 ms** | 92/92 请求 |
-| 官方逐题功能断言通过率 | **100%，20/20** | 固定完整 20 题 |
-| Pi 整轮端到端任务耗时 | **711.369460043 s** | 20/20 题 |
-| 累计输入 / 生成 tokens | **211383 / 19892** | 92 次模型请求 |
+| Worker prefill | **531.199 token/s** | 92/92 requests |
+| Worker decode | **65.085 token/s** | 92/92 requests |
+| Client median TTFT for first valid output | **6986.970 ms** | 92/92 requests |
+| Official per-problem function assertion pass rate | **100%, 20/20** | Fixed complete 20 problems |
+| Pi full round end-to-end task duration | **711.369460043 s** | 20/20 problems |
+| Cumulative input / generated tokens | **211383 / 19892** | 92 model requests |
 
-零任务超时、零 Pi 执行错误，20 份 `solution.py` 均通过隔离容器中的对应 HumanEval 官方断言。错误答案负对照实际以 `AssertionError`、退出码 1 失败，正对照退出码 0。每题耗时与累计 token 数保留在首页任务表；多轮重复上下文计入输入，不是净提示词长度。
+Zero task timeouts, zero Pi execution errors, 20 out of `solution.py` all passed the corresponding HumanEval official assertions in isolated containers. Negative control with wrong answers actually failed with `AssertionError`, exit code 1; positive control exit code 0. Time per problem and cumulative token count are retained in the homepage task table; multi-round repeated context counts as input, not net prompt length.
 
-Prefill 使用 `Σ inputTokens / Σ worker prefillSeconds`；decode 使用 `Σ(outputTokens−1) / Σ worker decodeSeconds`，不平均每请求 token/s。每个请求的输入/输出计数与 Pi 的独立 usage 逐项相符。两项速度与 TTFT 均达到整轮 92/92 采集覆盖。
+Prefill uses `Σ inputTokens / Σ worker prefillSeconds`; decode uses `Σ(outputTokens−1) / Σ worker decodeSeconds`, not averaging token/s per request. Input/output counts per request and Pi's independent usage match item by item. Both speeds and TTFT reach the full round 92/92 collection coverage.
 
-这是 Pi 编码代理负载的一个真实 main 基线，不是全量 164 题榜单成绩，也不是 128K 正式性能验收。
+This is a real main baseline for Pi coding agent load, not a full 164 problem leaderboard result, nor 128K formal performance acceptance.
 
-## 版本、配置和观测边界
+## Version, Configuration, and Observation Boundaries
 
-Mac 实际运行 coordinator、split-serve，以及 Windows split-agent 都重新构建、部署并核实为同一完整 main 源码：
+Mac actually runs coordinator, split-serve, and Windows split-agent all rebuilt, deployed, and verified as the same complete main source code:
 
 `cd6f7da401fadf044dac13e87b415d27bb5eadfb`
 
-Mac serve 在本轮期间 PID 保持 50216；Windows 实际运行代理 PID 为 69196，新包路径与版本已核对。原包和配置备份保留。Mac 两个组件由原用户 LaunchAgent 托管；Windows 沿用保留 SSH 会话的前台代理，没有新增 SCM 服务或管理员配置。新包校验为 Mac 9 项 / Windows 10 项；正式评测前稳定就绪后的真实部署验收 15 项通过。被测 source SHA 是实际二进制版本，不是本结果记录将来的合并 commit。
+The Mac server PID remained 50216 during this round; the Windows actual running agent PID was 69196, and the new package path and version have been verified. The original package and configuration backups are retained. The two Mac components are managed by the original user's LaunchAgent; Windows continues to use the foreground agent from the retained SSH session, with no new SCM service or administrator configuration added. New package verification passed for Mac 9 items / Windows 10 items; the real deployment acceptance after stable readiness prior to formal evaluation passed 15 items. The tested source SHA is the actual binary version, not the future merge commit recorded in this result.
 
-| 产物 | SHA-256 |
+| Artifact | SHA-256 |
 |---|---|
-| Mac executable / Metal dylib | 见公开 observations.json 的 `binarySha256`，与包清单一致 |
+| Mac executable / Metal dylib | See `binarySha256` in public observations.json, consistent with package manifest |
 | Windows executable | `76555a5f42392e8ff87bb8a59b8b8f794b41d4d063c10d1eefe293ee79636869` |
 | Windows CUDA DLL | `30d789415cbd68e17fe329fd65dcf2d2c4aef7725666d8937e712e09b4e742eb` |
 
-- 模型 Qwen3.6-35B-A3B；revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`；affine8/group64 权重，FP32 KV。
-- 4090 前 20 层 prefill，Mac 后 20 层及完整 decode；CUDA `batch-fp32-packed`、chunk 32，suffix 128、Metal scratch 128，增量 KV，fused FP32 decode。短输入本机路由门槛为 0，全部正式请求均观测为 `cuda-metal-split`。
-- Mac 插电、High Power，Windows stock 配置；Mac Wi-Fi / Windows Ethernet，原有 TLS 数据通道。未并行启动其他 GPU benchmark；没有声称桌面环境完全独占或全设备峰值资源验收。
-- Pi 1.4.0；固定 seed 0 的同一 20 题；每题独立会话/目录；工具 read/write/bash/edit；thinking off；单题 300 秒，context 32768，单次输出上限 4096；自然 EOS。缓存读写均为 0。
+- Model Qwen3.6-35B-A3B; revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`; affine8/group64 weights, FP32 KV.
+- Prefill for the first 20 layers of 4090, Mac handles the remaining 20 layers and full decode; CUDA `batch-fp32-packed`, chunk 32, suffix 128, Metal scratch 128, incremental KV, fused FP32 decode. The local routing threshold for short inputs is 0, and all formal requests were observed as `cuda-metal-split`.
+- Mac plugged in, High Power; Windows stock configuration; Mac Wi-Fi / Windows Ethernet, original TLS data channel. No other GPU benchmarks were started in parallel; no claim of exclusive desktop environment or full device peak resource acceptance.
+- Pi 1.4.0; same 20 question with fixed seed 0; independent session/directory per question; tools read/write/bash/edit; thinking off; single question 300 seconds, context 32768, single output limit 4096; natural EOS. Cache read/write are both 0.
 
-当前 main 服务没有逐请求 `INFERENCE_METRIC` 日志。本轮使用两处独立 loopback 转发观测，产品的 .NET/CUDA/Metal 推理代码未改变：
+The current main service does not have per-request `INFERENCE_METRIC` logs. This round uses two independent loopback forwarding observations, and the product's .NET/CUDA/Metal inference code has not changed:
 
-`Pi → HTTP 观测客户端 → 同版本独立 .NET coordinator → 原始 worker stream 观测 → 实际 split-serve → TLS → 实际 split-agent`
+`Pi → HTTP observer client → independent .NET coordinator at the same version → raw worker stream observation → actual split-serve → TLS → actual split-agent`
 
-Worker prefill/decode 数值直接取真实 `ServiceEvent.result.timings`；没有轮询 Dashboard 最近请求来代替逐请求记录。每次模型请求通过单并发窗口、task 起止时间、worker request ID 与 usage 对齐。采集器不存储请求正文、回答文本、凭据或生成代码的公开副本。
+Worker prefill/decode values are taken directly from real `ServiceEvent.result.timings`; there is no polling of the Dashboard for recent requests to replace per-request records. Each model request is aligned via single-concurrency window, task start/end times, worker request ID, and usage. The collector does not store request bodies, response texts, credentials, or public copies of generated code.
 
-TTFT 从观测客户端开始向真实 .NET coordinator 发送已准备的请求，到收到第一段非空文本或有效工具调用内容，使用同一进程单调时钟。角色、心跳和 usage 帧不计。Pi 到观测器的派发在该边界之外；Pi 整题 wall time 则包含完整链路。当前工具调用 API 会缓冲输出，故 TTFT 可能接近该次生成完成时间，不能解释成 worker 内部首 token 时间。
+TTFT is measured from when the observation client starts sending the prepared request to the real .NET coordinator until the first non-empty text or valid tool call content is received, using the same process monotonic clock. Role, heartbeat, and usage frames are excluded. Pi dispatch to the observer is outside this boundary; Pi's total wall time for the question includes the full chain. The current tool call API buffers output, so TTFT may be close to the completion time of that generation and cannot be interpreted as the worker's internal first token time.
 
-新增观测跳数、packed/路由配置与旧历史不同，因此本轮使用独立可比配置；不将 711.37 秒与旧轮次总耗时之差归因于某项代码优化。旧 `e017d84` 记录和缺测状态完整保留。
+New observation hops, packed/routing configurations differ from old history, so this round uses an independent comparable configuration; the difference between 711.37 seconds and the total time of previous rounds is not attributed to any specific code optimization. Old `e017d84` records and missing test statuses are fully retained.
 
-## 证据、复现与页面验收
+## Evidence, Reproduction, and Page Acceptance
 
-- [公开逐任务、逐请求及阶段数据](evaluations/main-cd6f7da-20261023/observations.json)：92 次真实 worker timings、客户端 TTFT、20 题时间窗口、官方断言结果、产物与本地原始文件散列。
-- [新 Run 页面逐项核对](evaluations/main-cd6f7da-20261023/page-checks.json)、[桌面截图](evaluations/main-cd6f7da-20261023/home-desktop.png)、[320px 截图](evaluations/main-cd6f7da-20261023/home-mobile.png)：新 Run 默认选中、四项实测值、20 行任务时间/token 数、旧配置的缺测状态及深链接重载均通过，无脚本错误。站点构建为 3 页 / 46 篇笔记 / 3 个真实运行，18 项 Python 与 15 项 JavaScript 检查通过。
-- [可复现的观测器](evaluations/main-cd6f7da-20261023/observe-main-run.py)：只将执行版本中的机器特定配置行改为参数；原实际执行文件的 SHA-256 留在原始证据索引中。使用本机已有受限配置目录与同源码 coordinator 包，端口 5260/5261/5262 须空闲。
-- 原始任务 JSONL、Pi 事件、生成文件、HTTP 观测记录和失败的准备阶段记录仅保存本机忽略的 `artifacts/`；不是公开下载链接。公开数据不含私网地址、令牌或私有输入。
+- [Public per-task, per-request, and phase data](evaluations/main-cd6f7da-20261023/observations.json): 92 real worker timings, client TTFT, 20 question time windows, official assertion results, artifacts, and local raw file hashes.
+- [New Run page item-by-item verification](evaluations/main-cd6f7da-20261023/page-checks.json), [Desktop screenshots](evaluations/main-cd6f7da-20261023/home-desktop.png), [320px screenshots](evaluations/main-cd6f7da-20261023/home-mobile.png): New Run default selection, four measured values, 20 row task time/token count, missing test status of old configuration, and deep link reload all passed, with no script errors. Site build consists of 3 pages / 46 notes / 3 real runs, with 18 Python and 15 JavaScript checks passed.
+- [Reproducible observer](evaluations/main-cd6f7da-20261023/observe-main-run.py): Only changed machine-specific configuration lines in the execution version to parameters; the SHA-256 of the original actual execution file remains in the raw evidence index. Uses the machine's existing restricted configuration directory and the same source coordinator package; port 5260/5261/5262 must be free.
+- Raw task JSONL, Pi events, generated files, HTTP observation records, and failed preparation stage records are only saved in `artifacts/` ignored by the machine; they are not public download links. Public data does not contain private network addresses, tokens, or private inputs.
 
-复现顺序：核实同 SHA 两端版本与空闲状态 → 部署验收 → 启动观测器 → 单条非题组预热并保留记录 → 执行固定 20 题 → 官方容器断言 → 对齐逐请求数据。命令入口：
+Reproduction order: Verify same SHA versions and idle status on both ends → Deployment acceptance → Start observer → Single non-question-group warmup and retain record → Execute fixed 20 question → Official container assertion → Align per-request data. Command entry:
 
 ```text
 python3 docs/evaluations/main-cd6f7da-20261023/observe-main-run.py --config-dir PRIVATE_MAC_CONFIG --executable SAME_MAIN_COORDINATOR --output NEW_OBSERVER_DIR
@@ -63,8 +63,8 @@ python3 scripts/benchmark-pi-humaneval.py --cohort cohort --seed 0 --timeout 300
 python3 scripts/eval-pi-humaneval-docker.py --results ABSOLUTE_RUN_DIR --dataset PINNED_DATASET --output ABSOLUTE_RESULTS_JSON
 ```
 
-准备阶段保留了三类失败及处理：首次 Metal LaunchAgent bootstrap 返回 5，确认该 job 未注册后仅清理本轮部分定义并重新安装；首次就绪边界验收一项未通过，稳定就绪后相同超限请求返回 400，重新执行完整 15 项通过；观测器最初未处理 chunked body 的请求返回 400，修正后 smoke 验证并在正式 20 题前完成。它们没有混入正式题组或删除正式慢轮次。
+The preparation phase retained three categories of failures and handling: the first Metal LaunchAgent bootstrap returned 5; after confirming the job was not registered, only partial definitions for this round were cleaned up and reinstalled; the first readiness boundary acceptance failed one item, and after stable readiness, the same out-of-limit request returned 400, re-executing the complete 15 item which passed; the observer initially did not handle chunked body requests, returning 400; after correction, smoke verification was completed before the formal 20 question. They were not mixed into the formal question set nor did they delete formal slow rounds.
 
-第一次容器调用使用相对挂载路径，Docker 以 125 退出，未执行任何断言；该错误不是 0/20 任务通过率。保留错误文件后改用绝对路径，同一份未修改答案完成有效 20 题测试，并额外核实正/负对照实际运行。未重新生成题目答案。
+The first container call used a relative mount path, and Docker exited with 125, executing no assertions; this error is not the 0/20 task pass rate. After retaining the error file, an absolute path was used instead, and the same unmodified answer completed valid 20 question tests, additionally verifying positive/negative controls actually running. The question answers were not regenerated.
 
-结果加入首页为默认选中的 main Run，按实际采集口径隔离旧配置。同步放宽了原测试中“生产数据永远只有两条”的假设：精确历史断言仍锁定原始运行 ID，新合法记录不再令测试误报；该测试调整由 Copilot CLI `gpt-6.1-sol` 完成，未改变生产绘图逻辑或推理后端。
+The result added the homepage as the default selected main Run, isolating old configurations according to actual collection standards. The assumption in the original test that "production data always has only two entries" was relaxed: precise historical assertions still lock the original run ID, and new legal records no longer cause false positives in the test; this test adjustment was completed by Copilot CLI `gpt-6.1-sol`, without changing production plotting logic or the inference backend.

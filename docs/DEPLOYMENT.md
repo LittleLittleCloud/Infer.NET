@@ -1,22 +1,22 @@
-# Infer.NET 双机部署
+# Infer.NET Dual-Machine Deployment
 
-本入口用于 Qwen3.6-35B-A3B **8bit 权重、FP32 KV**，候选版本移除 2048 context / 256 output 人为上限，模型窗口为输入加输出 262144 tokens，实际请求仍受内存和 deadline 约束。长窗口整模可用性与吞吐需要独立实测，不由上限声明保证。它提供常驻执行与服务生命周期；BF16、128K 和性能目标仍需另行验收。代码位于部署实现分支，未自动合并上游 PR。
+This entry point is for Qwen3.6-35B-A3B **8bit weights, FP32 KV**; candidate versions remove the artificial upper limits of 2048 context / 256 output. The model window is input plus output 262144 tokens; actual requests are still constrained by memory and deadline. Long-window full-model availability and throughput require independent empirical testing and are not guaranteed by upper-limit declarations. It provides persistent execution and service lifecycle; BF16, 128K, and performance targets still require separate acceptance testing. The code is located on the deployment implementation branch and has not been automatically merged into the upstream PR.
 
-## 模型范围
+## Model Scope
 
-项目只保留 Qwen3.6-35B-A3B；本双机部署继续使用固定 revision 的 8bit 权重与 FP32 KV。单机 CLI/demo 及启动器也默认选择该模型的 8bit 检查点。Qwen2.5 3B/7B、TinyStories 的加载器、下载器和专用验证入口已移除。现有 Qwen3.6 模型、证书、token 和兼容配置可复用，更新时不重新下载权重或生成凭据。关联 [Issue #45](https://github.com/LittleLittleCloud/Infer.NET/issues/45)。本次两端实际运行版本、产物散列和验收结果见 [唯一模型部署记录](SINGLE-MODEL-DEPLOYMENT-20261023.md)。
+The project retains only Qwen3.6-35B-A3B; this dual-machine deployment continues to use fixed revision 8bit weights and FP32 KV. The single-machine CLI/demo and launcher also default to selecting the 8bit checkpoint for this model. Qwen2.5 3B/7B, TinyStories loaders, downloaders, and dedicated validation entry points have been removed. Existing Qwen3.6 models, certificates, tokens, and compatible configurations can be reused; weights or credentials are not re-downloaded or regenerated during updates. Related to [Issue #45](https://github.com/LittleLittleCloud/Infer.NET/issues/45). The actual running versions, artifact hashes, and acceptance results for both ends this time are seen in the [Unique Model Deployment Record](SINGLE-MODEL-DEPLOYMENT-20261023.md).
 
-## 进程与网络
+## Processes and Network
 
-- Mac coordinator：loopback HTTP 5200，CLI/TUI 的统一入口，不加载模型。
-- Mac `split-serve`：loopback HTTP 5201 + LAN TCP 5210。持有唯一完整模型；负责后 20 层 prefill、接收前 20 层状态、全部 decode。
-- Windows `split-agent`：主动连接 Mac 5210，前 20 层权重常驻。无需开放新的 Windows 入站端口。
-- TCP 5210 强制双向 TLS + 固定证书 SHA256 校验，内部继续使用 SplitWire v3 身份/布局/位置/序号/HMAC 检查。客户端逐 token 输出走本地 HTTP SSE。v3 不兼容旧 v2，CUDA 原生 ABI 也升至 3；升级时两端必须一起切换，旧包保留供成对回退。
-- API 默认只对 Mac 本机开放；其他设备不能直接把它当作安全公网 API。跨机数据通道已经加密；HTTP 的远程 TLS 网关不在本版本安装器范围。
+- Mac coordinator: loopback HTTP 5200, unified entry for CLI/TUI, does not load models.
+- Mac `split-serve`: loopback HTTP 5201 + LAN TCP 5210. Holds the unique complete model; responsible for the back 20 layers' prefill, receiving the front 20 layers' state, and all decode.
+- Windows `split-agent`: actively connects to Mac 5210, front 20 layer weights resident. No need to open new Windows inbound ports.
+- TCP 5210 enforces bidirectional TLS + fixed certificate SHA256 verification; internally continues to use SplitWire v3 identity/layout/location/sequence/HMAC checks. Client per-token output goes via local HTTP SSE. v3 is incompatible with old v2, and the CUDA native ABI has also upgraded to 3; both ends must switch together during upgrades, with old packages retained for paired rollback.
+- The API is open only to the Mac localhost by default; other devices cannot directly treat it as a secure public API. The cross-machine data channel is already encrypted; the HTTP remote TLS gateway is not within the scope of this version's installer.
 
-每台机器只允许一个部署 worker 持有相应配置的独占锁。不要同时运行旧 demo、单机模型或另一份完整模型来做正式性能验收。历史 demo 的 Qwen3.6 默认权重已改为 8bit。
+Only one deployment worker per machine is allowed to hold the exclusive lock for the corresponding configuration. Do not run old demos, single-machine models, or another complete model simultaneously for formal performance acceptance. The Qwen3.6 default weights for historical demos have been changed to 8bit.
 
-## 构建、配置、打包
+## Build, Configuration, Packaging
 
 Mac：
 
@@ -26,7 +26,7 @@ python3 scripts/deploy/package.py --publish-dir artifacts/deploy/build-mac --rid
 python3 scripts/deploy/verify-package.py artifacts/deploy/releases/mac-VERSION
 ```
 
-Windows 普通 PowerShell：
+Windows standard PowerShell:
 
 ```powershell
 & scripts\windows\build-deployment.ps1
@@ -34,15 +34,15 @@ python scripts\deploy\package.py --publish-dir artifacts\deploy\build-windows --
 python scripts\deploy\verify-package.py artifacts\deploy\releases\windows-VERSION
 ```
 
-打包要求源码干净，且 `deepinfer version` 的源码 SHA 与当前 checkout 一致。清单包括文件散列、平台、模型 revision、KV 精度与能力上限。程序运行不需要 SDK、Python 或 nvcc；配置生成/安装辅助脚本分别使用 Python/OpenSSL 或 PowerShell。GPU 驱动、系统框架与 MSVC 系统运行依赖需在目标机预检。
+Packaging requires clean source code, and the source SHA of `deepinfer version` must match the current checkout. The manifest includes file hashes, platform, model revision, KV precision, and capability upper limits. The program runtime does not require SDK, Python, or nvcc; configuration generation/installation helper scripts use Python/OpenSSL or PowerShell respectively. GPU drivers, system frameworks, and MSVC system runtime dependencies must be pre-checked on the target machine.
 
-使用 `scripts/deploy/prepare.py --help` 生成独立的私有配置目录，明确传入 Mac LAN 地址、两端模型位置、Windows 配置目标目录。该工具生成两套固定证书、随机集群 token 与配置；证书有效期 365 天，换证时排空请求并成对更新 pin。新建目录使用 0700，文件 0600；Windows 配置目录应仅允许专用账号、SYSTEM、Administrators 访问。
+Use `scripts/deploy/prepare.py --help` to generate an independent private configuration directory, explicitly passing the Mac LAN address, model locations for both ends, and the Windows configuration target directory. This tool generates two sets of fixed certificates, random cluster tokens, and configurations; certificate validity is 365 days; when replacing certificates, drain requests and update pins in pairs. New directories use 0700, files 0600; the Windows configuration directory should only allow access by dedicated accounts, SYSTEM, and Administrators.
 
-只将生成的 `windows/` 内容安全传输到指定 Windows 配置目录；不要传 Mac 私钥，不把配置/凭据放入 GitHub。源码仍通过 GitHub 同步，模型单独校验；Windows prefix bundle 与 Mac 完整模型实际使用的文件均在启动时校验固定散列。
+Only securely transmit the generated `windows/` content to the specified Windows configuration directory; do not transmit Mac private keys, and do not put configurations/credentials into GitHub. Source code still synchronizes via GitHub, models are verified separately; Windows prefix bundles and the actual files used by the Mac complete model are verified against fixed hashes at startup.
 
-## 直接启动和使用
+## Direct Startup and Usage
 
-先启动三个独立进程（路径使用生成的绝对配置路径）：
+First start three independent processes (paths use the generated absolute configuration paths):
 
 ```sh
 deepinfer coordinator --config /PATH/mac/coordinator.json
@@ -55,9 +55,9 @@ Windows：
 .\deepinfer.exe split-agent --config C:\PATH\worker.json
 ```
 
-普通前台模式需要保留启动终端；SSH 子进程可能随会话退出。`scripts/windows/run-deployment.ps1` 是保留 SSH 会话的开发验证工具，绝不代替 Windows Service。该普通账号不具备 WMI 脱离会话创建进程的权限，开发流程不修改此权限。
+The standard foreground mode requires retaining the startup terminal; SSH subprocesses may exit with the session. `scripts/windows/run-deployment.ps1` is a development verification tool for retaining SSH sessions and must never replace Windows Services. This standard account lacks the permission to create processes outside a session via WMI, and the development process does not modify this permission.
 
-用户请求：
+User request:
 
 ```sh
 deepinfer infer --endpoint http://127.0.0.1:5200 \
@@ -65,55 +65,55 @@ deepinfer infer --endpoint http://127.0.0.1:5200 \
   --model qwen3.6-35b-a3b --prompt "你好" --max-tokens 128
 ```
 
-`--stream` 实时打印 token，最后显示 finish reason 和 decode 吞吐；不带该参数返回完整响应。自然生成遇到 EOS 结束，测试 API 可显式设置 `benchmarkIgnoreEos=true`。TUI 默认连接同一 5200 coordinator，通过 Microsoft.Extensions.AI 的 IChatClient 流式显示多轮对话；在仓库根目录无参数启动时读取现有部署配置，也可用 `DEEPINFER_TOKEN_FILE` 或 `DEEPINFER_TOKEN` 指定凭据。TUI 自身不加载模型。兼容 Chat Completions、Messages、Responses 的文本接口见 [HTTP chat API 指南](CHAT-API.md)。
+`--stream` prints tokens in real-time, finally displaying the finish reason and decode throughput; without this parameter, the full response is returned. Natural generation ends upon encountering EOS; the test API can explicitly set `benchmarkIgnoreEos=true`. The TUI connects to the same 5200 coordinator by default, displaying multi-turn conversations via streaming using Microsoft.Extensions.AI's IChatClient; when launched without parameters from the repository root, it reads the existing deployment configuration, or credentials can be specified using `DEEPINFER_TOKEN_FILE` or `DEEPINFER_TOKEN`. The TUI itself does not load models. For text interfaces compatible with Chat Completions, Messages, and Responses, see the [HTTP chat API guide](CHAT-API.md).
 
-`GET /health` 可见 Loading/Warming/Ready/Busy/Faulted、PID、build、模型与容量。`GET /ready` 需要 `X-DeepInfer-Token`，模型完成实际预热且 Windows 已认证连接才返回 200；加载完成并不等于 Ready。首次预热执行全部 40 层及 32 个 decode 步骤，之后重置请求状态，无 prefix cache 命中。
+`GET /health` shows Loading/Warming/Ready/Busy/Faulted status, PID, build, model, and capacity. `GET /ready` requires `X-DeepInfer-Token`; it only returns 200 after the model has completed actual warming and the Windows connection has been authenticated; loading completion does not equal Ready. The first warm-up executes all 40 layers and 32 decode steps, then resets the request state, with no prefix cache hit.
 
-## 系统托管
+## System Hosting
 
-Mac 使用用户 LaunchAgent：
+Mac uses user LaunchAgent:
 
 ```sh
 python3 /RELEASE/deploy/install-macos.py --executable /RELEASE/deepinfer --config-dir /PATH/mac
 ```
 
-登录后启动、异常退出重启；退出登录/休眠不是无人值守可用性保证。停用使用相同参数加 `--uninstall`，只操作 `com.infernet.coordinator` 与 `com.infernet.metal`。日志在配置目录 `logs/`；应按保留周期归档，当前安装脚本不做自动日志轮转。
+Starts after login, restarts on abnormal exit; logging out or suspending is not an assurance of unattended availability. To disable, use the same parameters with `--uninstall`, operating only on `com.infernet.coordinator` and `com.infernet.metal`. Logs are in the configuration directory `logs/`; they should be archived according to the retention period, and the current installation script does not perform automatic log rotation.
 
-只更新兼容的 coordinator 时可传 `--service coordinator`，该选项同时适用于旧包卸载和新包安装，保留 Metal worker 与模型进程；默认 `--service both`。切换前仍需排空请求、保存旧安装路径，并核对新旧协议兼容性。
+When updating only compatible coordinators, `--service coordinator` can be passed; this option applies to both old package uninstallation and new package installation, preserving Metal workers and model processes; default is `--service both`. Before switching, requests must still be drained, the old installation path saved, and compatibility between old and new protocols verified.
 
-Windows 使用专用标准本地账号。先停止开发前台 agent，再在**管理员 PowerShell**执行：
+Windows uses a dedicated standard local account. First, stop the development foreground agent, then execute in **Administrator PowerShell**:
 
 ```powershell
 & C:\RELEASE\deploy\install-windows.ps1 -Executable C:\RELEASE\deepinfer.exe -Config C:\PATH\worker.json
 ```
 
-安装脚本在本机交互请求服务账号凭据，不接收聊天中的密码。账号需要“作为服务登录”权限及模型/配置/程序目录的相应访问权；组织策略禁止时须由管理员处理，脚本不修改驱动或防火墙。服务名 `InferNetCuda`，自动启动，失败按 10/30/60 秒重试。删除使用同命令加 `-Uninstall`。Windows Service 通过 .NET 的 SCM 生命周期取消任务；系统安装、重启后的 GPU 可见性及自动恢复必须在实际服务账号下验收。
+The installation script interactively requests service account credentials on the local machine and does not accept passwords from chat. The account requires the 'Log on as a service' permission and appropriate access rights to model/configuration/program directories; if organizational policies prohibit this, it must be handled by an administrator, and the script does not modify drivers or firewalls. The service name is `InferNetCuda`, set to automatic start, with retries every 10/30/60 seconds on failure. Deletion uses the same command with `-Uninstall`. Windows Services cancel tasks via the .NET SCM lifecycle; GPU visibility and automatic recovery after system installation or reboot must be verified under the actual service account.
 
-## 运行与升级边界
+## Runtime and Upgrade Boundaries
 
-单 GPU executor，默认最多 2 个排队请求；超出返回 429。默认 300 秒 deadline 包括排队，可配置 1..1800 秒；客户端断开会取消当前请求。取消是协作式的，已经提交的单个 GPU 工作不能瞬时中断。每个请求重置 KV/Delta/卷积状态，传输缺失、重复或位置错误时阻止 decode。GPU 错误退出进程交给系统重启，已输出部分 token 的请求不会自动重放。
+Single GPU executor, defaulting to a maximum of 2 queued requests; exceeding this returns 429. The default 300 second deadline includes queuing, configurable to 1..1800 seconds; client disconnection cancels the current request. Cancellation is cooperative; submitted single-GPU work cannot be instantly interrupted. Each request resets KV/Delta/convolution state, blocking decode if transmission is missing, duplicated, or misplaced. GPU errors exit the process, handing it over to the system for restart; requests with partially output tokens are not automatically replayed.
 
-升级：停止接入、等待请求完成、停旧 worker、校验新包、切换绝对路径、重新启动并等待 ready；失败恢复旧包和旧兼容配置。两端 split 协议、模型 revision、KV 精度及 ABI 必须匹配。Mac 不并行加载新旧完整模型，本版本接受维护窗口，不承诺无停机滚动升级。
+Upgrade: Stop incoming traffic, wait for requests to complete, stop the old worker, verify the new package, switch absolute paths, restart, and wait for ready; on failure, revert to the old package and old compatible configuration. The split protocol, model revision, KV precision, and ABI must match on both ends. Mac does not load old and new full models in parallel; this version accepts maintenance windows and does not promise zero-downtime rolling upgrades.
 
-API 返回 prefill/decode/分 token profile、Metal allocation、GPU command 时间与提交计数；`--log-file` 可将输出写入指定持久日志。系统 swap 与供电仍由实验监控采样，不把既有 swap 总量误当作本次新增换页。
+The API returns prefill/decode/per-token profiles, Metal allocation, GPU command time, and submission counts; `--log-file` can write output to a specified persistent log. System swap and power supply are still sampled by experimental monitoring, not mistaking existing total swap for this session's new paging.
 
-自动验收入口：
+Automatic acceptance entry:
 
 ```sh
 python3 scripts/deploy/acceptance.py --token-file /PATH/mac/token.txt --output artifacts/deploy/acceptance-UNIQUE
 ```
 
-它验证真实连续请求、输出确定性、流式文本与 token 一致、取消后恢复、自然 EOS、容量拒绝、队列背压和 PID 稳定。需另外执行 agent 断连/重启测试、服务安装/重启测试，以及 `docs/QWEN36-8BIT-TARGETS.md` 的完整性能门槛。
+It verifies real continuous requests, output determinism, consistency between streaming text and tokens, recovery after cancellation, natural EOS, capacity rejection, queue backpressure, and PID stability. Agent disconnection/restart tests, service installation/restart tests, and the full performance threshold for `docs/QWEN36-8BIT-TARGETS.md` must be executed separately.
 
-## Metal 权重驻留候选
+## Metal Weight Residency Candidates
 
-`split-serve` 默认启用 `metal-residency=on`，为已加载权重建立 Metal residency set，预算不超过建议工作集与物理内存 80% 的较小值减 512 MiB。权重超出预算会明确失败，不静默退回；尚未固定驻留 KV/工作区。权重上传完成后、预热与 Ready 之前提交驻留请求。默认 `residency-refresh-ms=1000`，空闲时续驻留，不提交空 GPU 推理；资源最后一个图/矩阵引用释放时撤销登记。
+`split-serve` enables `metal-residency=on` by default, establishing a Metal residency set for loaded weights, with a budget not exceeding the smaller value of the suggested working set and physical memory 80% minus 512 MiB. Weights exceeding the budget will fail explicitly, not silently falling back; KV/workspace not yet pinned for residency. Residency requests are submitted after weight upload completes, before warm-up and Ready. Default is `residency-refresh-ms=1000`; residency is extended when idle, without submitting empty GPU inference; registration is revoked when the last graph/matrix reference for resources is released.
 
-`metal-residency=off` 为同一候选版本的对照开关，`residency-refresh-ms=0` 可测仅申请一次的行为。这些配置只作用于应用，不修改系统 wired limit。`RESIDENCY` 日志记录预算和登记大小，不保证操作系统一定满足驻留请求；仍须测空闲后的真实请求与换页。
+`metal-residency=off` is a control switch for the same candidate version; `residency-refresh-ms=0` can test behavior with only one application. These configurations only affect the application, not the system wired limit. `RESIDENCY` logs budget and registration size, but does not guarantee the OS will satisfy residency requests; real requests and paging after idle must still be tested.
 
-新增 `PREFILL` 日志分别记录 reset、hidden 等待、Mac suffix、状态等待/导入及交接字节数；hidden 等待含远端计算和传输，不称为纯 CUDA 时间。`METAL_WAIT` 对超过 100 ms 的命令记录 commit、wait 和 GPU 时间。日志用于定位，不改变 API 已有计时定义。
+New `PREFILL` logs record reset, hidden wait, Mac suffix, status wait/import, and handover bytes separately; hidden wait includes remote computation and transmission, not referred to as pure CUDA time. `METAL_WAIT` records commit, wait, and GPU time for commands exceeding 100 ms. Logs are for localization and do not change existing API timing definitions.
 
-驻留参数通过显式 C ABI 从 C# 传给 Metal；不能依赖 `Environment.SetEnvironmentVariable`：Unix 的托管环境副本不会更新原生 `getenv`。0bcbbb6 的首次上线因此没有启用驻留，保留为失败实验，不能算驻留性能结果。原生 `RESIDENCY` 日志及跨边界测试才证明该选项生效。历史 `Profile` 的其他环境参数同样需要逐项审核；不要将托管赋值当成原生生效证据。
+Resident parameters are passed from C# to Metal via an explicit C ABI; do not rely on `Environment.SetEnvironmentVariable`: the managed environment copy on Unix does not update the native `getenv`. Consequently, the initial launch of 0bcbbb6 did not enable residency, remaining a failed experiment and not constituting residency performance results. Only the native `RESIDENCY` logs and cross-boundary tests proved that this option took effect. Other environment parameters for historical `Profile` also require item-by-item review; do not treat managed assignments as evidence of native activation.
 
 ### Small-request routing and CUDA readback
 

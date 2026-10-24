@@ -67,7 +67,7 @@ network, cache, workload or timing scope. The homepage shows every run on the
 same commit axis by default; an optional configuration filter narrows the view.
 Runs from different configurations appear together but are never connected by
 trend lines or treated as controlled comparisons. The run selector lists all
-runs. A missing metric gets a selectable "未测" marker with no numeric value;
+runs. A missing metric gets a selectable "Not measured" marker with no numeric value;
 the original Issue #54 main and BF16/2048 cohorts did not record client first-token
 timestamps, so both have null TTFT and 0 observed TTFT samples. The separate
 BF16/2048 retake has 121 observed client TTFT samples in its own configuration.

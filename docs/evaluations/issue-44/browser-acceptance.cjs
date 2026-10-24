@@ -34,10 +34,10 @@ async function check(name, run) {
   });
   await check('Missing history not plotted as zero',async()=>{
     for(const key of ['prefill','decode','ttft']){
-      assert.match(await page.locator('#'+key+'-value').textContent(),/Not acquired|未取得/);
+      assert.match(await page.locator('#'+key+'-value').textContent(),/Unavailable|Not acquired/);
       assert.equal(await page.locator('#'+key+'-chart button').count(),0);
     }
-    assert.match(await page.locator('#tasks tbody tr').first().textContent(),/Not acquired|未取得/);
+    assert.match(await page.locator('#tasks tbody tr').first().textContent(),/Unavailable|Not acquired/);
   });
   await check('Original 20-task history matches source token totals and first row',async()=>{
     await page.selectOption('#run','pi-main-20261023');
@@ -83,9 +83,9 @@ async function check(name, run) {
     for(const key of ['prefill','decode','ttft','pass'])assert.equal(await page.locator('#'+key+'-chart button[data-run="fixture-candidate"]').getAttribute('aria-pressed'),'true');
   });
   await check('Failure, real zero and unknown assertions remain distinguishable',async()=>{
-    await page.selectOption('#run','fixture-failure');assert.match(await page.locator('#prefill-value').textContent(),/Not acquired|未取得/);
+    await page.selectOption('#run','fixture-failure');assert.match(await page.locator('#prefill-value').textContent(),/Unavailable|Not acquired/);
     await page.selectOption('#run','fixture-zero');assert.equal(await page.locator('#prefill-value').textContent(),'0 token/s');assert.equal(await page.locator('#ttft-value').textContent(),'0 ms');
-    await page.selectOption('#run','fixture-unverified');assert.match(await page.locator('#pass-value').textContent(),/Unverified|未验证/);
+    await page.selectOption('#run','fixture-unverified');assert.match(await page.locator('#pass-value').textContent(),/Unverified/);
   });
   await check('Incompatible BF16 series never mixed into FP32 charts',async()=>{
     await page.selectOption('#configuration','fixture-incompatible-bf16');

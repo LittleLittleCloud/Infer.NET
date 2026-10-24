@@ -110,7 +110,7 @@ class TrendTests(unittest.TestCase):
         external['requests'][0].pop('nativeCommandDelta')
         self.assertIsNone(sota_summary(self.data)[2]['value'])
         self.assertIn('P / D SOTA', homepage(self.data))
-        self.assertIn('不计算跨口径加速比', homepage(self.data))
+        self.assertIn('No speedup ratio is computed across these measurement scopes', homepage(self.data))
 
     def test_production_only_real_history_and_measured_worker_speed(self):
         self.assertEqual(self.first["measuredCommit"], "cd6f7da401fadf044dac13e87b415d27bb5eadfb")

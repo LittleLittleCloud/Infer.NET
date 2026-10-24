@@ -20,9 +20,25 @@ Worker `firstTokenMs` is an internal compute measurement; the HTTP endpoint is n
 
 ## Actual 7B response
 
-User: 用一句话介绍你自己。
+English rendering of the recorded input:
 
-> 我是Qwen，由阿里云开发的大型语言模型，可以回答问题、创作文字，还能表达观点和拟人对话。
+User: Introduce yourself in one sentence.
+
+Original input (verbatim):
+
+```text
+用一句话介绍你自己。
+```
+
+English rendering of the recorded output:
+
+> I am Qwen, a large language model developed by Alibaba Cloud, capable of answering questions, creating text, expressing opinions, and engaging in anthropomorphic dialogue.
+
+Original output (verbatim):
+
+```text
+我是Qwen，由阿里云开发的大型语言模型，可以回答问题、创作文字，还能表达观点和拟人对话。
+```
 
 The 7B model is the official Qwen2.5-7B-Instruct checkpoint at a09a35458c702b33eeacc393d103063234e8bc28. All four safetensors shards were SHA-256 verified. It uses an untied output classifier, 28 layers and 3584 hidden dimensions. The tokenizer is byte-identical to the pinned 3B tokenizer. The 7B functional check covers real Chinese text through coordinator/worker/Metal, but no independent full-logit Transformers comparison for 7B was run in this benchmark; that comparison was previously performed for 3B.
 

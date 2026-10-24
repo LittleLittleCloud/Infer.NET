@@ -28,9 +28,25 @@ The independent reference used PyTorch 2.14.1 and Transformers 5.20.2, the same 
 
 ## Observed real response
 
-User: 用一句话介绍你自己。
+English rendering of the recorded input:
 
-> 我是Qwen，由阿里云开发的超大规模语言模型，旨在提供各种领域的信息和帮助。
+User: Introduce yourself in one sentence.
+
+Original input (verbatim):
+
+```text
+用一句话介绍你自己。
+```
+
+English rendering of the recorded output:
+
+> I am Qwen, a large language model independently developed by Alibaba Group's Tongyi Lab, designed to provide information and assistance across various domains.
+
+Original output (verbatim):
+
+```text
+我是Qwen，由阿里云开发的超大规模语言模型，旨在提供各种领域的信息和帮助。
+```
 
 The request passed through the CLI/coordinator into a separately launched worker. It returned model ID qwen2.5-3b-instruct, backend metal, isSimulation=false, finishReason=eos, 34 prompt tokens, 22 output token IDs and 14168 completed Metal commands. The product uses the official single-turn chat template, including its default system message. Another Chinese prompt requesting 2+2 returned 4; requests do not share a KV history.
 
