@@ -454,7 +454,7 @@ class TrendTests(unittest.TestCase):
         html = (out / "experiments.html").read_text()
         article_ids = re.findall(r'<article class="experiment" id="([^"]+)"', html)
         self.assertEqual(article_ids, [n["id"] for n in notes])
-        self.assertEqual(len(article_ids), 48)
+        self.assertEqual(len(article_ids), len(notes))
         linked = re.findall(r'<li data-note-link="([^"]+)"><a href="#([^"]+)">', html)
         self.assertEqual(sorted(a for a, _ in linked), sorted(article_ids))
         self.assertTrue(all(a == b for a, b in linked))
@@ -465,7 +465,7 @@ class TrendTests(unittest.TestCase):
         self.assertIn('<script src="notebook.js" defer>', html)
         self.assertTrue((out / "notebook.js").is_file())
         dated = re.findall(r'<h2 id="notes-date-([^"]+)">[^<]* · (\d+) notes</h2>', html)
-        self.assertEqual(sum(int(c) for _, c in dated), 48)
+        self.assertEqual(sum(int(c) for _, c in dated), len(notes))
         self.assertEqual([d for d, _ in dated], sorted((d for d, _ in dated if d != "none"), reverse=True) +
                          (["none"] if any(d == "none" for d, _ in dated) else []))
         for note in notes:
