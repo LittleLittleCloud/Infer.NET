@@ -535,5 +535,5 @@
       "rawSha256": "c77ce7c914b454b75f8065c877416bc4edc690ff177d7bb505126fdb35dbfd83"
     }
   ],
-  "limits": "Old candidate source, not current main; HumanEval outputs diverged (10/20 matching solution SHA). Official assertions, peak memory, swap-out, 128K and Q8 KV not checked. Raw logs remain local only."
+  "limits": "Old candidate source, not current main; HumanEval outputs diverged (10/20 matching solution SHA). Timing came from 100ms polling of completedRequests/lastRequest with contiguous full coverage because old build lacks INFERENCE_METRIC; diagnostic A/B only, not formal performance acceptance. Official assertions, peak memory, swap-out, 128K and Q8 KV not checked. Raw logs remain local only."
 }

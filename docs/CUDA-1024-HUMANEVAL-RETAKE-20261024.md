@@ -8,7 +8,7 @@
 
 Mac 经 `en0` Wi-Fi 与 Windows RTX 4090 通信，测量期间 Mac 为 AC；没有把这组数据标作有线结果。模型 revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`。Mac 包中的 `deepinfer` SHA-256 为 `64968e78583c311abb429a47f4e85b1a93109639a021f9073bc2399644cc4087`，Metal dylib 为 `1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef`；Windows exe 为 `15d79b0496c9ea597d1b681901b8d52a593824ee1e016bb7735491e987d531ef`，CUDA DLL 为 `2e6149805dd684b398107c3d18aa2e7bfd9f296f843c1b8ace3fb2c5be899061`。两端 package manifest 与文件散列已核对。短输入本机路由在候选 Mac serve 中显式设为 0，两个 HumanEval 轮次的所有请求均为 `cuda-metal-split`；每次请求重置状态，0% prefix hit。固定输入复测也走双机路径。
 
-Pi 1.4.0 使用官方 HumanEval 数据集压缩文件 SHA-256 `b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`、seed 0 的同一固定 20 题，context 32768、最大输出 4096、单题超时 300 秒。每轮串行运行；两端没有并发 GPU benchmark。监测进程每 100 ms 读取 serve 的 `completedRequests` 与 `lastRequest`，两轮计数逐一连续、与 Pi 请求数完全一致。prefill 速度为总输入 token 数除以 worker prefill 总时间；decode 为总 `N−1` 间隔数除以从 worker 报告的每请求速度还原的总 decode 间隔时间。Pi wall time 另列，包含工具执行。
+Pi 1.4.0 使用官方 HumanEval 数据集压缩文件 SHA-256 `b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`、seed 0 的同一固定 20 题，context 32768、最大输出 4096、单题超时 300 秒。每轮串行运行；两端没有并发 GPU benchmark。旧候选包没有 `INFERENCE_METRIC` 逐请求日志，监测进程每 100 ms 读取 serve 的 `completedRequests` 与 `lastRequest`；两轮计数逐一连续、与 Pi 请求数完全一致。prefill 速度为总输入 token 数除以 worker prefill 总时间；decode 为总 `N−1` 间隔数除以从 worker 报告的每请求速度还原的总 decode 间隔时间。**这属于覆盖完整的旧版诊断采样，不是 HumanEval SOP 首选的独立逐请求日志；速度只用于本轮方向判断，不作为正式性能门槛验收。** Pi wall time 另列，包含工具执行。
 
 ## HumanEval 20 题结果
 
