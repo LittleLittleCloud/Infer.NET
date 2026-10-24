@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+  "defaultRun": "main-cd6f7da-humaneval20-20261023",
+  "runs": 3,
+  "configurations": 2,
+  "metrics": {
+    "prefill": {
+      "value": 531.19940338122,
+      "samples": 92,
+      "total": 92
+    },
+    "decode": {
+      "value": 65.08454290485518,
+      "samples": 92,
+      "total": 92
+    },
+    "ttft": {
+      "value": 6986.969833499998,
+      "samples": 92,
+      "total": 92,
+      "failedWithoutToken": 0,
+      "unknownFirstTokenFailures": 0,
+      "unobservedRequests": 0
+    },
+    "pass": {
+      "value": 100,
+      "passed": 20,
+      "total": 20,
+      "verified": true,
+      "samples": 20
+    }
+  },
+  "renderedHeaders": {
+    "prefill": "531.199 token/s",
+    "decode": "65.085 token/s",
+    "ttft": "6,986.97 ms",
+    "pass": "100% · 20/20"
+  },
+  "perTaskRowsChecked": 20,
+  "taskTokenAndTimingMatch": true,
+  "widths": [
+    1280,
+    320
+  ],
+  "oldConfigurationMissingPreserved": true,
+  "deepLinkReloadPassed": true,
+  "errors": [],
+  "browser": "149.0.7827.55"
+}
