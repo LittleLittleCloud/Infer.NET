@@ -16,6 +16,8 @@ description: "使用 GitHub 同步 Infer.NET 双机代码、Issues 管理任务�
 
 在仓库中按任务读取：
 
+- `docs/EXPERIMENT-SOP.md`：用户已批准的实验提案、人工批准、代码/结果 PR、评测与基线更新流程；每个实验仍需单独 approve。
+
 - `docs/QWEN36-8BIT-TARGETS.md`：固定性能、精度、计时、正确性和资源门槛的唯一来源；开始调优或验收前必须读。
 - `docs/QWEN36-8BIT.md`：已有单机证据、失败记录、内存限制和双机估算。
 - `README.md`、`scripts/`、`native/`、`src/`：当前启动、构建和真实实现状态。文档中的计划不证明代码已经实现。
@@ -66,6 +68,8 @@ Windows 命令按实际 shell 编写；不要把 POSIX 命令直接发送到 Pow
 复杂操作优先编写纳入版本控制的脚本，通过 GitHub 同步后调用，避免嵌套插值和多层引号。不要假设 Windows 有 rsync、bash 或与 Mac 相同的路径语法。
 
 ## GitHub 项目管理
+
+所有项目修改（包括代码、文档、技能、实验记录与站点内容）必须先在功能分支提交、推送并创建 PR，等待用户明确授权合并。只有用户明确要求直接推送 `main` 时，才允许绕过 PR；“提交并推送”“更新部署”“更新站点”等请求不构成直接推送 `main` 的授权。此规则同时适用于 Mac 和 Windows 的修改与同步；不能为触发部署或 Pages 发布而直接更新 `main`。
 
 当前仓库为 `https://github.com/LittleLittleCloud/Infer.NET`（公开），进展与实验笔记站点为 `https://littlelittlecloud.github.io/Infer.NET/`。仍须核对实际 remote 与发布状态。
 

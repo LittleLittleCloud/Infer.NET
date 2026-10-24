@@ -5,12 +5,8 @@ ROOT=pathlib.Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser()
 p.add_argument('--host',type=pathlib.Path,default=ROOT/'src/DeepInfer.Host/bin/Release/net10.0/deepinfer')
 p.add_argument('--tui',type=pathlib.Path,default=ROOT/'src/DeepInfer.Tui/bin/Release/net10.0/deepinfer-tui')
-p.add_argument('--real',action='store_true')
-p.add_argument('--qwen',action='store_true')
-p.add_argument('--qwen7b',action='store_true')
+p.add_argument('--qwen36',action='store_true')
 a=p.parse_args()
-qwen_size="7b" if a.qwen7b else "3b"
-a.qwen=a.qwen or a.qwen7b
 # Demo reserves consecutive ports; pick a range by checking all three before launch.
 for _ in range(50):
     sockets=[]
@@ -28,11 +24,8 @@ env.pop('DEEPINFER_TOKEN',None)
 import tempfile
 cluster_log=tempfile.TemporaryFile(mode='w+')
 cluster_args=[str(a.host.resolve()),'demo','--base-port',str(base),'--stay','--backend','simulation']
-if a.real:
-    cluster_args=cluster_args[:-2]
-    cluster_args += ['--backend','metal','--model','stories15m','--weights',str(ROOT/'models/stories15M.bin'),'--tokenizer',str(ROOT/'models/tokenizer.bin')]
-if a.qwen:
-    cluster_args=[str(a.host.resolve()),'demo','--base-port',str(base),'--stay','--backend','metal','--model',f'qwen2.5-{qwen_size}-instruct','--weights',str(ROOT/f'models/qwen2.5-{qwen_size}-instruct'),'--workers','1']
+if a.qwen36:
+    cluster_args=[str(a.host.resolve()),'demo','--base-port',str(base),'--stay','--backend','metal','--model','qwen3.6-35b-a3b','--weights',str(ROOT/'models/qwen3.6-35b-a3b-8bit-mlx'),'--workers','1']
 cluster=subprocess.Popen(cluster_args,env=env,stdout=cluster_log,stderr=cluster_log,start_new_session=True)
 child=None;master=None;output=b''
 try:
@@ -40,7 +33,7 @@ try:
         if cluster.poll() is not None: raise RuntimeError('Cluster exited before ready')
         try:
             with urllib.request.urlopen(f'http://127.0.0.1:{base}/v1/workers',timeout=.3) as r:
-                registered=len(json.load(r)['workers'])==(1 if a.qwen else 2)
+                registered=len(json.load(r)['workers'])==(1 if a.qwen36 else 2)
                 cluster_log.seek(0)
                 if registered and 'Cluster stays online' in cluster_log.read():break
         except (OSError, ValueError):pass
@@ -62,14 +55,14 @@ try:
             # Answer common cursor-position queries made by terminal UI libraries.
             if b'\x1b[6n' in data:os.write(master,b'\x1b[1;1R')
         text=output.decode(errors='replace')
-        expected='Workers · 1 live / 1 known' if a.qwen else 'Workers · 2 live / 2 known'
+        expected='Workers · 1 live / 1 known' if a.qwen36 else 'Workers · 2 live / 2 known'
         if expected in text and 'Dashboard' in text and 'Playground' in text and 'Devices' in text:break
     text=output.decode(errors='replace')
     artifact=ROOT/'artifacts/tui-smoke.txt';artifact.parent.mkdir(exist_ok=True)
     artifact.write_text(re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',text))
     assert 'Infer.NET' in text and 'Dashboard' in text and 'Playground' in text, f'TUI tabs were not rendered; see {artifact}'
     assert expected in text and 'Devices' in text and 'Models' in text, f'TUI worker RPC result missing; see {artifact}'
-    assert ('synthetic-v1 [SIMULATION]' if not (a.real or a.qwen) else 'metal') in text, f'TUI worker type missing; see {artifact}'
+    assert ('synthetic-v1 [SIMULATION]' if not a.qwen36 else 'metal') in text, f'TUI worker type missing; see {artifact}'
     print('PASS: RazorConsole PTY -> coordinator -> live worker dashboard')
 finally:
     if child:

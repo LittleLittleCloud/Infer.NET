@@ -3,24 +3,21 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 namespace DeepInfer.Backends.Models;
 
-// Byte-level BPE with pinned Qwen2/Qwen3.6 pretokenization. User text never injects special-token IDs.
-public sealed partial class QwenTokenizer : IModelTokenizer
+// Byte-level BPE with pinned Qwen3.6 pretokenization. User text never injects special-token IDs.
+public sealed class QwenTokenizer : IModelTokenizer
 {
-    public const int EndOfText = 151643, MessageStart = 151644, MessageEnd = 151645;
-    public const string SystemPrompt = "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.";
+    public const int EndOfText = 248044, MessageStart = 248045, MessageEnd = 248046;
     private readonly Dictionary<string, int> vocabulary = new(StringComparer.Ordinal);
     private readonly Dictionary<(string, string), int> ranks = new();
     private readonly Dictionary<int, byte[]> pieces = new();
     private readonly char[] byteEncoder = new char[256];
-    private readonly bool qwen36;
-    private readonly Regex? extendedPreTokenizer;
+    private readonly Regex extendedPreTokenizer;
     private readonly int endOfText, messageStart, messageEnd;
-    public QwenTokenizer(string path, bool qwen36 = false)
+    public QwenTokenizer(string path)
     {
-        this.qwen36 = qwen36;
-        endOfText = qwen36 ? 248044 : EndOfText;
+        endOfText = EndOfText;
         messageStart = endOfText + 1; messageEnd = endOfText + 2;
-        if (qwen36) extendedPreTokenizer = new(Pattern36, RegexOptions.CultureInvariant, TimeSpan.FromSeconds(2));
+        extendedPreTokenizer = new(Pattern36, RegexOptions.CultureInvariant, TimeSpan.FromSeconds(2));
         var bytes = Enumerable.Range(33,94).Concat(Enumerable.Range(161,12)).Concat(Enumerable.Range(174,82)).ToList();
         var mapped = bytes.ToList(); var extra = 0;
         for (var b = 0; b < 256; b++) if (!bytes.Contains(b)) { bytes.Add(b); mapped.Add(256 + extra++); }
@@ -28,9 +25,9 @@ public sealed partial class QwenTokenizer : IModelTokenizer
         for (var i = 0; i < bytes.Count; i++) { byteEncoder[bytes[i]] = (char)mapped[i]; decode[(char)mapped[i]] = (byte)bytes[i]; }
         using var document = JsonDocument.Parse(File.ReadAllBytes(path)); var root = document.RootElement;
         if (root.GetProperty("normalizer").GetProperty("type").GetString() != "NFC" || root.GetProperty("model").GetProperty("type").GetString() != "BPE")
-            throw new NotSupportedException("Only the pinned Qwen2 byte-BPE tokenizer is supported.");
+            throw new NotSupportedException("Only the pinned Qwen3.6 byte-BPE tokenizer is supported.");
         var pre = root.GetProperty("pre_tokenizer").GetProperty("pretokenizers");
-        if (pre[0].GetProperty("pattern").GetProperty("Regex").GetString() != (qwen36 ? Pattern36 : Pattern) ||
+        if (pre[0].GetProperty("pattern").GetProperty("Regex").GetString() != Pattern36 ||
             pre[1].GetProperty("type").GetString() != "ByteLevel" || pre[1].GetProperty("add_prefix_space").GetBoolean())
             throw new NotSupportedException("Unsupported Qwen pretokenizer configuration.");
         var model = root.GetProperty("model");
@@ -52,7 +49,7 @@ public sealed partial class QwenTokenizer : IModelTokenizer
     public int[] EncodeText(string text, CancellationToken ct = default)
     {
         var tokens = new List<int>();
-        foreach (Match match in (extendedPreTokenizer ?? PreTokenizer()).Matches(text.Normalize(NormalizationForm.FormC)))
+        foreach (Match match in extendedPreTokenizer.Matches(text.Normalize(NormalizationForm.FormC)))
         {
             ct.ThrowIfCancellationRequested();
             var encoded = new string(Encoding.UTF8.GetBytes(match.Value).Select(b => byteEncoder[b]).ToArray());
@@ -75,22 +72,14 @@ public sealed partial class QwenTokenizer : IModelTokenizer
     {
         var output = new List<int>();
         void Text(string content) => output.AddRange(EncodeText(content, cancellationToken));
-        if (qwen36)
-        {
-            output.Add(messageStart); Text("user\n"); Text(text); output.Add(messageEnd); Text("\n");
-            output.Add(messageStart); Text("assistant\n"); output.Add(248068); Text("\n\n");
-            output.Add(248069); Text("\n\n");
-            return output.ToArray();
-        }
-        output.Add(MessageStart); Text("system\n" + SystemPrompt); output.Add(MessageEnd); Text("\n");
-        output.Add(MessageStart); Text("user\n"); Text(text); output.Add(MessageEnd); Text("\n");
-        output.Add(MessageStart); Text("assistant\n");
+        output.Add(messageStart); Text("user\n"); Text(text); output.Add(messageEnd); Text("\n");
+        output.Add(messageStart); Text("assistant\n"); output.Add(248068); Text("\n\n");
+        output.Add(248069); Text("\n\n");
         return output.ToArray();
     }
     public bool IsEnd(int token) => token == endOfText || token == messageEnd;
     public int[] EncodeMessages(DeepInfer.Core.ChatTurn[] messages, CancellationToken ct)
     {
-        if (!qwen36) throw new NotSupportedException("Structured chat requires Qwen3.6.");
         var result = new List<int>();
         foreach (var message in messages)
         {
@@ -111,8 +100,5 @@ public sealed partial class QwenTokenizer : IModelTokenizer
         using var stream = new MemoryStream(); foreach (var token in tokens) stream.Write(DecodePiece(previous, token));
         return Encoding.UTF8.GetString(stream.ToArray());
     }
-    private const string Pattern = @"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+";
     private const string Pattern36 = @"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?[\p{L}\p{M}]+|\p{N}| ?[^\s\p{L}\p{M}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+";
-    [GeneratedRegex(Pattern, RegexOptions.CultureInvariant, 2000)]
-    private static partial Regex PreTokenizer();
 }

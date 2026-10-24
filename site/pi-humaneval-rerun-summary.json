@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-23 America/Los_Angeles",
+  "harnessCommit": "15710714e537372a59b3c1ba999f31337a37017d",
+  "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+  "runtimeSourceCommit": "e017d84e805c016d5912b5051e4c69f758056363",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "model": "qwen3.6-35b-a3b",
+  "weights": "affine 8bit / group64",
+  "kv": "fp32",
+  "topology": "Mac M5 Pro 48 GiB coordinator + split-serve; Windows RTX 4090 split-agent; Wi-Fi cross-host; Mac AC / High Power",
+  "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+  "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+  "run": {
+    "selection": "fixed seed-0 20 tasks",
+    "piVersion": "1.4.0",
+    "timeoutSeconds": 300.0,
+    "contextWindow": 32768,
+    "maxTokens": 4096,
+    "freshWorkspacePerTask": true,
+    "taskOrder": [
+      "HumanEval/156",
+      "HumanEval/94",
+      "HumanEval/72",
+      "HumanEval/80",
+      "HumanEval/149",
+      "HumanEval/2",
+      "HumanEval/35",
+      "HumanEval/32",
+      "HumanEval/146",
+      "HumanEval/137",
+      "HumanEval/97",
+      "HumanEval/154",
+      "HumanEval/6",
+      "HumanEval/161",
+      "HumanEval/115",
+      "HumanEval/131",
+      "HumanEval/162",
+      "HumanEval/50",
+      "HumanEval/47",
+      "HumanEval/148"
+    ]
+  },
+  "results": {
+    "completed": 19,
+    "syntaxValid": 19,
+    "officialTaskChecksPassed": 19,
+    "count": 20,
+    "timeouts": 0,
+    "errors": 1,
+    "wallSeconds": {
+      "median": 31.798099791499993,
+      "p90": 64.70272304100001,
+      "total": 774.288364666
+    },
+    "requestCount": 103,
+    "tokens": {
+      "input": 241162,
+      "output": 19949,
+      "cacheRead": 0,
+      "cacheWrite": 0,
+      "totalTokens": 261111
+    }
+  },
+  "failure": {
+    "taskId": "HumanEval/149",
+    "reason": "Malformed model tool call from coordinator; Pi error=terminated; no solution.py",
+    "singleTaskRetry": "same failure after 9.068 s; excluded from cohort statistics"
+  },
+  "pairedSuccessful19": {
+    "oldWallSeconds": 763.6624096240002,
+    "newWallSeconds": 765.249432833
+  },
+  "rows": [
+    {
+      "taskId": "HumanEval/156",
+      "wallSeconds": 24.061,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 36.475
+    },
+    {
+      "taskId": "HumanEval/94",
+      "wallSeconds": 46.711,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 29.97
+    },
+    {
+      "taskId": "HumanEval/72",
+      "wallSeconds": 22.183,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 23.436
+    },
+    {
+      "taskId": "HumanEval/80",
+      "wallSeconds": 27.192,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 22.064
+    },
+    {
+      "taskId": "HumanEval/149",
+      "wallSeconds": 9.039,
+      "completed": false,
+      "syntax": "missing",
+      "officialCheck": "missing_solution",
+      "priorWallSeconds": 45.221
+    },
+    {
+      "taskId": "HumanEval/2",
+      "wallSeconds": 42.539,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 22.92
+    },
+    {
+      "taskId": "HumanEval/35",
+      "wallSeconds": 33.228,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 49.374
+    },
+    {
+      "taskId": "HumanEval/32",
+      "wallSeconds": 97.451,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 49.713
+    },
+    {
+      "taskId": "HumanEval/146",
+      "wallSeconds": 36.041,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 64.704
+    },
+    {
+      "taskId": "HumanEval/137",
+      "wallSeconds": 64.703,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 83.232
+    },
+    {
+      "taskId": "HumanEval/97",
+      "wallSeconds": 31.721,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 38.923
+    },
+    {
+      "taskId": "HumanEval/154",
+      "wallSeconds": 58.106,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 61.569
+    },
+    {
+      "taskId": "HumanEval/6",
+      "wallSeconds": 25.955,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 27.591
+    },
+    {
+      "taskId": "HumanEval/161",
+      "wallSeconds": 21.8,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 57.4
+    },
+    {
+      "taskId": "HumanEval/115",
+      "wallSeconds": 31.875,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 32.518
+    },
+    {
+      "taskId": "HumanEval/131",
+      "wallSeconds": 28.507,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 29.482
+    },
+    {
+      "taskId": "HumanEval/162",
+      "wallSeconds": 26.703,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 29.912
+    },
+    {
+      "taskId": "HumanEval/50",
+      "wallSeconds": 52.085,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 20.309
+    },
+    {
+      "taskId": "HumanEval/47",
+      "wallSeconds": 67.396,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 56.943
+    },
+    {
+      "taskId": "HumanEval/148",
+      "wallSeconds": 26.994,
+      "completed": true,
+      "syntax": "ok",
+      "officialCheck": "passed",
+      "priorWallSeconds": 27.127
+    }
+  ],
+  "rawEvidence": "Local ignored artifacts only; SHA-256 hashes in docs/PI-HUMANEVAL-RERUN-20261023.md"
+}

@@ -1,0 +1,16 @@
+{
+  "baselineCommit": "58bf95018975297ba6f2f965948e2c5f4944cd95",
+  "browserVersion": "149.0.7827.55",
+  "playwrightVersion": "1.64.1",
+  "title": "项目进展 · Infer.NET",
+  "headings": [
+    "从单机基线，走向双机推理。",
+    "当前进展",
+    "当前设备拓扑",
+    "8bit 单机实测",
+    "固定验收目标",
+    "实验笔记",
+    "证据与复现"
+  ],
+  "chartCount": 0
+}

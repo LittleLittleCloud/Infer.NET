@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")"
-export DEEPINFER_MODEL_SIZE=moe
 # Select the measured M5 profile unless the user has chosen a GEMM precision.
 if [[ "$(sysctl -n machdep.cpu.brand_string 2>/dev/null)" == Apple\ M5* && -z "${DEEPINFER_METAL_PREFILL_GEMM:-}" ]]; then
   export DEEPINFER_METAL_PREFILL_GEMM=bf16-nax

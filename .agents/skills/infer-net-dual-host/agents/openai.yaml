@@ -1,4 +1,4 @@
 interface:
   display_name: "Infer.NET 双机开发"
   short_description: "GitHub 同步代码，SSH 双机开发、部署更新与回退，Issues/Pages 记录验收"
-  default_prompt: "使用 $infer-net-dual-host 继续 Infer.NET 双机开发：GitHub 同步代码、Issues 跟踪任务、Pages 更新项目进展与实验笔记，按部署 SOP 准备、更新或回退服务，并通过 SSH 按固定指标验收。"
+  default_prompt: "使用 $infer-net-dual-host 继续 Infer.NET 双机开发：修改先提交功能分支并创建 PR，除非用户明确要求，否则不直接推送 main；GitHub 同步代码、Issues 跟踪任务、Pages 更新项目进展与实验笔记，按部署 SOP 准备、更新或回退服务，并通过 SSH 按固定指标验收。"

@@ -13,7 +13,7 @@ public static class Qwen36Verification
         var output = Path.GetFullPath(options.Get("output", "artifacts/reference/qwen36/own"));
         Directory.CreateDirectory(output);
         using var reference = JsonDocument.Parse(File.ReadAllBytes(referencePath)); var r = reference.RootElement;
-        var tokenizer = new QwenTokenizer(Path.Combine(directory, "tokenizer.json"), qwen36: true);
+        var tokenizer = new QwenTokenizer(Path.Combine(directory, "tokenizer.json"));
         var prompt = tokenizer.EncodePrompt(r.GetProperty("prompt").GetString()!, ct);
         if (!prompt.SequenceEqual(r.GetProperty("promptTokenIds").EnumerateArray().Select(x => x.GetInt32())))
             throw new InvalidOperationException("Qwen3.6 chat token IDs differ from the independent reference.");
@@ -29,7 +29,7 @@ public static class Qwen36Verification
             if (positions.Contains(p)) File.WriteAllBytes(Path.Combine(output, $"p{p}-layer{l}.f32"), MemoryMarshal.AsBytes(x.AsSpan()).ToArray());
         }, routeTrace is null ? null : (p, l, ids) => routeTrace.Write(MemoryMarshal.AsBytes(ids.AsSpan())), prefill: options.Flag("prefill"));
         File.WriteAllBytes(Path.Combine(output, "logits.f32"), MemoryMarshal.AsBytes(logits.AsSpan()).ToArray());
-        Console.WriteLine($"Own .NET/Metal evaluation completed. tokens={inputs.Length}; argmax={LlamaModel.ArgMax(logits)}; trace={output}");
+        Console.WriteLine($"Own .NET/Metal evaluation completed. tokens={inputs.Length}; argmax={Qwen36Model.ArgMax(logits)}; trace={output}");
         var expected = r.GetProperty("generatedTokenIds").EnumerateArray().Select(x => x.GetInt32()).ToArray();
         var generated = await model.GenerateAsync(new(r.GetProperty("prompt").GetString()!, expected.Length, Protocol.Qwen36Model, "metal"), ct);
         if (generated.TokenIds is null || !generated.TokenIds.SequenceEqual(expected))

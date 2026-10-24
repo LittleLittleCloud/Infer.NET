@@ -2,12 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 base_port="${DEEPINFER_BASE_PORT:-5100}"
-model_size="${DEEPINFER_MODEL_SIZE:-3b}"
-case "$model_size" in
-  3b|7b) model="qwen2.5-${model_size}-instruct"; weights="models/$model" ;;
-  moe) model="qwen3.6-35b-a3b"; weights="models/qwen3.6-35b-a3b-5bit-mlx" ;;
-  *) echo "DEEPINFER_MODEL_SIZE must be 3b, 7b or moe" >&2; exit 1 ;;
-esac
+model="qwen3.6-35b-a3b"
+weights="${DEEPINFER_WEIGHTS:-models/qwen3.6-35b-a3b-8bit-mlx}"
 host="./artifacts/native/osx-arm64/deepinfer"
 tui="./artifacts/tui-native/osx-arm64/deepinfer-tui"
 if [[ ! -x "$host" || ! -x "$tui" ]]; then
@@ -17,13 +13,9 @@ if [[ ! -x "$host" || ! -x "$tui" ]]; then
 fi
 mkdir -p artifacts
 log_file="$(mktemp "${TMPDIR:-/tmp}/deepinfer-mvp.XXXXXX")"
-if [[ "$model_size" == moe ]]; then
-  if [[ ! -f "$weights/model-00005-of-00005.safetensors" ]]; then
-    echo "Download the pinned MoE weights first: python3 scripts/download-qwen36-mlx.py" >&2
-    exit 1
-  fi
-else
-  python3 scripts/download-qwen.py --size "$model_size"
+if [[ ! -f "$weights/config.json" || ! -f "$weights/tokenizer.json" ]]; then
+  echo "Download the pinned weights first: python3 scripts/download-qwen36-mlx.py --bits 8" >&2
+  exit 1
 fi
 "$host" demo --base-port "$base_port" --backend metal --weights "$weights" --tokenizer "$weights/tokenizer.json" --model "$model" --workers 1 --stay > "$log_file" 2>&1 &
 cluster_pid=$!

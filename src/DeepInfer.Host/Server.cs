@@ -56,24 +56,13 @@ public static class Server
         {
             var kind = options.Get("backend", "simulation");
             var weightsPath = options.Get("weights", ""); var tokenizerPath = options.Get("tokenizer", "");
-            var qwen = Directory.Exists(weightsPath);
-            var defaultModel = Protocol.TinyStoriesModel;
-            var format = qwen ? "hf-qwen2" : "llama2c-f32";
-            if (qwen)
-            {
-                using var config = System.Text.Json.JsonDocument.Parse(File.ReadAllBytes(Path.Combine(weightsPath, "config.json")));
-                if (config.RootElement.GetProperty("model_type").GetString() == "qwen3_5_moe")
-                { defaultModel = Protocol.Qwen36Model; format = "mlx-qwen36-affine"; }
-                else defaultModel = config.RootElement.GetProperty("hidden_size").GetInt32() == 3584 && config.RootElement.GetProperty("num_hidden_layers").GetInt32() == 28
-                    ? Protocol.Qwen7BModel : Protocol.Qwen3BModel;
-            }
-            if (qwen && tokenizerPath.Length == 0) tokenizerPath = Path.Combine(weightsPath, "tokenizer.json");
+            if (tokenizerPath.Length == 0 && weightsPath.Length != 0) tokenizerPath = Path.Combine(weightsPath, "tokenizer.json");
             var backend = BackendCatalog.Create(kind, weightsPath, tokenizerPath);
             var devices = backend.DiscoverDevices().ToArray();
             if (kind == "simulation")
                 model = await backend.LoadModelAsync(new(Protocol.SyntheticModel, "synthetic", true), ct);
             else if (weightsPath.Length != 0 || tokenizerPath.Length != 0)
-                model = await backend.LoadModelAsync(new(options.Get("model", defaultModel), format, false), ct);
+                model = await backend.LoadModelAsync(new(options.Get("model", Protocol.Qwen36Model), "mlx-qwen36-affine", false), ct);
             var id = options.Get("id", $"{Environment.MachineName}-{Environment.ProcessId}");
             var capacity = options.Number("capacity", 1, 1, 64);
             if (model is not null && !model.Info.IsSimulation && capacity != 1)

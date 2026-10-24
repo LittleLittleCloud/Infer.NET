@@ -19,7 +19,7 @@ public sealed class MetalBackend(string? weightsPath = null, string? tokenizerPa
                 var budget = MetalNative.SendUInt64(device, MetalNative.sel_registerName("recommendedMaxWorkingSetSize"));
                 return [new("metal:0", Kind, Marshal.PtrToStringUTF8(utf8) ?? "Apple GPU", "Apple GPU (runtime detected)",
                     checked((long)budget), true, Compute.MetalMatVecDevice.BridgeAvailable,
-                    Compute.MetalMatVecDevice.BridgeAvailable ? "Own Metal: Qwen3.6 full GPU executor, affine5/8 weights, FP32 state; dense models use GEMV + CPU attention. Memory is the recommended working-set budget." : "Metal discovered; native compute bridge is not installed.")];
+                    Compute.MetalMatVecDevice.BridgeAvailable ? "Own Metal: Qwen3.6 full GPU executor, affine5/8 weights, FP32 state. Memory is the recommended working-set budget." : "Metal discovered; native compute bridge is not installed.")];
             }
             finally { MetalNative.SendPointer(device, MetalNative.sel_registerName("release")); }
         }
@@ -30,11 +30,10 @@ public sealed class MetalBackend(string? weightsPath = null, string? tokenizerPa
     public ValueTask<IInferenceModel> LoadModelAsync(ModelInfo model, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (model.Format is not ("llama2c-f32" or "hf-qwen2" or "mlx-qwen36-affine") || model.IsSimulation) throw new NotSupportedException("Unsupported Metal model format.");
+        if (model.Id != Protocol.Qwen36Model || model.Format != "mlx-qwen36-affine" || model.IsSimulation) throw new NotSupportedException("Unsupported Metal model format.");
         if (string.IsNullOrWhiteSpace(weightsPath) || string.IsNullOrWhiteSpace(tokenizerPath))
             throw new ArgumentException("Real Metal inference requires --weights and --tokenizer paths.");
-        return ValueTask.FromResult<IInferenceModel>(model.Format == "mlx-qwen36-affine"
-            ? new Models.Qwen36Model(model, weightsPath, tokenizerPath) : new Models.LlamaModel(model, weightsPath, tokenizerPath, Kind));
+        return ValueTask.FromResult<IInferenceModel>(new Models.Qwen36Model(model, weightsPath, tokenizerPath));
     }
 }
 
@@ -105,9 +104,9 @@ public static class BackendCatalog
 {
     public static IComputeBackend Create(string kind, string? weightsPath = null, string? tokenizerPath = null) => kind switch
     {
-        "simulation" => new SimulationBackend(), "cuda" => new CudaBackend(), "metal" => new MetalBackend(weightsPath, tokenizerPath), "cpu" => new CpuBackend(weightsPath, tokenizerPath),
-        _ => throw new ArgumentException($"Unknown backend '{kind}'. Use simulation, cpu, metal or cuda.")
+        "simulation" => new SimulationBackend(), "cuda" => new CudaBackend(), "metal" => new MetalBackend(weightsPath, tokenizerPath),
+        _ => throw new ArgumentException($"Unknown backend '{kind}'. Use simulation, metal or cuda.")
     };
     public static DeviceInfo[] DiscoverAll() => new IComputeBackend[]
-        { new SimulationBackend(), new CpuBackend(), new MetalBackend(), new CudaBackend() }.SelectMany(x => x.DiscoverDevices()).ToArray();
+        { new SimulationBackend(), new MetalBackend(), new CudaBackend() }.SelectMany(x => x.DiscoverDevices()).ToArray();
 }

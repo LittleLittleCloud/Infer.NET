@@ -1,0 +1,122 @@
+{
+  "issue": 44,
+  "codePr": 46,
+  "evaluationDate": "2026-10-23 America/Los_Angeles",
+  "implementation": {
+    "provider": "GitHub Copilot CLI",
+    "cliVersion": "1.0.103",
+    "model": "gpt-6.1-sol",
+    "usageConfirmsModel": "gpt-6.1-sol"
+  },
+  "initialMain": "58bf95018975297ba6f2f965948e2c5f4944cd95",
+  "finalMain": "a5f7bc79e2d9eab308717722c52f859bb92fe2de",
+  "evaluatedCode": "37c93b63e6dd0eb2780d7a67989b51dbba601475",
+  "scope": "Static site and historical data evaluation; no new inference benchmark or deployment",
+  "tests": {
+    "python": 18,
+    "javascript": 15,
+    "chromium": 18,
+    "allPassed": true
+  },
+  "historicalData": {
+    "runs": 2,
+    "rowsPerRun": 20,
+    "prefillMeasuredRequests": 0,
+    "decodeMeasuredRequests": 0,
+    "clientTtftSamples": 0,
+    "officialPassRates": [
+      100,
+      95
+    ]
+  },
+  "localOnlyEvidence": [
+    {
+      "filename": "copilot-output.log",
+      "sha256": "ae9c502ad8ac2e0be1607c39b65432176ce2c9a61cb9da974776241cd47623bc",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "copilot-review-output.log",
+      "sha256": "4b0ef4f2a3700621a546cebed14e3650f6bc8baef961464c97632bba75ff7e24",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "copilot-session.md",
+      "sha256": "dcd696f4b3964700bea10a2d3fe775f41581e0dbcf8276a7c3bc158238b3bcbe",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "copilot-review-session.md",
+      "sha256": "041e3754fb7aa46d9cba25e0909b891b07842d2dc70d15792827084732c87bf9",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "copilot-usage.json",
+      "sha256": "0953618af000c02e0ada02a05c51c7d55261393f3cff39893d63888b3082961c",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "copilot-review-usage.json",
+      "sha256": "eaeccb34572f4c59a59901f218fc2f22020724f9e5798ee957ae9c064ead5fa6",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "browser-first-results.json",
+      "sha256": "17dab350df0ffb2c3a2004a4c76d1925912e1518f710a7254223186149425acb",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    },
+    {
+      "filename": "review-findings.md",
+      "sha256": "c9b02d4f91e6a316cc4c1ced5bdb3d873351251f912ca0339457b5959412a464",
+      "availability": "Only in local ignored artifacts/issue-44; not a public download"
+    }
+  ],
+  "publicFiles": {
+    "baseline-browser.json": {
+      "sha256": "19346b4f9430c9404f35fed43052554fb0de398a1a2196a5ccc101fab20db0a2",
+      "bytes": 402
+    },
+    "baseline-main-desktop.png": {
+      "sha256": "363b2b187059c2d3e368b96dd178faea3d50cd3ccc39338467df65723f1c21a7",
+      "bytes": 123783
+    },
+    "browser-acceptance.cjs": {
+      "sha256": "0297fc8477476b9cbf645a200908af171754c903d96c83927c0265d063dee0a0",
+      "bytes": 8523
+    },
+    "browser-results.json": {
+      "sha256": "733792913df181d95fae4ce97647f3252659118abaf0bc440c6107046bde0281",
+      "bytes": 4420
+    },
+    "desktop-overview.png": {
+      "sha256": "ce84e312368f903270905612089d045e0cd5863bd35adb5ed43fba595bc98d02",
+      "bytes": 78306
+    },
+    "final-checks.json": {
+      "sha256": "559880e3151cfa68b1fc21cbe0b9e30d1ed35b122b15e1d5fd4a10789b5e3668",
+      "bytes": 2318
+    },
+    "mobile-overview.png": {
+      "sha256": "0bc83a17db3b8f997b04ca4138f6cd8e4461c72c13386f7e3fe5e002f73b0df2",
+      "bytes": 49207
+    },
+    "task-detail.png": {
+      "sha256": "73978d92bdb94cf961230e2fe8a8bbce27aa4fd9609465434181b9efd5bbe9b1",
+      "bytes": 146219
+    },
+    "integration-results.json": {
+      "sha256": "20c23379d0d373119d22a5b894b6150dd22ead780156b01f3817df7b3986a5ba",
+      "bytes": 2108
+    }
+  },
+  "integration": {
+    "resultsPrBuildIndependent": true,
+    "resultsOnlyPageCount": 2,
+    "resultsOnlyNoteCount": 45,
+    "combinedBuildPageCount": 3,
+    "combinedNoteCount": 45,
+    "mergeTree": "38a117527eb71aa57bff027e6051708b787754ec",
+    "combinedPythonChecks": 18,
+    "combinedJavascriptChecks": 15
+  }
+}

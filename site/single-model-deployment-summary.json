@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-23",
+  "source": "58bf95018975297ba6f2f965948e2c5f4944cd95",
+  "issue": 45,
+  "model": "qwen3.6-35b-a3b",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "kv": "fp32",
+  "splitProtocol": 4,
+  "hosts": {
+    "mac": "M5 Pro / 48 GiB",
+    "windows": "RTX 4090 / 24 GiB"
+  },
+  "processManagement": {
+    "mac": "user LaunchAgents: coordinator + split-serve",
+    "windows": "foreground split-agent; retained SSH control session; no SCM service"
+  },
+  "configChange": "Windows restored existing official batch-fp32-packed config; only cuda-prefill differs from prior experimental batch-fp32-fast config. Weights, KV precision and credentials unchanged.",
+  "tests": {
+    "macUnitPassed": 131,
+    "windowsUnitPassed": 130,
+    "windowsUnitSkipped": 1,
+    "nativeRpcPerHost": 40,
+    "nativeChatPerHost": 37,
+    "realDeploymentPassed": 15,
+    "reconnectionPassed": 5,
+    "ci": "Linux/macOS/Windows passed for source commit",
+    "cliStreaming": "natural EOS passed"
+  },
+  "comparison": [
+    {
+      "name": "short",
+      "inputTokens": 17,
+      "outputTokens": 16,
+      "executionPath": "cuda-metal-split",
+      "matchesPreviousDeployment": true
+    },
+    {
+      "name": "split",
+      "inputTokens": 301,
+      "outputTokens": 16,
+      "executionPath": "cuda-metal-split",
+      "matchesPreviousDeployment": true
+    }
+  ],
+  "retiredModelRequests": [
+    {
+      "model": "qwen2.5-3b-instruct",
+      "status": 400
+    },
+    {
+      "model": "qwen2.5-7b-instruct",
+      "status": 400
+    },
+    {
+      "model": "stories15m",
+      "status": 400
+    }
+  ],
+  "artifacts": {
+    "macExe": "ab5d8ab1b389a2c87bf26276c87d9e0829cce443c41adea657c0f03b65451f23",
+    "metalLibrary": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+    "windowsExe": "97c9a6ebd3e948775d8de3b49337da6820a5b094133a8165599134c2c488c041",
+    "cudaLibrary": "1ee90b3059fdbee349ca841f1b955488feb624af2d211081fcf45d88bbdf57c1"
+  },
+  "evidence": {
+    "availability": "Raw logs and private rollback configs retained locally only.",
+    "acceptanceSummarySha256": "33b3dac7a97d2396f931ea13e242795ab9ea309a028c020849d679cc024056b3",
+    "reconnectSummarySha256": "ff5962f64e07efbf94206b80c9fa3dd7189fc6c89688a58c2da17e91a37462b1"
+  },
+  "limitations": [
+    "No new throughput or 128K performance acceptance.",
+    "Windows SCM and host-reboot persistence not tested."
+  ]
+}

@@ -1,32 +1,11 @@
 # GPU status and next milestones
 
-## Completed in v0.2
+Qwen3.6-35B-A3B is the only supported real model. Dense Qwen2.5 and TinyStories execution paths have been removed; CPU numerical primitives and weight-free RPC simulation remain for tests.
 
-- Original Metal C ABI bridge: device/queue/pipeline, persistent FP32 weight buffers, safe .NET handles and deterministic disposal.
-- Actual Metal GEMV with two SIMD groups per output row, including irregular shapes.
-- CPU numerical reference and complete-vocabulary logit/generation comparisons on M5 Pro.
-- FP32 TinyStories model loading/tokenization, sequential prefill/decode, attention and request-local KV cache in C#.
-- Actual text through coordinator and independent Metal workers; Native AOT deployment with bridge sidecar.
+## Metal
 
-## Current Metal status — Qwen3.6 MoE
+The original C# / Metal engine supports the same model's 5bit and 8bit affine checkpoints. The complete forward, attention, recurrent state, Top-8 experts and argmax run on GPU. The CLI/demo launcher defaults to 8bit. See [architecture](ARCHITECTURE.md), [8bit evidence](QWEN36-8BIT.md) and [fixed acceptance gates](QWEN36-8BIT-TARGETS.md).
 
-The original Qwen3.6-35B-A3B executor now runs the complete token forward on GPU:
-5/8-bit affine projections, normalization, convolution, RoPE, Gated DeltaNet,
-full attention/KV updates, Top-8 routing, fused experts and argmax. FP32 state
-and activations are retained. One command buffer per token replaces the previous
-191 submissions. Native AOT short-context decode measured 96.322 tokens/s on
-M5 Pro, compared with 92.186 for the external MLX baseline at the same 24-input /
-128-output lengths. Original batched prefill now processes 32-token chunks using FP32 matrix instructions, batched causal attention and register-resident recurrent updates. Streaming and longer-context performance validation remain next work. Dense Qwen2.5 still
-uses GPU GEMV with CPU attention. See [benchmark evidence](QWEN36-OWN-BENCHMARK.md).
+## CUDA and dual-host execution
 
-## CUDA work next
-
-Discovery only remains implemented. Add context/stream/module/allocation ownership, an original SM89 GEMV kernel, actual RTX 4090 numerical tests, then integrate the same transformer contract. No CUDA inference or CUDA performance is claimed without that hardware validation.
-
-## Distributed models later
-
-Current workers hold complete model replicas. Layer/expert placement, bounded binary activation transport, collectives, remote failure semantics and sharded KV ownership remain future work. A real DeepSeek model requires a compatible architecture, tokenizer, quantization implementation and explicit memory budget; the 15M demo does not establish that support.
-
-## Completed in v0.3
-
-Official Qwen2.5-3B-Instruct BF16 safetensors, byte-BPE/chat template, QKV biases and split-half RoPE are supported. BF16 weights are consumed directly by a second Metal GEMV kernel with FP32 accumulation. The original single-device Qwen inference path is implemented in .NET plus the Metal bridge; optimized GPU attention/batched prefill remain next steps.
+The dedicated RTX 4090 prefix agent and Mac Metal serve implement 20/20 layer handoff and state transfer. Generic CUDA full-model loading is not implemented. Deployment and current limitations are documented in [deployment](DEPLOYMENT.md), [split prefill](SPLIT-PREFILL.md) and [decode diagnosis](SPLIT-DECODE-DIAGNOSIS.md). Short-input or operator checks do not establish the complete 128K performance/resource gates.

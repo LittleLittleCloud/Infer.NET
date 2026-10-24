@@ -1,0 +1,23 @@
+name: Site acceptance (read-only)
+on:
+  pull_request:
+    paths: ['site/**', 'docs/**', 'scripts/build-progress-site.py', 'scripts/home_trends.py', 'scripts/test-home-trends.py', 'scripts/test-home-trends.js', 'tests/home-trends/**', '.github/workflows/pages.yml', '.github/workflows/site-acceptance.yml']
+permissions:
+  contents: read
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 scripts/build-progress-site.py
+      - run: python3 scripts/test-home-trends.py
+      - run: node scripts/test-home-trends.js

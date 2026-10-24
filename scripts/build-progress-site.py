@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from home_trends import homepage, load_data
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'artifacts/pages'
@@ -32,13 +33,14 @@ def table(headers, rows):
 
 def page(title, body, active):
     return f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{'en' if active == 'trends' else 'zh-CN'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)} · Infer.NET</title><meta name="description" content="Infer.NET 项目进展、可复现实验笔记与 8bit 双机性能目标。">
 <link rel="stylesheet" href="style.css"></head><body>
 <a class="skip" href="#main">跳至内容</a><header><a class="brand" href="index.html">Infer.NET<span>INFERENCE RESEARCH LOG</span></a>
-<nav aria-label="主导航"><a {'aria-current="page"' if active == 'progress' else ''} href="index.html">项目进展</a>
+<nav aria-label="主导航"><a {'aria-current="page"' if active == 'trends' else ''} href="index.html">Commit trends</a>
+<a {'aria-current="page"' if active == 'progress' else ''} href="progress.html">项目进展</a>
 <a {'aria-current="page"' if active == 'notes' else ''} href="experiments.html">实验笔记</a><a href="{REPO}/issues">Issues ↗</a><a href="{REPO}">GitHub ↗</a></nav></header>
-<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 8K 双机 prefill 累计提速约 3.66 倍；128K / BF16 与 Windows SCM 仍待完成</span>
+<main id="main">{body}</main><footer><span>内容整理于 2026-10-23 · 实测范围与缺项见逐次记录</span>
 <span>页面版本：{esc(revision[:12])} · 历史测量版本见二进制散列</span></footer></body></html>'''
 
 
@@ -62,14 +64,17 @@ target_rows = [line.strip('|').split('|') for line in target_text.splitlines()
 assert len(target_rows) == 4, 'Target table changed: review site mapping before publishing.'
 
 body = '''<section class="hero"><p class="eyebrow">研究进展 / 2026.10.23</p><h1>从单机基线，<br>走向双机推理。</h1>
-<p class="lead">自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过；当前 Q8 KV 目标和 128K 性能仍未验收。</p>
+<p class="lead">项目仅保留 Qwen3.6-35B-A3B，默认使用 8bit 权重；同模型 5bit 检查点继续支持。<a href="https://github.com/LittleLittleCloud/Infer.NET/issues/45">模型清理 #45</a>。自写 .NET / Metal 推理已完成 Qwen3.6-35B-A3B 8bit 单机验证。真实双机8K/32K输入与4096输出已验证：4090前20层、Mac后20层与完整状态接管。FP32 KV 诊断通过；当前 Q8 KV 目标和 128K 性能仍未验收。</p>
 <div class="tags"><span>8bit 单机基线完成</span><span class="pending">双机8K/32K已验证</span><span>无前缀缓存</span></div></section>
 <section class="stats" aria-label="关键实测"><article><p>128K + 128 · 单机 prefill</p><strong>964.0 <small>token/s</small></strong><span>135.966 秒 · 3 次正式测量</span></article>
 <article><p>128K + 4096 · 单机 decode</p><strong>38.95 <small>token/s</small></strong><span>固定输出 · 1 次正式测量</span></article>
 <article><p>128K · 双机最终 prefill 目标</p><strong>2000 <small>token/s</small></strong><span>尚未达标 · 不是实测成绩</span></article></section>
 <section><div class="section-head"><h2>当前进展</h2><a href="''' + REPO + '''/issues/1">总目标 #1 ↗</a></div>
 <div class="notice"><strong>CUDA GEMM / 专家：计算略快，双机未提速</strong><p>8bit / FP32 KV，同一Mac进程上切换4090 packed与fast：固定18,453输入的前段计算约快1%，两轮A–B长档完整prefill合并中位27.578/27.559秒，基本持平。固定20题HumanEval的worker prefill为561.6/532.3 token/s，decode为66.1/64.3 token/s；请求组合不同，不能把聚合降幅全归因于内核。fast保留为候选，Q8 KV与128K目标未验收。<a href="experiments.html#cuda-gemm-experts-20261023">实验记录 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/38">Issue #38</a></p></div>
+<div class="notice"><strong>Pi 固定 20 题复测：19/20，工具调用错误可复现</strong><p>同一 e017d84 推理部署与同一评测脚本复测：19 题完成并通过官方逐题断言；HumanEval/149 在工具调用解析时报错，单题重试也失败。整轮 774.3 秒含提前失败题，不能当作比首次 808.9 秒更快。<a href="experiments.html#pi-humaneval-rerun-20">复测记录 →</a> · <a href="pi-humaneval-rerun-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/32">工具调用 Issue #32</a></p></div>
+<div class="notice"><strong>首次测量：固定 20 题全部通过</strong><p>coordinator、Mac serve 与 Windows agent 均运行 e017d84；Pi 1.4.0 串行完成固定 HumanEval 20 题，整题 wall time 合计 808.9 秒、中位 34.5 秒、P90 61.6 秒。20 份完整代码均通过对应题目断言。这是有工具的 Pi 端到端小样本基线，不是 164 题榜单成绩或 GPU 吞吐上限。<a href="experiments.html#pi-humaneval-main-20">实验记录 →</a> · <a href="pi-humaneval-main-summary.json">逐题 JSON</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/issues/40">Issue #40</a></p></div>
 <div class="notice"><strong>BF16 QKV补偿：局部更准，整层仍未通过</strong><p>同版4090诊断中，三项BF16高低位乘积让token16的QKV相对FP32误差从9.92e-4降至8.01e-6；首层相对独立FP32参考仍约0.00704，20层0项通过。开关默认关闭、未部署；目标BF16 KV、独立状态/logits和128K验收仍待完成。<a href="experiments.html#bf16-highlow-qkv">新A/B →</a> · <a href="experiments.html#bf16-independent-oracle">独立参考 →</a> · <a href="https://github.com/LittleLittleCloud/Infer.NET/pull/31">诊断PR #31</a></p></div>
+<div class="notice"><strong>唯一模型与双机版本已统一：58bf950</strong><p>仅保留 Qwen3.6-35B-A3B，默认 8bit。真实部署15项、双机断连重连和输出一致性通过；三平台CI通过。Windows仍以前台agent运行，SCM与128K性能未验收。<a href="experiments.html#single-model-deployment">更新记录 →</a> · <a href="single-model-deployment-summary.json">验收摘要 JSON</a></p></div>
 <div class="notice"><strong>CUDA权重复用：8K prefill 14.32→11.35秒</strong><p>同包对照，32K输入66.93→52.91秒；32K＋4096输出整次143.48秒，decode45.48token/s。全部输出一致；仍为8bit/FP32诊断，BF16/128K未通过。<a href="experiments.html#cuda-dense-reuse">完整A/B →</a> · <a href="dense-reuse-summary.json">逐次JSON</a></p></div>
 <div class="notice"><strong>8K 双机 prefill：14.35 秒，累计约 3.66 倍</strong><p>KV 分段交接再减少 14.79%；完整请求 16.62 秒，decode 约 56 token/s。84-token 数值对照、真实取消恢复通过。仍为 8bit / FP32 诊断；128K / BF16 目标未通过。<a href="experiments.html#kv-streaming">A/B 与数值检查 →</a> · <a href="kv-streaming-summary.json">逐次 JSON</a></p></div>
 <div class="notice"><strong>8K 输入 + 4096 输出：55.05 token/s</strong><p>末尾 1024 个 token 仍为 53.90 token/s，4 轮输出一致，零新增 swap-out。三次正式请求中位 91.15 秒（上一版 2760e44）；32K 新内核已测：35.10→45.43 token/s（+29.45%），4096输出整次156.77秒；BF16/128K仍未验收。<a href="experiments.html#decode-attention-fp32">新内核对照 →</a><a href="experiments.html#sustained-decode">持续解码记录 →</a> · <a href="long-output-summary.json">逐次 JSON</a></p></div>
@@ -106,7 +111,11 @@ body += '''</div></section><section><h2>证据与复现</h2><p>历史实验发�
 <p><a href="baseline-8bit.json">下载 8bit 测量摘要 JSON</a> · <a href="experiments.json">下载实验笔记 JSON</a></p>
 <p class="note">公开摘要不含原始提示词和完整 RPC 日志；这些原始文件仍保存在本地，摘要保留其文件名与散列。当前链接不意味着原始日志已公开。</p></section>'''
 OUT.mkdir(parents=True, exist_ok=True)
-(OUT / 'index.html').write_text(page('项目进展', body, 'progress'))
+(OUT / 'progress.html').write_text(page('项目进展', body, 'progress'))
+trends = load_data()
+(OUT / 'index.html').write_text(page('Commit trends', homepage(trends), 'trends'))
+(OUT / 'trends-data.json').write_text(json.dumps(trends, ensure_ascii=False, indent=2, allow_nan=False))
+shutil.copyfile(ROOT / 'site/trends.js', OUT / 'trends.js')
 
 body = '''<section class="hero compact"><p class="eyebrow">EXPERIMENT NOTEBOOK</p><h1>记录每一次尝试。</h1><p class="lead">保留收益、退化、失败与边界。5bit 历史实验和当前 8bit 基线分别记录；理论分析与实际测量分别标明。</p>
 <p class="note">整理日期：2026-10-23。仅明确有日期的实验标出测量日期；其余按已有记录整理，不推定执行时间。新增有线 CUDA 计算块 A/B，保留端到端退化、分段 KV 交接与 4096-token 持续生成记录；BF16/128K 正式验收仍未完成。</p></section><nav class="notebook-nav" aria-label="实验目录">'''
@@ -126,8 +135,8 @@ for n in notes:
             body += f'<p class="note">本地证据索引：<code>{esc(n["evidence"])}</code>（原始文件未公开）</p>'
     body += '</article>'
 (OUT / 'experiments.html').write_text(page('实验笔记', body, 'notes'))
-for name in ['baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'cuda-midchunk-summary.json', 'bf16-fp32-control-summary.json', 'bf16-fp32kv-control-summary.json', 'bf16-independent-oracle-summary.json', 'bf16-highlow-qkv-summary.json', 'bf16-all-projections-summary.json', 'cuda-query-reuse-summary.json', 'cuda-score-reuse-summary.json', 'style.css']:
+for name in ['single-model-deployment-summary.json', 'baseline-8bit.json', 'kv-sync-summary.json', 'split-prefill-summary.json', 'experiments.json', 'pi-humaneval-main-summary.json', 'pi-humaneval-rerun-summary.json', 'chat-acceptance-summary.json', 'dashboard-acceptance-summary.json', 'idle-latency-summary.json', 'residency-summary.json', 'short-prefill-summary.json', 'cuda-chunk-summary.json', 'suffix-batching-summary.json', 'send-overlap-summary.json', 'kv-streaming-summary.json', 'long-output-summary.json', 'long-context-summary.json', 'decode-attention-summary.json', 'receive-overlap-summary.json', 'prefix-diagnostics.json', 'dense-reuse-summary.json', 'metal-scratch-summary.json', 'prefill-stage-summary.json', 'cuda-midchunk-summary.json', 'bf16-fp32-control-summary.json', 'bf16-fp32kv-control-summary.json', 'bf16-independent-oracle-summary.json', 'bf16-highlow-qkv-summary.json', 'bf16-all-projections-summary.json', 'cuda-query-reuse-summary.json', 'cuda-score-reuse-summary.json', 'style.css']:
     shutil.copyfile(ROOT / 'site' / name, OUT / name)
 shutil.copytree(ROOT / 'site/assets', OUT / 'assets', dirs_exist_ok=True)
 (OUT / '.nojekyll').write_text('')
-print(f'Built {OUT}: 2 pages, {len(notes)} notes, {len(measurements)} measured baselines; revision {revision}')
+print(f'Built {OUT}: 3 pages, {len(notes)} notes, {len(trends["runs"])} trend runs; revision {revision}')

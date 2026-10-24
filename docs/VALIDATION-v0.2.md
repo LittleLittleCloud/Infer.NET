@@ -1,5 +1,8 @@
 # v0.2 local validation — 2026-10-20
 
+> Historical record: this model path was retired on 2026-10-23. Only Qwen3.6-35B-A3B remains supported. Legacy loaders, model metadata and dedicated scripts referenced below were removed; the commands and paths describe the original experiment and are no longer current instructions. See [current setup](../README.md) and [Qwen3.6 validation](QWEN36-8BIT.md).
+
+
 Environment: Apple M5 Pro, 48GB unified memory, macOS 26.6 / arm64; .NET SDK 10.0.100 selected by global.json. The workspace was originally empty; Git is initialized on main, without a commit, remote or pull request.
 
 ## Acceptance results

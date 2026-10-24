@@ -1,12 +1,12 @@
-# Infer.NET — Qwen dense / Qwen3.6 MoE
+# Infer.NET — Qwen3.6-35B-A3B
 
 [项目进展](https://littlelittlecloud.github.io/Infer.NET/) · [实验笔记](https://littlelittlecloud.github.io/Infer.NET/experiments.html) · [任务与验收](https://github.com/LittleLittleCloud/Infer.NET/issues/1)
 
-站点内容由 `site/` 与固定性能规范生成，运行 `python3 scripts/build-progress-site.py` 可在 `artifacts/pages/` 预览。推送相关变更到 main 后由 GitHub Actions 发布。项目名称为 Infer.NET；现有 `DeepInfer.*` 文件名与命令保留兼容。
+站点内容由 `site/` 与固定性能规范生成，运行 `python3 scripts/build-progress-site.py` 可在 `artifacts/pages/` 预览。首页为四项 commit 趋势与逐任务记录；原完整进展页保留在 [progress.html](https://littlelittlecloud.github.io/Infer.NET/progress.html)。数据契约、缺测口径与离线验收见 [首页趋势数据说明](docs/HOME-TRENDS-DATA.md)。推送相关变更到 main 后由 GitHub Actions 发布。项目名称为 Infer.NET；现有 `DeepInfer.*` 文件名与命令保留兼容。
 
-**默认模型已换成 Qwen2.5-3B-Instruct。** CLI / RazorConsole → 协调器 → 独立 .NET Worker → 实际 Metal 计算 → 中文回答。支持 Native AOT。
+**唯一支持的真实模型是 Qwen3.6-35B-A3B。** CLI、demo 和默认启动器均选择该模型，默认权重为 `models/qwen3.6-35b-a3b-8bit-mlx`。同一模型的 5bit 与 8bit 检查点继续支持；Qwen2.5 3B/7B、TinyStories 的加载器、下载器及启动入口已移除。`synthetic-v1` 仅用于不加载权重的 RPC 测试。
 
-3B / 7B 采用官方 BF16 safetensors，权重保持 BF16 存储，Metal 矩阵运算使用 FP32 累加。分词、聊天模板、注意力、归一化、RoPE、激活和 KV cache 在 C# / CPU 上执行。Qwen3.6 MoE 使用下文的自写量化执行路径。产品不调用 Python、Transformers、MLX、llama.cpp 或外部模型服务。
+产品通过自写 C# / Metal / CUDA 路径执行推理，不调用 Python、Transformers、MLX、llama.cpp 或外部模型服务。Python 仅用于下载、独立参考和验收脚本。
 
 ## 直接启动
 
@@ -24,37 +24,28 @@ python3 scripts/split/run-dual.py --native --verify --kv fp32
 ./scripts/mvp.sh
 ```
 
-首次下载约 6.2GB 官方模型；已有文件会验证 SHA-256 并复用。启动一个协调器、一个 Qwen 3B Worker 和终端界面。默认输入“用一句话介绍你自己。”，Tab 选择 Generate，Enter 生成，Ctrl+C 退出并清理进程。
-
-原生版本已放在 `artifacts/`；没有原生文件时启动器会构建托管版。默认端口 5100–5101；可用 `DEEPINFER_BASE_PORT=5500 ./scripts/mvp.sh` 覆盖。默认使用一个模型副本；显式增加 `--workers` 才加载更多副本。
-
-## 试用 7B 与测量解码
-
-双击 `DeepInfer7B.command`，或运行 `DEEPINFER_MODEL_SIZE=7b ./scripts/mvp.sh`。它加载官方 Qwen2.5-7B-Instruct 原始 BF16 权重（约 15.2GB），默认一个副本；原有 `DeepInfer.command` 继续使用 3B。
+首次使用先下载固定版本的 8bit 权重：
 
 ```sh
-python3 scripts/download-qwen.py --size 7b
-deepinfer demo --model qwen2.5-7b-instruct --stay
-# 另一个终端：
-deepinfer infer --model qwen2.5-7b-instruct --prompt "用一句话介绍你自己。" --json
-deepinfer bench --model qwen2.5-7b-instruct --requests 3 --warmup 1 --max-tokens 128
+python3 scripts/download-qwen36-mlx.py --bits 8
+./scripts/mvp.sh
 ```
 
-`timings.prefillMs` 是 worker 的 prompt forward 时间；`timings.decodeTokensPerSecond` 只测首个输出 token 到最后一个输出 token 之间的 N−1 个生成间隔，排除加载、prefill、首 token 和末尾 EOS 探测。它包含 CPU 运算、GPU 调度和同步，属于实际引擎解码速度。非流式 API 的 `firstTokenMs` 是 worker 内部时间，不能当作用户看到首 token 的网络延迟。`bench` 同时保留包含 prefill/RPC 的 `tokensPerSecond`，不能将两者混用。
+下载环境需要 `huggingface-hub`。启动器启动一个协调器、一个 Qwen3.6 Metal Worker 和终端界面；Ctrl+C 退出并清理子进程。可用 `DEEPINFER_BASE_PORT=5500` 覆盖默认端口 5100–5101，或用 `DEEPINFER_WEIGHTS=models/qwen3.6-35b-a3b-5bit-mlx` 显式选择该模型的 5bit 权重。已有原生产物时使用 `artifacts/` 下的程序，否则构建托管版；修改源码后请重新构建或发布产物。
 
-两种模型的相同条件实测及复现命令见 [解码速度记录](docs/DECODE-BENCHMARK.md)。
+`DeepInferMoE.command` 保留为同一模型的 M5 调优入口，也使用默认 8bit 权重。显式增加 `--workers` 会加载额外完整模型副本，应先确认内存容量。
 
 ## Qwen3.6-35B-A3B：自写 Metal / C# 引擎
 
 **8bit 性能目标 v1 已固定**：128K 无前缀缓存，双机端到端 prefill 最终目标 **2000 token/s**，128K + 4096 输出整次请求 **≤ 180 秒**，持续 decode **≥ 37 token/s**。阶段验收线为 1600 token/s / 200 秒；均为待实现目标。模型、计时、复测、正确性与内存门槛见 [性能验收规范](docs/QWEN36-8BIT-TARGETS.md)。
 
-**8bit 新基线（独立产物）**：自写 Metal 已完成 8bit 权重支持与实际模型校验。M5 Pro 48GB、AC / High Power，8K / 32K / 128K 输入的稳态 prefill 分别为 **3.467 / 17.743 / 135.966 秒**，解码 **66.34 / 60.51 / 37.52 token/s**。**128K + 4096 输出**使用 512 分块完整跑通：prefill **164.157 秒**、持续解码 **38.95 token/s**。拆开最终词表投影降低单次提交的驻留峰值；长输出还需缩小工作区。整机确有换页，不能视为无内存压力。逐层校验、68 项单测及 4 项长请求后 RPC 验收通过；8bit 的复现、失败记录、内存限制与 20/20 双机容量/收益估算见 [8bit 验证报告](docs/QWEN36-8BIT.md)。现有 MoE 启动器仍保留原 5bit 配置，以下为此前 5bit 测量。
+**8bit 新基线（独立产物）**：自写 Metal 已完成 8bit 权重支持与实际模型校验。M5 Pro 48GB、AC / High Power，8K / 32K / 128K 输入的稳态 prefill 分别为 **3.467 / 17.743 / 135.966 秒**，解码 **66.34 / 60.51 / 37.52 token/s**。**128K + 4096 输出**使用 512 分块完整跑通：prefill **164.157 秒**、持续解码 **38.95 token/s**。拆开最终词表投影降低单次提交的驻留峰值；长输出还需缩小工作区。整机确有换页，不能视为无内存压力。逐层校验、68 项单测及 4 项长请求后 RPC 验收通过；8bit 的复现、失败记录、内存限制与 20/20 双机容量/收益估算见 [8bit 验证报告](docs/QWEN36-8BIT.md)。当前启动器默认使用 8bit；以下保留此前 5bit 测量。
 
-**当前 M5 启动配置**：专家尾块自适应 16/32/64、gate/up 合并矩阵乘法、DeltaNet 直接矩阵读取。AC / High Power、相同二进制与精度、每档预热三次测三次，8K prefill **3.468 → 3.353 秒（减少 3.32%）**，32K **17.850 → 17.344 秒（减少 2.83%）**。两档 A/B 全部 128 个输出 token 一致，显存分配和提交次数不变。新鲜 MLX 对照 **2.967 / 14.701 秒**，prefill 仍慢 **12.99% / 17.98%**，尚未持平；本轮解码为 **84.76 / 74.88 token/s**。287 项 Metal、68 项单元、25 项 RPC 和 4 项真实模型检查通过。`DeepInferMoE.command` 已选择新配置，详见 [实现与完整证据](docs/PREFILL-EXPERT-DELTA.md)。下文保留历史轮次，各自条件不能混用。
+**M5 调优配置（5bit 历史测量）**：专家尾块自适应 16/32/64、gate/up 合并矩阵乘法、DeltaNet 直接矩阵读取。AC / High Power、相同二进制与精度、每档预热三次测三次，8K prefill **3.468 → 3.353 秒（减少 3.32%）**，32K **17.850 → 17.344 秒（减少 2.83%）**。两档 A/B 全部 128 个输出 token 一致，显存分配和提交次数不变。新鲜 MLX 对照 **2.967 / 14.701 秒**，prefill 仍慢 **12.99% / 17.98%**，尚未持平；本轮解码为 **84.76 / 74.88 token/s**。287 项 Metal、68 项单元、25 项 RPC 和 4 项真实模型检查通过。`DeepInferMoE.command` 已选择新配置，详见 [实现与完整证据](docs/PREFILL-EXPERT-DELTA.md)。下文保留历史轮次，各自条件不能混用。
 
 此前专家中间布局实验：已实现 gate/up 直接输出 down 所需 BF16 布局，8K 同轮 prefill 耗时降低约 **1.4%**；32K 初测及补测分别慢约 **1.1% / 0.5%**，因此保留原默认路径。反量化双缓冲在 8K 反而慢约 **7.1%**，未启用。精度及输出不变，详见 [实现、High Power 实测与验证](docs/EXPERT-FLOW.md)。
 
-双击 **`DeepInferMoE.command`**，或运行 `DEEPINFER_MODEL_SIZE=moe ./scripts/mvp.sh`。本机权重已下载。其他机器先用 `scripts/download-qwen36-mlx.py` 获取固定版本的量化权重；该下载器的 Python 环境需要 `huggingface-hub`，运行产品无需 Python。
+双击 **`DeepInferMoE.command`**，或运行 `./scripts/mvp.sh`。先用 `python3 scripts/download-qwen36-mlx.py --bits 8` 获取固定版本的量化权重；该下载器的 Python 环境需要 `huggingface-hub`，运行产品无需 Python。
 
 支持该系列检查点的 5-bit 或 8-bit/group64 affine 权重、8-bit router、256 专家 Top-8、共享专家、30 层 Gated DeltaNet 与 10 层 gated full attention。默认完整 forward 在自写 Metal GPU 执行器中完成，包括量化 GEMV、专家 SwiGLU、归一化、卷积、RoPE、两种注意力、路由和 argmax；C# 负责分词、生成控制和 RPC。FP32 激活、状态和累加。**没有调用 MLX、llama.cpp、Ollama 或外部模型服务。** `mlx` 仅出现在所读取的检查点格式/目录名中。
 
@@ -77,6 +68,165 @@ python3 scripts/benchmark-qwen36-own.py
 
 目前为单机 GPU 执行基线：默认最多 2048-token 分块批量 prefill、所选专家分组 GEMM、分块 DeltaNet、长输入使用自写融合注意力、贪心非思考模式；已开放配置中的 262,144 token 总窗口、最多生成 32,768 token，输入输出共用预算。开放容量不代表最大长度已经实测；长上下文测试见 [长序列基准](docs/LONG-CONTEXT-BENCHMARK.md)。不支持图像、MTP、YaRN 或跨设备模型切分。正确性验证、实测速度和复现方式见 [自写引擎基线](docs/QWEN36-OWN-BENCHMARK.md)。
 
+## Pi + HumanEval wall-time harness
+
+`scripts/benchmark-pi-humaneval.py` measures the **real Pi CLI** using
+`infernet/qwen3.6-35b-a3b`, serially, with standard read/write/bash/edit tools.
+It never starts, restarts, or deploys a server. Python 3.9+ and a separately
+installed Pi are required; no Python packages are needed.
+
+**Dataset pin:** official [OpenAI HumanEval](https://github.com/openai/human-eval),
+revision `b9453e8f1865df0a0057a1383767caa400acfbcf`,
+[`data/HumanEval.jsonl.gz`](https://raw.githubusercontent.com/openai/human-eval/b9453e8f1865df0a0057a1383767caa400acfbcf/data/HumanEval.jsonl.gz),
+compressed-file SHA-256
+`b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`.
+The runner verifies the digest and all 164 IDs before running any task. Use
+`--dataset /absolute/path/HumanEval.jsonl.gz` for an offline copy of those exact
+bytes. The dataset is not bundled; its upstream MIT license applies.
+Only task IDs and prompts are retained after loading; tests and reference
+solutions are never supplied in Pi's prompt or workspace.
+
+### Reproduce
+
+Use a disposable environment with only the intended local Infer.NET endpoint
+reachable. Pi's bash tool runs generated commands: **a fresh workspace is not
+a security sandbox**. Do not run this with unrelated credentials, private
+files, or a local HumanEval checkout accessible to the agent. No official
+evaluator or generated solution is executed by the harness; Pi itself may run
+commands or syntax checks while solving the task.
+
+The Pi CLI interface was checked against upstream
+[`136b87e8a7f5a3e5186de0289523ba327dc592fc`](https://github.com/badlogic/pi-mono/tree/136b87e8a7f5a3e5186de0289523ba327dc592fc/packages/coding-agent)
+(package version 1.4.0). Install a Pi release supporting the recorded flags,
+including `--no-context-files` and `--no-approve`; unsupported flags are task
+failures, not grounds to silently weaken isolation. Keep the **same exact Pi
+version** for baseline and candidate. `--pi /absolute/path/to/pi` selects the
+executable. On Windows, where npm normally installs a `.cmd` wrapper, pass
+`--pi C:\absolute\npm\node_modules\@earendil-works\pi-coding-agent\dist\cli.js`
+(use the actual installed package path). The harness invokes that entry point
+with `node` from PATH, without shell quoting of prompts. `.cmd`/`.bat` wrappers
+are rejected. Bash must also be available for Pi's bash tool.
+
+Start and validate the authenticated local server separately using its normal
+deployment instructions. Its OpenAI-compatible chat endpoint must support
+tool calls. Supply the existing token **file path**, never a token in command
+arguments. The runner does not read your normal Pi config: it generates a
+fresh `models.json` for the loopback endpoint using the
+`$INFERNET_BENCH_TOKEN` key reference and explicit HTTP authentication. It disables
+discovery of extensions/MCP/skills/context files,
+disables retry/compaction, uses `--thinking off`, and uses `--no-session`.
+Each task gets a new temporary workspace, home, and agent directory, removed
+after collection. The child environment is restricted, but the local API
+token is necessarily available to Pi (and hence its tools).
+
+The generated `infernet/qwen3.6-35b-a3b` model uses `openai-completions` with
+explicit endpoint compatibility: `maxTokensField="max_tokens"`,
+`supportsDeveloperRole=false`, `supportsReasoningEffort=false`, and
+`supportsStore=false`. The current Infer.NET endpoint requires `max_tokens`
+rather than `max_completion_tokens`, does not support the developer role, and
+rejects `reasoning_effort` and `store` parameters (including `store=false`).
+These settings prevent Pi from sending unsupported parameters; they match the
+working Pi model configuration without reading or modifying your normal config.
+The offline fixture checks these fields in each task's generated `models.json`.
+
+From the repository root (replace paths/build labels with verified local values):
+
+```sh
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort pilot --seed 0 --timeout 600 \
+  --endpoint http://127.0.0.1:5200 --token-file /absolute/private/token \
+  --endpoint-build VERIFIED_BUILD --model-revision VERIFIED_MODEL_REVISION \
+  --output artifacts/pi-humaneval/baseline-pilot
+
+# Run only after reviewing pilot evidence; use a fresh directory every time:
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort cohort --seed 0 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/baseline-20
+
+python3 scripts/benchmark-pi-humaneval.py \
+  --cohort full --seed 0 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/baseline-164
+
+# Explicit IDs override cohort selection:
+python3 scripts/benchmark-pi-humaneval.py \
+  --ids HumanEval/0,HumanEval/1 --timeout 600 \
+  --token-file /absolute/private/token --output artifacts/pi-humaneval/explicit
+
+# Offline fixtures, also run in CI; no Pi, model, network, or GPU:
+python3 scripts/test-pi-humaneval.py
+```
+
+Selection sorts IDs by SHA-256 of UTF-8 `SEED:HumanEval/N`, ascending;
+`pilot` takes 5, `cohort` takes 20, and `full` takes 164. Thus the pilot is
+contained in the fixed 20-task cohort for the same seed. Explicit IDs preserve
+the supplied order. The seed controls **selection only**, not server sampling.
+Defaults are a 32,768-token context declaration and 4,096 output tokens per
+request; set `--context-window` / `--max-tokens` to the real endpoint limits.
+Do not change them between comparisons. Build/model revision fields default
+to `null`: supply verified non-secret provenance when available, not guesses.
+
+### Evidence and interpretation
+
+The new output directory contains:
+
+- `manifest.json`: exact source/digest, ordered IDs, seed, Pi version,
+  endpoint/build/model revision, limits, timeout, and harness digest.
+- `tasks.jsonl`: one record per attempted task, including failures/timeouts;
+  prompt hashes (both dataset and complete user prompt), exact Pi command,
+  version/provider/model, UTC start/end and monotonic process wall time,
+  return/finish status, authoritative assistant-message usage, request and
+  turn timings, tool lifecycle records, solution hash and syntax status.
+- `HumanEval-N/events.jsonl`: raw Pi event objects wrapped with harness-observed
+  monotonic receive offsets; stderr and malformed lines are retained separately.
+  API credentials are redacted before writing, including JSON-escaped values.
+  Streaming usage snapshots are **not** summed: only assistant `message_end`
+  usage is counted, once per response, not duplicate `turn_end`/`agent_end` data.
+- `HumanEval-N/solution.py`: collected implementation, never evaluated. Syntax
+  means only `ast.parse` succeeded, not that the answer is correct. Original
+  bytes are hashed; if credentials are redacted, `stored_solution_sha256`
+  records the different stored bytes.
+- `summary.json`: task/completion/syntax/timeout/error counts, median,
+  nearest-rank p90 and total task wall time, token totals, request count and
+  observed request-time statistics. All failed/timed-out tasks remain in the
+  wall-time denominator. Partial usage is retained when reported; missing
+  usage is not estimated. In-flight requests lacking `message_end` have no
+  completed-request usage/duration record. Nonzero exit indicates task failure.
+
+Wall time runs from Pi process launch through exit/timeout cleanup, including
+startup, model requests, tools, and orchestration; dataset download, directory
+setup, and the harness's post-run syntax parsing are outside that interval.
+`observed_seconds` measures assistant `message_start` to `message_end` receipt;
+`duration_ms` is Pi's optional reported request duration. Turn duration includes
+tools. Neither is server-only prefill/decode telemetry or GPU kernel timing.
+Older Pi streams may omit reported durations and `agent_settled`; the parser
+also accepts terminal `agent_end` with a final successful assistant response.
+Windows runs each capture in a private, kill-on-close Job Object. A gated Python
+launcher starts Pi only after job assignment succeeds; Pi and its descendants
+are terminated even if Pi exits first. Breakaway is not enabled. Cleanup waits
+for the job to empty and reaps the launcher, using bounded three-second waits;
+cleanup errors are reported as `cleanup_failed:<exception type>`, not suppressed.
+Windows termination is asynchronous: zero active job processes is not a barrier
+for every retained process handle to signal. The Windows regression verifies
+membership of the launcher, Pi stand-in, and descendant in the exact capture job
+(and excludes an unrelated process), then requires their exit signals within a
+shared one-second teardown deadline after capture, with total elapsed time under
+five seconds. It covers both a sleeping Pi and Pi exiting before its descendant.
+Launcher startup and all cleanup remain included in wall time. Windows hosts
+whose existing job restrictions prevent nested job assignment fail before Pi
+starts; there is no uncontained fallback. POSIX uses a process group; descendants
+that deliberately escape it still require external disposable-environment
+cleanup. Neither mechanism contains work delegated to an existing external
+service. Unrelated processes/services are never stopped.
+
+**This is not HumanEval pass@1, even for the full run. A subset is not a standard
+leaderboard score.** No correctness claims are made without the official
+evaluator in an appropriate isolated execution environment. No live-model
+results are asserted by these fixtures. Before publication, the orchestrator
+must review the five-task pilot, then run baseline/candidate 20-task cohorts
+with matched IDs/order, Pi version, harness digest, token/context limits,
+model revision/precision, server state/cache policy, hardware, power and load.
+Keep failed evidence and publish only validated results.
+
 ## 独立 MLX 参考结果
 
 已在本机 M5 Pro 20核 GPU / 48GB 上测量 Qwen3.6-35B-A3B 的 MLX community 5-bit 权重：短输入解码 **90.45 tokens/s**，4K输入 **86.91 tokens/s**，16K输入 **79.97 tokens/s**。单请求、每种输入预热一次再测三次，每次固定生成256 token。
@@ -86,94 +236,66 @@ python3 scripts/benchmark-qwen36-own.py
 ## CLI
 
 ```sh
-python3 scripts/download-qwen.py
-# 启动后保持运行：
-./artifacts/native/osx-arm64/deepinfer demo --stay
-# 另一个终端，默认就是 Qwen 3B / Metal：
-./artifacts/native/osx-arm64/deepinfer infer --prompt "用一句话介绍你自己。" --json
-./artifacts/native/osx-arm64/deepinfer infer --prompt "计算2加2，只回答数字。"
-./artifacts/native/osx-arm64/deepinfer status
+python3 scripts/download-qwen36-mlx.py --bits 8
+dotnet run --project src/DeepInfer.Host -c Release -- demo --stay
+# 另一个终端，默认 Qwen3.6-35B-A3B / Metal：
+dotnet run --project src/DeepInfer.Host -c Release -- infer --prompt "用一句话介绍你自己。" --json
 ```
 
-实际生成的回答：
-
-> 我是Qwen，由阿里云开发的超大规模语言模型，旨在提供各种领域的信息和帮助。
-
-这是单轮聊天：框架添加官方默认 system / user / assistant 模板，使用贪心解码，遇到 EOS、长度或上下文限制停止。每次请求拥有独立 KV cache。目前应用上下文上限 **2048 tokens**，生成上限 **256 tokens**；并未开放模型配置中的完整长上下文。
-
-## 独立运行各个角色
+`deepinfer` 可替换为构建后的程序路径，或 `dotnet run --project src/DeepInfer.Host -c Release --`。独立运行各角色：
 
 ```sh
 deepinfer coordinator
 deepinfer worker --id qwen-mac --listen http://127.0.0.1:5101 --backend metal \
-  --weights models/qwen2.5-3b-instruct --model qwen2.5-3b-instruct
+  --weights models/qwen3.6-35b-a3b-8bit-mlx --model qwen3.6-35b-a3b
 deepinfer infer --prompt "写一句关于月亮的诗。"
 ```
 
-`deepinfer` 可替换为上述原生程序路径，或 `dotnet run --project src/DeepInfer.Host -c Release --`。`--weights` 指向目录时加载 `hf-qwen2`，分词器默认为目录中的 `tokenizer.json`。CPU 后端也支持该格式，但本机 3B 验收重点是 Metal；Python 只用于独立验收，不是 Worker 后端。
+Worker 仅加载 `mlx-qwen36-affine` 格式，分词器默认为权重目录中的 `tokenizer.json`。Metal 执行完整模型，CUDA 前段通过下文的常驻双机服务接入。CPU 数值算子保留用于验证，不再提供 CPU 模型后端。每个真实模型 Worker 容量固定为 1；无权重的 Worker 只探测设备。
 
-请求通过 HTTP JSON RPC；协调器按已加载的 model/backend 路由，Worker 是独立进程。真实模型 Worker 容量固定为 1，更多 Worker 提供完整模型副本。当前分发整个请求，尚未拆分模型到多台设备。
+单轮接口使用非思考聊天模板、贪心解码、独立请求状态；结构化多轮与流式接口见 [聊天 API](docs/CHAT-API.md)。输入输出共享 262,144 token 窗口，实际可用容量取决于内存；配置上限不等于通过全部长度验收。
 
 ## 构建与验证
 
-需要固定的 .NET SDK 10.0.100、Python 3.9+。构建 Metal bridge 需要含 macOS 26+ SDK 的 Xcode/命令行工具，CI 使用 macos-26 runner；基础运行路径目标仍为 macOS 15+ / Apple GPU，M5 BF16/Metal 4 路径额外要求 macOS 26+ 与相应 GPU。Metal shader 在运行时编译，无需单独安装离线 Metal 编译器。
-
-`global.json` 禁止 SDK 自动滚动到其他补丁版本，CI 也从该文件安装并核对版本。SDK 会引入隐式 ILLink/Native AOT 包，升级时须一起更新并验证依赖锁文件；保留 `--locked-mode`，避免开发机和 runner 使用不同依赖图。
+需要固定的 .NET SDK 10.0.100、Python 3.9+。构建 Metal bridge 需要含 macOS 26+ SDK 的 Xcode/命令行工具；M5 BF16/Metal 4 路径要求相应 GPU 与操作系统。`global.json` 固定 SDK，依赖使用锁定还原。
 
 ```sh
 dotnet restore DeepInfer.slnx --locked-mode
 dotnet build DeepInfer.slnx -c Release --no-restore
 dotnet test tests/DeepInfer.Tests -c Release --no-build
-python3 scripts/download-qwen.py
-python3 scripts/qwen-inference.py
-python3 scripts/tui-smoke.py --qwen
-# 原有小模型和故障场景回归：
 python3 scripts/integration.py
-python3 scripts/real-inference.py
+python3 scripts/chat-integration.py
+# 已下载权重并构建 Metal bridge 后：
+python3 scripts/tui-smoke.py --qwen36
+deepinfer verify-qwen36 --weights models/qwen3.6-35b-a3b-8bit-mlx \
+  --reference artifacts/reference/qwen36-8bit/reference.json
 ```
 
-独立 Transformers FP32 参考仅用于测试，可选：
-
-```sh
-# 在独立虚拟环境安装 torch / transformers / tokenizers / safetensors 后：
-python scripts/reference-qwen.py
-# 对照 5 组分词/聊天模板、151936 维 logits、完整生成 token IDs：
-deepinfer verify-qwen --reference artifacts/qwen-reference.json
-```
-
-本机使用的参考版本及测试结果见 [验证记录](docs/VALIDATION.md)。没有参考文件时，验收仍验证真实 BF16 Metal 生成，但不会声称做过独立 logits/token 对照。
+独立参考文件需预先生成，见 [8bit 验证报告](docs/QWEN36-8BIT.md)。旧模型的验证及性能记录保留为历史证据，相关加载器和复现脚本已移除。
 
 Native AOT 发布：
 
 ```sh
 dotnet publish src/DeepInfer.Host -c Release -r osx-arm64 -o artifacts/native/osx-arm64
-python3 scripts/qwen-inference.py --executable artifacts/native/osx-arm64/deepinfer \
-  --output artifacts/qwen-e2e-native.json
 dotnet publish src/DeepInfer.Tui -c Release -r osx-arm64 -p:PublishAot=true \
   -p:TreatWarningsAsErrors=false -o artifacts/tui-native/osx-arm64
-python3 scripts/tui-smoke.py --qwen --host artifacts/native/osx-arm64/deepinfer \
-  --tui artifacts/tui-native/osx-arm64/deepinfer-tui
 ```
 
-发布时把 `libdeepinfer_metal.dylib` 与 `deepinfer` 放在一起，构建会自动复制。普通 Release 构建无警告；原生 TUI 保留一条上游 IL2104 裁剪警告，使用到的组件已实际验证。Linux 由 CI 验证；Windows Native AOT、RTX 4090 前段和真实双机短请求验证见双机实验说明。
+发布时将 `libdeepinfer_metal.dylib` 与 `deepinfer` 放在一起，构建会自动复制。部署方式与两端验收见下文。
 
 ## 基准与限制
 
 ```sh
-deepinfer bench --requests 3 --warmup 1 --max-tokens 48 --output artifacts/benchmark-qwen.json
+deepinfer bench --requests 3 --warmup 1 --max-tokens 128 --output artifacts/benchmark-qwen36.json
 ```
 
-结果统计真实生成 token、RPC p50/p95、已完成 GPU 命令数量与 GPU 时间。请求耗时包含聊天模板、prefill、decode、CPU 运算、GPU 同步和 RPC，不能视为纯 decode 吞吐。Qwen3.6 已实现 GPU attention 和批量 prefill；流式返回尚未实现。
+`timings.prefillMs` 测 prompt forward；`timings.decodeTokensPerSecond` 测首个到最后一个输出 token 之间的 N−1 个生成间隔。`tokensPerSecond` 包含 prefill 和 RPC。非流式接口的内部首 token 时间不能当作网络可见 TTFT。
 
-RPC 默认等待上限为 5 分钟，以容纳 3B 模型。心跳间隔 2 秒、租约 8 秒；过载返回 429，无可用模型返回 503，失联 Worker 返回 502。不会把 CUDA 请求回退到其他后端。服务器默认仅监听本机；跨主机必须显式使用 `--allow-remote` 与统一的 `DEEPINFER_TOKEN`。HTTP 未加密，应使用可信私网/VPN 或 TLS 终止。
+服务不静默回退到其他模型或后端。跨机访问须显式启用 `--allow-remote` 并配置统一 token；使用可信私网/VPN 或 TLS 终止。完整的 128K 性能与资源门槛仍按 [固定规范](docs/QWEN36-8BIT-TARGETS.md) 验收。
 
-Qwen2.5-3B 使用 **Qwen Research License**，不是 Apache/MIT；下载器保留 [上游许可证](models/qwen2.5-3b-instruct/LICENSE) 和 [固定版本/摘要](models/qwen2.5-3b-instruct/provenance.json)。实际权重不提交 Git。Qwen3.6 检查点保留其 Apache-2.0 许可证。通用 CUDA 完整模型 Worker、其他 Qwen3 变体、GGUF、持久多轮会话和通用 rank 通信尚未实现；实验 20/20 分层执行使用独立 CLI。
+Qwen3.6 检查点的 Apache-2.0 许可证与固定版本摘要保留在对应模型目录，权重不提交 Git。仅支持该模型的文本路径；图像、MTP、YaRN、GGUF 与通用 rank 通信尚未实现。纯模拟测试显式使用 `demo --backend simulation` 或 `infer --backend simulation --model synthetic-v1`。
 
-TinyStories 15M 仍保留为小模型回归：`demo --backend metal --model stories15m --weights models/stories15M.bin --tokenizer models/tokenizer.bin`。纯模拟测试须显式使用 `demo --backend simulation` 或 `infer --backend simulation --model synthetic-v1`。
-
-Metal BF16 matrix operands and 16-bit KV are available as an opt-in M5 path; precision boundaries, measurements and commands are documented in [BF16 Metal](docs/BF16-METAL.md).
-
-The M5 MoE launcher selects the measured hybrid GEMM, packed expert input and fused BF16 attention profile. See [current tuning and matched MLX measurements](docs/PREFILL-TUNING.md).
+M5 调优入口选择 hybrid GEMM、packed experts 与 BF16 attention。精度边界及历史测量见 [BF16 Metal](docs/BF16-METAL.md) 和 [调优记录](docs/PREFILL-TUNING.md)。
 
 ## Persistent 8bit deployment
 
@@ -184,3 +306,5 @@ See [deployment instructions](docs/DEPLOYMENT.md) for private configuration, Nat
 ## Chat playground 与 HTTP 兼容接口
 
 TUI 默认连接当前 5200 coordinator，支持 Microsoft.Extensions.AI 流式多轮对话、无边框紧凑布局。HTTP 提供 Chat Completions、Claude Messages 和 Responses 的文本流式/非流式格式。用法、鉴权与明确的能力边界见 [Chat API / TUI](docs/CHAT-API.md)。
+
+实验的提案、人工批准、代码与结果 PR、评测及基线更新流程见 [实验 SOP](docs/EXPERIMENT-SOP.md)。

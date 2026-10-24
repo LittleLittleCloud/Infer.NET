@@ -3,10 +3,9 @@
 import argparse,fcntl,os,pathlib,pty,re,select,signal,socket,struct,subprocess,termios,time
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
-parser.add_argument('--size',choices=['3b','7b','moe'],default='3b')
 a=parser.parse_args()
-model='qwen3.6-35b-a3b' if a.size=='moe' else f'qwen2.5-{a.size}-instruct'
-command=ROOT/('DeepInferMoE.command' if a.size=='moe' else 'DeepInfer7B.command' if a.size=='7b' else 'DeepInfer.command')
+model='qwen3.6-35b-a3b'
+command=ROOT/'DeepInfer.command'
 for _ in range(50):
  sockets=[]
  try:
@@ -54,7 +53,7 @@ try:
  current=subprocess.check_output(['ps','-Ao','pid,comm'],text=True)
  leaked=[line for line in current.splitlines()[1:] if int(line.split(None,1)[0]) in owned]
  assert not leaked,'Launcher left owned inference processes running'
- artifact=ROOT/f'artifacts/qwen-{a.size}-launcher-smoke.txt';artifact.parent.mkdir(exist_ok=True)
+ artifact=ROOT/'artifacts/qwen36-launcher-smoke.txt';artifact.parent.mkdir(exist_ok=True)
  artifact.write_text(re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]','',text))
  print('PASS: actual one-click launcher -> Qwen TUI -> independent Metal worker -> Chinese text; Ctrl+C reaped all owned processes')
 finally:

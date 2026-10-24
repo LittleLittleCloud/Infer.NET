@@ -2,7 +2,7 @@ name: Publish progress and experiments
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'docs/**', 'scripts/build-progress-site.py', '.github/workflows/pages.yml']
+    paths: ['site/**', 'docs/**', 'scripts/build-progress-site.py', 'scripts/home_trends.py', 'scripts/test-home-trends.py', 'scripts/test-home-trends.js', 'tests/home-trends/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -14,11 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - uses: actions/configure-pages@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 scripts/test-home-trends.py
       - run: python3 scripts/build-progress-site.py
+      - run: node scripts/test-home-trends.js
       - uses: actions/upload-pages-artifact@v4
         with:
           path: artifacts/pages

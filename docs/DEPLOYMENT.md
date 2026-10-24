@@ -2,6 +2,10 @@
 
 本入口用于 Qwen3.6-35B-A3B **8bit 权重、FP32 KV**，候选版本移除 2048 context / 256 output 人为上限，模型窗口为输入加输出 262144 tokens，实际请求仍受内存和 deadline 约束。长窗口整模可用性与吞吐需要独立实测，不由上限声明保证。它提供常驻执行与服务生命周期；BF16、128K 和性能目标仍需另行验收。代码位于部署实现分支，未自动合并上游 PR。
 
+## 模型范围
+
+项目只保留 Qwen3.6-35B-A3B；本双机部署继续使用固定 revision 的 8bit 权重与 FP32 KV。单机 CLI/demo 及启动器也默认选择该模型的 8bit 检查点。Qwen2.5 3B/7B、TinyStories 的加载器、下载器和专用验证入口已移除。现有 Qwen3.6 模型、证书、token 和兼容配置可复用，更新时不重新下载权重或生成凭据。关联 [Issue #45](https://github.com/LittleLittleCloud/Infer.NET/issues/45)。本次两端实际运行版本、产物散列和验收结果见 [唯一模型部署记录](SINGLE-MODEL-DEPLOYMENT-20261023.md)。
+
 ## 进程与网络
 
 - Mac coordinator：loopback HTTP 5200，CLI/TUI 的统一入口，不加载模型。
