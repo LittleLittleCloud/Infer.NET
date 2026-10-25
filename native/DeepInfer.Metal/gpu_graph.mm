@@ -403,7 +403,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->profileFirstPosition=UINT32_MAX;g->profileRequest++;return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->profileFirstPosition=UINT32_MAX;g->profileActive=false;g->profileRequest++;return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {

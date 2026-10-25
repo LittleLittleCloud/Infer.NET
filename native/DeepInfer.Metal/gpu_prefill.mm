@@ -647,7 +647,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
  if(trace&&p->trace.length<NSUInteger(count)*40*2048*4){p->trace=g_buffer(g,NSUInteger(count)*40*2048);if(!p->trace){error_text(error,capacity,@"Cannot allocate prefill trace");return -1;}}
  memcpy(p->tokens.contents,tokens,count*4);p->submissions=0;
- g->dispatches=0;g->profileCount=0;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
+ g->dispatches=0;g->profileCount=0;g->profileActive=false;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
  auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
  if(!command||!e){error_text(error,capacity,@"Cannot create prefill command");return -1;}
  bool profiling=std::getenv("DEEPINFER_METAL_PREFILL_PROFILE")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_PROFILE"),"1")==0&&g->position==4096;
