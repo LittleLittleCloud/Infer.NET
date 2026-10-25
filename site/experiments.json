@@ -1,5 +1,20 @@
 [
   {
+    "id": "p0-q8-memory-issue33",
+    "title": "Native Q8 KV: independent full-model numerical gate failed",
+    "kind": "2026-10-25 · Negative result · Candidate not adopted",
+    "source": "docs/EXPERIMENT-33-NATIVE-Q8-RESULTS-20261025.md",
+    "question": "Does native block32 Q8 preserve the approved independent same-precision layer/logit bounds?",
+    "setup": "Pinned affine8 Qwen3.6, FP32 arithmetic/state, Q8 KV; independent MLX/scalar CPU reference versus native Metal. CUDA codec checked separately.",
+    "change": "Experimental CUDA/Metal Q8 and bounded reservations in code PR85, independently of pipeline Issue84.",
+    "result": "Codec and selected attention checks pass; full-model relative L2 reaches0.00255049 and logits maxAbs0.0285692, exceeding the approved bounds. Greedy8 match.",
+    "validation": "All121 sampled hidden/logit comparisons and exact prompt-cache byte differences retained. HumanEval/speed/long-quality gates not run after numerical failure.",
+    "conclusion": "Do not adopt. No performance point, default switch or relaxed gate.",
+    "next": "Review independent negative results; restoration record follows experiment84.",
+    "commands": [],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/33; https://github.com/LittleLittleCloud/Infer.NET/pull/85; docs/evaluations/issue33/evidence.json"
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",

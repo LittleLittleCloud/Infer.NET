@@ -1,0 +1,47 @@
+{
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "macRuntimeSource": "127d6a720ca2c3a56cb30edf27e6704b4d266d6f",
+  "codePr": "https://github.com/LittleLittleCloud/Infer.NET/pull/85",
+  "artifacts": [
+    {
+      "file": "artifacts/dual-host/issue33-control-20261025/reference.log",
+      "availability": "local-only",
+      "sha256": "6ccab2c9186f54f0750da318d49a27aa94dad3879dd9e073325ece902e60cc6e"
+    },
+    {
+      "file": "artifacts/dual-host/issue33-control-20261025/native-reference.log",
+      "availability": "local-only",
+      "sha256": "c9f8a47397a881720576e37ea40831f5f2079bbfe0aa1cf554ba3635dfdd8c48"
+    },
+    {
+      "file": "artifacts/dual-host/issue33-control-20261025/prompt-state-attached.stderr.log",
+      "availability": "local-only",
+      "sha256": "703f5641ae011d8117da2078ff72f910d0fbf9cd4285e2b42893787b812da6f7"
+    },
+    {
+      "file": "artifacts/deploy/issue33-model-build/deepinfer",
+      "availability": "local-only",
+      "sha256": "460c7f4d5eb7660495e71d06b2e894ec5ec1bf56ca895054418d0a805dc0f030"
+    },
+    {
+      "file": "artifacts/deploy/issue33-model-build/libdeepinfer_metal.dylib",
+      "availability": "local-only",
+      "sha256": "66a9e9d67384465540f7271edacbb2692d16ab3e8febf828f36e79f6122ce410"
+    },
+    {
+      "file": "artifacts/dual-host/issue33-independent-q8-reference/reference.json",
+      "availability": "local-only",
+      "sha256": "aeb35fde7a993bed1c828bd9717bd0c020844f525f6109c8e78ec59b6231d70f"
+    }
+  ],
+  "completeModelReferencePassed": false,
+  "greedy8Matched": true,
+  "checkedTensors": 121,
+  "passedTensors": 78,
+  "prefillTokensPerSecond": null,
+  "decodeTokensPerSecond": null,
+  "ttftMs": null,
+  "humanEval": "Not run: independent numerical gate failed",
+  "resourceAcceptance": "Not passed; no formal benchmark resource cohort",
+  "followup": "Full-trace diagnostic interrupted after position 1; attempted second diagnostic startup exited without captured status. No follow-up timing/resource attribution. Logs retained locally."
+}

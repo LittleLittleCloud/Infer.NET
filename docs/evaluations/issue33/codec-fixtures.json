@@ -1,0 +1,9 @@
+{
+  "format": "q8-block32-fp16-scale-rne-le",
+  "tokens": 5,
+  "oracle": "Python struct IEEE FP16 and independent scalar round-even",
+  "sha256": {
+    "input.f32": "67bbdb0523f63bac891020e578c1c87daf371cc7a55e2e6e304ffe87564ad3a5",
+    "expected.q8": "05bf3053065706cda4568f2e24afd8dc83fd6c8bb7f6a568bcd160e151c07383"
+  }
+}

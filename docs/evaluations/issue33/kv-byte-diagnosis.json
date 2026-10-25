@@ -1,0 +1,77 @@
+[
+  {
+    "layer": 3,
+    "tensor": 0,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 3,
+    "tensor": 1,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 7,
+    "tensor": 0,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 7,
+    "tensor": 1,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 11,
+    "tensor": 0,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 11,
+    "tensor": 1,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 15,
+    "tensor": 0,
+    "different_bytes": 0,
+    "first_byte": null
+  },
+  {
+    "layer": 15,
+    "tensor": 1,
+    "different_bytes": 1,
+    "first_byte": 829,
+    "token": 1,
+    "block_in_token": 8,
+    "byte_in_block": 13,
+    "reference": 234,
+    "native": 233
+  },
+  {
+    "layer": 19,
+    "tensor": 0,
+    "different_bytes": 5,
+    "first_byte": 714,
+    "token": 1,
+    "block_in_token": 5,
+    "byte_in_block": 0,
+    "reference": 99,
+    "native": 98
+  },
+  {
+    "layer": 19,
+    "tensor": 1,
+    "different_bytes": 5,
+    "first_byte": 694,
+    "token": 1,
+    "block_in_token": 4,
+    "byte_in_block": 14,
+    "reference": 255,
+    "native": 0
+  }
+]
