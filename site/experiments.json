@@ -1,5 +1,20 @@
 [
   {
+    "id": "official-mtp-20261024",
+    "kind": "2026-10-24 · Research proposal · Pending experiment approval",
+    "title": "Official Qwen3.6 MTP: BF16 draft and exact local verification",
+    "source": "docs/RESEARCH-QWEN36-OFFICIAL-MTP-20261024.md",
+    "question": "Can official MTP improve fully local affine8 decoding while preserving greedy output?",
+    "setup": "Main 4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3; proposed M5 Pro 48 GiB, target e06a74e6236a60c8367e1a3214e83d8b61b637b0; context 32768, output 4096, widths 1/2.",
+    "change": "GitHub Copilot CLI 1.0.103 / Claude Sonnet 5.5 researched pinned official tensors and upstream implementations; independent review completed. Issue #76 proposes BF16 matrices, FP32 norms and shared target head.",
+    "result": "Metadata only: 19 official BF16 tensors, 844640768 parameters, 1689281536 raw bytes. No weight payload download, implementation or inference measurement.",
+    "validation": "CLI usage confirms claude-sonnet-5.5 in initial and review runs; bounded header reads, tokenizer comparisons and pinned source review; public metadata and local evidence hashes.",
+    "conclusion": "Requires post-final-norm target hidden rows, per-cycle draft-cache reconditioning, native BF16 operators and exact multi-row target verification. Net gain and memory fit remain unknown; DFlash excluded.",
+    "next": "Await separate approval of Issue #76 before implementation/downloads/runs. Proposed adoption threshold is 1.20x fresh paired main decode with correctness/resource gates; this is not a prediction. Code and results require independent PRs.",
+    "commands": [],
+    "evidence": "docs/evaluations/official-mtp-research-20261024/artifact-manifest.json; research-provenance.json; https://github.com/LittleLittleCloud/Infer.NET/issues/76"
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",

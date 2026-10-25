@@ -1,0 +1,434 @@
+{
+  "schema": "official-mtp-research-v1",
+  "kind": "Metadata/source research only; no inference, implementation or performance measurements",
+  "date": "2026-10-24 America/Los_Angeles",
+  "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "experimentId": "official-mtp-20261024",
+  "approvalStatus": "Proposed; separate experiment approval required before implementation or model runs",
+  "target": {
+    "repository": "mlx-community/Qwen3.6-35B-A3B-8bit",
+    "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+    "weights": "Existing affine8/group64 with checkpoint per-matrix overrides; unchanged",
+    "mtpTensorEntries": 0,
+    "weightsDownloadedInResearch": false
+  },
+  "officialBf16Mtp": {
+    "repository": "Qwen/Qwen3.6-35B-A3B",
+    "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+    "configSha256": "93a4693fa9d8392fbfccd4b3c9873f4bfdcb14fdede978b123d07d19675efe99",
+    "indexSha256": "41b9356101ebf8e7519e150dc811f80c4226e727301fbb032b890f006ed0be83",
+    "mtpTensorCount": 19,
+    "mtpParameterCount": 844640768,
+    "mtpTensorPayloadBytes": 1689281536,
+    "fullSourceShards": [
+      {
+        "rfilename": "model-00025-of-00026.safetensors",
+        "blobId": "8872dbf1c5f2d0c869ab788bacc4660ff2990db9",
+        "size": 3832888256,
+        "lfs": {
+          "sha256": "778e7f76602f05042b69ba7f3ec91f1fdffef390540b16074041c258fb81d154",
+          "size": 3832888256,
+          "pointerSize": 135
+        }
+      },
+      {
+        "rfilename": "model-00026-of-00026.safetensors",
+        "blobId": "9aa3a3b81e796bae14dbd3d6327440dc99f6a527",
+        "size": 2231416848,
+        "lfs": {
+          "sha256": "1a97404220077ed3d4182e10385b152004cab608377f50cec9f54a6b8d28b613",
+          "size": 2231416848,
+          "pointerSize": 135
+        }
+      }
+    ],
+    "sourceShardsTotalBytes": 6064305104,
+    "headers": [
+      {
+        "file": "model-00025-of-00026.safetensors",
+        "status": "header-only HTTP206",
+        "headerBytes": 2616,
+        "headerSha256": "a1213b03752357c4ef03c1fb806bc445f5230de6e4c70fe252328ad707322d39"
+      },
+      {
+        "file": "model-00026-of-00026.safetensors",
+        "status": "header-only HTTP206",
+        "headerBytes": 4104,
+        "headerSha256": "6f2afede1820106eca9e38a4c24f8da679a79dc841a94a30d90ab32a16f402ec"
+      }
+    ],
+    "payloadLocallyVerified": false,
+    "tensors": {
+      "mtp.layers.0.mlp.experts.gate_up_proj": {
+        "dtype": "BF16",
+        "shape": [
+          256,
+          1024,
+          2048
+        ],
+        "bytes": 1073741824,
+        "sourceShard": "model-00025-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2759143808,
+          3832885632
+        ]
+      },
+      "mtp.fc.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048,
+          4096
+        ],
+        "bytes": 16777216,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          1615873024,
+          1632650240
+        ]
+      },
+      "mtp.layers.0.input_layernorm.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          1632650240,
+          1632654336
+        ]
+      },
+      "mtp.layers.0.mlp.experts.down_proj": {
+        "dtype": "BF16",
+        "shape": [
+          256,
+          2048,
+          512
+        ],
+        "bytes": 536870912,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          1632654336,
+          2169525248
+        ]
+      },
+      "mtp.layers.0.mlp.gate.weight": {
+        "dtype": "BF16",
+        "shape": [
+          256,
+          2048
+        ],
+        "bytes": 1048576,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2169525248,
+          2170573824
+        ]
+      },
+      "mtp.layers.0.mlp.shared_expert.down_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048,
+          512
+        ],
+        "bytes": 2097152,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2170573824,
+          2172670976
+        ]
+      },
+      "mtp.layers.0.mlp.shared_expert.gate_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          512,
+          2048
+        ],
+        "bytes": 2097152,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2172670976,
+          2174768128
+        ]
+      },
+      "mtp.layers.0.mlp.shared_expert.up_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          512,
+          2048
+        ],
+        "bytes": 2097152,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2174768128,
+          2176865280
+        ]
+      },
+      "mtp.layers.0.mlp.shared_expert_gate.weight": {
+        "dtype": "BF16",
+        "shape": [
+          1,
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2176865280,
+          2176869376
+        ]
+      },
+      "mtp.layers.0.post_attention_layernorm.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2176869376,
+          2176873472
+        ]
+      },
+      "mtp.layers.0.self_attn.k_norm.weight": {
+        "dtype": "BF16",
+        "shape": [
+          256
+        ],
+        "bytes": 512,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2176873472,
+          2176873984
+        ]
+      },
+      "mtp.layers.0.self_attn.k_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          512,
+          2048
+        ],
+        "bytes": 2097152,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2176873984,
+          2178971136
+        ]
+      },
+      "mtp.layers.0.self_attn.o_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048,
+          4096
+        ],
+        "bytes": 16777216,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2178971136,
+          2195748352
+        ]
+      },
+      "mtp.layers.0.self_attn.q_norm.weight": {
+        "dtype": "BF16",
+        "shape": [
+          256
+        ],
+        "bytes": 512,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2195748352,
+          2195748864
+        ]
+      },
+      "mtp.layers.0.self_attn.q_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          8192,
+          2048
+        ],
+        "bytes": 33554432,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2195748864,
+          2229303296
+        ]
+      },
+      "mtp.layers.0.self_attn.v_proj.weight": {
+        "dtype": "BF16",
+        "shape": [
+          512,
+          2048
+        ],
+        "bytes": 2097152,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2229303296,
+          2231400448
+        ]
+      },
+      "mtp.norm.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2231400448,
+          2231404544
+        ]
+      },
+      "mtp.pre_fc_norm_embedding.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2231404544,
+          2231408640
+        ]
+      },
+      "mtp.pre_fc_norm_hidden.weight": {
+        "dtype": "BF16",
+        "shape": [
+          2048
+        ],
+        "bytes": 4096,
+        "sourceShard": "model-00026-of-00026.safetensors",
+        "dataSectionOffsets": [
+          2231408640,
+          2231412736
+        ]
+      }
+    },
+    "sourceUrl": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B/tree/995ad96eacd98c81ed38be0c5b274b04031597b0"
+  },
+  "officialFp8Alternative": {
+    "repository": "Qwen/Qwen3.6-35B-A3B-FP8",
+    "revision": "95a723d08a9490559dae23d0cff1d9466213d989",
+    "file": {
+      "rfilename": "mtp.safetensors",
+      "blobId": "ed9eb80e0fb4bf5da9d2ec367e2d1f2ed3d51d3e",
+      "size": 853860608,
+      "lfs": {
+        "sha256": "3e9c9fef90a5c02314cf27eeccc72f9f61ce711c12c869244c7127c787b5bd7d",
+        "size": 853860608,
+        "pointerSize": 134
+      }
+    },
+    "mtpTensorCount": 1560,
+    "mtpTensorPayloadBytes": 853668480,
+    "headers": [
+      {
+        "file": "mtp.safetensors",
+        "status": "header-only HTTP206",
+        "headerBytes": 192120,
+        "headerSha256": "4100a8e361ce627741646ad058d224dfcd9c9db747a50261fbc91857aa4cce3f"
+      }
+    ],
+    "payloadLocallyVerified": false,
+    "decision": "Official alternative, not selected for the BF16-preserving proposal; FP8 is not native affine8 and cannot reproduce the original BF16 values losslessly"
+  },
+  "tokenizer": {
+    "targetRepository": "mlx-community/Qwen3.6-35B-A3B-8bit",
+    "targetRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+    "officialRevision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+    "targetFiles": {
+      "config.json": {
+        "size": 23591,
+        "blobId": "ae9d67e72bbb9fe01062915d173360f2f39d3afd",
+        "lfs": null
+      },
+      "model.safetensors.index.json": {
+        "size": 215755,
+        "blobId": "849923d192ed2238f342e4313aa9e7bfc8838cd3",
+        "lfs": null
+      },
+      "tokenizer.json": {
+        "size": 19989343,
+        "blobId": "67741b04f23bfdb46501f748ce27865ec82eccfb",
+        "lfs": {
+          "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+          "size": 19989343,
+          "pointerSize": 133
+        }
+      },
+      "tokenizer_config.json": {
+        "size": 1139,
+        "blobId": "a068e2468cff426a9b105006e74e044030a6faf4",
+        "lfs": null
+      }
+    },
+    "officialFiles": {
+      "tokenizer.json": {
+        "size": 12807982,
+        "blobId": "a73a846725794819aa6e1c9e97d8dc9671c2006d",
+        "lfs": {
+          "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+          "size": 12807982,
+          "pointerSize": 133
+        }
+      },
+      "tokenizer_config.json": {
+        "size": 16718,
+        "blobId": "28d96ff303d1d20350185caf4bf037045916ed35",
+        "lfs": null
+      }
+    },
+    "tokenizerJsonSameGitBlob": false,
+    "officialTokenizerDownloadedBytes": 12807982,
+    "officialTokenizerSha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "targetTokenizerDownloadedBytes": 19989343,
+    "targetTokenizerSha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+    "vocabularyTokenIdsEqual": true,
+    "addedTokenIdsEqual": false,
+    "mergesEqual": false,
+    "topLevelFieldEquality": {
+      "added_tokens": false,
+      "decoder": true,
+      "model": false,
+      "normalizer": true,
+      "padding": true,
+      "post_processor": true,
+      "pre_tokenizer": true,
+      "truncation": true,
+      "version": true
+    },
+    "vocabularyCount": {
+      "official": 248044,
+      "target": 248044
+    },
+    "addedCommonTokenIdMismatches": {},
+    "addedOnlyOfficial": {},
+    "addedOnlyTarget": {
+      "<tts_text_bos_single>": 248075,
+      "<|audio_end|>": 248071,
+      "<|audio_start|>": 248070,
+      "<tts_pad>": 248072,
+      "<tts_text_eod>": 248074,
+      "<tts_text_bos>": 248073,
+      "<|audio_pad|>": 248076
+    },
+    "normalizedMergePairsEqual": true,
+    "addedCounts": {
+      "official": 26,
+      "target": 33,
+      "common": 26
+    }
+  },
+  "proposedDerivedMemoryBytes": {
+    "bf16MatricesPlusFp32NormScales": 1689303040,
+    "draftOnlyAffine8MatricesPlusFp32NormScalesAlternative": 897462400,
+    "draftKvFp32PerToken": 4096,
+    "targetKvFp32PerToken": 40960,
+    "targetRecurrentSnapshot": 65863680,
+    "sharedEmbeddingAndHeadAdditionalCopies": 0,
+    "note": "Arithmetic estimates before container/alignment/staging/workspace; not measured runtime allocation or fit. Norms store rawBF16.float()+1 in FP32. Affine8 alternative is not in the proposed first experiment."
+  },
+  "measuredInferenceResults": null,
+  "weightsPayloadDownloaded": false,
+  "numericalModelRunPerformed": false,
+  "provenanceCaveat": "Headers and API metadata verify layouts and advertised full-shard hashes only. No tensor payload was read or locally verified against official weight hashes. The proposed approved extraction verifies two complete official shards before extracting the19 MTP tensors.",
+  "experimentIssue": "https://github.com/LittleLittleCloud/Infer.NET/issues/76"
+}
