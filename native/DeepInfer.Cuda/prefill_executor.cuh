@@ -16,16 +16,16 @@ struct ChunkProfile {
 static void prepare_chunk(Model *g) {
     auto &p=g->chunk;
     if(!p.prepared) {
-#define CHUNK(name,n) p.name=g->alloc<float>(size_t(32)*(n))
+#define CHUNK(name,n) p.name=g->alloc<float>(size_t(g->executionWindow)*(n))
         CHUNK(x,2048);CHUNK(norm,2048);CHUNK(qkv,8192);CHUNK(z,4096);CHUNK(a,32);CHUNK(b,32);
         CHUNK(conv,8192);CHUNK(attention,4096);CHUNK(k,512);CHUNK(v,512);CHUNK(q,4096);CHUNK(out,2048);
         CHUNK(router,256);CHUNK(prob,8);CHUNK(eg,4096);CHUNK(eu,4096);CHUNK(eo,16384);
-        CHUNK(sg,512);CHUNK(su,512);CHUNK(so,2048);CHUNK(sr,1);p.ids=g->alloc<int>(32*8);p.tokens=g->alloc<int>(32);
+        CHUNK(sg,512);CHUNK(su,512);CHUNK(so,2048);CHUNK(sr,1);p.ids=g->alloc<int>(g->executionWindow*8);p.tokens=g->alloc<int>(g->executionWindow);
 #undef CHUNK
         p.prepared=true;
     }
     if(p.scoreCapacity<g->capacity) {
-        auto *next=g->alloc<float>(size_t(32)*16*g->capacity);
+        auto *next=g->alloc<float>(size_t(g->executionWindow)*16*g->capacity);
         if(p.scores){auto old=std::find(g->memory.begin(),g->memory.end(),p.scores);if(old!=g->memory.end())g->memory.erase(old);ck(cudaFree(p.scores));}
         p.scores=next;p.scoreCapacity=g->capacity;
     }

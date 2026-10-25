@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 6; }
+API int di_cuda_prefix_abi_version() { return 7; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
@@ -37,7 +37,7 @@ struct Model {
     std::vector<void *> memory;
     Matrix embedding;
     Layer layers[20];
-    int position = 0, capacity;
+    int position = 0, capacity, executionWindow=32;
     bool kvBf16 = true, batchReadback = false, layerBatch=false, bf16Projections=false;
     ChunkWorkspace chunk;
     bool profileEnabled=false,denseReuse=false,densePacked=false,expertPacked=false;double profileTotals[9]{};
@@ -503,11 +503,16 @@ API int di_cuda_prefix_profile_read(void *ptr,double *values,int count) {
     auto *g=static_cast<Model*>(ptr);if(!g||!values||count!=9)return -1;
     std::copy(g->profileTotals,g->profileTotals+9,values);return 0;
 }
+API int di_cuda_prefix_window(void *ptr,int tokens) {
+    auto *g=static_cast<Model*>(ptr);
+    if(!g||g->position||g->chunk.prepared||(tokens!=32&&tokens!=64&&tokens!=128)||(!g->layerBatch&&tokens!=32))return -1;
+    g->executionWindow=tokens;return 0;
+}
 API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position, float *hidden,
                            float *trace, char *error, int cap) {
     try {
         auto *g = static_cast<Model *>(ptr);
-        if (!g || !tokens || !hidden || count < 1 || count > 32 || position != g->position ||
+        if (!g || !tokens || !hidden || count < 1 || count > g->executionWindow || (!g->layerBatch&&count>32) || position != g->position ||
             position + count > g->capacity)
             throw std::runtime_error("Invalid prefix sequence");
         for (int i = 0; i < count; i++)
@@ -603,7 +608,7 @@ API int di_cuda_prefix_state(void *ptr, int layer, int kind, int position, void 
 API int di_cuda_prefix_kv_range(void *ptr,int layer,int kind,int position,int count,void *dest,int bytes,char *error,int cap) {
     try {
         auto *g=static_cast<Model*>(ptr);
-        if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>32||
+        if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>128||
            position>g->position-count||bytes!=count*512*(g->kvBf16?2:4))throw std::runtime_error("Invalid KV export range");
         auto &l=g->layers[layer];auto *src=static_cast<unsigned char*>(kind?l.values:l.keys);
         ck(cudaMemcpy(dest,src+size_t(position)*512*(g->kvBf16?2:4),bytes,cudaMemcpyDeviceToHost));return 0;
