@@ -870,7 +870,7 @@
     "evidence": "docs/evaluations/issue72/status.json; comparison.json; hardware-summary.json; baseline.json; off.json; on.json; restoration.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
   },
   {
-    "id": "official-mtp-20261024",
+    "id": "official-mtp-research-20261024",
     "kind": "2026-10-24 · Research proposal · Pending experiment approval",
     "title": "Official Qwen3.6 MTP: BF16 draft and exact local verification",
     "source": "docs/RESEARCH-QWEN36-OFFICIAL-MTP-20261024.md",
@@ -883,5 +883,22 @@
     "next": "Await separate approval of Issue #76 before implementation/downloads/runs. Proposed adoption threshold is 1.20x fresh paired main decode with correctness/resource gates; this is not a prediction. Code and results require independent PRs.",
     "commands": [],
     "evidence": "docs/evaluations/official-mtp-research-20261024/artifact-manifest.json; research-provenance.json; https://github.com/LittleLittleCloud/Infer.NET/issues/76"
+  },
+  {
+    "id": "official-mtp-20261024",
+    "title": "Official Qwen3.6 MTP: exact replay, small gains, G5 stop before formal20",
+    "kind": "2026-10-24 · Issue #76 · local Metal BF16 MTP / affine8 target",
+    "source": "docs/EXPERIMENT-76-OFFICIAL-MTP-20261024.md",
+    "question": "Can official Qwen3.6 MTP accelerate decoding while preserving target outputs and the disabled path?",
+    "setup": "M5 Pro20GPU/48GiB, AC/High Power; main4ca29ee vs candidate17965ce; Pi1.4.0 seed0 pilot5, context32768/output4096; FP32 KV/state; no Windows or DFlash.",
+    "change": "Official authenticated BF16 single-layer MTP on Metal GPU; shared target embedding/head; widths1/2; batched target verification, exact rollback and target-conditioned draft cache. Code PR #78.",
+    "result": "Pilot worker decode main67.138/off65.975/width1 69.416/width2 68.315 tok/s; official4/5,5/5,5/5,4/5. Identical five-request replay decode +3.330%/+4.752%, prefill latency +8.125%/+6.284%. Formal20 not run.",
+    "validation": "Real draft/reference, bit-identical verifier/state, fixed128/4096 and growth gates passed; six captured replays exact in all candidate arms. Both widths passed15 service checks. API errors retained; continuous Metal-driver peak unavailable.",
+    "conclusion": "Neither width qualifies under G5; no adoption. High acceptance97.47%/94.46% does not offset target verification/cache/synchronization costs. Failed tasks and incomplete successful-application metrics remain explicit.",
+    "next": "Review negative results independently from candidate code. Diagnostic main/off/width1 HumanEval20 needs approval to change the G5 stop decision; original adoption thresholds stay unchanged. Original worker restored and verified; no merge.",
+    "commands": [
+      "python3 artifacts/dual-host/issue76-official-mtp/evaluate.py LABEL MODE pilot"
+    ],
+    "evidence": "docs/evaluations/issue76/; restricted local raw evidence with SHA256 inventory; prompts, credentials and generated solutions excluded."
   }
 ]
