@@ -1,0 +1,6 @@
+{
+  "scripts/benchmark-pi-humaneval.py": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+  "scripts/observe-humaneval.py": "ad507a7f3cc40c87029ea96fc85c46c3b2cf77360de08ea6cbb753780e9e365d",
+  "scripts/eval-pi-humaneval-docker.py": "89b8cc5f63819146d986490fd725a2cf79da240d8b6a2e343e42aab720baddef",
+  "scripts/summarize-pi-humaneval-performance.py": "ee47653bedd02c1770eb6a1091266c13dd73f0236ec5dc69be667277c0169df6"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "artifacts": {
+    "deepinfer": "f5e0df23b2882062a9932e763296650737ad15194dae0e5410bd11c3211d0fcc",
+    "libdeepinfer_metal.dylib": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+  }
+}

@@ -930,5 +930,20 @@
     "commands": [],
     "source": "docs/EXPERIMENT-80-DFLASH2-RESULTS-20261024.md",
     "evidence": "docs/evaluations/issue80; private raw evidence remains local with public hashes."
+  },
+  {
+    "id": "p0-prefill-delivery",
+    "title": "Bounded delivery: complete prefill gain gate fails despite local CUDA reduction",
+    "kind": "2026-10-25 · Experiment #84 · not qualified for adoption",
+    "source": "docs/EXPERIMENT-84-PREFILL-DELIVERY-RESULTS-20261025.md",
+    "question": "Can completed-prefix windows64/128 improve unchanged FP32 split inference while retaining wire32?",
+    "setup": "M5 Pro20GPU/48GiB + native Windows RTX4090; AC/High Power; Mac Wi-Fi/Windows Ethernet; pinned affine8/group64 model; no cache/speculation.",
+    "change": "Opt-in32/64/128 CUDA execution windows; bounded per-window KV readback; ordered authenticated wire32; Metal32/128 consumption. Code PR #86.",
+    "result": "Matched main/candidate prefill medians: 8192/128 11.685/11.600s;32768/128 53.109/54.090s;32768/4096 53.296/53.957s. No5% gain. Pilot5 official5/5, Pi5/5, clocks21/21; prefill554.949/decode66.449 tok/s; TTFT7476.933ms. Formal20 not run.",
+    "validation": "All prefix traces/hidden/40 states byte-equal; fixed outputs exact across arms;15 service checks plus long-prefill cancellation and agent-loss recovery pass. Full continuous resource/residency evidence remains incomplete;128K not run after FP32 capacity preflight.",
+    "conclusion": "Do not adopt or change defaults: registered fixed-prefill gain prerequisite failed. Pilot5 is diagnostic, not a main20 comparison. All slow/failed attempts retained.",
+    "next": "Review independent negative results PR #88 and code PR #86 separately. Original cd6f7da deployment restored, hashes unchanged, two real split requests verified; first restoration503 retained. No merge or issue closure authorized.",
+    "commands": [],
+    "evidence": "docs/evaluations/issue84/fixed-requests.json; public runtime hashes and local-only raw evidence inventory."
   }
 ]

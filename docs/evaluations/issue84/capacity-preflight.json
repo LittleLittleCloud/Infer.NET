@@ -1,0 +1,16 @@
+{
+  "recordedUtc": "2026-10-25T19:46:17.200018+00:00",
+  "precision": "FP32 KV; not target Q8",
+  "evidence": "screen-cuda32-metal128/response-3.json.timings",
+  "observedCapacity": 10240,
+  "observedMetalAllocatedBytes": 37467340800,
+  "observedKvBytes": 419430400,
+  "requestedInput": 131072,
+  "requestedOutput": 4096,
+  "roundedCapacity": 135168,
+  "derivedKvBytes": 5536481280,
+  "limitBytes": 41339060224,
+  "derivation": "Projection retaining observed non-KV device allocation and replacing ten K/V-layer pairs by FP32 40960 bytes/token at rounded capacity. Assumes the frozen non-KV allocation remains resident; allocator cleanup could change it. Additional attention scratch and transient resize overlap excluded. This is a capacity preflight projection, not a measured peak or a proof of the allocator minimum.",
+  "decision": "Do not execute 128K performance: projected allocation already exceeds the approved Metal limit before attention growth and transient buffers. Long-context acceptance remains Not Obtained. No precision or system-limit change.",
+  "projectedAllocationBytes": 42584391680
+}

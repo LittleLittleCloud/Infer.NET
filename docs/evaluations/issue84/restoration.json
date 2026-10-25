@@ -1,0 +1,51 @@
+{
+  "verifiedUtc": "2026-10-25T20:26:42.454587+00:00",
+  "source": "cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+  "mac": {
+    "pid": 30913,
+    "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "ready": true,
+    "hosting": "Original login LaunchAgent restored",
+    "allOriginalPackageConfigAndPlistHashesUnchanged": true,
+    "artifacts": {
+      "deepinfer": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+      "libdeepinfer_metal.dylib": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+      "worker.json": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+      "com.infernet.metal.plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9"
+    }
+  },
+  "windows": {
+    "started": true,
+    "pid": 40052,
+    "restoredUtc": "2026-10-25T20:24:31.2446118Z",
+    "hosting": "Original foreground agent, held SSH; not SCM",
+    "artifacts": {
+      "config": "31c3c3fdcbe55698462f3d1cf9c10618aaef200d0130b06848b6d325d91495ab",
+      "native": "30d789415cbd68e17fe329fd65dcf2d2c4aef7725666d8937e712e09b4e742eb",
+      "executable": "76555a5f42392e8ff87bb8a59b8b8f794b41d4d063c10d1eefe293ee79636869"
+    },
+    "source": "cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "version": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "hashesUnchanged": true
+  },
+  "coordinatorHealthy": true,
+  "realSplitRequests": 2,
+  "outputTokenIdsEqual": true,
+  "outputTokenIdsSha256": "d04a473d98f7ec9b0e21f3177bb20488438df3367afe8e2b2bc65850132b680e",
+  "temporaryPortsStillListening": {
+    "5270": false,
+    "5280": false,
+    "5281": false,
+    "5282": false,
+    "5290": false,
+    "5291": false
+  },
+  "wiredLimitMb": 0,
+  "candidateAdopted": false,
+  "firstCoordinatorRequest": {
+    "httpStatus": 503,
+    "body": "Not captured by first controller",
+    "retained": true,
+    "resolution": "Acceptance waits for matching fresh worker PID and accepting/agentConnected registry telemetry; subsequent two requests pass."
+  }
+}
