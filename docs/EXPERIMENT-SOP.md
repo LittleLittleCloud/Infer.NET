@@ -21,7 +21,7 @@ The Issue body must clearly state before implementation:
 - Problem, hypothesis, and baseline complete SHA and existing measurement links.
 - Required code changes, involved devices, and content out of scope for this round.
 - Expected prefill / decode benefits; if there is basis, provide magnitude and basis; if no basis, mark as to-be-measured.
-- Evaluation configuration, question groups, main metrics, correctness and resource checks, and criteria for adopting changes.
+- Evaluation configuration, question groups, main metrics, correctness and resource checks, and criteria for adopting changes. For reduced-precision hardware acceleration, distinguish operator correctness, exploratory timing eligibility, and formal quality/adoption gates according to [the hardware utilization and quality policy](QWEN36-8BIT-TARGETS.md#hardware-utilization-and-quality-policy). Register the exact algorithm, quality budget, calibration/held-out inputs and scoring before candidate acceptance evaluation; do not apply FP32 whole-model tolerances universally.
 - Entry point for the first page prefill / decode chart and this experiment identifier; after data is available, fill in specific measurement point links.
 - Experiment plan awaiting approval, and subsequent code PR, results PR, and evidence locations.
 
@@ -41,7 +41,7 @@ Do not use keywords that automatically close the experiment Issue upon merging i
 
 For each round of control, fix the main baseline and the complete SHA of the candidate code. Verify the actual Mac/Windows versions and artifact hashes used in the run; the Git checkout HEAD cannot substitute for the runtime version. Use a new run ID and result directory for each round.
 
-Standard optimizations iterate on the fixed HumanEval 5 problems; when comparing with main and deciding whether to retain changes, use the fixed 20 problems. Keep the same problem set, seed, model, Pi version, precision, cache, context, and output limits, and maintain comparable power and network conditions. Competing benchmarks on the same GPU are executed serially.
+Standard optimizations iterate on the fixed HumanEval 5 problems; when comparing with main and deciding whether to retain changes, use the fixed 20 problems. Keep the same problem set, seed, model, Pi version, precision, cache, context, and output limits, and maintain comparable power and network conditions. Competing benchmarks on the same GPU are executed serially. For an explicitly approved precision-change experiment, fix and disclose each arm's precision separately; report the overall speed/quality trade-off and use matched-precision controls for implementation-only attribution.
 
 After obtaining complete per-request worker metrics, calculate:
 
@@ -49,6 +49,8 @@ After obtaining complete per-request worker metrics, calculate:
 - decode token/s = total decode intervals / total decode seconds; each N outputs correspond to N−1 intervals.
 
 Record both absolute values, relative changes from baseline, metric coverage, correctness, resources, failure cases, and total Pi time. Do not use Pi wall time or the Dashboard's most recent request to substitute for the full round of worker throughput.
+
+Reduced-precision candidates may collect exploratory timing after operator correctness, request/state integrity, and resource safety checks, while full-model quality is pending. Mark these results provisional; they cannot establish adoption or formal target completion. A failed historical gate remains failed under its original plan.
 
 Performance conclusions must consider both correctness and resource conditions; an increase in speed with incorrect output cannot be judged as an improvement. Whether the benefit justifies adoption is determined by pre-approved standards in the Issue and manual review, without adjusting thresholds after seeing results. Trade-offs, such as improved prefill but degraded decode, must be explicitly disclosed.
 
