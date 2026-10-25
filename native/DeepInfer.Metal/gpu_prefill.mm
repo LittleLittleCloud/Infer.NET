@@ -577,10 +577,10 @@ static void p_decode_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBu
 }
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer){
  if(!g->prefill)return false;
- if(g->decodeFusedFp32){p_decode_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention);return true;}
+ if(g->decodeFusedFp32){g_profile_begin(g,e,GPFusedAttention);p_decode_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention);g_profile_end(g,e);return true;}
  if(!g->prefill->attentionBf16)return false;
  if(const char *v=std::getenv("DEEPINFER_METAL_DECODE_ATTENTION"))if(strcmp(v,"legacy")==0)return false;
- p_fused_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention,1);return true;
+ g_profile_begin(g,e,GPFusedAttention);p_fused_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention,1);g_profile_end(g,e);return true;
 }
 struct EShape {uint32_t rows,columns,tokens,experts,grouped,bits,maxTiles;};
 static void p_pack_expert(GModel *g,id<MTLComputeCommandEncoder> e,PShape shape,bool gate,id<MTLBuffer> input){
@@ -647,7 +647,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
  if(trace&&p->trace.length<NSUInteger(count)*40*2048*4){p->trace=g_buffer(g,NSUInteger(count)*40*2048);if(!p->trace){error_text(error,capacity,@"Cannot allocate prefill trace");return -1;}}
  memcpy(p->tokens.contents,tokens,count*4);p->submissions=0;
- g->dispatches=0;g->profileCount=0;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
+ g->dispatches=0;g->profileCount=0;g->profileActive=false;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
  auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
  if(!command||!e){error_text(error,capacity,@"Cannot create prefill command");return -1;}
  bool profiling=std::getenv("DEEPINFER_METAL_PREFILL_PROFILE")&&strcmp(std::getenv("DEEPINFER_METAL_PREFILL_PROFILE"),"1")==0&&g->position==4096;
