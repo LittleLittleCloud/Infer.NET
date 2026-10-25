@@ -1,0 +1,125 @@
+{
+  "df4-pilot": {
+    "requestCoverage": 13,
+    "samples": [
+      {
+        "submissions": 29846,
+        "weightsRegistered": 12672,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 30372,
+        "weightsRegistered": 12913,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 30628,
+        "weightsRegistered": 13021,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 31406,
+        "weightsRegistered": 13387,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 32033,
+        "weightsRegistered": 13674,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 32300,
+        "weightsRegistered": 13784,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 32846,
+        "weightsRegistered": 14040,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 33264,
+        "weightsRegistered": 14228,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 33579,
+        "weightsRegistered": 14358,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 34011,
+        "weightsRegistered": 14554,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 34365,
+        "weightsRegistered": 14714,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 34667,
+        "weightsRegistered": 14842,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      },
+      {
+        "submissions": 35179,
+        "weightsRegistered": 15078,
+        "unregistered": 0,
+        "sampledPeakBytes": 38514982912,
+        "submissionPeakBytes": 38502563840,
+        "aboveWorkingSetSubmissions": 0,
+        "recommendedWorkingSetBytes": 40200896512
+      }
+    ],
+    "scope": "Tracked allocation and submission boundary evidence; cumulative counters; not continuous Metal driver peak; weights-only residency checks."
+  }
+}

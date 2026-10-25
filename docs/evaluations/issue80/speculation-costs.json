@@ -1,0 +1,25 @@
+{
+  "df4-pilot": {
+    "requestCoverage": 13,
+    "totals": {
+      "block": 52,
+      "cycles": 948,
+      "proposed": 2844,
+      "accepted": 2366,
+      "rejectedCycles": 236,
+      "fullAccept": 712,
+      "arSteps": 0,
+      "replays": 238,
+      "contextRows": 28001,
+      "bootstrapMs": 2542.615,
+      "draftMs": 10022.393,
+      "verifyMs": 38044.941999999995,
+      "ingestMs": 941.9119999999999,
+      "snapshotMs": 997.7679999999999,
+      "replayMs": 5891.5960000000005,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.8319268635724332,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  }
+}
