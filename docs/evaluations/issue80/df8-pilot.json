@@ -582,5 +582,13 @@
     "df8-pilot-observer/requests.jsonl": "cde62a16224dd8093e0149025c6d80a8be9318106664df609289f1e88740ee02",
     "df8-pilot-window.json": "73da6c42410d2a701abe986ce8fd5bd5b06b45ddf422340e62d9235c5c0bd9d6"
   },
-  "diagnosticWorkerPrefillTokensPerSecond": 265.6915810814525
+  "diagnosticWorkerPrefillTokensPerSecond": 265.6915810814525,
+  "knownTimedWorkerDecodeTokensPerSecond": 53.127298194092326,
+  "timingCoverage": {
+    "known": 15,
+    "observed": 15,
+    "piRecorded": 15,
+    "wholeCohortAvailable": true
+  },
+  "knownTokenTotalsOnly": false
 }

@@ -685,5 +685,13 @@
     "off-pilot-observer/requests.jsonl": "11a23391eaf6170dccf63012e9c4b178cd0d98fb2d9f1c5f59b2fc921456c00d",
     "off-pilot-window.json": "3ae2d3fc03e2dd60d0a4bdd0342ccba7798fff96c7c7ffd840b28321485ad55b"
   },
-  "diagnosticWorkerPrefillTokensPerSecond": 272.2721270749593
+  "diagnosticWorkerPrefillTokensPerSecond": 272.2721270749593,
+  "knownTimedWorkerDecodeTokensPerSecond": 67.98728553905978,
+  "timingCoverage": {
+    "known": 19,
+    "observed": 19,
+    "piRecorded": 19,
+    "wholeCohortAvailable": true
+  },
+  "knownTokenTotalsOnly": false
 }

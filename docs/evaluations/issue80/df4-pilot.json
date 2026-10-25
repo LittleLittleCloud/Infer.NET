@@ -530,5 +530,13 @@
     "df4-pilot-observer/requests.jsonl": "32bd9cee7054980d98f4ce9e104492560b49e5678f9c0bf4c2b833a7d85be55d",
     "df4-pilot-window.json": "c2c127a069f7798f10713e03cb2ce0a28bcabfd397602c99e7ce5b37ca6594fc"
   },
-  "diagnosticWorkerPrefillTokensPerSecond": 265.86230753984586
+  "diagnosticWorkerPrefillTokensPerSecond": 265.86230753984586,
+  "knownTimedWorkerDecodeTokensPerSecond": 59.09132904697301,
+  "timingCoverage": {
+    "known": 13,
+    "observed": 13,
+    "piRecorded": 13,
+    "wholeCohortAvailable": true
+  },
+  "knownTokenTotalsOnly": false
 }

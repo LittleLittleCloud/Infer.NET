@@ -1,8 +1,8 @@
-# Native DFlash2 versus official MTP: diagnostic comparison in progress
+# Native DFlash2 versus official MTP: diagnostic HumanEval20 results
 
 Experiment started 2026-10-24 America/Los_Angeles; hardware checks continued on 2026-10-25. [Issue #80](https://github.com/LittleLittleCloud/Infer.NET/issues/80), [candidate code PR #81](https://github.com/LittleLittleCloud/Infer.NET/pull/81). The human requested implementation of DFlash2 and comparison with MTP. No merge, production adoption, or deployment update is authorized.
 
-**The comparison is diagnostic and remains in progress.** Completed five-task pilot evidence is listed below; no complete 20-task comparison is available yet. The complete draft intermediate numerical gate failed. All nine separate exact target-state diagnostics passed, including fixed 128/4096-output checks. The human explicitly approved diagnostic 20-task continuation on 2026-10-25 while retaining the numerical failure; [approval record](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6394804249). Application measurements are in progress. Neither CI nor a passing final normalized output substitutes for the failed gate.
+**All four diagnostic 20-task arms are complete.** The numerical gate remains failed; this record does not recommend adoption. The complete draft intermediate numerical gate failed. All nine separate exact target-state diagnostics passed, including fixed 128/4096-output checks. The human explicitly approved diagnostic 20-task continuation on 2026-10-25 while retaining the numerical failure; [approval record](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6394804249). Application measurements are complete and reported below. Neither CI nor a passing final normalized output substitutes for the failed gate.
 
 ## Sources, implementation, and comparison envelope
 
@@ -22,11 +22,11 @@ The implementation runs native C#/Metal, with BF16 draft matrices and FP32 arith
 
 Default remains off. The new branch starts from main; it explicitly ports the minimal verifier, state-transaction, and allocation-trace dependencies from the unmerged MTP source. This does not assume PR #74 or #78 was adopted. GitHub Copilot CLI 1.0.103 used `claude-sonnet-5.5` for implementation and resumed review; the controlling agent independently audited weights, fixed stale-tap bounds, added actual generation-time page-growth checks, and ran hardware validation. CLI output alone is not a passing test.
 
-The controlled comparison is planned for M5 Pro 20 GPU cores/48 GiB, AC/High Power, local Metal, concurrency one, unchanged affine8 target/FP32 target KV and state, BF16 drafts, greedy, zero prefix cache, context 32768 and maximum 4096 outputs/request. DFlash2 blocks 4 and 8 contain three/seven proposals; MTP width 1 is the existing higher-rate pilot reference. Different widths compare available implementations, not an isolated algorithm effect at equal draft width. Splash's Q8 KV, quantized draft, memory-limit configuration, and native-command timing remain separate historical context.
+The controlled comparison ran on M5 Pro 20 GPU cores/48 GiB, AC/High Power, local Metal, concurrency one, unchanged affine8 target/FP32 target KV and state, BF16 drafts, greedy, zero prefix cache, context 32768 and maximum 4096 outputs/request. DFlash2 blocks 4 and 8 contain three/seven proposals; MTP width 1 is the existing higher-rate pilot reference. Different widths compare available implementations, not an isolated algorithm effect at equal draft width. Splash's Q8 KV, quantized draft, memory-limit configuration, and native-command timing remain separate historical context.
 
 ## Builds and independent review
 
-Native and managed Release builds, compile-only Metal shader/pipeline checks, 37 focused CPU tests, and candidate CI on Linux/macOS/Windows passed. Twelve full-model facts were skipped in the CPU run; skipped facts are not hardware passes. Site build, 26 Python checks, and 27 offline DOM checks passed for the planned entry without fabricated speed points.
+Native and managed Release builds, compile-only Metal shader/pipeline checks, 37 focused CPU tests, and candidate CI on Linux/macOS/Windows passed. Twelve full-model facts were skipped in the CPU run; skipped facts are not hardware passes. The final site build, 26 Python checks and 27 offline DOM checks passed with all eight measured runs. The new complete main control updates the best verified worker decode observation while the explicitly adopted baseline remains unchanged; failed MTP quality and partial off clocks cannot become verified SOTA. No planned value is used as a measurement.
 
 Review corrections included full-window RoPE capacity, actual tail-block clamping, graph/child safe-handle lifetime, avoiding double-counted whole-device allocation, explicit small-output finiteness checks, the 2047-row context window, stale tap source-position/valid-count rejection, and exact scalar-versus-batched target tests. Native target suffix poisoning and real 2048→4096 growth were added instead of assuming a small `Reset` request shrinks an existing allocation. The first full reference failure and the correction below remain separate evidence.
 
@@ -65,9 +65,9 @@ These are correctness diagnostics at `c706064`, not serving-speed measurements. 
 
 The raw ring-window test validates selected independently projected K/V rows and poison stability. It is not a full-window independent NumPy forward comparison. The dedicated growth test verifies an actual capacity increase while generating, rather than inferring growth from a reserve argument. Final unused draft context may legitimately lag the terminal target; its valid prefix is explicitly reported and resets before another request.
 
-## Diagnostic pilots and pending 20-task comparison
+## Diagnostic pilots and frozen width
 
-The completed five-task pilots use the same frozen target and dataset. The enabled DFlash2 rate below is an **all-request diagnostic worker rate**, not a successful-application throughput: one API failure is retained, and strict Pi usage reconciliation is incomplete until recorded failure output is included.
+The completed five-task pilots use the same frozen target and dataset. The enabled DFlash2 rate below is an **all-request diagnostic worker rate**, not successful-application throughput: each enabled pilot retains one API failure, and strict Pi usage reconciliation omits failed API output until the recorded failure is explicitly included.
 
 | Pilot | Worker decode token/s | Worker prefill token/s | Official assertions | Pi completed | Requests |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -78,20 +78,71 @@ The completed five-task pilots use the same frozen target and dataset. The enabl
 
 Block 4's failed HumanEval/149 request generated 327 worker tokens and ended at EOS, while Pi reported `Stream ended without finish_reason`; no valid client first-output timestamp was captured for that request. No answer retry or exclusion was performed. All 13 worker clocks are complete and token totals reconcile when the recorded API failure is included. All six frozen replay requests matched main target tokens and finish reasons; the five timing controls measured 61.668 token/s versus main 67.867 token/s. These are separate fixed-input controls, not substitutes for the HumanEval cohort.
 
-Block 4 also passed all eight fixed128/4096 warm/formal controls and 15 serving checks. Its fixed4096 formal rates were 53.965, 53.979, and 53.967 token/s, with zero new swap-out. Block8 completed at 53.127 token/s, with 4/5 official passes, 15 complete worker clocks, and maximum per-request swap-out 283,131,904 bytes. The predeclared selection therefore froze block4 before any formal20 measurement; [decision](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6395198735). Fresh four-arm HumanEval20 is in progress. The width selection rule remains the higher aggregate diagnostic worker rate among target/resource-safe pilots, tie block4; it is not an adoption decision.
+Block 4 also passed all eight fixed128/4096 warm/formal controls and 15 serving checks. Its fixed4096 formal rates were 53.965, 53.979, and 53.967 token/s, with zero new swap-out. Block8 completed at 53.127 token/s, with 4/5 official passes, 15 complete worker clocks, and maximum per-request swap-out 283,131,904 bytes. The predeclared selection therefore froze block4 before any formal20 measurement; [decision](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6395198735). Fresh four-arm HumanEval20 is complete below. The width selection rule remains the higher aggregate diagnostic worker rate among target/resource-safe pilots, tie block4; it is not an adoption decision.
 
-Main/MTP/DFlash2 HumanEval20 rates are **not obtained**. No pilot or fixed correctness clock is presented as a formal application speedup. The old MTP five-task evidence remains in [PR #79](https://github.com/LittleLittleCloud/Infer.NET/pull/79), without being relabeled as this comparison's main or 20-task result.
+## Complete diagnostic HumanEval20 comparison
 
-The approved continuation retains the failed draft numerical criterion and allows diagnostic main/off/MTP/DFlash2 HumanEval20 after complete exact target-output/state and resource-safety checks. It does not establish adoption, relax tolerances, or change target/draft precision.
+All four arms attempted all 20 fixed tasks without selective answer retries. Rates below include **every measured model request**, including output rejected by the API. They are diagnostic worker clocks; failed application tasks remain failed and missing client first-token samples remain missing.
 
-The fixed application configuration is Pi 1.4.0, seed zero, 300 seconds/task, fresh session/workspace, identical allocation warmup, and complete per-request worker clocks. The ordered 20 tasks are 156, 94, 72, 80, 149, 2, 35, 32, 146, 137, 97, 154, 6, 161, 115, 131, 162, 50, 47, 148. Dataset revision `b9453e8f1865df0a0057a1383767caa400acfbcf`, gzip SHA256 `b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`; assertion image `python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd`, with an actual failing negative control. No selective answer retries or exclusions of failed tasks.
+| Arm | Decode token/s | vs main | Prefill token/s | TTFT median ms (coverage) | Official assertions | Pi completed | Requests | Worker clocks |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Fresh main | 67.782 | +0.00% | 271.810 | 10917.017 (105/105) | 20/20 | 20/20 | 105 | 105/105 |
+| Candidate off | Not obtained | Not obtained | Not obtained | 11124.568 (114/115) | 20/20 | 19/20 | 115 | 114/115 |
+| Official MTP width1 | 69.563 | +2.63% | 255.429 | 11249.222 (87/88) | 19/20 | 19/20 | 88 | 88/88 |
+| DFlash2 block4 | 57.981 | -14.46% | 265.762 | 11563.235 (92/92) | 20/20 | 20/20 | 92 | 92/92 |
 
-Worker prefill is sum(inputs)/sum(prefill seconds); decode is sum(N−1)/sum(actual first-to-last output generation seconds). Entire draft/selector/verify/cache/snapshot/replay costs are included, with needed prompt bootstrap in prefill/TTFT. Simultaneously validated block tokens share their actual ready timestamp. Client TTFT measures observer send to first valid text/tool-call output over two loopback hops; Pi-to-observer dispatch is excluded. Application trajectories, task correctness, failed API usage accounting, and timing coverage must be disclosed separately.
+DFlash2 block4 measured **0.834× MTP** (-16.65%) and **0.855× fresh main** (-14.46%). These figures compare the current implementations under this envelope; BF16 drafts, different widths, bootstrap attention and application trajectories prevent attributing the difference solely to the algorithms. They do not establish parity with Splash's separate Q8-KV/quantized-draft/memory-limit/native-command configuration.
+
+| Arm | Known input / output tokens | Pi wall seconds | Errors / timeouts | Strict metrics complete | Max per-request system swap-out MiB | Sampled Metal GiB |
+| --- | ---: | ---: | ---: | --- | ---: | ---: |
+| main-human20 | 247915 / 21542 | 1237.393 | 0 / 0 | True | 0.000 | 34.730 |
+| off-human20 | 294850 / 22496 | 1450.768 | 1 / 1 | False | 55.359 | 34.812 |
+| mtp-human20 | 195854 / 17383 | 1025.562 | 1 / 0 | False | 83.781 | 36.342 |
+| df-human20 | 209094 / 19706 | 1132.802 | 0 / 0 | True | 0.000 | 35.858 |
+
+The candidate-off arm has one canceled request without a terminal worker clock after HumanEval/32 timed out. Its entire-cohort prefill and decode are **Not obtained**; the known subset alone measured 67.810 decode and 271.726 prefill token/s; the known114/115 clock subset remains separate in JSON and chart sample coverage, never substituted for the missing whole rate. Known token totals exclude that unknown request and are lower bounds, not zero-filled totals. Official assertions20/20 and Pi completion19/20 describe different outcomes. Strict `metricsComplete=false` is not hidden: Pi SDK usage may omit output on API failures. The separate worker diagnostic rates require complete unique worker clocks and a per-request reconciliation that explicitly accounts for recorded API errors. TTFT covers only requests with an actual first valid text/tool-call output; the median cannot repair missing samples. Per-task official status, request counts, wall time and tokens remain in the linked JSON files.
+
+DFlash2's Pi wall time was lower than main despite slower worker decoding: it made 92 rather than105 requests and consumed209,094 rather than247,915 input tokens. Application trajectories differ; wall-time reduction is not a decode speedup. All six fixed-input replay controls remained exact, and DFlash2 also decoded more slowly on those controls.
+
+### Same-input replay controls
+
+These six frozen requests are separate diagnostics, never answer retries. Five use identical outer API bodies and one retains a known malformed-output baseline case. Every arm must match target tokens and finish reasons; five valid controls provide timing comparisons against a fresh main reference primed to the same capacity.
+
+| Arm | Exact replay | Five-control decode token/s | vs main | Prefill latency change | TTFT median change |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| main-human20 | 6/6 (True) | 67.800 | +0.00% | +0.00% | +0.00% |
+| off-human20 | 6/6 (True) | 68.011 | +0.31% | -0.03% | +0.07% |
+| mtp-human20 | 6/6 (True) | 70.640 | +4.19% | +6.51% | +2.78% |
+| df-human20 | 6/6 (True) | 61.747 | -8.93% | +2.47% | +7.15% |
+
+### Cost and adoption interpretation
+
+DFlash2 accepted 14,025/17,091 proposals (82.061%); MTP accepted 8,564/8,875 (96.496%). Proposal widths differ, and terminal proposals may not all become emitted output, so this is not a quality score or a direct algorithm comparison. DFlash2 host timers recorded draft60.371s, verify229.447s and replay37.115s; MTP recorded verify206.711s, catch-up27.830s and replay6.683s. These totals cover different request/output counts. They point to draft work and frequent rejection restoration as additional costs, while verification dominates absolute time. Draft weights and execution remain on the Metal GPU; this result does not demonstrate CPU drafting.
+
+[Component totals](evaluations/issue80/speculation-costs.json) retain proposal acceptance and host timers for draft, verification, ingest/catch-up, snapshot and replay. These timers are diagnostic and are not assumed independently additive. DFlash2 `draftMs` includes the six-layer network, shared head, top16 and trained selector. MTP may charge ordinary drafting to catch-up/first-draft rather than `draftMs`; zero `draftMs` does not imply free drafting.
+
+**Do not adopt this candidate.** Both failed DFlash2 intermediate numerical attempts remain failed, and a continuous Metal-driver peak was not obtained. Exact target diagnostics, official task passes and diagnostic throughput cannot substitute for those missing acceptance conditions. Code PR81 and independent results PR82 remain unmerged; Issue80 remains open. Further optimization should profile verification/replay and draft/context costs with unchanged target semantics, and resolve numerical validation before any adoption proposal.
+
+### Reproduction and evidence
+
+The source hashes, authenticated actual builds, nine package file hashes per arm and final restoration checks are in [runtime-and-restoration.json](evaluations/issue80/runtime-and-restoration.json). Dataset revision `b9453e8f1865df0a0057a1383767caa400acfbcf`, gzip SHA256 `b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef`. Ordered tasks: 156,94,72,80,149,2,35,32,146,137,97,154,6,161,115,131,162,50,47,148. Pi1.4.0, seed0, timeout300s, context32768/output4096, fresh session/workspace; no prefix cache. Worker prefill is sum(inputs)/sum(prefill seconds); decode is sum(N−1)/sum(first-to-last output seconds). Observer client TTFT ends at the first valid text/tool-call output and excludes Pi-to-observer dispatch. The driver is frozen from MTP source `17965ce1f43e37398441c6f192c0a331efab228d`; per-phase helper SHA256 snapshots and raw manifest/task/request hashes are in [evidence.json](evaluations/issue80/evidence.json). The command shape is `python3 evaluation/evaluate.py LABEL main|off|mtp|df4 cohort`, executed serially under verified exclusive-worker maintenance with restore in `finally`. The helper sources and private model/chat logs remain restricted local ignored artifacts, not public downloads. Official Docker checks use all20 outputs and preserve missing solutions; the negative control actually fails.
+
+The site source contains separate five-task and twenty-task configurations and selectable failed DFlash2 points. Proposed point: `/#experiment=dflash2-comparison-20261024&run=issue80-df-human20`. The results PR saves evidence only; it does not publish Pages or change the adopted baseline. No site publication is claimed before human-authorized merge and successful deployment.
 
 ## Resources, restoration, and evidence
 
 No system memory limit, model precision, offload policy, Windows service, or production package was changed. Required boundaries remain Metal allocations at most 38.5 GiB, per-request whole-system new swap-out at most 512 MiB, zero OOM/crash/active NaN/Inf/CPU weight offload, and wired limit zero. Loading/warmup and unit-gate resource samples are separate from formal per-request resource acceptance. Allocation-boundary/submission samples are not a continuous Metal-driver peak; that continuous peak remains not obtained.
 
-Each failed model group stopped at its failed fact and restored the original worker: Ready state, registration, two real chats, original package/configuration hashes unchanged, wired limit zero. The complete target diagnostic group also restored the original worker successfully. Application phases use separate exclusive windows and restoration records; final application restoration is not yet claimed while those phases remain in progress.
 
-Raw artifacts remain restricted local ignored `artifacts/dual-host/issue80-dflash2/`, including pinned original references, authenticated weights, source audits, CLI/model provenance, build logs, per-fact TRX/binary hashes/resources, and independent captured-checkpoint comparisons. Public sanitized summaries and hashes will accompany the completed record. Local paths are not public download links. Credentials, private configurations, prompts, generated solutions, and raw model feature arrays are excluded from publication.
+| Arm | Endpoint footprint / OS-reported process peak (raw vmmap units) | Sampled minimum system free MiB | Sampled maximum compressor MiB |
+| --- | --- | ---: | ---: |
+| main-human20 | 35.1G / 35.1G | 14.328 | 2911.578 |
+| off-human20 | 35.2G / 35.2G | 50.453 | 2523.578 |
+| mtp-human20 | 37.0G / 37.3G | 43.750 | 3972.500 |
+| df-human20 | 36.2G / 36.2G | 48.828 | 3134.797 |
+
+[Resource samples](evaluations/issue80/resource-summary.json) are restricted to each HumanEval observation window and exclude loading/fixed-control warmup. Every sampled power status was AC. System free/compressor/wired values are whole-machine `vm_stat` indicators, not an OS pressure-level gauge or worker attribution. The OS pressure-level gauge was not obtained. The vmmap process high-water is separate from the missing continuous Metal-driver peak.
+
+Each failed model group stopped at its failed fact and restored the original worker: Ready state, registration, two real chats, original package/configuration hashes unchanged, wired limit zero. The complete target diagnostic group also restored the original worker successfully. Application phases use separate exclusive windows and restoration records; all four application phases also restored the original worker successfully, with Ready state, registration, two real chats, unchanged package/configuration hashes and wired limit zero.
+
+Raw artifacts remain restricted local ignored `artifacts/dual-host/issue80-dflash2/`, including pinned original references, authenticated weights, source audits, CLI/model provenance, build logs, per-fact TRX/binary hashes/resources, and independent captured-checkpoint comparisons. Public sanitized summaries and hashes accompany this record. Local paths are not public download links. Credentials, private configurations, prompts, generated solutions, and raw model feature arrays are excluded from publication.

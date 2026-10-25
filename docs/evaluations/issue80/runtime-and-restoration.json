@@ -123,7 +123,85 @@
       "wiredLimit": "0",
       "passed": true,
       "endedUtc": "2026-10-25T08:05:21.648252+00:00"
+    },
+    "main-human20": {
+      "startedUtc": "2026-10-25T08:32:02.403240+00:00",
+      "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "bootstrapExitCode": 0,
+      "ready": true,
+      "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "coordinatorRegistrationReady": true,
+      "realChatsPassed": 2,
+      "originalPackageHashesUnchanged": true,
+      "workerConfigUnchanged": true,
+      "wiredLimit": "0",
+      "passed": true,
+      "endedUtc": "2026-10-25T08:32:50.847803+00:00"
+    },
+    "off-human20": {
+      "startedUtc": "2026-10-25T09:03:06.139275+00:00",
+      "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "bootstrapExitCode": 0,
+      "ready": true,
+      "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "coordinatorRegistrationReady": true,
+      "realChatsPassed": 2,
+      "originalPackageHashesUnchanged": true,
+      "workerConfigUnchanged": true,
+      "wiredLimit": "0",
+      "passed": true,
+      "endedUtc": "2026-10-25T09:03:52.499439+00:00"
+    },
+    "mtp-human20": {
+      "startedUtc": "2026-10-25T09:27:07.801573+00:00",
+      "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "bootstrapExitCode": 0,
+      "ready": true,
+      "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "coordinatorRegistrationReady": true,
+      "realChatsPassed": 2,
+      "originalPackageHashesUnchanged": true,
+      "workerConfigUnchanged": true,
+      "wiredLimit": "0",
+      "passed": true,
+      "endedUtc": "2026-10-25T09:27:50.220032+00:00"
+    },
+    "df-human20": {
+      "startedUtc": "2026-10-25T09:54:23.700236+00:00",
+      "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "bootstrapExitCode": 0,
+      "ready": true,
+      "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "coordinatorRegistrationReady": true,
+      "realChatsPassed": 2,
+      "originalPackageHashesUnchanged": true,
+      "workerConfigUnchanged": true,
+      "wiredLimit": "0",
+      "passed": true,
+      "endedUtc": "2026-10-25T09:55:04.869299+00:00"
     }
   },
-  "windowsUsed": false
+  "windowsUsed": false,
+  "finalVerification": {
+    "startedUtc": "2026-10-25T09:55:39.576915+00:00",
+    "scope": "Read-only identity/resource checks and two real chats after all experimental workers have stopped; no bootstrap or package update",
+    "originalBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "ready": true,
+    "originalProcessIdentityVerified": true,
+    "registered": true,
+    "realChatsPassed": 2,
+    "originalPackageHashesUnchanged": true,
+    "originalWorkerConfigUnchanged": true,
+    "wiredLimit": "0",
+    "temporaryPortsClosed": {
+      "5280": true,
+      "5281": true,
+      "5282": true,
+      "5290": true,
+      "5291": true,
+      "5292": true
+    },
+    "passed": true,
+    "endedUtc": "2026-10-25T09:55:41.743954+00:00"
+  }
 }

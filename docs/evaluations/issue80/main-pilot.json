@@ -581,5 +581,13 @@
     "main-pilot-observer/requests.jsonl": "c6e87410eb1e9034a62a005a2b9618fa989666e7f84b8fc5297136e31e301b6d",
     "main-pilot-window.json": "a2c44ca77170d83489f75c035033f3f24d5b9a570a6665ab60f70b41d62d4ec9"
   },
-  "diagnosticWorkerPrefillTokensPerSecond": 272.7300840213717
+  "diagnosticWorkerPrefillTokensPerSecond": 272.7300840213717,
+  "knownTimedWorkerDecodeTokensPerSecond": 68.0124760305233,
+  "timingCoverage": {
+    "known": 15,
+    "observed": 15,
+    "piRecorded": 15,
+    "wholeCohortAvailable": true
+  },
+  "knownTokenTotalsOnly": false
 }

@@ -97,7 +97,8 @@ class TrendTests(unittest.TestCase):
     def test_sota_requires_official_passes_complete_coverage_and_separate_scopes(self):
         entries = {(e['family'], e['metric']): e for e in sota_summary(self.data)}
         self.assertAlmostEqual(entries['infernet', 'prefill']['value'], 531.19940338122)
-        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 66.4336423808985)
+        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 67.78193415454106)
+        self.assertEqual(entries['infernet', 'decode']['run']['id'], 'issue80-main-human20')
         self.assertAlmostEqual(entries['external', 'prefill']['value'], 3066.6108426327232)
         self.assertAlmostEqual(entries['external', 'decode']['value'], 148.91366915373305)
         for entry in entries.values():
