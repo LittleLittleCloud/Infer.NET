@@ -838,5 +838,20 @@
       "python3 scripts/split/analyze-bf16-qkv-mode-reference.py --model MODEL_DIR --cuda NEW_CUDA_DIRECTORY --output NEW_CPU_JSON"
     ],
     "evidence": "PR #31; artifacts/dual-host/bf16-route-gap-176b666-v2.json etc original comparison only local machine."
+  },
+  {
+    "id": "speculative-state-20261024",
+    "title": "DFlash2 integration: proposal verification and rejection recovery first",
+    "kind": "2026-10-24 · Speculative-decode research · Pending approval",
+    "source": "docs/DFLASH2-RESEARCH-20261024.md",
+    "question": "How can native DFlash2 draft/verify preserve committed KV, DeltaNet and convolution state?",
+    "setup": "Source-only study at main4ca29eed and Splash1482f6b. Draft metadata pinned at51ef7b6; no weights downloaded or inference run.",
+    "change": "User prioritized speculation after approving diagnostic #70. Copilot claude-sonnet-5.5 follow-up; state-transaction experiment #72 proposed.",
+    "result": "Not measured. Draft assets are identified; real draft forward, batched target verification and performance remain unimplemented.",
+    "validation": "Draft config/file metadata fetched; usage confirms requested model; source dependencies and timing/memory claims independently reviewed.",
+    "conclusion": "First establish exact rejection recovery using synthetic proposals and serial target verification. This is a correctness reference, not accelerated DFlash2.",
+    "next": "Issue #72 awaits approval. Real draft/tap integration and batched verification require concrete follow-up plans; #70 diagnostics deferred.",
+    "commands": [],
+    "evidence": "docs/evaluations/dflash-research-20261024/manifest.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
   }
 ]

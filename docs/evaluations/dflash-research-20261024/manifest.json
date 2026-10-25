@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "provider": "GitHub Copilot CLI",
+  "cliVersion": "1.0.103",
+  "model": "claude-sonnet-5.5",
+  "sessionId": "49d9cd16-5288-477b-b7ac-c869fba154cf",
+  "sessionResumed": true,
+  "usageScope": "Resumed-session usage statistics are cumulative, not isolated follow-up cost.",
+  "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "splashCommit": "1482f6bbc2abf12375332725302019594150b6cb",
+  "scope": "Read-only speculation-focused source study plus metadata-only HTTP fetch. No weights downloaded, implementation, build, inference benchmark, service or system-setting changes.",
+  "proposedExperimentIssue": 72,
+  "localOnlyEvidence": [
+    {
+      "filename": "output.log",
+      "sha256": "24a334505c1462089611d03d99cae847387ec4dbdd17bf27d119b1f12f3deed2",
+      "bytes": 28604,
+      "availability": "Local ignored artifacts/dflash-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "session.md",
+      "sha256": "b6be9bbf5304bcffd3a32bc5c57c22dea79ab7e95d28908e65441f5b0185b939",
+      "bytes": 463041,
+      "availability": "Local ignored artifacts/dflash-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "usage.json",
+      "sha256": "c69811bf69828beaedf1bdb850f279a766fc8071aa4f48b8ef87cc501005d80a",
+      "bytes": 3211,
+      "availability": "Local ignored artifacts/dflash-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "report-original.md",
+      "sha256": "13ce3b799c0e63c5b19bbefd041cc968d682ec21ac5f42f24dabf497aa789049",
+      "bytes": 18098,
+      "availability": "Local ignored artifacts/dflash-research-20261024/ only; not a public download"
+    }
+  ],
+  "publicEvidence": {
+    "draft-config.json": "86d2e8e57e7c70bb867240708d00c0535ae9ed3c828dbdcb21584471c7bbce59",
+    "draft-file-provenance.json": "cd90ed66564f9bddc984e16fc76fda51c1bf0d3b8b52ded53d7aed40fc8ccb49"
+  }
+}
