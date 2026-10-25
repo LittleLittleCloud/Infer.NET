@@ -279,9 +279,15 @@ test("default homepage exposes the BF16/2048 run across configurations", () => {
   assert.deepEqual(new Set(page.points("prefill").map(point => point.dataset.run)),
     new Set(production.runs.map(run => run.id)));
   const prefillSvg = page.elements["prefill-chart"].children[0];
-  assert.equal(prefillSvg.children.filter(child =>
-    ["main-line", "candidate-line"].includes(child.attributes.class)).length, 0,
-  "different configurations must not be connected as one trend");
+  const model = ui.chartModel(production, "all", "prefill", page.elements["prefill-chart"].clientWidth);
+  for (const line of prefillSvg.children.filter(child =>
+    ["main-line", "candidate-line"].includes(child.attributes.class))) {
+    const start = model.points.find(point => point.x === Number(line.attributes.x1));
+    const end = model.points.find(point => point.x === Number(line.attributes.x2));
+    assert.ok(start && end, "trend endpoints must identify measured runs");
+    assert.equal(start.run.configurationId, end.run.configurationId,
+      "different configurations must not be connected as one trend");
+  }
   assert.ok(page.points("ttft").find(point => point.dataset.run === candidateId).className.includes("missing"));
   assert.ok(page.elements.run.children.some(option => option.value === candidateId));
   page.elements.run.value = candidateId;

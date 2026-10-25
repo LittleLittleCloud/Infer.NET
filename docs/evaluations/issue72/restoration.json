@@ -1,0 +1,35 @@
+{
+  "controller": {
+    "startedUtc": "2026-10-25T00:17:36.761138+00:00",
+    "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "systemGpuLimit": "0",
+    "bootstrapExitCode": 0,
+    "ready": true,
+    "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "pid": 71597,
+    "coordinatorRegistrationReady": true,
+    "realChatSucceeded": true,
+    "endedUtc": "2026-10-25T00:18:26.181514+00:00"
+  },
+  "independentVerification": {
+    "utc": "2026-10-25T00:19:32.455374+00:00",
+    "ready": true,
+    "state": "Ready",
+    "pid": 71597,
+    "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "originalBuildMatches": true,
+    "coordinatorRegistrationReady": true,
+    "realChatSucceeded": true,
+    "systemGpuLimit": "0",
+    "originalPackageFilesVerified": 9,
+    "originalPackageHashesMatch": true,
+    "knownExperimentPortsListening": {
+      "5280": false,
+      "5281": false,
+      "5282": false,
+      "5290": false,
+      "5291": false,
+      "5292": false
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "source": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "rid": "osx-arm64",
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "weightBits": 8,
+  "kv": "fp32",
+  "splitProtocol": 4,
+  "maxContextTokens": 262144,
+  "maxOutputTokens": 262144,
+  "requiredPlatform": "macOS 26+ / Apple M5",
+  "files": {
+    "deepinfer": "409a35e8d8e7637ebc38e7e672b3e1c3d64ea8112d60db56b110fedc32a49444",
+    "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+    "deploy/acceptance.py": "b9adcd2d036c7abcb1d7d7c79c126b0ccc5033554d25618800a71b7f75bea771",
+    "deploy/install-macos.py": "dd3c8cffce13d113ad9f050ac6320d36ef25a032a1484bbca004cc323b0e837e",
+    "deploy/install-windows.ps1": "4224c38d0d82bb73ab9e824973185733f4286f7c07de5df0484b493ca83db092",
+    "deploy/package.py": "cfbb586244c322dcf7e21869880ae6926114c1f6ef2ca9ce56edcea3747be798",
+    "deploy/prepare.py": "f979dc106f2be9dd677dbb0fd6c0c7eb0d79a312698bc41cb5034460124eaebd",
+    "deploy/verify-package.py": "1730da5c0668aac357a645decc6d51e416ea068db69edba1b9ff7f0308b5b518",
+    "libdeepinfer_metal.dylib": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+  }
+}

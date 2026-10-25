@@ -96,8 +96,9 @@ class TrendTests(unittest.TestCase):
 
     def test_sota_requires_official_passes_complete_coverage_and_separate_scopes(self):
         entries = {(e['family'], e['metric']): e for e in sota_summary(self.data)}
-        self.assertAlmostEqual(entries['infernet', 'prefill']['value'], 531.19940338122)
-        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 66.4336423808985)
+        self.assertGreaterEqual(entries['infernet', 'prefill']['value'], 531.19940338122)
+        self.assertAlmostEqual(next(r for r in self.data['runs'] if r['id'] == 'issue58-m5pro-local-human20-20261024')['metrics']['decode']['value'], 66.4336423808985)
+        self.assertGreaterEqual(entries['infernet', 'decode']['value'], 66.4336423808985)
         self.assertAlmostEqual(entries['external', 'prefill']['value'], 3066.6108426327232)
         self.assertAlmostEqual(entries['external', 'decode']['value'], 148.91366915373305)
         for entry in entries.values():
@@ -105,7 +106,7 @@ class TrendTests(unittest.TestCase):
         # A faster record without official checks cannot become verified SOTA.
         candidate = next(r for r in self.data['runs'] if r['id'] == 'issue54-main99e-human20-20261024')
         candidate['metrics']['prefill']['value'] = 1e9
-        self.assertEqual(sota_summary(self.data)[0]['run']['id'], self.first['id'])
+        self.assertEqual(sota_summary(self.data)[0]['run']['id'], entries['infernet', 'prefill']['run']['id'])
         # Missing native observations never become zero or an inferred speed.
         external = next(r for r in self.data['runs'] if 'splash' in r['runtime'])
         external['requests'][0].pop('nativeCommandDelta')

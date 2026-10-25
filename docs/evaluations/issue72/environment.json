@@ -1,0 +1,39 @@
+{
+  "environment": {
+    "utc": "2026-10-24T22:27:22.321076+00:00",
+    "chip": "Apple M5 Pro",
+    "memoryBytes": 51539607552,
+    "gpuWiredLimit": "0",
+    "powerSettings": "Battery Power:\n Sleep On Power Button 1\n powermode            2\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n powermode            2\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         60\n womp                 1\n networkoversleep     0\n sleep                1\n tcpkeepalive         1\n disksleep            10\n",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+    "windowsParticipating": false
+  },
+  "offLateSample": {
+    "utc": "2026-10-24T23:35:35.781628+00:00",
+    "thermal": {
+      "exitCode": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    },
+    "pressure": {
+      "exitCode": 0,
+      "stdout": "The system has 51539607552 (3145728 pages with a page size of 16384).\nSystem-wide memory free percentage: 11%\n",
+      "stderr": ""
+    }
+  },
+  "coverage": "Environment and late disabled samples only; no continuous thermal or memory-pressure trace. Request boundaries retain AC and vm_stat; supplemental two-second service sampler starts midway through disabled formal cohort.",
+  "onMidSample": {
+    "utc": "2026-10-25T00:05:04.619604+00:00",
+    "phase": "enabled formal, 13 tasks attempted",
+    "thermal": {
+      "exitCode": 0,
+      "stdout": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "stderr": ""
+    },
+    "pressure": {
+      "exitCode": 0,
+      "stdout": "The system has 51539607552 (3145728 pages with a page size of 16384).\nSystem-wide memory free percentage: 13%\n",
+      "stderr": ""
+    }
+  }
+}

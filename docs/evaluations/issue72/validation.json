@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+  "checks": [
+    {
+      "log": "independent-cpu-tests.log",
+      "passed": 430,
+      "sha256": "9b30006192fb2b095a1605a3f75888341e1ff6fea0bd6a15982320632bb8054d"
+    },
+    {
+      "log": "independent-integration.log",
+      "passed": 70,
+      "sha256": "6dbce6caa925bae402fde307958fee35bd9af32f87ef11648d571afc83b91add"
+    },
+    {
+      "log": "native-aot-integration.log",
+      "passed": 70,
+      "sha256": "f43f4a966211266232987f4ab94aa7990b2da44c473e2236e6a81f4dc6de0871"
+    },
+    {
+      "log": "native-state-checks.log",
+      "passed": 587,
+      "sha256": "7c94a9c087a7f748f734757323b12f2ec0e8158d7ed105f3b46b6106a7d6b7eb"
+    }
+  ],
+  "availability": "Raw logs are local ignored artifacts, not public downloads.",
+  "nativeScope": "Native buffer checks execute transaction semantics over real Metal buffers mutated by a CPU stand-in; real numerical model validation is reported separately."
+}

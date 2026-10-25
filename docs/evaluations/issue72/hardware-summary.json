@@ -1,0 +1,68 @@
+{
+  "candidateCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+  "scope": "Synthetic oracle state correctness; no real draft, acceptance-quality estimate or acceleration measurement",
+  "phases": [
+    {
+      "name": "short128",
+      "runs": 45,
+      "formalRuns": 33,
+      "failures": 0,
+      "powerAcAllSamples": true,
+      "sampledWholeProcessSwapOutBytes": 9845342208,
+      "swapScope": "Includes model loading and warmup as well as fixture execution; not a per-formal-request attribution.",
+      "publicReport": "hardware-short128.json",
+      "localEvidence": {
+        "process.log": {
+          "sha256": "534477011346267d63367f1db32b191e192cbc6db4e5bb4173c3632eceee09b1",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        },
+        "resources.jsonl": {
+          "sha256": "e93fb89e41c94ce162371441a40b8c9b460c2fbe42c4c64dc507c694adbcf5fd",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        }
+      }
+    },
+    {
+      "name": "long4096",
+      "runs": 5,
+      "formalRuns": 3,
+      "failures": 0,
+      "powerAcAllSamples": true,
+      "sampledWholeProcessSwapOutBytes": 7134576640,
+      "swapScope": "Includes model loading and warmup as well as fixture execution; not a per-formal-request attribution.",
+      "publicReport": "hardware-long4096.json",
+      "localEvidence": {
+        "process.log": {
+          "sha256": "d8da08e4b7c7d5e364dcfdad1a15984b7611f7027ec1e60f9c87586607658293",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        },
+        "resources.jsonl": {
+          "sha256": "4f4ec1ab2e1cd96e9e5e09a4b81a5a47e9b5211d795406c92fec586e0d573808",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        }
+      }
+    },
+    {
+      "name": "natural-eos",
+      "runs": 45,
+      "formalRuns": 33,
+      "failures": 0,
+      "powerAcAllSamples": true,
+      "sampledWholeProcessSwapOutBytes": 8006664192,
+      "swapScope": "Includes model loading and warmup as well as fixture execution; not a per-formal-request attribution.",
+      "publicReport": "hardware-natural-eos.json",
+      "localEvidence": {
+        "process.log": {
+          "sha256": "7ab9340475dcf573cfae09ddfeaf04e3a79d3e057354c172d2badcd9a05d0804",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        },
+        "resources.jsonl": {
+          "sha256": "b6a741ddf6a994f3ed1459bacb5d15a05c9069b92118f4a13faa52a90d440ea1",
+          "availability": "Local ignored experiment artifacts only; not a public download"
+        }
+      }
+    }
+  ],
+  "totalRuns": 95,
+  "totalFailures": 0
+}
