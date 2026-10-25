@@ -1,5 +1,20 @@
 [
   {
+    "id": "dflash2-comparison-20261024",
+    "title": "Native DFlash2 versus official MTP: implementation and correctness review",
+    "kind": "2026-10-24 · Issue #80 · Planned local Metal comparison",
+    "source": "docs/EXPERIMENT-80-DFLASH2-20261024.md",
+    "question": "Can parallel DFlash2 block drafting outperform the official MTP implementation on the same Qwen3.6 target?",
+    "setup": "Fresh main4ca29ee; immutable MTP17965ce reference; M5 Pro20GPU/48GiB, affine8 target/FP32 KV, BF16 draft, local Metal; planned Pi1.4.0 seed0 pilot5/formal20.",
+    "change": "Native six-layer DFlash2, eight target feature taps, trained dynamic convolutions/top16 path selector, shared embedding/head, exact target verification and rollback. Default off.",
+    "result": "Not obtained: implementation in progress. Full source weight hash and all11 target-file hashes verified; no inference speed claims or fabricated trend points.",
+    "validation": "Independent NumPy backbone/selector goldens generated; actual native agreement, rollback, service and formal20 checks remain pending.",
+    "conclusion": "Benefit to be measured; prior MTP failures preserved in PR79. Safe diagnostic20 continues despite performance threshold failures; correctness/resource failures still stop.",
+    "next": "Finish native/managed implementation, independent review and correctness gates; pilot block4/8, freeze width, then fresh main/off/MTP/DFlash2 formal20. Human review required for adoption.",
+    "commands": [],
+    "evidence": "Issue #80; restricted local ignored artifacts/dual-host/issue80-dflash2/; no prompts/solutions/credentials published."
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",

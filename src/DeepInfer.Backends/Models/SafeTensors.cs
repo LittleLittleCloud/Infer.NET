@@ -44,6 +44,8 @@ public sealed class SafeTensors : IDisposable
         }
         catch { stream.Dispose(); throw; }
     }
+    public IReadOnlyCollection<string> Names => tensors.Keys;
+    public Tensor Find(string name) => tensors.TryGetValue(name, out var tensor) ? tensor : throw new InvalidDataException($"Missing tensor: {name}.");
     public Tensor Get(string name, params int[] shape)
     {
         if (!tensors.TryGetValue(name, out var tensor) || !tensor.Shape.SequenceEqual(shape))
@@ -63,6 +65,21 @@ public sealed class SafeTensors : IDisposable
         stream.Position = tensor.Start;
         stream.ReadExactly(destination);
     }
+    // Exact byte range of a tensor; lets CPU oracles read one embedding row without loading the whole matrix.
+    public void ReadBytesRange(Tensor tensor, long offset, Span<byte> destination)
+    {
+        if (offset < 0 || offset + destination.Length > tensor.Bytes) throw new InvalidDataException("Invalid byte range.");
+        stream.Position = tensor.Start + offset;
+        stream.ReadExactly(destination);
+    }
+    // Exact BF16 element range expanded to FP32 (a 16-bit shift); used by CPU oracles, never by inference.
+    public void ReadBFloat16Range(Tensor tensor, long element, Span<float> destination)
+    {
+        if (tensor.Dtype != "BF16" || element < 0 || (element + destination.Length) * 2 > tensor.Bytes) throw new InvalidDataException("Invalid BF16 range.");
+        var raw = new ushort[destination.Length]; stream.Position = tensor.Start + element * 2;
+        stream.ReadExactly(MemoryMarshal.AsBytes(raw.AsSpan()));
+        for (var i = 0; i < raw.Length; i++) destination[i] = BitConverter.Int32BitsToSingle(raw[i] << 16);
+    }
     public float[] ReadFloat(Tensor tensor)
     {
         float[] values;
@@ -78,6 +95,18 @@ public sealed class SafeTensors : IDisposable
         }
         if (values.Any(x => !float.IsFinite(x))) throw new InvalidDataException("Non-finite tensor values.");
         return values;
+    }
+    public string Sha256Hex(Tensor tensor)
+    {
+        if (!tensors.TryGetValue(tensor.Name, out var owned) || owned != tensor) throw new InvalidDataException("Tensor ownership mismatch.");
+        using var hash = System.Security.Cryptography.IncrementalHash.CreateHash(System.Security.Cryptography.HashAlgorithmName.SHA256);
+        var buffer = new byte[1 << 20]; stream.Position = tensor.Start;
+        for (var left = tensor.Bytes; left > 0;)
+        {
+            var n = (int)Math.Min(buffer.Length, left);
+            stream.ReadExactly(buffer, 0, n); hash.AppendData(buffer, 0, n); left -= n;
+        }
+        return Convert.ToHexStringLower(hash.GetHashAndReset());
     }
     public void Dispose() => stream.Dispose();
 }

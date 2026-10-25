@@ -394,6 +394,8 @@ struct GPrefill {
  std::array<id<MTLComputePipelineState>,4> bf16ps,expandedPs;
  id<MTLBuffer> expandedWeight,expandedUp,expandedInput;
  bool matrix=true,fusedAttention=true,fusedAll=false;uint32_t matrixRows=64,matrixTokens=0,scoreCapacity=2048,attentionFeatures=256,maxTokens=2048;
+ // Opt-in exact-decode verification (gpu_verify.mm). Nothing below is allocated unless di_graph_verify_rows runs.
+ bool exactDecode=false;id<MTLComputePipelineState> exactShared,exactExperts5,exactExperts8;id<MTLBuffer> verifyNext,verifyLogits;
 };
 static void g_prefill_destroy(GPrefill *p){delete p;}
 static bool p_create(GModel *g,char *error,int capacity,uint32_t scratchTokens=0) {
@@ -567,11 +569,11 @@ static void p_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuf
  [e dispatchThreadgroups:MTLSizeMake(16,count,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
 }
 static void p_decode_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuffer> q,id<MTLBuffer> keys,
- id<MTLBuffer> values,id<MTLBuffer> raw,id<MTLBuffer> out) {
- AttentionShape shape{g->position,1,g->capacity,(g->position+128)/128};
- g_bind(e,q,0);g_bind(e,keys,1);g_bind(e,values,2);g_bind(e,g->attentionParts,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];
+ id<MTLBuffer> values,id<MTLBuffer> raw,id<MTLBuffer> out,uint32_t row=0) {
+ AttentionShape shape{g->position+row,1,g->capacity,(g->position+row+128)/128};
+ g_bind(e,q,0,NSUInteger(row)*4096*4);g_bind(e,keys,1);g_bind(e,values,2);g_bind(e,g->attentionParts,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];
  p_run(g,e,PDecodeAttention,MTLSizeMake(shape.partitions,2,1),128);g_barrier(e);
- g_bind(e,g->attentionParts,0);g_bind(e,raw,1);g_bind(e,out,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];
+ g_bind(e,g->attentionParts,0);g_bind(e,raw,1,NSUInteger(row)*8192*4);g_bind(e,out,2,NSUInteger(row)*4096*4);[e setBytes:&shape length:sizeof(shape) atIndex:3];
  [e setComputePipelineState:g->ps[GAttentionCombine]];
  [e dispatchThreadgroups:MTLSizeMake(16,1,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
 }
@@ -629,10 +631,63 @@ static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatri
  if(experts&&g->prefill->groupedExperts&&shape.tokens>=64){auto *p=g->prefill;
   g_bind(e,p->groupedRoutes,9);g_bind(e,p->groupedCounts,10);g_bind(e,p->groupedTiles,11);[e setComputePipelineState:p->bf16Gemm?(p->packedExperts?(direct?p->packedGateDirectPs:p->packedGatePs):p->bf16ps[2]):p->ps[PGroupedGate]];
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:0 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?64:128):256,1,1)];g->dispatches++;return;}
+ if(g->prefill->exactDecode){auto *p=g->prefill;[e setComputePipelineState:experts?(gate.bits==8?p->exactExperts8:p->exactExperts5):p->exactShared];
+  [e dispatchThreadgroups:MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
 }
-extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
- int *nextToken,int *dispatches,double *ms,char *error,int capacity) {
+// Verification retains layer-major batched projections and uses the actual decode pipelines
+// for stateful and reduction operations. Separate prefill kernels can change final FP32 bits.
+static GStep p_decode_step(GModel *g,int row,int layer=0){return GStep{g->position+uint32_t(row),uint32_t(layer),0,g->epsilon,g->theta,g->capacity};}
+static void p_exact_start(GModel *g,id<MTLComputeCommandEncoder> e,const int32_t *tokens,int count){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row);
+  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->x,3,NSUInteger(row)*2048*4);
+  [e setBytes:tokens+row length:4 atIndex:4];[e setBytes:&g->embedding.bits length:4 atIndex:5];g_run(g,e,GEmbed,16,128);g_barrier(e);
+  g_bind(e,p->x,0,NSUInteger(row)*2048*4);g_bind(e,g->layers[0].parameters,1);g_bind(e,p->norm,2,NSUInteger(row)*2048*4);[e setBytes:&s length:sizeof(s) atIndex:3];g_run(g,e,GNorm,1,256);g_barrier(e);
+ }
+}
+static void p_exact_linear(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->qkv,0,r*8192*4);g_bind(e,l.history,1);g_bind(e,l.parameters,2,4096*4);g_bind(e,p->conv,3,r*8192*4);
+  g_bind(e,p->a,4,r*32*4);g_bind(e,p->b,5,r*32*4);g_bind(e,l.parameters,6,36864*4);g_bind(e,l.parameters,7,36896*4);g_run(g,e,GLinear,64,128);g_barrier(e);
+  [e setComputePipelineState:g->compute.delta];g_bind(e,l.state,0);g_bind(e,p->conv,1,r*8192*4);g_bind(e,p->conv,2,(r*8192+2048)*4);
+  g_bind(e,p->conv,3,(r*8192+4096)*4);g_bind(e,p->a,4,r*32*4);g_bind(e,p->b,5,r*32*4);g_bind(e,p->attention,6,r*4096*4);
+  [e dispatchThreadgroups:MTLSizeMake(2048,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];g->dispatches++;g_barrier(e);
+  g_bind(e,p->attention,0,r*4096*4);g_bind(e,p->z,1,r*4096*4);g_bind(e,l.parameters,2,36928*4);[e setBytes:&s length:sizeof(s) atIndex:3];g_run(g,e,GDeltaNorm,32,128);g_barrier(e);
+ }
+}
+static void p_exact_heads(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->qkv,0,r*8192*4);g_bind(e,p->k,1,r*512*4);g_bind(e,p->v,2,r*512*4);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
+  g_bind(e,p->q,5,r*4096*4);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&s length:sizeof(s) atIndex:8];g_run(g,e,GHead,18,256);g_barrier(e);
+ }
+}
+static void p_exact_add(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->x,0,r*2048*4);g_bind(e,p->out,1,r*2048*4);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3,r*2048*4);[e setBytes:&s length:sizeof(s) atIndex:4];g_run(g,e,GAddNorm,1,256);g_barrier(e);
+ }
+}
+static void p_exact_top(GModel *g,id<MTLComputeCommandEncoder> e,int count){auto *p=g->prefill;
+ for(int row=0;row<count;row++){NSUInteger r=NSUInteger(row);g_bind(e,p->router,0,r*256*4);g_bind(e,p->ids,1,r*8*4);g_bind(e,p->prob,2,r*8*4);g_run(g,e,GTop8,1,32);g_barrier(e);}
+}
+static void p_exact_merge(GModel *g,id<MTLComputeCommandEncoder> e,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->x,0,r*2048*4);g_bind(e,p->expertOut,1,r*8*2048*4);g_bind(e,p->sharedOut,2,r*2048*4);g_bind(e,p->sharedRoute,3,r*4);g_bind(e,p->prob,4,r*8*4);
+  g_bind(e,layer==39?g->finalNorm:g->layers[layer+1].parameters,5);g_bind(e,p->norm,6,r*2048*4);g_bind(e,g->trace,7);[e setBytes:&s length:sizeof(s) atIndex:8];g_run(g,e,GMerge,1,256);g_barrier(e);
+ }
+}
+// DFlash2 target taps: post-layer residual rows (before the final norm) of the declared layers are copied
+// device-to-device into g->tapBuffer ([rows][8*2048], slot order = tap order). Defined in gpu_dflash.mm.
+static int dflash_tap_slot(int layer);
+static void p_tap(GModel *g,id<MTLComputeCommandEncoder> e,int count,int layer){
+ int slot=dflash_tap_slot(layer);if(slot<0)return;auto *p=g->prefill;
+ uint32_t params[2]={uint32_t(count),uint32_t(slot)};
+ [e setComputePipelineState:g->tapPipeline];g_bind(e,p->x,0);g_bind(e,g->tapBuffer,1);[e setBytes:params length:sizeof(params) atIndex:2];
+ [e dispatchThreads:MTLSizeMake(2048,count,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
+}
+struct PVerifyIO {int32_t *next;float *hidden;float *logits;};
+static int p_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
+ int *nextToken,int *dispatches,double *ms,char *error,int capacity,const PVerifyIO *verifyIO) {
+ const bool verify=verifyIO!=nullptr;
  @autoreleasepool {
  if(!graph||!tokens||!((begin==0&&end==40)||(begin==20&&end==40&&hidden))||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
  auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
@@ -644,7 +699,15 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  }
  for(int t=0;t<count;t++)if(tokens[t]<0||tokens[t]>=248320){error_text(error,capacity,@"Invalid prefill token");return -1;}
  if(!g->prefill&&!p_create(g,error,capacity))return -1;auto *p=g->prefill;
+ struct ExactScope {GPrefill *p;bool matrix,grouped;~ExactScope(){if(p){p->exactDecode=false;p->matrix=matrix;p->groupedExperts=grouped;}}} exactScope{nullptr,false,false};
+ if(verify){
+  if(count>8||begin!=0||end!=40||!classifier||!g->decodeFusedFp32||g->kvBf16||p->bf16Gemm||p->expandedGemm||p->packedExperts||trace||!p->exactShared||!p->exactExperts5||!p->exactExperts8){error_text(error,capacity,@"Exact multi-row verification requires <=8 rows, fused-fp32 decode attention, FP32 KV and prepared exact kernels");return -1;}
+  if(!p->verifyNext){p->verifyNext=g_buffer(g,8);p->verifyLogits=g_buffer(g,NSUInteger(8)*248320);if(!p->verifyNext||!p->verifyLogits){error_text(error,capacity,@"Cannot allocate verification buffers");return -1;}}
+  exactScope=ExactScope{p,p->matrix,p->groupedExperts};p->exactDecode=true;p->matrix=false;p->groupedExperts=false;
+ }
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
+ if(g->tapsEnabled&&(begin!=0||end!=40||!g->tapBuffer||uint32_t(count)>g->tapRows)){error_text(error,capacity,@"DFlash2 tap capture requires a full local prefill/verify within the tap buffer rows");return -1;}
+ if(g->tapsEnabled)g->tapValidRows=0;
  if(trace&&p->trace.length<NSUInteger(count)*40*2048*4){p->trace=g_buffer(g,NSUInteger(count)*40*2048);if(!p->trace){error_text(error,capacity,@"Cannot allocate prefill trace");return -1;}}
  memcpy(p->tokens.contents,tokens,count*4);p->submissions=0;
  g->dispatches=0;g->profileCount=0;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
@@ -663,26 +726,36 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  };
 
 
+ if(verify)p_exact_start(g,e,tokens,count);
+ else {
  if(begin==0){
  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->tokens,3);g_bind(e,p->x,4);[e setBytes:&g->embedding.bits length:4 atIndex:5];
  p_run(g,e,PEmbed,MTLSizeMake(16,count,1),128);g_barrier(e);
  }else memcpy(p->x.contents,hidden,NSUInteger(count)*2048*4);
  g_bind(e,p->x,0);g_bind(e,g->layers[begin].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
+ }
  if(!checkpoint("embedding-norm"))return -1;
  for(int index=begin;index<end;index++) {
   shape.layer=index;auto &l=g->layers[index];auto &m=l.m;
   p_gemv(g,e,m[GQ],p->norm,p->qkv,shape);
   if(l.linear){p_gemv(g,e,m[GZ],p->norm,p->z,shape);p_gemv(g,e,m[GA],p->norm,p->a,shape);p_gemv(g,e,m[GB],p->norm,p->b,shape);g_barrier(e);if(!checkpoint("linear-projections"))return -1;
+   if(verify)p_exact_linear(g,e,l,count,index);
+   else {
    g_bind(e,p->qkv,0);g_bind(e,l.history,1);g_bind(e,l.parameters,2,4096*4);g_bind(e,p->conv,3);
    g_bind(e,p->a,4);g_bind(e,p->b,5);g_bind(e,l.parameters,6,36864*4);g_bind(e,l.parameters,7,36896*4);[e setBytes:&shape length:sizeof(shape) atIndex:8];
    p_run(g,e,PLinear,MTLSizeMake(64,count,1),128);g_barrier(e);if(!checkpoint("linear-convolution"))return -1;
    p_delta(g,e,l.state,l.history,shape);if(!checkpoint("delta"))return -1;
    g_bind(e,p->attention,0);g_bind(e,p->z,1);g_bind(e,l.parameters,2,36928*4);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PDeltaNorm,MTLSizeMake(32,count,1),128);g_barrier(e);if(!checkpoint("delta-norm"))return -1;
+   }
   } else {
    p_gemv(g,e,m[GK],p->norm,p->k,shape);p_gemv(g,e,m[GV],p->norm,p->v,shape);g_barrier(e);if(!checkpoint("attention-projections"))return -1;
+   if(verify)p_exact_heads(g,e,l,count,index);
+   else {
    g_bind(e,p->qkv,0);g_bind(e,p->k,1);g_bind(e,p->v,2);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
    g_bind(e,p->q,5);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];p_run(g,e,PHead,MTLSizeMake(18,count,1),256);g_barrier(e);if(!checkpoint("attention-head"))return -1;
-   for(uint32_t offset=0;offset<(uint32_t)count;offset+=p->attentionBatchTokens){uint32_t n=std::min(p->attentionBatchTokens,(uint32_t)count-offset);
+   }
+   if(verify){for(uint32_t row=0;row<(uint32_t)count;row++)p_decode_attention(g,e,p->q,l.keys,l.values,p->qkv,p->attention,row);}
+   else for(uint32_t offset=0;offset<(uint32_t)count;offset+=p->attentionBatchTokens){uint32_t n=std::min(p->attentionBatchTokens,(uint32_t)count-offset);
     if(p->fusedAttention&&(p->attentionBf16||p->fusedAll||g->position+offset+n>2048))p_fused_attention(g,e,p->q,l.keys,l.values,p->qkv,p->attention,n,offset);
     else {
      PShape as=shape;as.tokens=n;as.position+=offset;as.capacity=p->scoreCapacity;
@@ -696,14 +769,24 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   }
   if(!l.linear&&!checkpoint("attention"))return -1;
   p_gemv(g,e,m[GO],p->attention,p->out,shape);g_barrier(e);if(!checkpoint("output-projection"))return -1;
+  if(verify)p_exact_add(g,e,l,count,index);
+  else {
   g_bind(e,p->x,0);g_bind(e,p->out,1);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];p_run(g,e,PAdd,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("residual-norm"))return -1;
+  }
   p_gemv(g,e,m[GR],p->norm,p->router,shape);p_gate(g,e,m[GSG],m[GSU],p->sharedAct,shape,false);p_gemv(g,e,m[GSR],p->norm,p->sharedRoute,shape);g_barrier(e);if(!checkpoint("router-shared-gate"))return -1;
+  if(verify)p_exact_top(g,e,count);
+  else {
   g_bind(e,p->router,0);g_bind(e,p->ids,1);g_bind(e,p->prob,2);g_bind(e,p->groupedTileCount,3);p_run(g,e,PTop,MTLSizeMake(count,1,1),32);g_barrier(e);
+  }
   if(p->groupedExperts&&count>=64)p_build_groups(g,e,shape,m[GEG].rows,m[GED].rows);if(!checkpoint("routing"))return -1;
   p_gate(g,e,m[GEG],m[GEU],p->expertAct,shape,true);g_barrier(e);if(!checkpoint("expert-gate"))return -1;
   p_gemv(g,e,m[GED],p->expertAct,p->expertOut,shape,true);p_gemv(g,e,m[GSD],p->sharedAct,p->sharedOut,shape);g_barrier(e);if(!checkpoint("expert-shared-down"))return -1;
+  if(verify)p_exact_merge(g,e,count,index);
+  else {
   g_bind(e,p->x,0);g_bind(e,p->expertOut,1);g_bind(e,p->sharedOut,2);g_bind(e,p->sharedRoute,3);g_bind(e,p->prob,4);
   g_bind(e,index==39?g->finalNorm:g->layers[index+1].parameters,5);g_bind(e,p->norm,6);g_bind(e,p->trace,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];p_run(g,e,PMerge,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("merge"))return -1;
+  }
+  if(g->tapsEnabled)p_tap(g,e,count,index);
  }
  // The 8-bit vocabulary matrix adds ~0.5 GiB to a command's resource set.
  // Finish the layer stack before binding it, so long KV + prefill scratch
@@ -715,17 +798,41 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   command=[g->compute.queue commandBuffer];e=[command computeCommandEncoder];
   if(!command||!e){error_text(error,capacity,@"Cannot create classifier command");return -1;}
  }
- if(classifier){QMatrix &m=g->classifier;struct {uint32_t experts,rows,columns,bits,group,count,batched;} qs{1,m.rows,m.columns,m.bits,64,1,0};
-  [e setComputePipelineState:m.bits==8?(g->compute.rowTile==8?g->compute.wide8:g->compute.tiled8):(g->compute.rowTile==8?g->compute.wide5:g->compute.tiled5)];g_bind(e,m.packed,0);g_bind(e,m.scales,1);g_bind(e,m.biases,2);g_bind(e,p->norm,3,(count-1)*2048*4);g_bind(e,g->logits,4);[e setBytes:&qs length:sizeof(qs) atIndex:5];g_bind(e,g->zero,6);
+ // Verification reuses each classifier weight across the block's rows with the same affine dot order.
+ // The ordinary last-row classifier stays unchanged. G3 checks every row against single-token decode.
+ if(verify){p_gemv(g,e,g->classifier,p->norm,p->verifyLogits,shape);g_barrier(e);}
+ for(int row=verify?0:count-1;classifier&&row<count;row++){QMatrix &m=g->classifier;struct {uint32_t experts,rows,columns,bits,group,count,batched;} qs{1,m.rows,m.columns,m.bits,64,1,0};
+  if(!verify){
+  [e setComputePipelineState:m.bits==8?(g->compute.rowTile==8?g->compute.wide8:g->compute.tiled8):(g->compute.rowTile==8?g->compute.wide5:g->compute.tiled5)];g_bind(e,m.packed,0);g_bind(e,m.scales,1);g_bind(e,m.biases,2);g_bind(e,p->norm,3,NSUInteger(row)*2048*4);g_bind(e,verify?p->verifyLogits:g->logits,4,verify?NSUInteger(row)*248320*4:0);[e setBytes:&qs length:sizeof(qs) atIndex:5];g_bind(e,g->zero,6);
   [e dispatchThreadgroups:MTLSizeMake((m.rows+g->compute.rowTile-1)/g->compute.rowTile,1,1) threadsPerThreadgroup:MTLSizeMake(g->compute.rowTile*32,1,1)];g->dispatches++;g_barrier(e);
-  g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,g->nextToken,2);g_run(g,e,GArgFinal,1,32);
+  }
+  g_bind(e,verify?p->verifyLogits:g->logits,0,verify?NSUInteger(row)*248320*4:0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,verify?p->verifyNext:g->nextToken,2,verify?NSUInteger(row)*4:0);g_run(g,e,GArgFinal,1,32);
  }
  [e endEncoding];double finalMs=0;if(!q_complete(command,&finalMs,error,capacity))return -1;p->submissions++;if(ms)*ms=profileMs+finalMs;
- *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
- if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);if(trace)memcpy(trace,p->trace.contents,count*40*2048*4);
+ if(verify){
+  auto *next=static_cast<const int32_t*>(p->verifyNext.contents);auto *rows=static_cast<const float*>(p->norm.contents);
+  for(int i=0;i<count*2048;i++)if(!std::isfinite(rows[i])){error_text(error,capacity,@"Non-finite verification hidden row");return -1;}
+  auto *lg=static_cast<const float*>(p->verifyLogits.contents);
+  for(int i=0;i<count;i++){if(next[i]<0||next[i]>=248320){error_text(error,capacity,@"Invalid or non-finite verification logits (no valid argmax)");return -1;}}
+  memcpy(verifyIO->next,next,NSUInteger(count)*4);if(verifyIO->hidden)memcpy(verifyIO->hidden,rows,NSUInteger(count)*2048*4);
+  if(verifyIO->logits)memcpy(verifyIO->logits,lg,NSUInteger(count)*248320*4);
+  (void)lg;*nextToken=next[count-1];
+ }
+ else *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
+ if(!verify&&classifier&&logits)memcpy(logits,g->logits.contents,248320*4);if(trace)memcpy(trace,p->trace.contents,count*40*2048*4);
  if(output)memcpy(output,p->x.contents,NSUInteger(count)*2048*4);
+ if(g->tapsEnabled){g->tapBasePosition=shape.position;g->tapValidRows=uint32_t(count);}
  *dispatches=g->dispatches;g->position+=count;return 0;
  }
+}
+extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
+ int *nextToken,int *dispatches,double *ms,char *error,int capacity) {
+ return p_range(graph,tokens,count,classifier,begin,end,hidden,output,logits,trace,nextToken,dispatches,ms,error,capacity,nullptr);
+}
+extern "C" int di_graph_verify_rows(void *graph,const int32_t *tokens,int count,int32_t *next,float *hidden,float *logits,int *dispatches,double *ms,char *error,int capacity) {
+ if(!next||!tokens){error_text(error,capacity,@"Invalid verification arguments");return -1;}
+ PVerifyIO io{next,hidden,logits};int last=0;
+ return p_range(graph,tokens,count,1,0,40,nullptr,nullptr,nullptr,nullptr,&last,dispatches,ms,error,capacity,&io);
 }
 
 extern "C" int di_graph_prepare_prefill(void *graph,char *error,int capacity){

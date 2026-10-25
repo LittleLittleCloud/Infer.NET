@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using DeepInfer.Backends.Compute;
 using DeepInfer.Backends.Models;
+using DeepInfer.Backends.Dflash2;
 namespace DeepInfer.Backends.Split;
 
 // Dedicated, single-request sessions. A failed request is disposed, never reused.
@@ -52,6 +53,58 @@ public sealed class MetalSplitSession : IDisposable
                 trace is null ? null : (p,l,x) => trace(offset+p,l,x));
         }
         return next;
+    }
+    private Dflash2Device? dflash2; private ulong dflash2Request; private int dflash2Block; private Dflash2ReplayMode dflash2Replay;
+    public bool Dflash2Enabled => dflash2 is not null;
+    public static void ConfigureAllocationTrace(bool enabled) => Dflash2Device.ConfigureAllocationTrace(enabled);
+    public static MetalAllocatorTrace AllocatorTrace() => Dflash2Device.AllocatorTrace();
+    public Dflash2DeviceState Dflash2State() => dflash2?.State() ?? throw new InvalidOperationException("DFlash2 is not enabled.");
+    public Dflash2ResidencyEvidence Dflash2Evidence() => dflash2?.Evidence() ?? throw new InvalidOperationException("DFlash2 is not enabled.");
+    // Opt-in: loads the pinned DFlash2 draft next to the already-loaded target. Never called on the default path.
+    public void EnableDflash2(string draftDirectory, int block, Dflash2ReplayMode replay = Dflash2ReplayMode.Batched, bool verifyHashes = true, bool debug = false)
+    {
+        new Dflash2Options(block).Validate();
+        if (dflash2 is not null) throw new InvalidOperationException("DFlash2 is already enabled.");
+        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != "fp32") throw new InvalidOperationException("DFlash2 requires FP32 KV.");
+        if (!graph.ExecutionProfile().FusedAttention) throw new InvalidOperationException("DFlash2 requires fused-fp32 decode attention.");
+        graph.PrepareVerify();
+        using var weights = Dflash2Weights.Load(draftDirectory, new Dflash2LoadOptions(VerifyHash: verifyHashes, RequirePins: verifyHashes));
+        dflash2 = graph.AttachDflash2(weights, debug);
+        dflash2Block = block; dflash2Replay = replay;
+    }
+    // Diagnostics for the parent-run GPU gates. Not used by the serving path.
+    public int PrefillWithHidden(int[] tokens, CancellationToken ct, Action<int[], float[]> sink) { graph.PrepareVerify(); return graph.PrefillWithHidden(tokens, ct, (_, t, h) => sink(t, h)); }
+    public int PrefillChunks(int[] tokens, CancellationToken ct, Action<int, int> sink) { graph.PrepareVerify(); return graph.PrefillChunks(tokens, ct, sink); }
+    public (int[] Argmax, float[]? Hidden) VerifyRows(int[] tokens, float[]? logits = null) { graph.PrepareVerify(); return graph.Verify(tokens, logits); }
+    public float[] ExportTaps(int rows) => graph.ExportTaps(rows);
+    // Scalar single-token decode with the actual graph trace: taps receives the raw post-layer residuals of layers 1,6,11,16,22,27,32,37
+    // (before any norm) from di_graph_forward, independent of the batched/prefill tap hook. logits receives the full vocabulary row.
+    public int ScalarForward(int token, int position, float[] logits, float[] taps)
+    {
+        if (taps.Length != Dflash2Geometry.TapWidth) throw new ArgumentException("taps must hold 8*2048 floats.");
+        return graph.Forward(token, position, true, logits, (_, layer, x) => { var slot = Array.IndexOf(Dflash2Geometry.TapLayers, layer); if (slot >= 0) x.CopyTo(taps, slot * 2048); }, true);
+    }
+    public ulong[] StateDigest() => graph.StateDigest();
+    public int ConsumedPosition() => graph.ConsumedPosition();
+    public void PoisonKvSuffix(int rows) => graph.PoisonKvSuffix(rows);
+    public ulong SnapshotCreate() => graph.SnapshotCreate();
+    public double SnapshotCapture(ulong snapshot, ulong request) => graph.SnapshotCapture(snapshot, request);
+    public double SnapshotRestore(ulong snapshot, ulong request) => graph.SnapshotRestore(snapshot, request);
+    public void SnapshotRelease(ulong snapshot) => graph.SnapshotRelease(snapshot);
+    private Dflash2Device Draft => dflash2 ?? throw new InvalidOperationException("DFlash2 is not enabled.");
+    public double Dflash2Ingest(int tapRow, int rows, int firstPosition) => Draft.Ingest(tapRow, rows, firstPosition);
+    public Dflash2Proposal Dflash2Propose(int[] block) => Draft.Propose(block);
+    public void Dflash2Reset() => Draft.Reset();
+    public void Dflash2PoisonRing() => Draft.PoisonRing();
+    public (float[] Keys, float[] Values) Dflash2ExportContext(int layer) => Draft.ExportContext(layer);
+    public float[] Dflash2Checkpoint(Dflash2Checkpoint kind, int layer, int floats) => Draft.Checkpoint(kind, layer, floats);
+    public float[] Dflash2Logits(int rows) => Draft.Logits(rows);
+    // One generation per call; the caller drives TryNext and must Dispose it (releases the request snapshot).
+    public MetalDflash2Generation StartDflash2(int maxTokens, bool ignoreEos, Func<double> clock)
+    {
+        var drafter = dflash2 ?? throw new InvalidOperationException("DFlash2 is not enabled.");
+        var target = new MetalDflash2Target(graph, dflash2Replay, ++dflash2Request);
+        return new(target, new MetalDflash2Drafter(drafter), new Dflash2Options(dflash2Block, ignoreEos), maxTokens, IsEnd, clock);
     }
     public void Dispose() { graph.Dispose(); weights.Dispose(); device.Dispose(); }
 }
