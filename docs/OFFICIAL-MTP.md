@@ -12,7 +12,7 @@ Draft: official `Qwen/Qwen3.6-35B-A3B@995ad96eacd98c81ed38be0c5b274b04031597b0`,
 python3 scripts/convert-qwen36-mtp.py --source-dir SOURCE_SHARDS --output-dir MTP_SIDECAR
 ```
 
-The sidecar manifest records source, converter, tensor and output hashes. The loader verifies the pinned model/revision, geometry, precision, provenance and payloads. The parent independently audited the converted matrices, all norm scales and expert gate/up roundtrip.
+The sidecar manifest records source, converter, tensor and output hashes. The loader verifies the pinned model/revision, geometry, precision, provenance and payloads. The parent independently audited the converted matrices, all norm scales and expert gate/up roundtrip. An opt-in `Category=MtpArtifact` test loads the authenticated real sidecar without a GPU, checking the converter/loader contract (including the official expert down tensor name without a `.weight` suffix).
 
 ## Generation semantics
 

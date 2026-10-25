@@ -48,7 +48,8 @@ public static class Qwen36MtpNames
     public const string Router = L + "mlp.gate.weight";
     public const string ExpertGate = L + "mlp.experts.gate_proj.weight";
     public const string ExpertUp = L + "mlp.experts.up_proj.weight";
-    public const string ExpertDown = L + "mlp.experts.down_proj.weight";
+    // The official fused expert down tensor has no .weight suffix.
+    public const string ExpertDown = L + "mlp.experts.down_proj";
     public const string SharedGate = L + "mlp.shared_expert.gate_proj.weight";
     public const string SharedUp = L + "mlp.shared_expert.up_proj.weight";
     public const string SharedDown = L + "mlp.shared_expert.down_proj.weight";
