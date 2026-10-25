@@ -1,0 +1,12 @@
+{
+  "source": "30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+  "version": "0.3.0+30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+  "macArtifacts": {
+    "deepinfer": "4bc5f8373ca061e97cda4c5ed277955b71cd2bd2403358f2216d82e2d5ecc4c9",
+    "libdeepinfer_metal.dylib": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+  },
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "kv": "fp32",
+  "cache": "off",
+  "speculation": "off"
+}

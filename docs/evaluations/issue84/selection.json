@@ -1,0 +1,39 @@
+{
+  "selectedCudaWindow": 128,
+  "selectedMetalChunk": 128,
+  "prefillMedianMs": 11599.643,
+  "allScreenMedians": [
+    [
+      11643.9356,
+      32,
+      128
+    ],
+    [
+      16236.0079,
+      128,
+      32
+    ],
+    [
+      16079.7267,
+      32,
+      32
+    ],
+    [
+      11744.7735,
+      64,
+      128
+    ],
+    [
+      11599.643,
+      128,
+      128
+    ],
+    [
+      16087.9578,
+      64,
+      32
+    ]
+  ],
+  "frozenUtc": "2026-10-25T19:47:43.521032+00:00",
+  "rule": "Smallest complete prefill median; resource/correctness acceptance remains provisional. No main/adoption claim."
+}
