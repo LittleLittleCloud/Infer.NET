@@ -1,5 +1,7 @@
 # Experiment #72: speculative state transactions
 
+> Session closeout, 2026-10-25: the user authorized preserving research/results and closing experimental code PRs #74/#78/#81 without adoption. Earlier approval/pending/publication statements below describe the historical stage, not a current request to continue. The later #80 diagnostic20 includes the frozen MTP reference. See the [final disposition and combined summary](SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md). No acceptance threshold or original measurement was changed.
+
 Evaluation completed with service-level failures; not all predeclared acceptance criteria were met. [Experiment #72](https://github.com/LittleLittleCloud/Infer.NET/issues/72) was explicitly approved by the user on 2026-10-24. [Code PR #74](https://github.com/LittleLittleCloud/Infer.NET/pull/74) implements the default-off synthetic proposal correctness reference; it is not a real DFlash2 draft and has no acceleration claim. This independent results branch starts from main and can be reviewed separately from implementation.
 
 Baseline main: `4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3`. Candidate: `afdb36fd1106cf29b19b66ac94745dda481fc429`. Windows is not participating. Model remains fixed affine8 revision `e06a74e6236a60c8367e1a3214e83d8b61b637b0`, FP32 KV/state, fully local Metal, fused-fp32 attention, managed prefill chunk 32 and scratch 128. No system GPU-limit or precision change was made. The original worker was restored and independently verified after evaluation.

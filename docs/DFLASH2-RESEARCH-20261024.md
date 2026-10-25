@@ -1,5 +1,7 @@
 # DFlash2 integration: speculation-first research
 
+> Session closeout, 2026-10-25: the user authorized preserving research/results and closing experimental code PRs #74/#78/#81 without adoption. Earlier approval/pending/publication statements below describe the historical stage, not a current request to continue. The later #80 diagnostic20 includes the frozen MTP reference. See the [final disposition and combined summary](SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md). No acceptance threshold or original measurement was changed.
+
 2026-10-24. The user approved diagnostic #70, then directed the work toward speculative decoding. #70 retains that approval but is deferred; its original plan explicitly excludes speculation. [Speculation-specific experiment #72](https://github.com/LittleLittleCloud/Infer.NET/issues/72) is a concrete new proposal awaiting approval. No implementation or performance run has started.
 
 GitHub Copilot CLI1.0.103, actual usage-confirmed `claude-sonnet-5.5`, completed a focused follow-up source study in session `49d9cd16-5288-477b-b7ac-c869fba154cf`. This is the reviewed synthesis, supplemented by independently fetched draft metadata. [Evidence manifest](evaluations/dflash-research-20261024/manifest.json). The original report/session remain local with hashes. Resumed-session usage is cumulative and is not the cost of this follow-up alone.

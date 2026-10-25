@@ -16452,7 +16452,7 @@
       "title": "Issue72 · baseline · HumanEval20",
       "date": "2026-10-24 America/Los_Angeles",
       "measuredCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
-      "state": "pending-review",
+      "state": "not-adopted",
       "change": "Fixed main reference.",
       "result": "Pi 20/20; official 20/20. Worker prefill 270.830, decode 67.450 tok/s.",
       "provenance": {
@@ -16470,7 +16470,7 @@
         }
       },
       "conditions": {
-        "adoption": "Human review pending; no baseline selection, deployment or adoption change.",
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline.",
         "observer": "TTFT from observer send to first valid output; Pi-to-observer dispatch excluded; two forwards.",
         "resources": {
           "maxObservedMetalAllocatedBytes": 37290852352,
@@ -18222,7 +18222,7 @@
         }
       },
       "conditions": {
-        "adoption": "Human review pending; no baseline selection, deployment or adoption change.",
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline.",
         "observer": "TTFT from observer send to first valid output; Pi-to-observer dispatch excluded; two forwards.",
         "resources": {
           "maxObservedMetalAllocatedBytes": 37290852352,
@@ -20058,7 +20058,7 @@
         }
       },
       "conditions": {
-        "adoption": "Human review pending; no baseline selection, deployment or adoption change.",
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline.",
         "observer": "TTFT from observer send to first valid output; Pi-to-observer dispatch excluded; two forwards.",
         "resources": {
           "maxObservedMetalAllocatedBytes": 37290852352,
@@ -21842,7 +21842,7 @@
         "resourcePeak": "Continuous Metal-driver peak not obtained; samples only",
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Not adopted; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "409a35e8d8e7637ebc38e7e672b3e1c3d64ea8112d60db56b110fedc32a49444",
@@ -22243,7 +22243,7 @@
         "resourcePeak": "Continuous Metal-driver peak not obtained; samples only",
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Not adopted; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "c19eb56f34e9106c5e86568ff31bb2288bcb18202c5a3ae53ba5ae0ca39f3803",
@@ -22630,7 +22630,7 @@
         "resourcePeak": "Continuous Metal-driver peak not obtained; samples only",
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Not adopted; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "c19eb56f34e9106c5e86568ff31bb2288bcb18202c5a3ae53ba5ae0ca39f3803",
@@ -22989,7 +22989,7 @@
         "resourcePeak": "Continuous Metal-driver peak not obtained; samples only",
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Not adopted; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "c19eb56f34e9106c5e86568ff31bb2288bcb18202c5a3ae53ba5ae0ca39f3803",
@@ -23419,7 +23419,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 15, 'observed': 15, 'piRecorded': 15, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "409a35e8d8e7637ebc38e7e672b3e1c3d64ea8112d60db56b110fedc32a49444",
@@ -23765,7 +23765,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 19, 'observed': 19, 'piRecorded': 19, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "273380d5b1af64f2a0ddb8bbb95cec3789db49433efd2572afc016a31f5508fc",
@@ -24167,7 +24167,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 13, 'observed': 13, 'piRecorded': 13, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "273380d5b1af64f2a0ddb8bbb95cec3789db49433efd2572afc016a31f5508fc",
@@ -24485,7 +24485,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 15, 'observed': 15, 'piRecorded': 15, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "273380d5b1af64f2a0ddb8bbb95cec3789db49433efd2572afc016a31f5508fc",
@@ -24831,7 +24831,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 105, 'observed': 105, 'piRecorded': 105, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "409a35e8d8e7637ebc38e7e672b3e1c3d64ea8112d60db56b110fedc32a49444",
@@ -26602,7 +26602,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 114, 'observed': 115, 'piRecorded': 114, 'wholeCohortAvailable': False}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "273380d5b1af64f2a0ddb8bbb95cec3789db49433efd2572afc016a31f5508fc",
@@ -28513,7 +28513,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 88, 'observed': 88, 'piRecorded': 88, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "c19eb56f34e9106c5e86568ff31bb2288bcb18202c5a3ae53ba5ae0ca39f3803",
@@ -30051,7 +30051,7 @@
         "TTFT": "Observer HTTP client send-to-first valid text/tool-call output; Pi-to-observer dispatch is outside this interval.",
         "clockCoverage": "{'known': 92, 'observed': 92, 'piRecorded': 92, 'wholeCohortAvailable': True}; missing canceled-request clock prevents whole-cohort speed. Chart aggregates only known paired observations with explicit sample coverage.",
         "quality": "All failed tasks and requests retained; worker token counts include API-rejected output, separately reconciled with Pi usage",
-        "adoption": "Diagnostic only; failed DFlash2 intermediate numerical gate retained; thresholds unchanged; not formal128K acceptance"
+        "adoption": "Session closed by explicit user review on 2026-10-25; code PRs #74/#78/#81 closed without adoption; failed and missing gates retained. Results publication changes no adopted baseline."
       },
       "binarySha256": {
         "macExecutable": "273380d5b1af64f2a0ddb8bbb95cec3789db49433efd2572afc016a31f5508fc",

@@ -1,5 +1,7 @@
 # Decode optimization research — Copilot / Claude Sonnet 5.5
 
+> Session closeout, 2026-10-25: the user authorized preserving research/results and closing experimental code PRs #74/#78/#81 without adoption. Earlier approval/pending/publication statements below describe the historical stage, not a current request to continue. The later #80 diagnostic20 includes the frozen MTP reference. See the [final disposition and combined summary](SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md). No acceptance threshold or original measurement was changed.
+
 2026-10-24. Requested researcher: GitHub Copilot CLI 1.0.103, actual usage-confirmed model `claude-sonnet-5.5`, session `49d9cd16-5288-477b-b7ac-c869fba154cf`. This is Codex's reviewed synthesis of the completed Chinese source-research report. [Evidence manifest](evaluations/decode-research-20261024/manifest.json). [First proposed experiment #70](https://github.com/LittleLittleCloud/Infer.NET/issues/70).
 
 Research baseline: main `4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3`. Splash source was independently fetched from its verified Git remote and checked out at measured revision `1482f6bbc2abf12375332725302019594150b6cb`. No implementation, GPU benchmark, service change or system-setting change was performed. No new throughput point is reported. The original Copilot report and usage/session evidence remain in the ignored local research directory with hashes in the manifest; they are not public downloads.

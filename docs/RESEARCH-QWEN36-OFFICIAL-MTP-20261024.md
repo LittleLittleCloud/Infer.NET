@@ -1,5 +1,7 @@
 # Research: integrating Qwen3.6 official MTP weights into Infer.NET (decode speed)
 
+> Session closeout, 2026-10-25: the user authorized preserving research/results and closing experimental code PRs #74/#78/#81 without adoption. Earlier approval/pending/publication statements below describe the historical stage, not a current request to continue. The later #80 diagnostic20 includes the frozen MTP reference. See the [final disposition and combined summary](SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md). No acceptance threshold or original measurement was changed.
+
 - Status: **research only, pending approval (independently reviewed revision 3).** No MTP implementation or benchmark is approved. Nothing here is a measurement of Infer.NET MTP behaviour.
 - Proposed experiment ID: `official-mtp-20261024` (Section 10 summarizes the dedicated experiment proposal).
 - Research baseline: main `4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3`. The experiment itself pins the latest main at Issue creation.

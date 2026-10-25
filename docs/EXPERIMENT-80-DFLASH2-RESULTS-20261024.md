@@ -1,5 +1,7 @@
 # Native DFlash2 versus official MTP: diagnostic HumanEval20 results
 
+> Session closeout, 2026-10-25: the user authorized preserving research/results and closing experimental code PRs #74/#78/#81 without adoption. Earlier approval/pending/publication statements below describe the historical stage, not a current request to continue. The later #80 diagnostic20 includes the frozen MTP reference. See the [final disposition and combined summary](SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md). No acceptance threshold or original measurement was changed.
+
 Experiment started 2026-10-24 America/Los_Angeles; hardware checks continued on 2026-10-25. [Issue #80](https://github.com/LittleLittleCloud/Infer.NET/issues/80), [candidate code PR #81](https://github.com/LittleLittleCloud/Infer.NET/pull/81). The human requested implementation of DFlash2 and comparison with MTP. No merge, production adoption, or deployment update is authorized.
 
 **All four diagnostic 20-task arms are complete.** The numerical gate remains failed; this record does not recommend adoption. The complete draft intermediate numerical gate failed. All nine separate exact target-state diagnostics passed, including fixed 128/4096-output checks. The human explicitly approved diagnostic 20-task continuation on 2026-10-25 while retaining the numerical failure; [approval record](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6394804249). Application measurements are complete and reported below. Neither CI nor a passing final normalized output substitutes for the failed gate.
