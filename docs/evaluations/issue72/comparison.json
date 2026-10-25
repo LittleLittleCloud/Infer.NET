@@ -1,0 +1,92 @@
+{
+  "scope": "Predeclared S0 criteria only; no real draft or acceleration evaluation.",
+  "outcome": "not-accepted",
+  "offRelativeChangesPercent": {
+    "prefillThroughput": 0.0853617522442951,
+    "prefillTimePerInputToken": -0.08528894810372334,
+    "decodeThroughput": -0.088562955411986,
+    "clientTtftMedian": 0.7114782206118164,
+    "piWall": 3.643090940014515
+  },
+  "criteria": [
+    {
+      "criterion": "Exact deterministic state/logit/token continuation",
+      "status": "passed",
+      "evidence": "95 real-model checks, zero failures; selected matrix in hardware-summary.json"
+    },
+    {
+      "criterion": "Main/off/on official 20/20",
+      "status": "failed",
+      "values": {
+        "baseline": 20,
+        "off": 20,
+        "on": 19
+      }
+    },
+    {
+      "criterion": "Retain incomplete Pi tasks and failures",
+      "status": "passed",
+      "piCompleted": {
+        "baseline": 20,
+        "off": 19,
+        "on": 19
+      },
+      "note": "Off HumanEval/149 stream failure with a passing saved solution; on HumanEval/94 stream failure with missing solution. No selected retries."
+    },
+    {
+      "criterion": "Disabled prefill latency <= +5%, decode >= -5%, TTFT median <= +5%",
+      "status": "observed-within-bounds",
+      "note": "Worker timing coverage complete; TTFT has one missing sample, so medians alone do not establish acceptance."
+    },
+    {
+      "criterion": "Complete disabled timing coverage",
+      "status": "failed",
+      "coverage": {
+        "prefillRequests": 104,
+        "decodeRequests": 104,
+        "clientTtftRequests": 103,
+        "totalObservedRequests": 104
+      }
+    },
+    {
+      "criterion": "Zero additional disabled GPU allocation",
+      "status": "passed-observed",
+      "evidence": "Every baseline/off fixed fixture and cohort response reports 37290852352 Metal bytes; source has no disabled snapshot buffers."
+    },
+    {
+      "criterion": "Per-request swap-out <= 512 MiB",
+      "status": "passed-observed",
+      "maxBytes": {
+        "baseline": 395378688,
+        "off": 167706624,
+        "on": 257097728
+      },
+      "coverage": {
+        "baseline": 98,
+        "off": 104,
+        "on": 100
+      }
+    },
+    {
+      "criterion": "Metal allocator high-water <= 38.5 GiB",
+      "status": "not-established",
+      "note": "All response samples are below the bound; continuous allocator high-water was not collected."
+    },
+    {
+      "criterion": "Synthetic enabled speed improvement",
+      "status": "not-required",
+      "note": "No standard decode clock, real draft or acceleration claim."
+    },
+    {
+      "criterion": "No OOM/crash/NaN/Inf/CPU weight offload",
+      "status": "partially-observed",
+      "note": "No worker crash/OOM was recorded; all 302 observed cohort requests report real metal-local execution. CPU weight offload was not configured. Full per-request tensor/logit finiteness traces were not retained; poisoned invisible suffix NaNs are intentional fixture inputs."
+    },
+    {
+      "criterion": "Restore original service and system limit",
+      "status": "passed",
+      "evidence": "restoration.json: Ready, registration, real chat, all nine original package hashes, experiment ports closed, wired limit 0."
+    }
+  ],
+  "recommendation": "Retain code PR #74 as a draft candidate. Review failed results independently; isolate stream failures with paired captured requests and improve allocation observability before adoption. Later tap/draft/batched-verifier work requires its own approved proposal."
+}

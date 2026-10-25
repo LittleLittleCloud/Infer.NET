@@ -1,0 +1,67 @@
+{
+  "issue": 72,
+  "codePr": 74,
+  "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "candidateCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
+  "date": "2026-10-24 America/Los_Angeles",
+  "status": "evaluation-complete-not-accepted",
+  "scope": "Synthetic speculative-state correctness reference; no real draft or acceleration claim.",
+  "independentCpuTests": 430,
+  "managedIntegrationChecks": 70,
+  "implementationProvider": "GitHub Copilot CLI1.0.103 / claude-sonnet-5.5",
+  "hardwareCorrectness": "95 real-model checks passed, zero failures",
+  "formalPerformance": "All cohorts and official assertions complete. Main 20/20; off official 20/20 with Pi stream failure; on 19/20 with missing solution. No synthetic speed claim.",
+  "restoration": "Original cd6f7da worker Ready; coordinator registration and real chat independently verified; nine original package hashes match; all experiment ports closed; wired limit 0.",
+  "windowsParticipating": false,
+  "baselineFormal": {
+    "runId": "issue72-main-human20-20261024",
+    "piCompleted": 20,
+    "officialPassed": 20,
+    "observedRequestCount": 98,
+    "prefillTokensPerSecond": 270.82991455030697,
+    "decodeTokensPerSecond": 67.44985753269998,
+    "clientTtftMedianMs": 10940.332500000011,
+    "piWallSeconds": 1148.529099958,
+    "piUsageMatchesWorker": true
+  },
+  "nativeBufferTransactionChecks": 587,
+  "nativeAotIntegrationChecks": 70,
+  "codeCi": "All macOS/Linux/Windows checks passed",
+  "modelFixtureRunsCompleted": 95,
+  "offFormal": {
+    "runId": "issue72-off-human20-20261024",
+    "piCompleted": 19,
+    "piErrors": 1,
+    "officialPassed": 20,
+    "observedRequestCount": 104,
+    "prefillTokensPerSecond": 271.06109971096885,
+    "decodeTokensPerSecond": 67.39012194544785,
+    "clientTtftMedianMs": 11018.170583000028,
+    "coverage": {
+      "prefillRequests": 104,
+      "decodeRequests": 104,
+      "clientTtftRequests": 103,
+      "totalObservedRequests": 104
+    },
+    "piUsageMatchesWorker": false
+  },
+  "acceptance": "Not all predeclared criteria met; code remains a draft candidate. No merge or adoption.",
+  "onFormal": {
+    "runId": "issue72-on-human20-20261024",
+    "piCompleted": 19,
+    "piErrors": 1,
+    "officialPassed": 19,
+    "observedRequestCount": 100,
+    "prefillTokensPerSecond": 271.6123995585477,
+    "decodeTokensPerSecond": null,
+    "clientTtftMedianMs": 17547.33483300015,
+    "coverage": {
+      "prefillRequests": 100,
+      "decodeRequests": 0,
+      "clientTtftRequests": 99,
+      "totalObservedRequests": 100
+    },
+    "piUsageMatchesWorker": false
+  },
+  "completedUtc": "2026-10-25T00:19:32.455374+00:00"
+}

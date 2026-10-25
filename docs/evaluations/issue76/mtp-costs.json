@@ -1,0 +1,46 @@
+{
+  "k1-pilot5": {
+    "requestCoverage": 16,
+    "totals": {
+      "cycles": 2176,
+      "proposed": 2176,
+      "accepted": 2121,
+      "rejectedCycles": 55,
+      "fullAccept": 2121,
+      "arSteps": 0,
+      "replays": 64,
+      "bootstrapMs": 8453.88,
+      "firstDraftMs": 48.39600000000001,
+      "draftMs": 0.0,
+      "verifyMs": 51342.604,
+      "catchUpMs": 6993.928999999999,
+      "snapshotMs": 2340.45,
+      "replayMs": 1188.7079999999999,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.9747242647058824,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; firstDraft belongs to decode."
+  },
+  "k2-pilot5": {
+    "requestCoverage": 21,
+    "totals": {
+      "cycles": 1859,
+      "proposed": 3718,
+      "accepted": 3512,
+      "rejectedCycles": 143,
+      "fullAccept": 1716,
+      "arSteps": 0,
+      "replays": 156,
+      "bootstrapMs": 14016.971999999998,
+      "firstDraftMs": 69.20000000000002,
+      "draftMs": 5587.457000000001,
+      "verifyMs": 60346.982,
+      "catchUpMs": 6418.276,
+      "snapshotMs": 2389.7889999999993,
+      "replayMs": 3440.7299999999996,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.9445938676707908,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; firstDraft belongs to decode."
+  }
+}

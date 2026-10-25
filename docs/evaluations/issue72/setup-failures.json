@@ -1,0 +1,17 @@
+[
+  {
+    "utc": "2026-10-24T22:09:00.318968+00:00",
+    "run": "baseline-human20",
+    "validForPerformanceComparison": false,
+    "reason": "Parent scheduler treated incrementally written summary.json as completion; separate fixture requests entered the same serialized worker queue before Pi20 finished. Cohort and interrupted fixture evidence retained; a fresh isolated baseline cohort will be run after all prior clients exit.",
+    "rawEvidenceSha256": "991a1c6c3f0725fde6e0abf0466cd5f76d30d679c15aef91a3c2b0905d974d0c"
+  },
+  {
+    "utc": "2026-10-24T22:15:01.638288+00:00",
+    "run": "baseline-clean-human20",
+    "validForPerformanceComparison": false,
+    "reason": "Observer clone was newly started, but parent started Pi before its worker registration became ready. First3requests503 before inference. Retain attempted tasks and interruption; final baseline will reuse registered observer, verify authenticated readiness and a real warmup, then run full fixed20.",
+    "plannedTasks": 20,
+    "rawEvidenceSha256": "b6ccc644be2c577f14c05d9540c04c92e1ae5b2dcd4590ed0b8e0ca69c39a731"
+  }
+]

@@ -97,7 +97,8 @@ class TrendTests(unittest.TestCase):
     def test_sota_requires_official_passes_complete_coverage_and_separate_scopes(self):
         entries = {(e['family'], e['metric']): e for e in sota_summary(self.data)}
         self.assertAlmostEqual(entries['infernet', 'prefill']['value'], 531.19940338122)
-        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 66.4336423808985)
+        self.assertAlmostEqual(entries['infernet', 'decode']['value'], 67.78193415454106)
+        self.assertEqual(entries['infernet', 'decode']['run']['id'], 'issue80-main-human20')
         self.assertAlmostEqual(entries['external', 'prefill']['value'], 3066.6108426327232)
         self.assertAlmostEqual(entries['external', 'decode']['value'], 148.91366915373305)
         for entry in entries.values():
@@ -105,7 +106,7 @@ class TrendTests(unittest.TestCase):
         # A faster record without official checks cannot become verified SOTA.
         candidate = next(r for r in self.data['runs'] if r['id'] == 'issue54-main99e-human20-20261024')
         candidate['metrics']['prefill']['value'] = 1e9
-        self.assertEqual(sota_summary(self.data)[0]['run']['id'], self.first['id'])
+        self.assertEqual(sota_summary(self.data)[0]['run']['id'], entries['infernet', 'prefill']['run']['id'])
         # Missing native observations never become zero or an inferred speed.
         external = next(r for r in self.data['runs'] if 'splash' in r['runtime'])
         external['requests'][0].pop('nativeCommandDelta')
@@ -454,7 +455,7 @@ class TrendTests(unittest.TestCase):
         html = (out / "experiments.html").read_text()
         article_ids = re.findall(r'<article class="experiment" id="([^"]+)"', html)
         self.assertEqual(article_ids, [n["id"] for n in notes])
-        self.assertEqual(len(article_ids), 48)
+        self.assertEqual(len(article_ids), len(notes))
         linked = re.findall(r'<li data-note-link="([^"]+)"><a href="#([^"]+)">', html)
         self.assertEqual(sorted(a for a, _ in linked), sorted(article_ids))
         self.assertTrue(all(a == b for a, b in linked))
@@ -465,7 +466,7 @@ class TrendTests(unittest.TestCase):
         self.assertIn('<script src="notebook.js" defer>', html)
         self.assertTrue((out / "notebook.js").is_file())
         dated = re.findall(r'<h2 id="notes-date-([^"]+)">[^<]* · (\d+) notes</h2>', html)
-        self.assertEqual(sum(int(c) for _, c in dated), 48)
+        self.assertEqual(sum(int(c) for _, c in dated), len(notes))
         self.assertEqual([d for d, _ in dated], sorted((d for d, _ in dated if d != "none"), reverse=True) +
                          (["none"] if any(d == "none" for d, _ in dated) else []))
         for note in notes:

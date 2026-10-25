@@ -1,5 +1,35 @@
 [
   {
+    "id": "speculative-decode-closeout-20261025",
+    "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
+    "kind": "2026-10-25 · Session closed · Baseline unchanged",
+    "source": "docs/SPECULATIVE-DECODE-SESSION-CLOSEOUT-20261025.md",
+    "question": "Which experiments were completed, what did they show, and which changes are retained?",
+    "setup": "Existing #70/#72/#76/#80 records only. No new inference run, service deployment or system setting change.",
+    "change": "Close code PRs #74/#78/#81; integrate research #71/#73/#77 and results #75/#79/#82 with their original ancestry.",
+    "result": "State recovery evidence retained; MTP pilot gains failed gates; diagnostic20 main 67.782, MTP 69.563 and DFlash2 57.981 tok/s. All failures and missing coverage retained.",
+    "validation": "Independent reports, immutable tested commits and public sanitized evidence retained. Combined publication validation is recorded in the closeout PR.",
+    "conclusion": "No experimental inference code adopted. Existing baseline remains selected. Experiment lifecycle closes without claiming the broader decoding target passed.",
+    "next": "Stop optimization research in this session. Any future implementation or benchmark requires a separately scoped experiment.",
+    "commands": [],
+    "evidence": "PRs #71/#73/#75/#77/#79/#82; docs/evaluations/issue72/; docs/evaluations/issue76/; docs/evaluations/issue80/."
+  },
+  {
+    "id": "decode-profile-20261024",
+    "title": "Decode bottleneck research: Copilot / Claude Sonnet 5.5",
+    "kind": "2026-10-25 · Research archived; diagnostic #70 discontinued",
+    "source": "docs/DECODE-RESEARCH-SONNET-20261024.md",
+    "question": "Which native Metal decode costs should be optimized before comparing with Splash?",
+    "setup": "Audited main 4ca29eed and Splash 1482f6b source; historical metrics only. No new inference run.",
+    "change": "Read-only research by GitHub Copilot CLI 1.0.103 / claude-sonnet-5.5; reviewed synthesis and diagnostic-only experiment Issue #70.",
+    "result": "Not measured. No optimization implemented and no new throughput point.",
+    "validation": "Model usage and unchanged-file counts verified; fixed upstream SHA inspected; speculative causal claims corrected during independent review.",
+    "conclusion": "Existing clocks, KV precision and speculation differ. Diagnose per-stage costs before selecting a single optimization.",
+    "next": "Issue #70 was approved but deferred when speculation became the priority. The user discontinued further work at session closeout; no experiment measurement or implementation is claimed.",
+    "commands": [],
+    "evidence": "docs/evaluations/decode-research-20261024/manifest.json; raw model report/session/usage remain local with hashes. https://github.com/LittleLittleCloud/Infer.NET/issues/70"
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",
@@ -823,5 +853,82 @@
       "python3 scripts/split/analyze-bf16-qkv-mode-reference.py --model MODEL_DIR --cuda NEW_CUDA_DIRECTORY --output NEW_CPU_JSON"
     ],
     "evidence": "PR #31; artifacts/dual-host/bf16-route-gap-176b666-v2.json etc original comparison only local machine."
+  },
+  {
+    "id": "speculative-state-20261024",
+    "title": "DFlash2 integration: proposal verification and rejection recovery first",
+    "kind": "2026-10-25 · Research archived; experiment #72 completed without adoption",
+    "source": "docs/DFLASH2-RESEARCH-20261024.md",
+    "question": "How can native DFlash2 draft/verify preserve committed KV, DeltaNet and convolution state?",
+    "setup": "Source-only study at main4ca29eed and Splash1482f6b. Draft metadata pinned at51ef7b6; no weights downloaded or inference run.",
+    "change": "User prioritized speculation after approving diagnostic #70. Copilot claude-sonnet-5.5 follow-up; state-transaction experiment #72 proposed.",
+    "result": "Not measured. Draft assets are identified; real draft forward, batched target verification and performance remain unimplemented.",
+    "validation": "Draft config/file metadata fetched; usage confirms requested model; source dependencies and timing/memory claims independently reviewed.",
+    "conclusion": "First establish exact rejection recovery using synthetic proposals and serial target verification. This is a correctness reference, not accelerated DFlash2.",
+    "next": "See the independent #72 results and session closeout. Code PR #74 is closed; state evidence is retained, with failed service/resource acceptance.",
+    "commands": [],
+    "evidence": "docs/evaluations/dflash-research-20261024/manifest.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
+  },
+  {
+    "id": "speculative-state-issue72-20261024",
+    "title": "Speculative state recovery: fixtures pass, service acceptance fails",
+    "kind": "2026-10-25 · Experiment #72 closed without code adoption",
+    "source": "docs/EXPERIMENT-72-SPECULATIVE-STATE-20261024.md",
+    "question": "Can rejection recover full target state and exact greedy continuation before native DFlash2 integration?",
+    "setup": "Fixed affine8/FP32 KV, fully local M5 Pro, fused-fp32/chunk32/scratch128. Main 4ca29eed; candidate afdb36f.",
+    "change": "Default-off synthetic proposal verification with all-layer snapshots and rejection replay; no real draft. Code PR #74.",
+    "result": "Main: Pi/official 20/20, decode 67.450 tok/s. Off: Pi 19/20, official 20/20, decode 67.390 tok/s (−0.089%). On: Pi/official 19/20; standard decode unavailable.",
+    "validation": "430 CPU, 70 managed and 70 Native AOT integration checks; 587 native Metal-buffer transaction checks; 95 real-model state checks passed. Setup failures retained.",
+    "conclusion": "Not accepted: enabled missing solution, disabled missing TTFT, continuous allocation peak unmeasured. Synthetic oracle only; no real draft or acceleration claim.",
+    "next": "Code PR #74 closed per explicit user review; independent results PR #75 retained in main through session closeout. No further experiment in this session.",
+    "commands": [],
+    "evidence": "docs/evaluations/issue72/status.json; comparison.json; hardware-summary.json; baseline.json; off.json; on.json; restoration.json. https://github.com/LittleLittleCloud/Infer.NET/issues/72"
+  },
+  {
+    "id": "official-mtp-research-20261024",
+    "kind": "2026-10-25 · Research archived; official MTP evaluated without adoption",
+    "title": "Official Qwen3.6 MTP: BF16 draft and exact local verification",
+    "source": "docs/RESEARCH-QWEN36-OFFICIAL-MTP-20261024.md",
+    "question": "Can official MTP improve fully local affine8 decoding while preserving greedy output?",
+    "setup": "Main 4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3; proposed M5 Pro 48 GiB, target e06a74e6236a60c8367e1a3214e83d8b61b637b0; context 32768, output 4096, widths 1/2.",
+    "change": "GitHub Copilot CLI 1.0.103 / Claude Sonnet 5.5 researched pinned official tensors and upstream implementations; independent review completed. Issue #76 proposes BF16 matrices, FP32 norms and shared target head.",
+    "result": "Metadata only: 19 official BF16 tensors, 844640768 parameters, 1689281536 raw bytes. No weight payload download, implementation or inference measurement.",
+    "validation": "CLI usage confirms claude-sonnet-5.5 in initial and review runs; bounded header reads, tokenizer comparisons and pinned source review; public metadata and local evidence hashes.",
+    "conclusion": "Requires post-final-norm target hidden rows, per-cycle draft-cache reconditioning, native BF16 operators and exact multi-row target verification. Net gain and memory fit remain unknown; DFlash excluded.",
+    "next": "See #76 pilot results and the #80 diagnostic20 MTP arm. Code PR #78 is closed; original numerical/performance/resource gates remain unchanged.",
+    "commands": [],
+    "evidence": "docs/evaluations/official-mtp-research-20261024/artifact-manifest.json; research-provenance.json; https://github.com/LittleLittleCloud/Infer.NET/issues/76"
+  },
+  {
+    "id": "official-mtp-20261024",
+    "title": "Official Qwen3.6 MTP: exact replay, small gains, G5 stop before formal20",
+    "kind": "2026-10-25 · Experiment #76 closed without code adoption",
+    "source": "docs/EXPERIMENT-76-OFFICIAL-MTP-20261024.md",
+    "question": "Can official Qwen3.6 MTP accelerate decoding while preserving target outputs and the disabled path?",
+    "setup": "M5 Pro20GPU/48GiB, AC/High Power; main4ca29ee vs candidate17965ce; Pi1.4.0 seed0 pilot5, context32768/output4096; FP32 KV/state; no Windows or DFlash.",
+    "change": "Official authenticated BF16 single-layer MTP on Metal GPU; shared target embedding/head; widths1/2; batched target verification, exact rollback and target-conditioned draft cache. Code PR #78.",
+    "result": "Pilot worker decode main67.138/off65.975/width1 69.416/width2 68.315 tok/s; official4/5,5/5,5/5,4/5. Identical five-request replay decode +3.330%/+4.752%, prefill latency +8.125%/+6.284%. Formal20 not run.",
+    "validation": "Real draft/reference, bit-identical verifier/state, fixed128/4096 and growth gates passed; six captured replays exact in all candidate arms. Both widths passed15 service checks. API errors retained; continuous Metal-driver peak unavailable.",
+    "conclusion": "Neither width qualifies under G5; no adoption. High acceptance97.47%/94.46% does not offset target verification/cache/synchronization costs. Failed tasks and incomplete successful-application metrics remain explicit.",
+    "next": "Code PR #78 closed. Preserve pilot results PR #79 and the later approved diagnostic20 MTP comparison in #82; G5 failures remain failed. No further experiment in this session.",
+    "commands": [
+      "python3 artifacts/dual-host/issue76-official-mtp/evaluate.py LABEL MODE pilot"
+    ],
+    "evidence": "docs/evaluations/issue76/; restricted local raw evidence with SHA256 inventory; prompts, credentials and generated solutions excluded."
+  },
+  {
+    "id": "dflash2-comparison-20261024",
+    "title": "DFlash2 diagnostic20: 57.98 token/s, slower than MTP69.56 and main67.78",
+    "kind": "2026-10-25 · Experiment #80 closed without code adoption",
+    "question": "Does native BF16 DFlash2 improve unchanged affine8/FP32 target decode over fresh main and official MTP?",
+    "setup": "Single M5 Pro20GPU/48GiB; AC/HighPower; Pi1.4.0 seed0 ctx32768/out4096; same target revision; serial GPU jobs; wired0.",
+    "change": "Native six-layer DFlash2 plus trained selector, blocks4/8; minimal exact verifier/state dependencies explicitly ported from unmerged MTP. Code PR #81; independent results PR #82.",
+    "result": "All4 arms attempted20. Main67.782 token/s, official20/20; MTP69.563, official19/20; DFlash2-block4 57.981, official20/20. DFlash2 was16.65% slower than MTP and14.46% slower than main. Off official20/20 but Pi19/20; one canceled request lacks a terminal clock, so whole-arm speed is not obtained.",
+    "validation": "Both draft numerical failures retained; all9 target/state diagnostics passed. Main105/105, MTP88/88 and DFlash2 92/92 worker clocks complete; off114/115 only. MTP API failure and off timeout retained. Original service restored; final identity, registration, two chats, hashes, wired0 and closed temporary ports passed. Continuous Metal driver peak remains unavailable.",
+    "conclusion": "Do not adopt this prototype: numerical gate failed, full peak evidence missing, and decoding slower. User authorized results publication and closing code PR #81; no production update.",
+    "next": "Code PR #81 closed; results PR #82 retained in main through session closeout. Draft numerical failures, slower decode and resource limitations remain. No further experiment in this session.",
+    "commands": [],
+    "source": "docs/EXPERIMENT-80-DFLASH2-RESULTS-20261024.md",
+    "evidence": "docs/evaluations/issue80; private raw evidence remains local with public hashes."
   }
 ]

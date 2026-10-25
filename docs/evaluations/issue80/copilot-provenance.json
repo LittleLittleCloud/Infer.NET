@@ -1,0 +1,14 @@
+{
+  "cliVersion": "GitHub Copilot CLI 1.0.103.",
+  "requestedModel": "claude-sonnet-5.5",
+  "sessionId": "ccabbd22-d982-4c49-9f0d-bd10a029289f",
+  "implementationPromptSha256": "64c81c418618b00dd3e443819436cffab1775c81fbd27a609e5f8a1303d4345c",
+  "reviewPromptSha256": "4b158fe2ed9c286785cd52a7f68944a3c76d3e95329085e0818234d40df1d1d4",
+  "noSubagents": true,
+  "observedModels": {
+    "claude-sonnet-5.5": 358,
+    "not reported": 1
+  },
+  "modelEvidenceSha256": "8f8fb8f99276c0af14c86e0df9c36ac60f3cae272ea64c4f5c41f45ef3a7f237",
+  "scope": "Copilot implementation and resumed review; parent corrections and independent validation are separately recorded, not attributed to the CLI."
+}

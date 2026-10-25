@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "numericalGatePassed": false,
+  "targetDiagnosticFactsPassed": 9,
+  "allFourFormalArmsAttempted20": true,
+  "offArmHasMissingCanceledRequestClock": true,
+  "rows": [
+    {
+      "label": "main-pilot",
+      "observedRequests": 15,
+      "knownWorkerClocks": 15,
+      "diagnosticDecodeTokensPerSecond": 68.0124760305233,
+      "officialPassed": 5,
+      "officialCount": 5,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "off-pilot",
+      "observedRequests": 19,
+      "knownWorkerClocks": 19,
+      "diagnosticDecodeTokensPerSecond": 67.98728553905978,
+      "officialPassed": 5,
+      "officialCount": 5,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "df4-pilot",
+      "observedRequests": 13,
+      "knownWorkerClocks": 13,
+      "diagnosticDecodeTokensPerSecond": 59.09132904697301,
+      "officialPassed": 4,
+      "officialCount": 5,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "df8-pilot",
+      "observedRequests": 15,
+      "knownWorkerClocks": 15,
+      "diagnosticDecodeTokensPerSecond": 53.127298194092326,
+      "officialPassed": 4,
+      "officialCount": 5,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "main-human20",
+      "observedRequests": 105,
+      "knownWorkerClocks": 105,
+      "diagnosticDecodeTokensPerSecond": 67.78193415454106,
+      "officialPassed": 20,
+      "officialCount": 20,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "off-human20",
+      "observedRequests": 115,
+      "knownWorkerClocks": 114,
+      "diagnosticDecodeTokensPerSecond": null,
+      "officialPassed": 20,
+      "officialCount": 20,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "mtp-human20",
+      "observedRequests": 88,
+      "knownWorkerClocks": 88,
+      "diagnosticDecodeTokensPerSecond": 69.5629235819449,
+      "officialPassed": 19,
+      "officialCount": 20,
+      "restored": true,
+      "helperHashesUnchanged": true
+    },
+    {
+      "label": "df-human20",
+      "observedRequests": 92,
+      "knownWorkerClocks": 92,
+      "diagnosticDecodeTokensPerSecond": 57.98075584718392,
+      "officialPassed": 20,
+      "officialCount": 20,
+      "restored": true,
+      "helperHashesUnchanged": true
+    }
+  ]
+}

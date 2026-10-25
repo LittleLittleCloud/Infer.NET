@@ -1,0 +1,93 @@
+{
+  "df4-pilot": {
+    "requestCoverage": 13,
+    "totals": {
+      "block": 52,
+      "cycles": 948,
+      "proposed": 2844,
+      "accepted": 2366,
+      "rejectedCycles": 236,
+      "fullAccept": 712,
+      "arSteps": 0,
+      "replays": 238,
+      "contextRows": 28001,
+      "bootstrapMs": 2542.615,
+      "draftMs": 10022.393,
+      "verifyMs": 38044.941999999995,
+      "ingestMs": 941.9119999999999,
+      "snapshotMs": 997.7679999999999,
+      "replayMs": 5891.5960000000005,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.8319268635724332,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  },
+  "df8-pilot": {
+    "requestCoverage": 15,
+    "totals": {
+      "block": 120,
+      "cycles": 643,
+      "proposed": 4501,
+      "accepted": 2947,
+      "rejectedCycles": 313,
+      "fullAccept": 330,
+      "arSteps": 0,
+      "replays": 313,
+      "contextRows": 32386,
+      "bootstrapMs": 2980.7950000000005,
+      "draftMs": 8215.405,
+      "verifyMs": 47055.93,
+      "ingestMs": 774.5709999999999,
+      "snapshotMs": 684.8899999999999,
+      "replayMs": 10486.859,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.6547433903576982,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  },
+  "mtp-human20": {
+    "requestCoverage": 88,
+    "totals": {
+      "cycles": 8875,
+      "proposed": 8875,
+      "accepted": 8564,
+      "rejectedCycles": 311,
+      "fullAccept": 8564,
+      "arSteps": 0,
+      "replays": 367,
+      "bootstrapMs": 46914.84,
+      "firstDraftMs": 265.8689999999999,
+      "draftMs": 0.0,
+      "verifyMs": 206711.45400000003,
+      "catchUpMs": 27830.402999999995,
+      "snapshotMs": 9612.294999999996,
+      "replayMs": 6682.5710000000045,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.9649577464788732,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  },
+  "df-human20": {
+    "requestCoverage": 92,
+    "totals": {
+      "block": 368,
+      "cycles": 5697,
+      "proposed": 17091,
+      "accepted": 14025,
+      "rejectedCycles": 1492,
+      "fullAccept": 4205,
+      "arSteps": 0,
+      "replays": 1500,
+      "contextRows": 197636,
+      "bootstrapMs": 18345.08,
+      "draftMs": 60371.25200000001,
+      "verifyMs": 229447.45900000003,
+      "ingestMs": 5600.087,
+      "snapshotMs": 6022.141,
+      "replayMs": 37114.998,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.8206073371950149,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  }
+}

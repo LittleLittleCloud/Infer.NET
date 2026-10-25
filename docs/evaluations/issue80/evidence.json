@@ -1,0 +1,3832 @@
+{
+  "audit_final.py": {
+    "sha256": "4caba60eae7691aadfb3030ce93b5ea215f241858499cf8a0ea942b18b33f026",
+    "bytes": 2818,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-attempt2/cpu-dflash-tests.log": {
+    "sha256": "b18332210eb0fbf29c5daa084093995c458af7240582f0211795b421456fa683",
+    "bytes": 3685,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-attempt2/cpu.trx": {
+    "sha256": "b393247c6a865e3c83f0ce3ff0b9b98e62ba36224f149f4d723f2ae23a043b5d",
+    "bytes": 82448,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-attempt2/release-build.log": {
+    "sha256": "c88af7056929fbf1c808fa5aad7777edc552b0c8d1fb0d0b5f05ed2b6de405bf",
+    "bytes": 1032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/cpu-dflash-tests.log": {
+    "sha256": "3abc5c4d08e7f8bddff3a14fff70ea89dd3ca915b602828fddec79d5b5e596be",
+    "bytes": 3684,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/cpu.trx": {
+    "sha256": "9b1808b5cfe07dee5ecdfe7acd118840e24c540232cbfb0b1c19bcb8eebeb16f",
+    "bytes": 82448,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/native.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/release-build.log": {
+    "sha256": "725f72c1b4d07e698dc7451586bfd735e4fc3bffe7860ff6f749dd745aa864e9",
+    "bytes": 1032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/shader-compile.log": {
+    "sha256": "3d6a07d8783befdac3ce150381ea802e4c41372dab8ae9db6f4f5cabb377452c",
+    "bytes": 625,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "build-initial/steps.json": {
+    "sha256": "3e3c46a5a7236707e71db2d5a702436d1014f8326fc1e838db2077de845afdd9",
+    "bytes": 889,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "candidate-package-c706064/manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "compare_numpy.py": {
+    "sha256": "8a8b1b7017507233fc0643eb63a87efd0dc88dbe0ec923f71bda7a32730dbc8e",
+    "bytes": 3073,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "config.json": {
+    "sha256": "86d2e8e57e7c70bb867240708d00c0535ae9ed3c828dbdcb21584471c7bbce59",
+    "bytes": 1291,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "dflash-model.py": {
+    "sha256": "f55b7fe0a4c0b3073e0f9cdce547cce29f4b8e2168c4d2818760007c43b7651e",
+    "bytes": 25722,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "dflash-model_mlx.py": {
+    "sha256": "2f8598eaca4cb814e63ea69e791c1bdf55ba82280bfd299f9141906356b7cb87",
+    "bytes": 35272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/application-resources.jsonl": {
+    "sha256": "1417fa9c3fca278ea8495615c7183b000314409b24c2d8ead8de848ff1df3b07",
+    "bytes": 10085986,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-115/events.jsonl": {
+    "sha256": "eff6198d9d8708e9973d0230d35d7cadc1955e71f9013471ca2d3263194c0ac9",
+    "bytes": 52623,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-115/solution.py": {
+    "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+    "bytes": 1277,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-131/events.jsonl": {
+    "sha256": "f7848c5023c07a943730b4a09ba1ca7c1c1b158e1655a16608e14169d6123e31",
+    "bytes": 42197,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-131/solution.py": {
+    "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+    "bytes": 413,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-137/events.jsonl": {
+    "sha256": "db959832a722b5d8af3dc6d42e745ef68422f17db93981d3c9801286730e9b83",
+    "bytes": 103428,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-137/solution.py": {
+    "sha256": "f1f3df06664d42429d1a13b5650f0fb678712814410522567291d840ada93b2d",
+    "bytes": 936,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-146/events.jsonl": {
+    "sha256": "bd4a74d8310d2471a952742024ebd50da61042b9ef044df5186dbbca8948d706",
+    "bytes": 96845,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-146/solution.py": {
+    "sha256": "90ecdc633a1e121cfab1f0d2105eee5869865f41c0d515cd664d9b9830983d82",
+    "bytes": 809,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-148/events.jsonl": {
+    "sha256": "48f59bd8639758580b010ff2463a37aeee8fc5a2c4dd0c941c968f70b726e364",
+    "bytes": 56148,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-148/solution.py": {
+    "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+    "bytes": 1155,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-149/events.jsonl": {
+    "sha256": "77b3fbf24597f6b5873ef33c798efca5d2dd2e10c1450bf516a27e2bf0d11713",
+    "bytes": 76710,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-149/solution.py": {
+    "sha256": "690971b614dd34a74608a44f00bd34b87f5955e567651287fe794ba32bb633db",
+    "bytes": 1185,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-154/events.jsonl": {
+    "sha256": "f910607008b5fdcc654798c6ead7ee9ec0973a9def2c3850534b1b5bceb1e763",
+    "bytes": 64561,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-154/solution.py": {
+    "sha256": "ec6e850ade8d7a8e97be0b72c5698e00f828591acf6cb53bfd69cbf17385f80c",
+    "bytes": 684,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-156/events.jsonl": {
+    "sha256": "c1a6f527234e35a312c03d8fb3886c862719d0a5923b6bcd8641c42531458872",
+    "bytes": 64019,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-161/events.jsonl": {
+    "sha256": "22b3836f9ce59044a577a90721cc17d7e097935a7626a8ddf08e3b8661f280c5",
+    "bytes": 66126,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-161/solution.py": {
+    "sha256": "a0d9dbf0c4011d8e4670d27beb42956cb5564f59f541bb55a7d3461be01f4f05",
+    "bytes": 879,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-162/events.jsonl": {
+    "sha256": "4bc34a742c5769104e94a26f7e5e2a9c797998f93b4407d6b255b2f797ec7419",
+    "bytes": 46006,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-162/solution.py": {
+    "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+    "bytes": 342,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-2/events.jsonl": {
+    "sha256": "2d18ef2e2d8dc37632713972d1fc93f817acc2b9350e453ad6eef88c2ba79545",
+    "bytes": 55018,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-2/solution.py": {
+    "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+    "bytes": 360,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-32/events.jsonl": {
+    "sha256": "408da3b83c3c06a0b68c1c1caa54cb0a0164bdbf036ad764afd0a07cd8bd812e",
+    "bytes": 101789,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-32/solution.py": {
+    "sha256": "c1c71e163e4819013b7af0786271ef76172029c01c5c123f82b48c882d2d386d",
+    "bytes": 3615,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-35/events.jsonl": {
+    "sha256": "7cfc27187bc445ab608d0199ad074a3d00e4fc7436eb085d3b3bae3a809de671",
+    "bytes": 48840,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-35/solution.py": {
+    "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+    "bytes": 200,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-47/events.jsonl": {
+    "sha256": "2737b45f74318ec5168ecd94920f657e4716e11dc9101224da9a657c647006ad",
+    "bytes": 96704,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-47/solution.py": {
+    "sha256": "ef748e09d8a11301058dcb7fe8648e1dbe1c9bdbd99638c76e9f44de200fd018",
+    "bytes": 344,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-50/events.jsonl": {
+    "sha256": "b6253fd07d36a0d7766d7df376b0e173394e23cf13cbed4520506e2bef039a69",
+    "bytes": 60666,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-50/solution.py": {
+    "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+    "bytes": 412,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-6/events.jsonl": {
+    "sha256": "c19f3063cafaf372c35f8e5ae9fb371335e81fffd399f42c2c63611a417989d3",
+    "bytes": 56621,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-6/solution.py": {
+    "sha256": "8070deaabf301e8946b034d6cb278dd859d42e7ec0c386c6a80830ab732209b7",
+    "bytes": 856,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-72/events.jsonl": {
+    "sha256": "c43bf75360a7f516cd6909b6ac5cb3339586826a41f1c43eba211012d5b0f137",
+    "bytes": 48975,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-80/events.jsonl": {
+    "sha256": "fc1adc54494284f23d089c087ef771fa907e0fdb8eaf52d06efee5318891b2ce",
+    "bytes": 45611,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-80/solution.py": {
+    "sha256": "7a2193e09cc497455ec1933e0daed2521d485c7b9c4706c9179d0a0c753ea13d",
+    "bytes": 534,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-94/events.jsonl": {
+    "sha256": "d90cebfba8e2c31d52958f4a5e161f5b1a01c42fb6d2d0810fa562321eac32ac",
+    "bytes": 52999,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-94/solution.py": {
+    "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+    "bytes": 1135,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-97/events.jsonl": {
+    "sha256": "f9bb4763f3c97c6dc45ba568de4cd21241af169046c4d77a60ca4b1a6feda388",
+    "bytes": 58143,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/HumanEval-97/solution.py": {
+    "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+    "bytes": 421,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/manifest.json": {
+    "sha256": "d6049d83fee7ea0be2e8200e9a7b639a3404adfdfc7c1f4e4eb9508939c68df6",
+    "bytes": 1220,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/summary.json": {
+    "sha256": "c87f167237795890ec1a683202d974648da1756a69bb374824e0b68b85245256",
+    "bytes": 531,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20/tasks.jsonl": {
+    "sha256": "6877c248e6c47ade640f67efc22b096b70f83c2296af7c4ca69e179ed2f13610",
+    "bytes": 169902,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-analysis.json": {
+    "sha256": "3fb1dafbfca655ffc794879a318c6705cff853557089fb11058e7c15dc132985",
+    "bytes": 85418,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-driver.log": {
+    "sha256": "53bf53f22d6ca0ddb07863cbada6bf6d35fdc7290b784c780b5c27b45e4e2bb0",
+    "bytes": 1011,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-fixed-fixtures/summary.json": {
+    "sha256": "4dc3651c5ffba399f2fdc2c738d0e393a9110ea69ced0879c3a7ba721b5b0b41",
+    "bytes": 42550,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-footprint.txt": {
+    "sha256": "7c7248681d7b2a0b71139e78c7c59addad8d01dcc71b16f12531d7d9d86f5e48",
+    "bytes": 5371,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-initial-health.json": {
+    "sha256": "9a696bf5f8e07932a02a7c706bb91e4252650e0fe5894171a548e2c641010522",
+    "bytes": 290,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observations.json": {
+    "sha256": "b7512442cd8a4f945629053e91fe7b77e78f96c0d16e0aa5ff5c188313bccc4b",
+    "bytes": 544639,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observer/coordinator-persistent.log": {
+    "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observer/manifest.json": {
+    "sha256": "95ef93ae269494d047013e934b467333e46cf7a489a3995bb8fb8a91cbe91dbf",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observer/requests.jsonl": {
+    "sha256": "ae6e4fe71e7e59025b281889d30405cacec89dfd321e77475a5424105bae89f4",
+    "bytes": 541587,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-official.json": {
+    "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+    "bytes": 2661,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-official.log": {
+    "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+    "bytes": 424,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-package-manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-paired-replay.json": {
+    "sha256": "22623361d94dc5fbb28614cd5ded11e7a9bc8d318e88a04278220a05e188b241",
+    "bytes": 37727,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-performance.log": {
+    "sha256": "2dfdd9610e7ceacd3e26312312eceee1e57118550942a617d35a6649877e77aa",
+    "bytes": 341,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serve.log": {
+    "sha256": "c259ba0820f463d03aaf2c40cc726490c2367e2e5569a5df2d86c4a1dfe51ddc",
+    "bytes": 380526,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/queue-responses.json": {
+    "sha256": "e9abf6fc3ea53f52434a7121f5ef35bb07b47b2095e27d85c4b90a907cbb353f",
+    "bytes": 7912,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/request-0.json": {
+    "sha256": "5a9bd0c2f2e2d8bdf851c6b7d2f24e5203d38dbe87721e2d8df93a1e25c162b0",
+    "bytes": 1566,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/request-1.json": {
+    "sha256": "0f2f4a58a3244b2d7bfc62ae58f53df83599d117997270e51e54da09678358d7",
+    "bytes": 1567,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/request-2.json": {
+    "sha256": "5a856fa4a62c0371e71d8a97341be11775693a694a291ac0b7c7cf04f7ecb9b7",
+    "bytes": 1567,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/response-0.json": {
+    "sha256": "34bae1a28f3d9b62c83a266b2f14b1855c0aed42a9854d8bfa48e128767612c1",
+    "bytes": 1317,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/response-1.json": {
+    "sha256": "6ce4a729f8919e466171f764943f46fe24b9e73d8b62eeffbab5f5d736672104",
+    "bytes": 1318,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/response-2.json": {
+    "sha256": "d0737b736683b0594c7960d3326e7e4c0598940159e16a53cb9aed2602e9d238",
+    "bytes": 1318,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks/summary.json": {
+    "sha256": "d2e4789fd1b6ec74c54390b87a3ae3d6d043d0501dbfe0acd602c368b174c83e",
+    "bytes": 3702,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-serving-checks.log": {
+    "sha256": "2a2f2c38a20ded2594b29dc6fe46dbcbbfdb67fb14e90994f48d33657323dee7",
+    "bytes": 761,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-summary.json": {
+    "sha256": "4ed2d620f42a1ad9554891c7a1df818743f9592736a0dfeddac445e071691be4",
+    "bytes": 522,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-window.json": {
+    "sha256": "1ca177fae2a309d76502c32d0708b64aa98ba2d1a3fe45c50b7d9772d444dc1c",
+    "bytes": 246,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20-worker-persistent.log": {
+    "sha256": "ed66b1c9afd833142a4050243f1d7e1bc97db74bfcdfcc183852c91f82a5b386",
+    "bytes": 90136,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df-human20.log": {
+    "sha256": "fb11c642f28a72cba99d24a9a71d2dfe9fb8d068426589d539e465db0285c29e",
+    "bytes": 1400,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-149/events.jsonl": {
+    "sha256": "b2c76569ecc136d53c614cb50dc031017d3b25e79e7ed996517ff3d04faaaa62",
+    "bytes": 25182,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-156/events.jsonl": {
+    "sha256": "e295698fc7c1280f08a0497fe7a2843ed08a519e70d3be651344246e23e4ede3",
+    "bytes": 48894,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-72/events.jsonl": {
+    "sha256": "e61d797c5312d3317e2b559a6d5458bdbbbb369c87bc053b91b05531eae4836e",
+    "bytes": 49184,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-80/events.jsonl": {
+    "sha256": "921f5c8ed8f6cf35cae95655155f00e8ec9ca0aaf33b1aaf970c4b64cb6cb8bc",
+    "bytes": 45602,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-80/solution.py": {
+    "sha256": "7a2193e09cc497455ec1933e0daed2521d485c7b9c4706c9179d0a0c753ea13d",
+    "bytes": 534,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-94/events.jsonl": {
+    "sha256": "92e45e74d5081df288c95494f4bf9cf019a56fde05e359c488afc6f6996d16e0",
+    "bytes": 53032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/HumanEval-94/solution.py": {
+    "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+    "bytes": 1135,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/manifest.json": {
+    "sha256": "fb8d55a4e341ac5fdd63ce3cbbb89c1370e878f528122aa9f1c010a56bfb7ecd",
+    "bytes": 913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/summary.json": {
+    "sha256": "4b18a283d804a5a063d7caea228bb3d50eb4cb23d9a07f84255bc5880ba85d39",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot/tasks.jsonl": {
+    "sha256": "b844d691525f391a5bce40670c401c1f6b56628f2bc1ee199d2734733fc4d9b4",
+    "bytes": 27319,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-analysis.json": {
+    "sha256": "72654f9fe59142aa98276212f6367fc9b0c1e317868da69d5021a05b05c5afbf",
+    "bytes": 16144,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-driver.log": {
+    "sha256": "98b6db3588b9c989e6344320390162e20396a1acdee90ec88b428522755f4534",
+    "bytes": 967,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-fixed-fixtures/summary.json": {
+    "sha256": "f7b2a603c624ab71dddc9a7062628937f879453765b303ba2e8f281e5e10f07f",
+    "bytes": 42524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-footprint.txt": {
+    "sha256": "e6ecacea594797d36523ce55880ab530ba6bbe9f178579ce53015281d98207c0",
+    "bytes": 6012,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-initial-health.json": {
+    "sha256": "542e81e43c1847369f761b1d2be3d52128932b7452d6451f2294e0b20277724f",
+    "bytes": 292,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observations.json": {
+    "sha256": "cbe0a1332cba64bb77e49c9d380960cc8eb176c4d67a7822c701a29924a1bb94",
+    "bytes": 76867,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observer/coordinator-persistent.log": {
+    "sha256": "778b3e8edf4eb7d333786390abc32bfb8a9639719db5e04f0ae3a4cbfefc65be",
+    "bytes": 867,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observer/manifest.json": {
+    "sha256": "12766b45c109d925bd17f01336b29fa2282a4501bbf7d55df120bd8fa0c4d31b",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observer/requests.jsonl": {
+    "sha256": "32bd9cee7054980d98f4ce9e104492560b49e5678f9c0bf4c2b833a7d85be55d",
+    "bytes": 107829,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-official.json": {
+    "sha256": "d4e9a6999e5717af257a0e9720cbffddf917b60937a02b8c1fd1aa30eff9e8b4",
+    "bytes": 926,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-official.log": {
+    "sha256": "aaaa88cf3c2c5c27391072a2f160ec905412df3ad8a31bbc6a04c0e899eac52f",
+    "bytes": 95,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-package-manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-paired-replay.json": {
+    "sha256": "4fe727779fad27edd592adf27da08b78b5ca91898593f7fa3d788db44b164e6a",
+    "bytes": 37735,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-performance.log": {
+    "sha256": "47bf4ed4e72f05d64dc2af9920727b1ac033ccea17e625e26eb467b96bf87a72",
+    "bytes": 314,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serve.log": {
+    "sha256": "31979ddfce70ac210cbd02921ccce84c56311dc2b373f4d41a64527ced492183",
+    "bytes": 68565,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/queue-responses.json": {
+    "sha256": "13a2c277382de2bf59174c22eadb5d88367ac3c565c5cecf84013a733bc9ef0b",
+    "bytes": 7910,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/request-0.json": {
+    "sha256": "c60c5bf9295bb8c37bf52f08cf1a51d99c0b4022806b7d6a81ee93fac8255cc6",
+    "bytes": 1565,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/request-1.json": {
+    "sha256": "6dc10775aaf5e73d51b8761f3e03f4dabfaf053357e208c2b46d228289d8dce2",
+    "bytes": 1565,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/request-2.json": {
+    "sha256": "f91ee7033c7d1e3c32c3dcb0d59833eb7889ed2cb9517e07599f0ad3d2c34eea",
+    "bytes": 1574,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/response-0.json": {
+    "sha256": "c09bfbce13c94b02b11f55a90b0f167e7e6f25cd7867c4388c5ff7175121deaf",
+    "bytes": 1316,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/response-1.json": {
+    "sha256": "95d148ef56212d796ccb145a8de9c6aaaa2c9650f68cf8f6bcf95fdcf8618d82",
+    "bytes": 1316,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/response-2.json": {
+    "sha256": "55f1e4183660b7bcac49a80dbb6cf6c4f34e5f12ce08187a26c43daaf3c8fb7c",
+    "bytes": 1325,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks/summary.json": {
+    "sha256": "1611237678887b511fe86f5b4e8dc2897712ee7fec62786b5b3aa92376ac2c09",
+    "bytes": 3711,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-serving-checks.log": {
+    "sha256": "66787d268eb8ce20477144d486b0c512814e7aa97fabc7f196a2ad108662cca6",
+    "bytes": 760,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-summary.json": {
+    "sha256": "8099692d3fa5cb225c79e3c04abbf131323b291bfe90401fc90ddf81500747e0",
+    "bytes": 487,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-window.json": {
+    "sha256": "c2c127a069f7798f10713e03cb2ce0a28bcabfd397602c99e7ce5b37ca6594fc",
+    "bytes": 245,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot-worker-persistent.log": {
+    "sha256": "ffd1d53fda94944de372746285096b843ecf26df2900d7332ef570e1311170ab",
+    "bytes": 29636,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df4-pilot.log": {
+    "sha256": "8063eaa4389cefc81c842f705ff896f6abb1d00803395d81b277cf66126938ef",
+    "bytes": 743,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-149/events.jsonl": {
+    "sha256": "6283f1273e6c938c7fb6c54a04c8060bf9f2d402579713a0aff3427425153aa7",
+    "bytes": 25184,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-156/events.jsonl": {
+    "sha256": "39d7d60cd28972beaa6f24555f566fd08d731c0726c799c8dbde03295caef9e6",
+    "bytes": 64851,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-72/events.jsonl": {
+    "sha256": "298568fcb12537bdf528fb2d9f3371898d5255f67658a9428751eae6c1eef225",
+    "bytes": 49025,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-80/events.jsonl": {
+    "sha256": "5c6ab12fdca09351b458123d1a37953aa9a280ab74e6574a1d87f8908e28520e",
+    "bytes": 45367,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-94/events.jsonl": {
+    "sha256": "bb766d2b23b205caadef895974afd129d9ba080e55246d28de7f082f6c17b10e",
+    "bytes": 53066,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/HumanEval-94/solution.py": {
+    "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+    "bytes": 1135,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/manifest.json": {
+    "sha256": "c68b229ac494959019ea9ea0a09b6b2ff3162cf0ddb68d93347357282821bf35",
+    "bytes": 913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/summary.json": {
+    "sha256": "cb6c4ef4e7c60dfd3efd80a7b11c94665670549fde735d8136319317e63f2b69",
+    "bytes": 522,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot/tasks.jsonl": {
+    "sha256": "88c3cd24dc5dc227601ebc7a2d155c44e3f3f066ed15bf571fd78c1e6dfc4040",
+    "bytes": 29903,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-analysis.json": {
+    "sha256": "b81c1f2525bd9b37fcd76b2c069bae783095b4c2b6215fb5977f207195063e13",
+    "bytes": 17705,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-driver.log": {
+    "sha256": "298e892baa3399186036fcfa6f3a3ae772590c2d67d4a40437b14e4ba434cfd6",
+    "bytes": 960,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-fixed-fixtures/summary.json": {
+    "sha256": "851cc8bf86391130fb8870051bf3b3294efcb4edab3d12108511758e2e5a90f3",
+    "bytes": 42537,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-footprint.txt": {
+    "sha256": "db3fe697a450d0690d50f97e3aa8e9c678a210544deffc5a832bda34a638dfd0",
+    "bytes": 6012,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-initial-health.json": {
+    "sha256": "ed09abbac63079a6f0f06cb77bc3cf47302d370b8d9a6eb6843f5b99d05eeb7f",
+    "bytes": 292,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observations.json": {
+    "sha256": "b19abf5fc7c6f2fe4777b4bdc978c19fc16aac1089a15a0a25c45f6a8ec92d78",
+    "bytes": 88729,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observer/coordinator-persistent.log": {
+    "sha256": "8d5cdcb59e31e4a5a773e01aef25bc6bbcc89156dc2a33d11bb440482cf2f18c",
+    "bytes": 867,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observer/manifest.json": {
+    "sha256": "b7c2057ea517fa9b9cd9c48ecdaa3855a232d9590b4d8f72c603ac1eacb47f0d",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observer/requests.jsonl": {
+    "sha256": "cde62a16224dd8093e0149025c6d80a8be9318106664df609289f1e88740ee02",
+    "bytes": 118859,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-official.json": {
+    "sha256": "d4e9a6999e5717af257a0e9720cbffddf917b60937a02b8c1fd1aa30eff9e8b4",
+    "bytes": 926,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-official.log": {
+    "sha256": "aaaa88cf3c2c5c27391072a2f160ec905412df3ad8a31bbc6a04c0e899eac52f",
+    "bytes": 95,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-package-manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-paired-replay.json": {
+    "sha256": "d08d9b5cdd287910257badb1e54ec0fd51af079b43b0a88bef80cb033ab3a331",
+    "bytes": 37742,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-performance.log": {
+    "sha256": "9e1ba4a87a06ac3ae35bb821e5f81feeb7c8de0f2fdc89192bf42c2ab4531ef6",
+    "bytes": 322,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serve.log": {
+    "sha256": "02a8b719261a60cafc666852317e7bdfb48e290b8ee725273ed5f47c7db71d51",
+    "bytes": 77146,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/queue-responses.json": {
+    "sha256": "56d7c77ebdbf99b30edb0aee88aac6e9f1fff6dac0d3ea2ce4ad844d8099fff3",
+    "bytes": 7928,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/request-0.json": {
+    "sha256": "b50ef940af3d024463885ef2da6c9689e4e22b24bd8f628894c75f4d22ff266f",
+    "bytes": 1566,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/request-1.json": {
+    "sha256": "6be1744db13fd2641c2b778239ebd1054707296fb3929ce8cd36e9340d9a811d",
+    "bytes": 1565,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/request-2.json": {
+    "sha256": "5dce320ad218b5755318afe5dfdfa2e06a69a307bdac5e8989929e44643de160",
+    "bytes": 1574,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/response-0.json": {
+    "sha256": "0ee58fa3ce251fbdcb6728e655a2b230c9fdbaeae9ac41909b6cb15710d1f4ec",
+    "bytes": 1317,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/response-1.json": {
+    "sha256": "e2fc31f78702a7c11d77d248adb284355c7ea58387bb98729c99f7dd57e90246",
+    "bytes": 1316,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/response-2.json": {
+    "sha256": "fb7eae451659bcf9a85000ce2a206d08b1ce7d5f8191ad964fc7321d071cd60c",
+    "bytes": 1325,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks/summary.json": {
+    "sha256": "c2446309b32e1b74cd86ac6e05b34acf5bc9675a9392eef20dd227ca797c188a",
+    "bytes": 3720,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-serving-checks.log": {
+    "sha256": "32e31f3d3b87d6c211f3585f4ee18c8e2e2ccb07b9bc7041252b6d5aa409372a",
+    "bytes": 760,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-summary.json": {
+    "sha256": "7b2783cae765307b71e2c9d660727ebd14c9ac016a32b1af6f56136bb27b679a",
+    "bytes": 480,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-window.json": {
+    "sha256": "73da6c42410d2a701abe986ce8fd5bd5b06b45ddf422340e62d9235c5c0bd9d6",
+    "bytes": 245,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot-worker-persistent.log": {
+    "sha256": "be2c9c516631add0b93b3d97f318550307b57c30a3f7993f4b7842d5bf70e782",
+    "bytes": 31416,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/df8-pilot.log": {
+    "sha256": "02fe75e42463530726793ed766dc72c0d7a6c957000649aff83a4439a9e2898f",
+    "bytes": 741,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/final-verification.json": {
+    "sha256": "5fd92e43d5a06de374dac9b3b1f114c07d9999a6831adde322fc9c7c25b93a80",
+    "bytes": 686,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/final_verify.py": {
+    "sha256": "f6fda75929fab8f9898d4e281bb47579841742904d300a7dba8e07d196091f14",
+    "bytes": 2480,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fixed-fixture.json": {
+    "sha256": "cdad86e57bbbf8167b31b83ad167fd1489bda0942e865d988b164d3fcad61e08",
+    "bytes": 711,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fixed-inputs.json": {
+    "sha256": "c40f590d6f4626b73c183ce5245166c7e3e26924970fd9ecf09f1bdb93073f02",
+    "bytes": 919,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fixed4096-serial-tokens.json": {
+    "sha256": "9a2392a16c50034df3c4005ecfa65afdc6506686a954ae60d5cda14a3e006c67",
+    "bytes": 18810,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fixture-prompt-token-ids.json": {
+    "sha256": "0d87a02bbee793e0e7fca627c204908ec338da04645415197f67db3ceb245391",
+    "bytes": 158,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/formal-queue.py": {
+    "sha256": "18a2e35af5592e66d74ee0304e79ecb5e91790bbac7842f8e70c125fe3ed7426",
+    "bytes": 2835,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fresh-main-replay-cohort.json": {
+    "sha256": "10d63812cd023046db2a334edf68efbcd61a79c5846f8b42ded57d01f300467a",
+    "bytes": 37493,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/fresh-main-replay-pilot.json": {
+    "sha256": "198f7043009ef89c9e4656b6512ac762da882f3857a9bf1b12353ef5349fa1ca",
+    "bytes": 37631,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gate-resources.jsonl": {
+    "sha256": "8687a225ba5e27c8339980c3474493b1f7c8f01be078e893e6986586c191de41",
+    "bytes": 2596751,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G1/binary-hashes.json": {
+    "sha256": "24e66bf634d007828e8b0efab13a2ec40681e641200a582ac416819c0f2ffbbd",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G1/process.log": {
+    "sha256": "8b9a3ec10986ad2fa327fa182a58f8c0d66a7a92e215dfda6b5d090a0bbb6eb6",
+    "bytes": 568,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G1/resources.jsonl": {
+    "sha256": "d8fba7288d31acf7ea21b60a554aba20f84c7fc10082ad0c34c76f4faa5b3f56",
+    "bytes": 29540,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G1/result.trx": {
+    "sha256": "2450b2ff6b6a5e63746c5ab70a88a075d3347d0ce4db3d3839bb391272e8717c",
+    "bytes": 3134,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G2/binary-hashes.json": {
+    "sha256": "24e66bf634d007828e8b0efab13a2ec40681e641200a582ac416819c0f2ffbbd",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G2/process.log": {
+    "sha256": "c5efa4e7592160eb908db970f3bc3261aa77c7c336b41fc9678f35cd3d81e0ce",
+    "bytes": 568,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G2/resources.jsonl": {
+    "sha256": "9cf0ec61af97a11afefdbda1e6909247ebd75b890644bb8197e28c1f3c7f24d5",
+    "bytes": 21100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G2/result.trx": {
+    "sha256": "d4f808165bb0bd7c09f2db995cca459980fc822633516bd15a3ddbb7a598a94f",
+    "bytes": 3189,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G3/binary-hashes.json": {
+    "sha256": "24e66bf634d007828e8b0efab13a2ec40681e641200a582ac416819c0f2ffbbd",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G3/process.log": {
+    "sha256": "e601c096295ead3d11dc87537d4b256b5eab18000eea4141229dc7d970aa3799",
+    "bytes": 1584,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G3/resources.jsonl": {
+    "sha256": "580152ad5d5dd17ec88b87742af6311003b6bad9a0f23f92a0b73245eff9d7ec",
+    "bytes": 23210,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1-G3/result.trx": {
+    "sha256": "99a1ae0d7cb3f943b8188ad19308041f5f28c7b94ee2d5259c2a6c4e2d44ba54",
+    "bytes": 5307,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt1.json": {
+    "sha256": "21ec8774d6062f95469e2a85e2c6d5a00db9a2efdb0ae6fe9d1e90e63ce2f77a",
+    "bytes": 3873,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-G1/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-G1/process.log": {
+    "sha256": "2e364370f6d29b71fff7f9f48844ed9bf68d5524d5f7c49755b8b9416cdf09dd",
+    "bytes": 1587,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-G1/resources.jsonl": {
+    "sha256": "d94d4e987cfcdde81c8db1ced0055717dd4e7f06699b1c66e6d8c3f38934e4a1",
+    "bytes": 33760,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-G1/result.trx": {
+    "sha256": "cb9d7b542d77d05d237cfd126e93971db7c7b38112e073019d61adcbc25ebb25",
+    "bytes": 5313,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/input-embeddings.bin": {
+    "sha256": "49502bf10477313cce540264bbc545b6dbee8f13719a37675aa940f1ae473efd",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/input-taps.bin": {
+    "sha256": "f9673934a1f204e756e5b6da72689dd52eea2124dbf0f495932369cf6b82c434",
+    "bytes": 5505024,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/manifest.json": {
+    "sha256": "75656ab624cabc85cd63ed700c780067da77505f3944cd727ee695f0e58c8b31",
+    "bytes": 4840,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-0.bin": {
+    "sha256": "38d0491a808baec3591cad5dc9be58e03ce44e2044d75430767e19270eb0e470",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-1.bin": {
+    "sha256": "cfd0777ef8f67245325e44779976aae707a44dea7a96f82bcc7d572aedd38cad",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-2.bin": {
+    "sha256": "4ccabe53919181c7f87a0096a011b3dcc2bbf1e16620afedbac8a5ffbc6eec31",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-3.bin": {
+    "sha256": "7d95a4a19f331cf83012c8e5f5fcaf7ac63385fd941fe2254d6a87e6630aceeb",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-4.bin": {
+    "sha256": "f01cccf145cea5e2fbade5f73af3099aa23ee7326bb8911704a719be550baf3f",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-attention-5.bin": {
+    "sha256": "edd6e83e485b1c06716f45e6834ca36edd7eb6303e893c833f8f34f53ff7c9fd",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-0.bin": {
+    "sha256": "1886d0596fb964cfafe5c4f721ec0b9c26d09bd43d1e94eade103f5afb281623",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-1.bin": {
+    "sha256": "698527c0a2f825b80a0a6782bcffad5013c0e4b76eb7a110351c2e83915998ba",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-2.bin": {
+    "sha256": "df64db925032e5c20af8827a2b2f2f7fb2934a03598b0d980169646036978274",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-3.bin": {
+    "sha256": "32acdf9602612a685134a36c0426251d52c9352055fea82d4f09a9b3304ed371",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-4.bin": {
+    "sha256": "f6d71adba4589b51c2cf50846610bf1c143cef10ac69b9404cb17ee435d1ef4d",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-keys-5.bin": {
+    "sha256": "569191819ca9d3ddb5dadcce05c0921ba8a362f535f359bf46518a7a844907a8",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-0.bin": {
+    "sha256": "2b66a540b7418907ad892db4054a8b3fbfa423814ac5ee8f8ba15ac7b2df3cbf",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-1.bin": {
+    "sha256": "44295827257f23d3c6533043db8ab2c01f56bc1ccea7c550903c6a2204323dd9",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-2.bin": {
+    "sha256": "d1a636cb580f15a7b910f1e9d95d2db7c8b97f4d4d7116b3fb01af5a5cc43b95",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-3.bin": {
+    "sha256": "4b332b6585d4db34372b5434970700de4b6ea9a3683290b2a1ae545810f20e7f",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-4.bin": {
+    "sha256": "ba8d3dbad0d70320d85debfd870e5af8aa991ccbbb0462310d051c270178d6f8",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-context-values-5.bin": {
+    "sha256": "0cc4c1d8907405a06158f14b8e44f99734b9504cb7536857d019ca9c33d22dc8",
+    "bytes": 344064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-final.bin": {
+    "sha256": "40ecef1243dbacf28b714da597d16f80624bbeed3ceef0cc0a77b9af720e213e",
+    "bytes": 57344,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-0.bin": {
+    "sha256": "f1df0c5856928499c2b4f87417f74161023502fee783f31ab3d2bca18843ee63",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-1.bin": {
+    "sha256": "52a209285e29231491d7c61df9fc7e1b6c3c1dfb05704f2039ce244ef50b2c25",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-2.bin": {
+    "sha256": "b5619f443d60007d1040ed31d40b474923e8efb8fd8ed7080b3f9281df898cab",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-3.bin": {
+    "sha256": "b129a31646fe1777c99b92e5c9de854eece9f3a71f8423118d27d380e01f2913",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-4.bin": {
+    "sha256": "2e4b509230918912aa3823066fa1b76efccf3ee0c693d6d44119216993d70be0",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/native-output-5.bin": {
+    "sha256": "cc7518f406b9a79a2cabf1530d546b55aa42c171bc213b1235cb6c793cecd8e7",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/numpy-comparison.json": {
+    "sha256": "f3970e4716796793b8c615f19a35e63f77032e8a404dda230df1e893978ac6e7",
+    "bytes": 5645,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-native-evidence/draft-checkpoints/numpy-isolated-comparison.json": {
+    "sha256": "db13adac74dc9e7dd6dc5a69a374d1d9595c149d5d8cceeed7edad7040a8659c",
+    "bytes": 1977,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2-numpy-comparison.log": {
+    "sha256": "f3970e4716796793b8c615f19a35e63f77032e8a404dda230df1e893978ac6e7",
+    "bytes": 5645,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-attempt2.json": {
+    "sha256": "a642910774f59dc1a763b39d37823301b274127376909c1500ce8f3b432f86d7",
+    "bytes": 1395,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G1/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G1/process.log": {
+    "sha256": "d52f0095ecb8859bc85e6e051f177e4209506e47f7674b6a4e377d5df3da4c6f",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G1/resources.jsonl": {
+    "sha256": "6e83a08a6e9b4763be838362c9b778c7d44e477e307fab120e6f687a9d04d7ad",
+    "bytes": 59100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G1/result.trx": {
+    "sha256": "b82587bd9f2563733451a4118effd7d59d2b85d3e8e6070fd85b22ae153fb6e5",
+    "bytes": 12049,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G2/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G2/process.log": {
+    "sha256": "9ffe074f6caaf5118a6e16170e5258490d26c70a26b8bc0337a128e7677414c9",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G2/resources.jsonl": {
+    "sha256": "043d920193a76fb9f68ae57b2bcdeda8237994b27b483867a31745f9752980ba",
+    "bytes": 33759,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G2/result.trx": {
+    "sha256": "32f4cbc3406e0606e5c52f9fcdc98100686586a0a3ebf9a2a924d5584b50c982",
+    "bytes": 8453,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G3/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G3/process.log": {
+    "sha256": "e1ed2550895d6ae642831e7e4a117491e0027c10097070ea959a7d161f105d2a",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G3/resources.jsonl": {
+    "sha256": "b81d6f97355f03bfd3e90bf5a6b1bea045c5cdb83b9c9fc9f410905ed940fcc0",
+    "bytes": 25327,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G3/result.trx": {
+    "sha256": "44ed28820acb1a9eb40d6eee2bced9fc7d52fb5020ae80b876818347cecae81f",
+    "bytes": 3622,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G4/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G4/process.log": {
+    "sha256": "cae4b9ae347069f98ffd97d573626e314ec2ee0b9b9a4a734759d32c6a68505d",
+    "bytes": 582,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G4/resources.jsonl": {
+    "sha256": "530811426342635babfab2207456e7c515fbc104236169ec2ae0e28d39d89107",
+    "bytes": 88643,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G4/result.trx": {
+    "sha256": "e66136aa1e8552df4a435e41ef24daa947532f1f45cf0cb76cda4e287ad51bf6",
+    "bytes": 17072,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G5/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G5/process.log": {
+    "sha256": "3558485cc28a1b8216035deeb4c1f8c8d0350ee4a3354955cdea224ab53fcb31",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G5/resources.jsonl": {
+    "sha256": "2e02d4fcf68214cbf19a06144d14ce8dcfa3af2ac42ada1700ddeca80c0ae95a",
+    "bytes": 54860,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G5/result.trx": {
+    "sha256": "aaab3767b06165f9314ffed86ab6218816401035f8bee80b4506efc7b8511bee",
+    "bytes": 17489,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G6/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G6/process.log": {
+    "sha256": "c5b5ea4c7eac34eaef778eed0e358af25f6f004c24fb768a6a89595ef8fdc5aa",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G6/resources.jsonl": {
+    "sha256": "67075530ae8d0761f094403539ee18e4d8ed8930efcc4a1bf4894ea300266cdf",
+    "bytes": 63300,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G6/result.trx": {
+    "sha256": "8e6eced285c5968448c9aade3d119700eb6c89b8483bc3e0179aa4c2ed8802b0",
+    "bytes": 7320,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G7/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G7/process.log": {
+    "sha256": "64d764938bad66f880617154cd013dc98fdad3560d2308e9efd4581fa47e9e0b",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G7/resources.jsonl": {
+    "sha256": "2b8117a19794e6e2821a3c056e0fa0046ca2c6bb3f161f02068fc28252d1245b",
+    "bytes": 44310,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G7/result.trx": {
+    "sha256": "48fed8dbdbd132d1a00567616c9f19adbca945cb256216f758b0238c373af3da",
+    "bytes": 3185,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G8/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G8/process.log": {
+    "sha256": "35860cf02afc81bfe1da1dd11110f2fb410f15aedcbf22c4553f8812ced3358c",
+    "bytes": 578,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G8/resources.jsonl": {
+    "sha256": "ebb99e87a9416e51f5e35bc1a86b2a069e129e4c0a9ed85efbc63007b80ec487",
+    "bytes": 44310,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G8/result.trx": {
+    "sha256": "6d4d925f8d1bdfffa5ebf14abf1bdd7aded97dbdd595612090f2c939d6d2381f",
+    "bytes": 3351,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G9/binary-hashes.json": {
+    "sha256": "eeff32fb42b126bad866dedb2a9d5fbd1df8068889af43452b601a7412d40203",
+    "bytes": 278,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G9/process.log": {
+    "sha256": "0b521355d469593b2d1b48122cb91de77b377c65577f8e8db14a89c60f4cc5e1",
+    "bytes": 583,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G9/resources.jsonl": {
+    "sha256": "f9c3da14606160695078726f96c8cda44ff52f4f4206351a1318bc48166fe4f7",
+    "bytes": 843434,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1-G9/result.trx": {
+    "sha256": "0754c3ea51754be6e3f6e6020c8e676710543c8d40c3a61bf908dd66229be19f",
+    "bytes": 8724,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/gates-target-diagnostic1.json": {
+    "sha256": "b5150a9f338e96065c30f34a1f0ebcb47ff839e64e94186f96e6d1ba69454316",
+    "bytes": 11537,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/manifest.json": {
+    "sha256": "246385c10ced38451c4a57be5c2458e0e420e194dd7464be386b83a0ceb4533e",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df-human20/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/manifest.json": {
+    "sha256": "86241a42dca52c57ad3005f9133a800c62635b6081900a74281b93a493306e33",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df4-pilot/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/manifest.json": {
+    "sha256": "e2972b2e72bd8ffca697cfa6976f4c2e0d31ebbaa2e02dfdf7fdde5d4763cf76",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/df8-pilot/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/manifest.json": {
+    "sha256": "be61199a6d0f7d18dea223c4d41dabd394beebae37fde2bd92b26a7481875e7b",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-human20/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/manifest.json": {
+    "sha256": "ff7ae23e3576b1d3d226be78454f0684cb02884cfa9c606b74c3dc9c74c21f26",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/main-pilot/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/manifest.json": {
+    "sha256": "42cbd8fb89c135d887a340929ba1aadcf93ed4314a6b8ec63aedf6fdf09c60f5",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/mtp-human20/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/manifest.json": {
+    "sha256": "4cc52db6bec4e8e1598712594469583a6abbe1c394aa386796f0d41d720c1968",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-human20/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/acceptance-mtp.py": {
+    "sha256": "77c975d77f23d6ffbd9116072ad6eae39ce3e01b66cd3fdfe3f2c22a79fd5377",
+    "bytes": 5272,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/aggregate.py": {
+    "sha256": "4d65bada8393edab843b441342216ad5002f7f3055b9c7b5c0339e0a9c5e67e1",
+    "bytes": 7991,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/evaluate.py": {
+    "sha256": "543381cd059eb0010a66f9c58e6dbc2cc2b4cd7cbb29baf55b58c980352bc0ef",
+    "bytes": 11502,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/fixed_serving_fixtures.py": {
+    "sha256": "a938220d317328c94b2ca356265c6dbc95bd447fc11d56432da148bfb09952e8",
+    "bytes": 2032,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/manifest.json": {
+    "sha256": "f7eaef630c5494956e7490a057d9346d70d7988f882008a3ccb9312c1fd72111",
+    "bytes": 766,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/helper-snapshots/off-pilot/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/independent-negative-control.json": {
+    "sha256": "317ecbebf3e338dfa9dd6c0b3653c8d3214152eda23c13817d5113394316bddf",
+    "bytes": 837,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-115/events.jsonl": {
+    "sha256": "cddafffff6c1dbbacbed011de432cfc62bc4785a1a021a5c99d398e70bedc5f0",
+    "bytes": 71557,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-115/solution.py": {
+    "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+    "bytes": 1277,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-131/events.jsonl": {
+    "sha256": "45ab539586161809a4ce561e50ee58689aef5302fdd06f6255f951db5477f125",
+    "bytes": 80676,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-131/solution.py": {
+    "sha256": "99d95d2f2e56753d2ea4a0437bc1afab5c1e200b348b49278dbd646b1386dfe9",
+    "bytes": 414,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-137/events.jsonl": {
+    "sha256": "22b15879ffcfe5a5230732cf886a2f07454f5160cbb118fcfb4ee0d0f6f902db",
+    "bytes": 102400,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-137/solution.py": {
+    "sha256": "f1f3df06664d42429d1a13b5650f0fb678712814410522567291d840ada93b2d",
+    "bytes": 936,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-146/events.jsonl": {
+    "sha256": "9efe963bb929850e9a2e969b675937e8b2a0e6e588cd35b4abde9c33d67e46c8",
+    "bytes": 63820,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-146/solution.py": {
+    "sha256": "cf8f333e1f4978ae6478dfa77c0d1a135940bbf03745c70cf41f44d9671a23c1",
+    "bytes": 762,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-148/events.jsonl": {
+    "sha256": "89f20f81460774e23d59e8dbcefbb18027c61d9b5f0e4d7ac4464b5b16416035",
+    "bytes": 62463,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-148/solution.py": {
+    "sha256": "1702a0349fab8a7b0f0d2451c96e4406125debe6ffbe8495d6c583bd6cdf0c8a",
+    "bytes": 407,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-149/events.jsonl": {
+    "sha256": "ed63e257967d4cc33cd863a32cbad56b2b2136b618132d884ad561511b186fd4",
+    "bytes": 71515,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-149/solution.py": {
+    "sha256": "ec7fe03c8451767ae947fd7c464067c9a40186b36b1e412fca91530114591e2f",
+    "bytes": 1000,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-154/events.jsonl": {
+    "sha256": "a3a6d6f408b57c6d81fd79973adbe179a8ca6208d39321c18429253d1682a7f6",
+    "bytes": 81014,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-154/solution.py": {
+    "sha256": "ec6e850ade8d7a8e97be0b72c5698e00f828591acf6cb53bfd69cbf17385f80c",
+    "bytes": 684,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-156/events.jsonl": {
+    "sha256": "2a90cde6563fa4ff1fbc27c81eb81c98c2423b30eb4c0eb8bf1fbb13d13daced",
+    "bytes": 57803,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-161/events.jsonl": {
+    "sha256": "a46aed1770ce414cecd0d03d59a7856baf8bbb8d0548f21b4b6c66159e65cea8",
+    "bytes": 47914,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-161/solution.py": {
+    "sha256": "788241e207ecc80cab31dc00a99c5dc524e89e1f52ed9d6adc3862c1c3ac6b8b",
+    "bytes": 836,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-162/events.jsonl": {
+    "sha256": "1e0a954d478bbbe6fff041d00d718f38a132a1c0f55bd78ebfe5a2b5f5e7ff5f",
+    "bytes": 54777,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-162/solution.py": {
+    "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+    "bytes": 342,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-2/events.jsonl": {
+    "sha256": "af2a5b2dbe1b6e7d6752f9df61b602089095b24faa4a0f619f658a108c97eac5",
+    "bytes": 49376,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-2/solution.py": {
+    "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+    "bytes": 360,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-32/events.jsonl": {
+    "sha256": "9f732203b826034188518f93031e8573ddb4423fc7b419cd2e22ce44e0a1adf5",
+    "bytes": 134607,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-32/solution.py": {
+    "sha256": "b34640ba50a4a7eed5080140155e6fdc8173c945574a0026dd74c0db6b8ba0c6",
+    "bytes": 3425,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-35/events.jsonl": {
+    "sha256": "585b35aeb367f293a2f6ebdfa2cf66dfebfb7faa8fcd4a462012aac28861a714",
+    "bytes": 48867,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-35/solution.py": {
+    "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+    "bytes": 200,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-47/events.jsonl": {
+    "sha256": "7eeed2ad5d2ca9fecf0cf8a037f15728aed547980468921cec0dab2e9e0188a2",
+    "bytes": 95041,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-47/solution.py": {
+    "sha256": "dd55ab53b051ac7889e3c993095682ae6e49fc05f1fbbd266418bc0de4b285f1",
+    "bytes": 351,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-50/events.jsonl": {
+    "sha256": "6b8b69b00b0152c304878454cc50854c2a2210e358a34dc35d17ad222f3ac163",
+    "bytes": 62975,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-50/solution.py": {
+    "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+    "bytes": 412,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-6/events.jsonl": {
+    "sha256": "b82c4cd31ed3f5ed74d102a9ba5622f40376d11f530a431ba0a52a20f20be9cb",
+    "bytes": 100349,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-6/solution.py": {
+    "sha256": "386337a61f6e3bfd0185707162af923663374eae215d230a7535af8c7b4556c4",
+    "bytes": 857,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-72/events.jsonl": {
+    "sha256": "3cdb2efda7b571056c78adc5881280b631c806a977c267a870e54a793253569e",
+    "bytes": 49213,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-80/events.jsonl": {
+    "sha256": "3747ac9cc3e03319ca316dfa06944c22f6783e72339e19cf08ee459a844167a2",
+    "bytes": 48659,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-94/events.jsonl": {
+    "sha256": "67c7701cb971e5ffc0aa8e3b92cf04c13dd2f0076e5790dbe243ac010bb14445",
+    "bytes": 55354,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-94/solution.py": {
+    "sha256": "4175178e89aff6fbce069753a75f2cf41d8cf643397babd447d25a7f45d185af",
+    "bytes": 1249,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-97/events.jsonl": {
+    "sha256": "1c9c325716b648aeeff19fa00402fe9299031b4197dd0130947f7460263df84b",
+    "bytes": 58172,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/HumanEval-97/solution.py": {
+    "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+    "bytes": 421,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/manifest.json": {
+    "sha256": "e8ae7102eca57fb47f358f8b49ab980139db33b238febefbb73963d14ea9c507",
+    "bytes": 1220,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/summary.json": {
+    "sha256": "f2b40fa8433c2769232aa1e3151d5382d4d37af4b7c3afb023e4845dcd060193",
+    "bytes": 537,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20/tasks.jsonl": {
+    "sha256": "f756c739063f709d54be2bb2e759d5a01270ea4ce6c1e9926b4d8b85fddd56ee",
+    "bytes": 188296,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-analysis.json": {
+    "sha256": "396d0a6d83aa17df945f39ae9372468f9d92a9d08bf5786daf9c3c8e3b554046",
+    "bytes": 95401,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-driver.log": {
+    "sha256": "b6fd3e49642e63362ee53379fa8399a908dd836247e29a55b9be6a6db5d687a9",
+    "bytes": 1036,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-fixed-fixtures/summary.json": {
+    "sha256": "5f71ee46f97e48ae4d874523047f5b13deb59edfc401b306601b42f7e1d79712",
+    "bytes": 42541,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-footprint.txt": {
+    "sha256": "6d7bd8a48547aa52b8cf4a978f71d20e287b69000c18a9a8018e46d3b0555f19",
+    "bytes": 5873,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-initial-health.json": {
+    "sha256": "8236052fb8856a3bfbf412e15a6aec38dfa137c9b1a506bfd30e54c62da2909b",
+    "bytes": 295,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observations.json": {
+    "sha256": "fcd9b1c11ee12a92325191975413da46fa8cfee9e80e2fbd55f3982d54a75cff",
+    "bytes": 621923,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observer/coordinator-persistent.log": {
+    "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observer/manifest.json": {
+    "sha256": "8e254b06aba717ad965a8e0131b289f423cd3b435cf629d5470ae31246e57133",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observer/requests.jsonl": {
+    "sha256": "e84174ddd4cdde407352633cf7a8299fd7af3a89878af51d0348d8f512f19505",
+    "bytes": 613280,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-official.json": {
+    "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+    "bytes": 2661,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-official.log": {
+    "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+    "bytes": 424,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-package-manifest.json": {
+    "sha256": "1080d7ed38ea3b00b0bdb60d851e988b62be0219f7e9eb6ce2621df0c639e6b5",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-paired-replay.json": {
+    "sha256": "22fe0ce9b0d08b84e513e9920f91b8f8759fc77ffd31be7f7fa254cebc2504a4",
+    "bytes": 37719,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-performance.log": {
+    "sha256": "3bd21bdd1e598963e9d701f9890f6d452490a9ed5b733ddb4e2e7f59e655163b",
+    "bytes": 346,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-serve.log": {
+    "sha256": "fd9a7aa7cd5dc13281e53117277821a1d5fa0bd9c982f4db1e62c765f665914a",
+    "bytes": 446801,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-summary.json": {
+    "sha256": "72c9ca60abfd44e072e276b1ba198df2b4d779f18b7e04a7a998cdcbf342376f",
+    "bytes": 529,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-window.json": {
+    "sha256": "3d48a73e54f21f7d778d2d63fef0d706ea7c37b6bc249d803f323b1405fb1563",
+    "bytes": 247,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20-worker-persistent.log": {
+    "sha256": "cab69a01bb8656ce2f6e6b07ea77c6a10d92f447b368c6e7d689009a2e66bc75",
+    "bytes": 3545281,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-human20.log": {
+    "sha256": "7b70d4d94876ceb08e4cf89bc5ac2843998704a514dfa50aaea773826d2a147a",
+    "bytes": 1406,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-149/events.jsonl": {
+    "sha256": "5617905fa28ff5a26f85e8335b34b8a2cf62dd788079e6c7b8aedc838e5ba80a",
+    "bytes": 54608,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-149/solution.py": {
+    "sha256": "3ca8b8c68e20767beedc84c4e63d1ba91f04df64595b9c4cf64ea8edf79d3b33",
+    "bytes": 1010,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-156/events.jsonl": {
+    "sha256": "c9cf90441e80e13aaf404a52b2e7f0f14892f65cb4186c8d8b6be4c0ef09bfdb",
+    "bytes": 48895,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-72/events.jsonl": {
+    "sha256": "936ec02d68ea6c53d6662920a26ecb12d9f8c490c44dc283a70ef949fb37b677",
+    "bytes": 48884,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-80/events.jsonl": {
+    "sha256": "aefaca00dfbd4bd152cb60c4932375b869632a62f6857c624e215c0b1fdb2414",
+    "bytes": 45366,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-94/events.jsonl": {
+    "sha256": "7cf76bceb93a7701cb21a22f2f52d5f7d0373dbeb93cabba5796d8d9bcdf956c",
+    "bytes": 53047,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/HumanEval-94/solution.py": {
+    "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+    "bytes": 1135,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/manifest.json": {
+    "sha256": "9eb307abfb84d7183ea7e5ced81434fc5441314af780bd571c47d81f51666f43",
+    "bytes": 913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/summary.json": {
+    "sha256": "b65f938b818e8baa4511e1490cccdef0e3825f2c239f5b40c19eb272e613ac44",
+    "bytes": 513,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot/tasks.jsonl": {
+    "sha256": "901bfcbaee6cb5881b04fec5bd46797ba7be1ebef7db1d9b34fd50794ed051d3",
+    "bytes": 31408,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-analysis.json": {
+    "sha256": "f21a1333d449e5bdc11fe5ca5d5bedbf79c0b50e31efd2e7ef083e9eb8387c62",
+    "bytes": 17730,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-fixed-fixtures/summary.json": {
+    "sha256": "7220c89cf4962607a6782c0bc54c14b15ce4ece853326095731f833c5b073ddd",
+    "bytes": 42668,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-footprint.txt": {
+    "sha256": "88965ee4058aab9c2a4c2e481ebd28149f4481c6059de365598f95052ab72dd6",
+    "bytes": 5734,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-initial-health.json": {
+    "sha256": "7bea9c5e6895048edb76b4cb4048b67d994c2480e0bd15733cbf0ba64160a31a",
+    "bytes": 295,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observations.json": {
+    "sha256": "d6656b53709ce534f0f36af2e5c44214542f66155d12eae7c3156b4a305e1ee8",
+    "bytes": 89044,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observer/coordinator-persistent.log": {
+    "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observer/manifest.json": {
+    "sha256": "854d2c3bb0dff349bb43055926b039adb724d0872b0bf787dd15e4fce0d2d87c",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observer/requests.jsonl": {
+    "sha256": "c6e87410eb1e9034a62a005a2b9618fa989666e7f84b8fc5297136e31e301b6d",
+    "bytes": 119319,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-official.json": {
+    "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+    "bytes": 958,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-official.log": {
+    "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+    "bytes": 116,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-package-manifest.json": {
+    "sha256": "1080d7ed38ea3b00b0bdb60d851e988b62be0219f7e9eb6ce2621df0c639e6b5",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-paired-replay.json": {
+    "sha256": "4160d4cf37eaa6d56f9aaecf9c5e7547469611a0dd4455137d0cb8d4a644c035",
+    "bytes": 37859,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-performance.log": {
+    "sha256": "791c14aa5c35af279c3b2a4bc722ddcc56cdf801f77f1b8b19e58bfb37c88209",
+    "bytes": 338,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-serve.log": {
+    "sha256": "a3f8682ca299e66e460ef606ac72c5c5c4e46a309a6abfd0b15ef51e3b18cffb",
+    "bytes": 76541,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-summary.json": {
+    "sha256": "25be7e74660d6cd06c909065b91a3bbc4dc4486a72dbb0e0cef5f7c013b1bcd0",
+    "bytes": 516,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-window.json": {
+    "sha256": "a2c44ca77170d83489f75c035033f3f24d5b9a570a6665ab60f70b41d62d4ec9",
+    "bytes": 245,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot-worker-persistent.log": {
+    "sha256": "23a319ea6ee6e198775aeac167a4f15ff480102bfeeefdc8d549ace103eae92d",
+    "bytes": 1965918,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-pilot.log": {
+    "sha256": "8d9afb576ca0ba75ca34a1e673b5b25b2e3beff5da3a244a5e9ae659053cbc32",
+    "bytes": 731,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/main-reference-package.json": {
+    "sha256": "1080d7ed38ea3b00b0bdb60d851e988b62be0219f7e9eb6ce2621df0c639e6b5",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-attempt1.json": {
+    "sha256": "edb1281f648f20d10b539619fbbff5905ca704677232e73969677de37bd841f8",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-attempt2.json": {
+    "sha256": "7368c9e10da0f75b105040af7f3e3f4bfbc90642daf7b2451a413993c2d84858",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-df-human20.json": {
+    "sha256": "e68f4d9a9e56d0a091de66185773ff0b14a9dd405d47a8491fe0ffa807cfe188",
+    "bytes": 522,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-df4-pilot.json": {
+    "sha256": "3de4cddbe3884d21509d0cc9e06c7c36bfc3a00ec2b442dda7a07fb1ec019de6",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-df8-pilot.json": {
+    "sha256": "30d3ab21505fadbc8351a7558cd06d02a54c8a27da54053cb5daab8f4a84dd1e",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-main-human20.json": {
+    "sha256": "2a3c37d9a3307758a46d12cbd8f678252e4384bf33bfb717f4e06b55329c7225",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-main-pilot.json": {
+    "sha256": "065a617d23c20705d6c90219d5ba70decae3cc1d4018583bd22441da4c3c3e80",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-mtp-human20.json": {
+    "sha256": "75c74c70797a8591dbaef887fbb50a29179286f8e34f6558f069cd8ab6be94cd",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-off-human20.json": {
+    "sha256": "0a84d49f05d955447831abc4309760779809fdc4527e3256399558981d0eca6a",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-off-pilot.json": {
+    "sha256": "581c892afc8cda275d519989cc588a2ce7e6d56aad4a181b59dd0e546e6be758",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance-before-target-diagnostic1.json": {
+    "sha256": "37faf27fb5c3baa00f6e77f7ec96284644915a5f639060edfde394258ae1212e",
+    "bytes": 524,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/maintenance.py": {
+    "sha256": "70e7ff78d11bdebecf97ae88eed5574d37e4455713b031e0a962512c031f9091",
+    "bytes": 4913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/monitor.py": {
+    "sha256": "bf9cd5b3696038d5963a22fbfbbb998d88e7d16da712607bda8bab73545aba05",
+    "bytes": 939,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-115/events.jsonl": {
+    "sha256": "b0e1abfcd05f8a93cddf302f47ae48b12badba6b6f721d17f18e7b0085ef134b",
+    "bytes": 52484,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-115/solution.py": {
+    "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+    "bytes": 1277,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-131/events.jsonl": {
+    "sha256": "83bb91b6fc4db81b4c65059550b188fe60ea3eebaf194930fca7c437de69772e",
+    "bytes": 49986,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-131/solution.py": {
+    "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+    "bytes": 413,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-137/events.jsonl": {
+    "sha256": "b8f997607a87ed82af4680ca0ad8fd9c0be0fe9ded11bc04bb0f64717bf39a26",
+    "bytes": 87858,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-137/solution.py": {
+    "sha256": "6ba40678ee5a518c13903cbe894fa24f62b74a0916f6462ed80b05b0871f234f",
+    "bytes": 936,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-146/events.jsonl": {
+    "sha256": "3d6f3cc55ccabde1b57e0a02c62a07fd03ddd67a70144c9bd55fff969b8495fd",
+    "bytes": 96846,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-146/solution.py": {
+    "sha256": "2db6701f26f41633f8af05d87c3b22d381f47874c28260f3845a875b9fe098cf",
+    "bytes": 918,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-148/events.jsonl": {
+    "sha256": "f0ace74b4ad640deaf71499717f8c0fdef4ffd45afdfad503fcd4149c812ec3d",
+    "bytes": 54387,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-148/solution.py": {
+    "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+    "bytes": 1155,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-149/events.jsonl": {
+    "sha256": "b355c8e2451802ea7b394895c491239057df11760a9d890f1f80bdd06eae2923",
+    "bytes": 25183,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-154/events.jsonl": {
+    "sha256": "828d72a703a2e1d68c4f54c14d0f856a33c28a30152f15d187850a56e04604d4",
+    "bytes": 98649,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-154/solution.py": {
+    "sha256": "b4088d4896a21dfd8eb2f823c3d643e8fd50859583cce734c6df2d6c9bc6459f",
+    "bytes": 685,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-156/events.jsonl": {
+    "sha256": "494f34793732bb4ed83cd672c976fbb04515b5d160ccc664f44eca0b59cee21f",
+    "bytes": 65011,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-161/events.jsonl": {
+    "sha256": "7c88f306ae1d7897308572ecbd11b0a12f06baf67b9d646fcaa492f86ec6790c",
+    "bytes": 47847,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-161/solution.py": {
+    "sha256": "fb3312522e5fc72292bad3ba90a2980c21f187734a8442afc2cba263bb378ca1",
+    "bytes": 832,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-162/events.jsonl": {
+    "sha256": "52d616956fd432df50c2fb8181c035af93646ac5f2f5166d4fe38ee23207d085",
+    "bytes": 55001,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-162/solution.py": {
+    "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+    "bytes": 342,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-2/events.jsonl": {
+    "sha256": "c68a94e2b150208ce3e909dc1a9e53355ef3848238dc084dbe75dc036f06e875",
+    "bytes": 49355,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-2/solution.py": {
+    "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+    "bytes": 360,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-32/events.jsonl": {
+    "sha256": "07ee4994eac3ff6562e09ce8c697a2e01222f68f01a1ab4ec251f2a3f6306296",
+    "bytes": 61099,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-32/solution.py": {
+    "sha256": "6fee45865415f1027ee5e4ab188d7b0efb393d9b8ade7ce60c7e7171fbb567ac",
+    "bytes": 1929,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-35/events.jsonl": {
+    "sha256": "aab4e5297b7566110bcb1b167833cd7770a2c4329390bb321476675e86e49b94",
+    "bytes": 48834,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-35/solution.py": {
+    "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+    "bytes": 200,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-47/events.jsonl": {
+    "sha256": "a120025d3096addd99da5dc3b68ae75e64dd932e4346656de9232ccf565bd148",
+    "bytes": 98817,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-47/solution.py": {
+    "sha256": "2bfd2ad421479ba5092c9c8bdad6f554e4d76ed977c52b4f79573985bf5852aa",
+    "bytes": 404,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-50/events.jsonl": {
+    "sha256": "c8af850bbba5eafbd259ef12f40ad67bcfb218bdcd655c13efcace5d0c42edd9",
+    "bytes": 49164,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-50/solution.py": {
+    "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+    "bytes": 412,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-6/events.jsonl": {
+    "sha256": "9b0c5cba387c256fa5875ca5b36ea47a208115a46173ebd627ead51d52a49c8d",
+    "bytes": 62479,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-6/solution.py": {
+    "sha256": "8070deaabf301e8946b034d6cb278dd859d42e7ec0c386c6a80830ab732209b7",
+    "bytes": 856,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-72/events.jsonl": {
+    "sha256": "d023019c9f95812e31e2bf94e8bb721b2bce392ee165e7be36575d24b1c68971",
+    "bytes": 48898,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-80/events.jsonl": {
+    "sha256": "73b9dc895c89fe5de1e174fd6cb1ad83768e8ef36baf325f7abb61eeef1bdb90",
+    "bytes": 47634,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-94/events.jsonl": {
+    "sha256": "6260bf0cde7adeb447a7ca44052f275e14f1395d39b29687e3516176b9a3df5b",
+    "bytes": 54834,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-94/solution.py": {
+    "sha256": "2847833c0e9431c13601f6e1c7f565c71947764c6c26b4fda097d527bb6e98aa",
+    "bytes": 1244,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-97/events.jsonl": {
+    "sha256": "26eeed66d8c141aa7ce55d570a3039e6264e809ca14c6c7a439453ae448c1350",
+    "bytes": 59031,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/HumanEval-97/solution.py": {
+    "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+    "bytes": 421,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/manifest.json": {
+    "sha256": "a3731909ec15d22abf04c41ae0356d53a2c7520a4d801150072976d5fffa6c53",
+    "bytes": 1220,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/summary.json": {
+    "sha256": "798b1433d7c77f976e7d3ca87d2ee328dcd6182da7a124f8c113ed790b913ac3",
+    "bytes": 536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20/tasks.jsonl": {
+    "sha256": "352d20a4d86ca02124e6ccbc4494d058244e107022497b468591fd39226642f5",
+    "bytes": 158038,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-analysis.json": {
+    "sha256": "637660ef157e8b743bcafbb6960167066a60b5832fb49a6a2b8c445c08b03b15",
+    "bytes": 82328,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-driver.log": {
+    "sha256": "52fffd3a8feeb07f654703fb3f149a87220ce0aa160249abdf768ed325f00b5d",
+    "bytes": 990,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-fixed-fixtures/summary.json": {
+    "sha256": "ddb25bb5397288a718a8829e0ca1e8285f90db6a0f9291c5e0aa52760d925fbd",
+    "bytes": 42506,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-footprint.txt": {
+    "sha256": "4af9591c47baaeafaa8422e16ef2281c997e0ccd5defde8d22dd0642ca224f25",
+    "bytes": 5873,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-initial-health.json": {
+    "sha256": "9b88e902119b4235de19c4669e70dcc180a682b83d7536b5033f311637d8d69a",
+    "bytes": 292,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observations.json": {
+    "sha256": "a130eef674c016b11f930078011d4c3c43e73045ab01cc7250e9751674e9a66d",
+    "bytes": 520981,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observer/coordinator-persistent.log": {
+    "sha256": "4fce8a85af47ffba6b76a9502f10fe883568ece27d367d38f2c96f244edac401",
+    "bytes": 867,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observer/manifest.json": {
+    "sha256": "21b099e1b854ba4a1f2a5e4d15c25be5b28e75aa588ebdebfeae955a65808cbb",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observer/requests.jsonl": {
+    "sha256": "118cb45fc35eb37cdf8a28e490a4030d665a71b0d9f75a69a0f75b172422f45f",
+    "bytes": 519674,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-official.json": {
+    "sha256": "0cb18ffb96d20a2a339765d5b9c1fb9e16fef356eae67773ec95f1f5851656b4",
+    "bytes": 2629,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-official.log": {
+    "sha256": "9c340a8fd4ae510ce47c72b3c919148cc899c5cd8ffed03d26faca1dd8888b1f",
+    "bytes": 403,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-package-manifest.json": {
+    "sha256": "a801de3b1cf8e577f695a94a633f16e8d48c8949ee5d71e32afe36603280b6f5",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-paired-replay.json": {
+    "sha256": "7386d6678eb346002f0add46e7b527cdece9ecd59a669f4eb06db4f8134753be",
+    "bytes": 37734,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-performance.log": {
+    "sha256": "10b155ea3de3cda42b31faeb8026eb7693a2c16b06ae0d0040ad25373d203738",
+    "bytes": 325,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-serve.log": {
+    "sha256": "2e850503445cb8fa9359d34fc8ae8743f655dcc2b75246a3dff31a5e38237172",
+    "bytes": 357865,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-summary.json": {
+    "sha256": "4330396d3518eb37f9737f9880edc5fb174479c82e4fc0e5264c25711558c29d",
+    "bytes": 492,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-window.json": {
+    "sha256": "360a7ede627b45e2991fa1f7e60df803e4f9b997326a95fec5e5ea529c1bf1b2",
+    "bytes": 246,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20-worker-persistent.log": {
+    "sha256": "f4fbe66a28245d60a6ba9abfe92de3ea487041eb6226d3bb63a64a3e1076e88d",
+    "bytes": 77924,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-human20.log": {
+    "sha256": "530000875e64d6c1068ea3e758c5ce5c9371fa2f866088142a5fc077beb52b8d",
+    "bytes": 1406,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/mtp-reference-package.json": {
+    "sha256": "a801de3b1cf8e577f695a94a633f16e8d48c8949ee5d71e32afe36603280b6f5",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/observe.py": {
+    "sha256": "ddc2bb1aa91c5f2e2278427514c2dda01bae38ec42518c0d5dd607e3d649fe72",
+    "bytes": 10263,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-115/events.jsonl": {
+    "sha256": "20dad445c6e669b564ed9c2b005d16aa1f721a101ffe482ff8f41c23f2925b25",
+    "bytes": 52734,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-115/solution.py": {
+    "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+    "bytes": 1277,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-131/events.jsonl": {
+    "sha256": "f8b86fdde1222a5295bb671e71dcdbcb3fa602a3c7c83d7af580ad727efcab89",
+    "bytes": 49634,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-131/solution.py": {
+    "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+    "bytes": 413,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-137/events.jsonl": {
+    "sha256": "f5c466e614b06e6dd74c80f7a19ffecea5d7aeeabfe294c56aa183b1a86cc513",
+    "bytes": 66786,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-137/solution.py": {
+    "sha256": "df081a0145615e33c2580814840e2ec48004190ade5ad2705c15a808455f63e3",
+    "bytes": 935,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-146/events.jsonl": {
+    "sha256": "2ef7fcf90823da13a07ebdb638d3677b33f82a3a85f441c129191379f3d19b18",
+    "bytes": 104760,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-146/solution.py": {
+    "sha256": "dc2461f31f86f23bb47484f1fd8c80e4caaa605eed292524b8af44e59b594b88",
+    "bytes": 923,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-148/events.jsonl": {
+    "sha256": "99a43cc951425860f488d93970cfdf6985d898b3113f1fab1e45b4a5d6d6b7ab",
+    "bytes": 94874,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-148/solution.py": {
+    "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+    "bytes": 1155,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-149/events.jsonl": {
+    "sha256": "0eac318580155929f4d91d72efcf974a62704e34dc64f48f84c292b37f96049b",
+    "bytes": 57396,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-149/solution.py": {
+    "sha256": "f5b30cf3f741ca918b99a6970b23524c34135be31f99fe36b36bae2faf320138",
+    "bytes": 1195,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-154/events.jsonl": {
+    "sha256": "4c32d39776a70e5656f1412e3dc9482f112ef3966e1d7d3d088d1d9d1709da4e",
+    "bytes": 90927,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-154/solution.py": {
+    "sha256": "9ffde35323507f0b13ebc37090475d24e849c3adf6a985bbbca33889e78b9d90",
+    "bytes": 646,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-156/events.jsonl": {
+    "sha256": "1c223deccda73e899bf1c02c8cf2534f5db1d37a7a31c0e28be4511aa11514ce",
+    "bytes": 64826,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-156/solution.py": {
+    "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+    "bytes": 773,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-161/events.jsonl": {
+    "sha256": "aef96b38e6897a112f629d74c7adf6a977df317383005548394a21725525e154",
+    "bytes": 66371,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-161/solution.py": {
+    "sha256": "a0d9dbf0c4011d8e4670d27beb42956cb5564f59f541bb55a7d3461be01f4f05",
+    "bytes": 879,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-162/events.jsonl": {
+    "sha256": "0407a45ad92c3d6270fb7fec05d61113356bb719f1d69a31369ec53bc62865c6",
+    "bytes": 50157,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-162/solution.py": {
+    "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+    "bytes": 342,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-2/events.jsonl": {
+    "sha256": "e755969f48e5b8df58eeee5e2253c45a9feea90ecd8526a92d7ce14f4620eb3b",
+    "bytes": 55011,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-2/solution.py": {
+    "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+    "bytes": 360,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-32/events.jsonl": {
+    "sha256": "39a2570d7330b7d3607ad537054182fffd8a812200140b2a0676421a4e285f8f",
+    "bytes": 163228,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-32/solution.py": {
+    "sha256": "4e31c78788156787911a08c42c03382d8b7daed9d24c7224bc01d99365c86261",
+    "bytes": 3506,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-35/events.jsonl": {
+    "sha256": "1c2f36fc021ad802bd9f7c62eb041d8736fa45a69e3c2a9aea2b6453abde494a",
+    "bytes": 52499,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-35/solution.py": {
+    "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+    "bytes": 200,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-47/events.jsonl": {
+    "sha256": "b56e4e63ae5f422d69553ed52b7e43021fbe3e26164ddb1d36717499f33ff2b2",
+    "bytes": 96978,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-47/solution.py": {
+    "sha256": "ef748e09d8a11301058dcb7fe8648e1dbe1c9bdbd99638c76e9f44de200fd018",
+    "bytes": 344,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-50/events.jsonl": {
+    "sha256": "2344a410664b45bb274e4ab2debcfe4530c78fe95f5dbd4e878aa50834864297",
+    "bytes": 89797,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-50/solution.py": {
+    "sha256": "0e667f90adff903cc0ecc0e555186ff1abe63d7c73cc7b4729f6212e3ba0f63b",
+    "bytes": 413,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-6/events.jsonl": {
+    "sha256": "a73ad45c48f2da7a2ec183f0d4e9f6b633b94132e1da348140386b7495c912fd",
+    "bytes": 82879,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-6/solution.py": {
+    "sha256": "386337a61f6e3bfd0185707162af923663374eae215d230a7535af8c7b4556c4",
+    "bytes": 857,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-72/events.jsonl": {
+    "sha256": "56b253a3d03c32360f5d19a4bd72afdd66912a72df6d3ffb10ed95d9f567ee14",
+    "bytes": 48924,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-80/events.jsonl": {
+    "sha256": "4e9e3cca043c354342050e28c2f64dad30aeaa8f4f854767f90759d2cf2de0b3",
+    "bytes": 48675,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-94/events.jsonl": {
+    "sha256": "7f6a572c06205b594ff7acaa4c54af62a7554e16da739c7860eb29fc9454bde6",
+    "bytes": 72259,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-94/solution.py": {
+    "sha256": "4175178e89aff6fbce069753a75f2cf41d8cf643397babd447d25a7f45d185af",
+    "bytes": 1249,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-97/events.jsonl": {
+    "sha256": "c4f8b10db45384ecc4c8628c0792bf3edbdfb35fb5ed431025764e7f3794729f",
+    "bytes": 59065,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/HumanEval-97/solution.py": {
+    "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+    "bytes": 421,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/manifest.json": {
+    "sha256": "43392535fcc1aadf8ff20c156e63242f3bd82f894b7c41ce6b6371ebd92c4e14",
+    "bytes": 1220,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/summary.json": {
+    "sha256": "a0ce57a8ca01d5a1630314a7e16bd587c8286fd485f5d02a1bf926c40f151adc",
+    "bytes": 537,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20/tasks.jsonl": {
+    "sha256": "42619b3d59a71dcb61463689aca47d519b5cce5980b3b94cfac7d4e10aaf8ad9",
+    "bytes": 202123,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-analysis.json": {
+    "sha256": "523222a0a5c647d7d95e93fced90c9365d8204987e40ff724f1b8a836ff72c33",
+    "bytes": 102757,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-driver.log": {
+    "sha256": "cbfa9cf94b55923ca2e7aa5737293c66afd18c5e9f320c81229070ac9b3b4b50",
+    "bytes": 993,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-fixed-fixtures/summary.json": {
+    "sha256": "9b012af3812f8f504d30cfe51c14485aafbc9cbf80261b6e4b7a637a1d2e4c61",
+    "bytes": 42527,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-footprint.txt": {
+    "sha256": "0523a5d3ea43ed8fda8a1c09b0b9bca38e582f9b80dcc4bc3f613a5d9ccac558",
+    "bytes": 5873,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-initial-health.json": {
+    "sha256": "6ac139017f1ab8c6bf1dd2e5d01a54edc1ac0849f3dbd893f3ee035453df7dce",
+    "bytes": 295,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observations.json": {
+    "sha256": "8aacb00a9124b94b922143da30c2d13b2d0aae988356ed7c7cc11ec2b7b011e8",
+    "bytes": 679569,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observer/coordinator-persistent.log": {
+    "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observer/manifest.json": {
+    "sha256": "f65a31c3de54efd63c114393f77c1946a7f315f9fe07c2cdb272951187136c63",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observer/requests.jsonl": {
+    "sha256": "23c13815b5c01fd6a7d6ad7dadb63a802de1c2b058820349d68832d5ecd94217",
+    "bytes": 666921,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-official.json": {
+    "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+    "bytes": 2661,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-official.log": {
+    "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+    "bytes": 424,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-package-manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-paired-replay.json": {
+    "sha256": "24588dc64e746d71612994f3dd90ab17dfd9f90ef172442debb613eccf723543",
+    "bytes": 37720,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-performance.log": {
+    "sha256": "bcf41575c2afb65b6c51c10c3bd5170af88b859f75a7c720b540fad240e34ba8",
+    "bytes": 327,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-serve.log": {
+    "sha256": "2c9d5c0f52590aebb42dd78a7825e2df4a9ce6fb5434ed38d013f4cc587558c3",
+    "bytes": 539805,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-summary.json": {
+    "sha256": "16b5d7f1d9f2d5c180cc8341e94e5c9597ab1346b36ce81326a067d9a9da2803",
+    "bytes": 495,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-window.json": {
+    "sha256": "0171f2cca1aeb1bc8c71642d50c27028693282139128eeb3201400f54a7c276a",
+    "bytes": 247,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20-worker-persistent.log": {
+    "sha256": "3940f8078489c2c7fda000bbd9b27864e17614e761a96d36507db4009f576af4",
+    "bytes": 3629289,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-human20.log": {
+    "sha256": "abebda9f4b5e4af7a72f8b2271b12fd477fe3f5c42dd90b5075a1f178b64e4fb",
+    "bytes": 1406,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-149/events.jsonl": {
+    "sha256": "5b9b839be773b20b95b8049ef8b8b3dd8fb15f1c77d8ba6cf4331f4fcb9bbac7",
+    "bytes": 57409,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-149/solution.py": {
+    "sha256": "f5b30cf3f741ca918b99a6970b23524c34135be31f99fe36b36bae2faf320138",
+    "bytes": 1195,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-156/events.jsonl": {
+    "sha256": "e20f0b53d87b591ff1793be2d1348b68289d0f2220fa9938821ee73de70ad537",
+    "bytes": 83703,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-156/solution.py": {
+    "sha256": "37f76457c42f9453d034d12f8b046b66073b22b963535f918e6fb9a6b8435824",
+    "bytes": 774,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-72/events.jsonl": {
+    "sha256": "69a90f23a977d5bdbb954cdf980e2e9c070f57a3e0f03cbb9e8d00f34c88fdf3",
+    "bytes": 49140,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-72/solution.py": {
+    "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+    "bytes": 911,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-80/events.jsonl": {
+    "sha256": "563035fab9bfd8e0652a19fd67377f07b886f5b461d0dc88e8f1df3486a3898f",
+    "bytes": 48297,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-80/solution.py": {
+    "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+    "bytes": 571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-94/events.jsonl": {
+    "sha256": "e7f1edfdbaa4d0259cf3b692eae51939d13964eeae0afc376d792697caa3e923",
+    "bytes": 52996,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/HumanEval-94/solution.py": {
+    "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+    "bytes": 1135,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/manifest.json": {
+    "sha256": "aea05f994a5dd531af788dc3bc4efb03f8450127bc343e9a0c73a89aa46469b9",
+    "bytes": 913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/summary.json": {
+    "sha256": "459ac3ec64449c8452205f9ccf0caee0c937dc6474808b2013db6c76abe3e1d7",
+    "bytes": 522,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot/tasks.jsonl": {
+    "sha256": "9c5c3099a5dbe0975f0a9e7539a3bbaa7a5e7ffd214bd9e42c38b065b197a9d6",
+    "bytes": 37484,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-analysis.json": {
+    "sha256": "8c66e97f0c87b13f267fe2a69375a75badc466861ca9e18a4c3e49ad5f410603",
+    "bytes": 20802,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-base-coordinator-persistent.log": {
+    "sha256": "f04602b17b41039dfdc3e4b00dfb186b4964de77aceda92396a59fd7729415ab",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-driver.log": {
+    "sha256": "07ca79feb30408a4534b8fd9a82739b83b135fcd2fb1ee9f7cb96f4df117f0b0",
+    "bytes": 999,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/128-0-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/128-1-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/128-2-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/128-3-tokens.json": {
+    "sha256": "d833921be2eb93fc95d5d9569af16921ca536e59d63dfe64b53dba8d21d5a436",
+    "bytes": 1004,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/4096-0-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/4096-1-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/4096-2-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/4096-3-tokens.json": {
+    "sha256": "af67dd9b4b6ddd9f53026816484d7e54c4f97ef6315e39b393ab63a90defd035",
+    "bytes": 31100,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-fixed-fixtures/summary.json": {
+    "sha256": "466e7b5ab25e7b6ee0e052201b7018281752f3ba2ae4a13e2c8fef0782cadd33",
+    "bytes": 42671,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-footprint.txt": {
+    "sha256": "a7421f65d8e3725c5472d799268d7dd4284c6e04cfddcc3542d063425fa09d27",
+    "bytes": 5374,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-initial-health.json": {
+    "sha256": "fe6d4f169ff2f873c4ed19c8de45d4f71029f2baa3600304fc6b497d9a29f5fe",
+    "bytes": 295,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observations.json": {
+    "sha256": "869dd6144e0e29662ab8768b3b90f34ec4273d2af06441ec8d79b494d7783c89",
+    "bytes": 112484,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observer/coordinator-persistent.log": {
+    "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+    "bytes": 70,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observer/coordinator.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observer/manifest.json": {
+    "sha256": "962ce866dd3bbba7807bd38bcf763af8bf6c0899f81003c7ffabe27c65d21fd9",
+    "bytes": 744,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observer/requests.jsonl": {
+    "sha256": "11a23391eaf6170dccf63012e9c4b178cd0d98fb2d9f1c5f59b2fc921456c00d",
+    "bytes": 141001,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-observer.log": {
+    "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+    "bytes": 61,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-official.json": {
+    "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+    "bytes": 958,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-official.log": {
+    "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+    "bytes": 116,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-package-manifest.json": {
+    "sha256": "034bb63eb23d6ce9bdd2f81e8ea3b1cb5b684afb27dfe191a7175a73313ea093",
+    "bytes": 1207,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-paired-replay.json": {
+    "sha256": "d8894ca60ae6d8ce81bb24528c4ef3ce13909b7fc3d2c55069c27a1fc86bea3c",
+    "bytes": 37846,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-performance.log": {
+    "sha256": "d8e9d3603b9d2dde41c587294e540e276dfdb3be169ea7a960617baa84e3884d",
+    "bytes": 338,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-serve.log": {
+    "sha256": "ec7d713acfca130fb43482d71ada355dfcf6571b9a6a27b43eb26bde72724c29",
+    "bytes": 95571,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-summary.json": {
+    "sha256": "9eb6329da97fc0f1d0c985a2a5e529d7769079f21602a88948c6a30ad420cae8",
+    "bytes": 519,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-window.json": {
+    "sha256": "3ae2d3fc03e2dd60d0a4bdd0342ccba7798fff96c7c7ffd840b28321485ad55b",
+    "bytes": 245,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot-worker-persistent.log": {
+    "sha256": "dab6abdb5b785e1b17164578dc16b23545a39e367c5d7f411be646687992ecd2",
+    "bytes": 2045325,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/off-pilot.log": {
+    "sha256": "265b82dae8f2d1128f9e2b556e7760faee9553ab6f951f9d868239755f2593a7",
+    "bytes": 740,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/original-package-identity.json": {
+    "sha256": "bbe852df4181c5d7663c24e60930ad0f9981c6d1025a4c3dc5c66965b1bcafef",
+    "bytes": 1582,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/pilot-queue.py": {
+    "sha256": "8b9ba031a82b3258f977d6fff75730fc47375478b3255ac7b34e948df444694f",
+    "bytes": 1253,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/preflight.json": {
+    "sha256": "5842724a229bfb8c95773faf422b56b207fb8264e17eaa537a51544b42130e2f",
+    "bytes": 692,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/replay.py": {
+    "sha256": "7676e84a1c4119ebf71c9483089727684862aded08569b6dbdd418102e4c7539",
+    "bytes": 4386,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-df-human20.json": {
+    "sha256": "fd21c5d0f8b24ef20e5ce6af4cb5c9a2e07a7c48a718655a23a18ae196f96398",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-df4-pilot.json": {
+    "sha256": "11f23accefad2a7dbe67cc3be2e62af0b4cbdee7de12f330ee826dfd6dd16516",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-df8-pilot.json": {
+    "sha256": "623a9aba7c328502dcf5cba6f6177e6c6ff29845389e1dda601b45f687e90028",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-gates-attempt1.json": {
+    "sha256": "526b2888c55e80a7ed20154f89583e31bed7c2f12737540b9eaf3a9e410471cc",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-gates-attempt2.json": {
+    "sha256": "403eca2f27dc11a19b0e8f2aefbd165e356d8879222b2605052256ed0bb7acb7",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-gates-target-diagnostic1.json": {
+    "sha256": "5c58524e9724f090704f30766b5aa4d863af5f045d324cad6ab80bd26df08474",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-main-human20.json": {
+    "sha256": "745e8ddd22c5f685de2f4e22ef905d6f0adb9174afe8dfade91aa1c4cf09b398",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-main-pilot.json": {
+    "sha256": "30592b0147df07954c8e4d904c0052feb9a1d6c10f977a47144eb86c67dcd231",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-mtp-human20.json": {
+    "sha256": "6f29c9514f128e1ce8bf0784c1ad6671b501eec63d2fabb9adade4f608131f57",
+    "bytes": 476,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-off-human20.json": {
+    "sha256": "d0754afdde959a81c347695da3086ae1da00c1e3e69d4f4f21b50af8756e82be",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/restoration-off-pilot.json": {
+    "sha256": "619fc2b22a49e7d6581b23481c0d5e793ca900637e684d8a895bac0a3e0baff8",
+    "bytes": 478,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/run-gates.py": {
+    "sha256": "155e2668a1fbdfe179b7ff6ec19cd7e2a6e19b195aa555fb4dc5fe00ff275de4",
+    "bytes": 3447,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/status.py": {
+    "sha256": "c9feca1ae56b93299ca3dfa545f0effdaddb09eba651cbe893bd9293c2ea36b2",
+    "bytes": 1433,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "evaluation/width-decision.json": {
+    "sha256": "723fb9406c9723fd371f19fa33a19df09927a42ae2c14f5738037d29f9ebc23f",
+    "bytes": 525,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "export_results.py": {
+    "sha256": "59ba85563a160d8abe18edf52ce2cde98bba5515f12934042e2af033bb268095",
+    "bytes": 15186,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "final-audit.json": {
+    "sha256": "711e0ffffe70e3edeba21d7e4d01cbf13726cac3a348876b5f9c8c89b79c1587",
+    "bytes": 2400,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "finalize_report.py": {
+    "sha256": "0e0fa54929ea4053b55a28bb18ec0394f7ec1c4e7b3bcba124b49d56e7419110",
+    "bytes": 9125,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/cli.log": {
+    "sha256": "ba5a0067f9db1b2d163a3a738ec193899cd4f12d6d0769dad85fed3396647828",
+    "bytes": 34806,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/exit.json": {
+    "sha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+    "bytes": 15,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/logs/process-1792907716681-6347.log": {
+    "sha256": "7c907b7a51f55ad64fd4a18e423d4f6308c32dcc4adacb985f7e99b2c35063ce",
+    "bytes": 8208,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/model-evidence.json": {
+    "sha256": "8f8fb8f99276c0af14c86e0df9c36ac60f3cae272ea64c4f5c41f45ef3a7f237",
+    "bytes": 29841,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/prompt.txt": {
+    "sha256": "64c81c418618b00dd3e443819436cffab1775c81fbd27a609e5f8a1303d4345c",
+    "bytes": 7913,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/provenance.json": {
+    "sha256": "6e3f2c8b1c031f65df574fda7cc4a88784ce4558d4ef21dccf71b1ad1dd914e5",
+    "bytes": 361,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/review-cli.log": {
+    "sha256": "888bb70a6639593dc7f2966f6c451ac750004e4a4b7e605a42d418c00fc1928e",
+    "bytes": 12031,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/review-exit.json": {
+    "sha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+    "bytes": 15,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/review-logs/process-1792909100058-15402.log": {
+    "sha256": "6f24ee16ef0c02add19c99abb5753673b4f5cf235999a67fd81ef8f28cc55c26",
+    "bytes": 3357,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "implementation/review-prompt.txt": {
+    "sha256": "4b158fe2ed9c286785cd52a7f68944a3c76d3e95329085e0818234d40df1d1d4",
+    "bytes": 2962,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/final-hidden.bin": {
+    "sha256": "a857e392b6892b1e7f9bf5666f318350e7065e7380c0f7f88e5e3fbd1d18347c",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/input-embeddings.bin": {
+    "sha256": "f4c8e23af0ac6b0ae6f0f3886a28d3039d00477e1233e49920ecaf289ce5d459",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/input-features.bin": {
+    "sha256": "6a7770a93da6421c909a5cf0bfb2f0b5f4d8530a6b9d72ca9567632098bea91d",
+    "bytes": 196608,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.0-attention.bin": {
+    "sha256": "1ecae0b9684aade9762987b089f28150bb5521fe9de910a38d5497fae9de9fc1",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.0-context-keys.bin": {
+    "sha256": "de1a6ad4f2224ebffb13610d021b1d6a62ae06ab9217589e97cbba3651706712",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.0-context-values.bin": {
+    "sha256": "f4733214197f7942942823817db422a6b95fb7b5a1186187a46967732c7ec2ab",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.0-output.bin": {
+    "sha256": "5be10222200feb462d8d2ed53075eb4a5307b9677fe4ddefb3502fd697a69d62",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.1-attention.bin": {
+    "sha256": "5e9d85f2f52c99cdfcb2f1cade20df388f0db9da46f2be51982e5dcc151c29dc",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.1-context-keys.bin": {
+    "sha256": "554670667e26b94760aa9dfdab870fce94bacbe1bfc48928c31dfad12f711768",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.1-context-values.bin": {
+    "sha256": "1c958692e908cd5f7028abdb872f33ac124c01a3bb42e1cce2671b91c71df515",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.1-output.bin": {
+    "sha256": "0b7a7846fc6298d6319adc9ab9ff951296a14b4cdbb3f0a1415353f60198aa4f",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.2-attention.bin": {
+    "sha256": "b45b0049ee4ff8f30f63d49389fdcd42ca398351d49e83dbc90a741f6016a78c",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.2-context-keys.bin": {
+    "sha256": "66ce170fe5aa4fa4de3399aeeaa751a83c1194bf803c6d906c74345965914522",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.2-context-values.bin": {
+    "sha256": "2ce06f78ddf2f8ce15318731b3bec267134919fd765026776988f8382ea8501a",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.2-output.bin": {
+    "sha256": "73ea5f134ac3699c793153288926711b1bc63264c4d72e191054b1e1533560b9",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.3-attention.bin": {
+    "sha256": "7b654c9d74169482e25c1995c2c2bd775b10214118a31c158492db40cc100163",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.3-context-keys.bin": {
+    "sha256": "dfc7b5b3c80c94e957a9d8c9e2e072c1de619951a3dd8b0c8fa6131f7f1e85ae",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.3-context-values.bin": {
+    "sha256": "49dcdfab73e06c1838e59e2b6a4ea7a3a7e20a1c4ae631943e3f7e2d8233686e",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.3-output.bin": {
+    "sha256": "dfb4598c85d0bb7d0e08b00188a54e076d634a3a8166e177fd23a68dc875c55e",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.4-attention.bin": {
+    "sha256": "2f8970d99123dff21ca2404835a67a7ab7f72a5b47cd6a4cc2671bfb150f6982",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.4-context-keys.bin": {
+    "sha256": "37b947065a3d80a786c017eed36084ccfb7d4d4bff6bb0d3dbd30e49bfdb413a",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.4-context-values.bin": {
+    "sha256": "9e69fdc06551a325c94faa0edcd73cd6af7c5004227e296e43a01d3d34b593fe",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.4-output.bin": {
+    "sha256": "597b975dc28d1e1b1e7d385710674869791ef834bce26e06a074a9c8ecc45f0b",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.5-attention.bin": {
+    "sha256": "62939a6612505d2673dc95bc7ac0222d4ab5794ba396f2831811b5f7d7dc4e2b",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.5-context-keys.bin": {
+    "sha256": "f55ed78b0e739abc855cbbe340f4db93d8dd6d9862ee51f691559c5c4acb43cd",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.5-context-values.bin": {
+    "sha256": "2218d3fd00fd6d1b34f133638eae8205e23c6e2d5c53a55ea96f71aa8cb3095b",
+    "bytes": 12288,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/layers.5-output.bin": {
+    "sha256": "c6cadae1e8955c6ab730d1e8c89b80c65cf7d1dfb10d21e8cee90518046cfb06",
+    "bytes": 65536,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/manifest.json": {
+    "sha256": "3d88fcdaaa1dc6b49bdfe297b54d1964daa743926c9d78df62a38b5b486cd87f",
+    "bytes": 6683,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/projected-context.bin": {
+    "sha256": "d98b0a7f1ce0b87cd3dc2452dad97d1064723787589affd737d60580d488256d",
+    "bytes": 24576,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/selector-candidates.bin": {
+    "sha256": "ee468d1bb20bdb2a0f715d904216fb4c9dc304a19cf5c96d4f88a026c66574bf",
+    "bytes": 448,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/selector-expected-scores.bin": {
+    "sha256": "4a7c0e57849ed314532fe8aae85c523be7b1b01f16113e314cfaeb2bc7ca5272",
+    "bytes": 448,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/selector-expected-tokens.bin": {
+    "sha256": "ea185b18992e2d24e9c20c1d742b7c760c90fcf2093fb385872ed51e706a51e8",
+    "bytes": 28,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "independent-golden-v1/selector-unary.bin": {
+    "sha256": "27c2c99bd9888d899988ef85a3a5d3a0c855536572f4cadcb3ef3113c562f444",
+    "bytes": 448,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "isolate_numpy.py": {
+    "sha256": "5f99a76305683298bca9666db7e74f223525b49bcb74091582abce9ba727a073",
+    "bytes": 2671,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "numpy_oracle.py": {
+    "sha256": "4ec413791e41f17fab1f36ec964c98f029b9f5bec77b377a0a015e3253287413",
+    "bytes": 8630,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "package-c706064/package.log": {
+    "sha256": "cb14477b34ebbfdb17c6aa55b7e416682b998e722a00e5c05b14d0e947106f2f",
+    "bytes": 127,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "package-c706064/publish.log": {
+    "sha256": "6909529069b027f14dc80d3816963cb0a27d2b187cf5c3ae76a4f85bf5cea42e",
+    "bytes": 1332,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "package-c706064/steps.json": {
+    "sha256": "f58e819f661b21b8c433666310d6d7e735e2b750f4117b1e72963bfbd2a786c1",
+    "bytes": 1064,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "package-c706064/verify.log": {
+    "sha256": "9752217734c3c56d2ff0bc4a29c8b98eedd7a92df1ea396cc7fd3b83df9f5b6c",
+    "bytes": 68,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "reference-revision.txt": {
+    "sha256": "d0ac4ff831cd5260cae5ddd2cf03514551b6100030a2c9ca4de328770ba16ddc",
+    "bytes": 41,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "source-audit.json": {
+    "sha256": "e15e2425f28857e477c4e855dda9238583bedef52a14193c0c14e532a533c706",
+    "bytes": 18725,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "summarize_resources.py": {
+    "sha256": "f2572d594cb991b13febe6847ffd7ceb637ee26ecb2be70a21603773922c0c41",
+    "bytes": 1784,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "target-verified.json": {
+    "sha256": "e4d4933631f5fb1f9d5e4814e2599056073f1a1d84c20b2156d8e56c42b0c2d3",
+    "bytes": 2049,
+    "availability": "Restricted local ignored artifact; not a public download"
+  }
+}
