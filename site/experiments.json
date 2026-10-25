@@ -1,5 +1,22 @@
 [
   {
+    "id": "official-mtp-20261024",
+    "title": "Official Qwen3.6 MTP: exact replay, small gains, G5 stop before formal20",
+    "kind": "2026-10-24 · Issue #76 · local Metal BF16 MTP / affine8 target",
+    "source": "docs/EXPERIMENT-76-OFFICIAL-MTP-20261024.md",
+    "question": "Can official Qwen3.6 MTP accelerate decoding while preserving target outputs and the disabled path?",
+    "setup": "M5 Pro20GPU/48GiB, AC/High Power; main4ca29ee vs candidate17965ce; Pi1.4.0 seed0 pilot5, context32768/output4096; FP32 KV/state; no Windows or DFlash.",
+    "change": "Official authenticated BF16 single-layer MTP on Metal GPU; shared target embedding/head; widths1/2; batched target verification, exact rollback and target-conditioned draft cache. Code PR #78.",
+    "result": "Pilot worker decode main67.138/off65.975/width1 69.416/width2 68.315 tok/s; official4/5,5/5,5/5,4/5. Identical five-request replay decode +3.330%/+4.752%, prefill latency +8.125%/+6.284%. Formal20 not run.",
+    "validation": "Real draft/reference, bit-identical verifier/state, fixed128/4096 and growth gates passed; six captured replays exact in all candidate arms. Both widths passed15 service checks. API errors retained; continuous Metal-driver peak unavailable.",
+    "conclusion": "Neither width qualifies under G5; no adoption. High acceptance97.47%/94.46% does not offset target verification/cache/synchronization costs. Failed tasks and incomplete successful-application metrics remain explicit.",
+    "next": "Review negative results independently from candidate code. Diagnostic main/off/width1 HumanEval20 needs approval to change the G5 stop decision; original adoption thresholds stay unchanged. Original worker restored and verified; no merge.",
+    "commands": [
+      "python3 artifacts/dual-host/issue76-official-mtp/evaluate.py LABEL MODE pilot"
+    ],
+    "evidence": "docs/evaluations/issue76/; restricted local raw evidence with SHA256 inventory; prompts, credentials and generated solutions excluded."
+  },
+  {
     "id": "splash-human20-20261024",
     "title": "Splash 8bit Full resident: 20/20 Passed, native command 3066.61 /148.91 tok/s",
     "kind": "2026-10-24 · Third-party reference · Q8 KV /DFlash2 /40GiB Budget",
