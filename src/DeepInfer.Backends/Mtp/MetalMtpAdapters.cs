@@ -5,13 +5,13 @@ namespace DeepInfer.Backends.Mtp;
 public enum MtpReplayMode { Batched, Serial }
 
 // Native Metal target. Batched replay is the accelerated path; Serial replay is a diagnostic oracle only.
-internal sealed class MetalMtpTarget(Qwen36Gpu graph, MtpReplayMode replay, ulong request) : IMtpTarget
+internal sealed class MetalMtpTarget(Qwen36Gpu graph, MtpReplayMode replay, ulong request, Action<int, float[]>? hiddenObserver = null) : IMtpTarget
 {
     private ulong snapshot; private int snapshotPosition = -1; private int position;
     public int Prefill(int[] prompt, Action<int[], float[]> sink, CancellationToken ct)
     {
         graph.PrepareVerify();
-        var next = graph.PrefillWithHidden(prompt, ct, (_, tokens, hidden) => sink(tokens, hidden));
+        var next = graph.PrefillWithHidden(prompt, ct, (offset, tokens, hidden) => { hiddenObserver?.Invoke(offset, hidden); sink(tokens, hidden); });
         position = prompt.Length;
         return next;
     }
@@ -26,7 +26,7 @@ internal sealed class MetalMtpTarget(Qwen36Gpu graph, MtpReplayMode replay, ulon
         if (snapshot == 0) snapshot = graph.SnapshotCreate();
         graph.SnapshotCapture(snapshot, request); snapshotPosition = position;
     }
-    public (int[] Argmax, float[] Hidden) Verify(int[] tokens) { var r = graph.Verify(tokens); position += tokens.Length; return r; }
+    public (int[] Argmax, float[] Hidden) Verify(int[] tokens) { var r = graph.Verify(tokens); hiddenObserver?.Invoke(position, r.Hidden); position += tokens.Length; return r; }
     public void RestoreAndReplay(int[] committed)
     {
         if (snapshot == 0 || snapshotPosition < 0) throw new InvalidOperationException("No snapshot to restore.");

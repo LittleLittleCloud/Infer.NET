@@ -92,10 +92,10 @@ public sealed class MetalSplitSession : IDisposable
     public void MtpPoison(int from, int rows) => Draft.Poison(from, rows);
     public byte[] MtpDebugTensor(int index, int bytes) => Draft.DebugTensor(index, bytes);
     // One generation per call; the caller drives TryNext and must Dispose it (releases the request snapshot).
-    public MetalMtpGeneration StartMtp(int maxTokens, bool ignoreEos, Func<double> clock)
+    public MetalMtpGeneration StartMtp(int maxTokens, bool ignoreEos, Func<double> clock, Action<int, float[]>? hiddenObserver = null)
     {
         var drafter = mtp ?? throw new InvalidOperationException("MTP is not enabled.");
-        var target = new MetalMtpTarget(graph, mtpReplay, ++mtpRequest);
+        var target = new MetalMtpTarget(graph, mtpReplay, ++mtpRequest, hiddenObserver);
         return new(target, new MetalMtpDrafter(drafter), new MtpOptions(mtpWidth, ignoreEos), maxTokens, IsEnd, clock);
     }
     public void Dispose() { graph.Dispose(); weights.Dispose(); device.Dispose(); }
