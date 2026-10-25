@@ -71,7 +71,9 @@ internal sealed class Dflash2CpuReference(Dflash2Weights weights)
                 {
                     var g = j / GroupSize;
                     var kernel = baseKernel[(which * K + offset) * H + j];
-                    output[t][j] += (kernel + dyn[t][which * K * Groups + offset * Groups + g]) * hidden[t - offset][j];
+                    // Upstream accumulates the base and dynamic contributions separately in FP32.
+                    output[t][j] += kernel * hidden[t - offset][j];
+                    output[t][j] += dyn[t][which * K * Groups + offset * Groups + g] * hidden[t - offset][j];
                 }
             }
         }

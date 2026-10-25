@@ -233,7 +233,32 @@ public class Dflash2GpuTests
         var block = new int[8]; block[0] = anchor; Array.Fill(block, Dflash2Geometry.MaskToken, 1, 7);
         var proposal = s.Dflash2Propose(block);
         using var target = new Affine8Reference(Dflash2Gate.Target);
-        var draft = reference.Propose(anchor, block.Select(t => target.Embedding(t)).ToArray(), target.Logits, prompt.Length);
+        var embeddings = block.Select(t => target.Embedding(t)).ToArray();
+        // Optional local-only evidence lets a second independent NumPy implementation diagnose reduction-order differences.
+        if (Environment.GetEnvironmentVariable("DEEPINFER_DFLASH2_EVIDENCE_DIR") is { Length: > 0 } evidence)
+        {
+            var directory = Path.Combine(evidence, "draft-checkpoints"); Directory.CreateDirectory(directory);
+            var files = new Dictionary<string, object>();
+            void Save(string name, float[] values, params int[] shape)
+            {
+                var bytes = System.Runtime.InteropServices.MemoryMarshal.AsBytes(values.AsSpan()).ToArray();
+                File.WriteAllBytes(Path.Combine(directory, name + ".bin"), bytes);
+                files[name] = new { shape, sha256 = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)).ToLowerInvariant() };
+            }
+            Save("input-taps", taps, prompt.Length, Dflash2Geometry.TapWidth);
+            Save("input-embeddings", embeddings.SelectMany(row => row).ToArray(), 8, 2048);
+            Save("native-final", s.Dflash2Checkpoint(Dflash2Checkpoint.Final, 0, 7 * 2048), 7, 2048);
+            for (var layer = 0; layer < 6; layer++)
+            {
+                Save($"native-attention-{layer}", s.Dflash2Checkpoint(Dflash2Checkpoint.HAttn, layer, 8 * 2048), 8, 2048);
+                Save($"native-output-{layer}", s.Dflash2Checkpoint(Dflash2Checkpoint.HOut, layer, 8 * 2048), 8, 2048);
+                var (keys, values) = s.Dflash2ExportContext(layer);
+                Save($"native-context-keys-{layer}", keys, prompt.Length, 8, 128);
+                Save($"native-context-values-{layer}", values, prompt.Length, 8, 128);
+            }
+            File.WriteAllText(Path.Combine(directory, "manifest.json"), System.Text.Json.JsonSerializer.Serialize(new { promptRows = prompt.Length, blockTokens = block, files }, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+        }
+        var draft = reference.Propose(anchor, embeddings, target.Logits, prompt.Length);
         // Per-layer first-divergence diagnosis: the first failing checkpoint name is the first divergent stage.
         for (var l = 0; l < 6; l++)
             foreach (var (kind, width) in new[] { (Dflash2Checkpoint.AttnDyn, 512), (Dflash2Checkpoint.AttnPrep, 2048), (Dflash2Checkpoint.AttnOut, 4096), (Dflash2Checkpoint.HAttn, 2048),
