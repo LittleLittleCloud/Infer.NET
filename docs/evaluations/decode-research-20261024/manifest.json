@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "provider": "GitHub Copilot CLI",
+  "cliVersion": "1.0.103",
+  "model": "claude-sonnet-5.5",
+  "sessionId": "49d9cd16-5288-477b-b7ac-c869fba154cf",
+  "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
+  "splashCommit": "1482f6bbc2abf12375332725302019594150b6cb",
+  "scope": "Read-only source and historical-evidence research; no implementation, benchmark, deployment, or new performance result. Reviewed synthesis corrects unsupported causal claims in raw model report.",
+  "issue": 70,
+  "localOnlyEvidence": [
+    {
+      "filename": "copilot-report-original.md",
+      "sha256": "cf339b7e6d6d6ba35218cb9921590549c3165bb2dc9cf760b3facf197c2c0fc7",
+      "bytes": 23416,
+      "availability": "Local ignored artifacts/decode-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "copilot-output.log",
+      "sha256": "18d4cbb9206a8f9d75586b4541e5f8716a9c9fbbae7694010841e8f2e55d1871",
+      "bytes": 52398,
+      "availability": "Local ignored artifacts/decode-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "copilot-session.md",
+      "sha256": "884b1272ceb99c5843111d74689e6813e68900d239f6c1fea02464d96071496a",
+      "bytes": 363809,
+      "availability": "Local ignored artifacts/decode-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "research-usage.json",
+      "sha256": "17f4058c5d9f068f6a2e1a4316434186947871586cdf9f0fa3d14a21932a7e64",
+      "bytes": 3212,
+      "availability": "Local ignored artifacts/decode-research-20261024/ only; not a public download"
+    },
+    {
+      "filename": "model-check-usage.json",
+      "sha256": "44cad95fe74fb95de07e81af33b131e82f11fc30e3f1a2cbc6f082118c340dfd",
+      "bytes": 3099,
+      "availability": "Local ignored artifacts/decode-research-20261024/ only; not a public download"
+    }
+  ]
+}
