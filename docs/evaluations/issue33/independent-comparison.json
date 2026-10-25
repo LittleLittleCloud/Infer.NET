@@ -1,0 +1,733 @@
+{
+  "checks": [
+    {
+      "tensor": "p0-layer0.f32",
+      "relativeL2": 2.9466638006246045e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer1.f32",
+      "relativeL2": 2.490762400878706e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer10.f32",
+      "relativeL2": 1.9716298729681833e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer11.f32",
+      "relativeL2": 2.1296316434140916e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer12.f32",
+      "relativeL2": 2.1696623820453262e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer13.f32",
+      "relativeL2": 2.14343445504163e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer14.f32",
+      "relativeL2": 2.2140112844027195e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer15.f32",
+      "relativeL2": 2.4055651808966887e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer16.f32",
+      "relativeL2": 2.132415074293609e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer17.f32",
+      "relativeL2": 2.501919120582723e-07,
+      "maxAbs": 7.152557373046875e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer18.f32",
+      "relativeL2": 2.450304373532117e-07,
+      "maxAbs": 4.76837158203125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer19.f32",
+      "relativeL2": 2.7383852792631346e-07,
+      "maxAbs": 4.76837158203125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer2.f32",
+      "relativeL2": 2.2325827879428945e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer20.f32",
+      "relativeL2": 2.832574339623385e-07,
+      "maxAbs": 7.152557373046875e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer21.f32",
+      "relativeL2": 2.856952999873798e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer22.f32",
+      "relativeL2": 2.2686772907593548e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer23.f32",
+      "relativeL2": 2.496635304965963e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer24.f32",
+      "relativeL2": 2.4306707211410464e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer25.f32",
+      "relativeL2": 2.441582235617233e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer26.f32",
+      "relativeL2": 2.614407367899727e-07,
+      "maxAbs": 1.430511474609375e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer27.f32",
+      "relativeL2": 2.649170842844799e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer28.f32",
+      "relativeL2": 2.3481973605311397e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer29.f32",
+      "relativeL2": 3.326596694329312e-07,
+      "maxAbs": 7.152557373046875e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer3.f32",
+      "relativeL2": 2.341405974798876e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer30.f32",
+      "relativeL2": 3.296498903212584e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer31.f32",
+      "relativeL2": 5.580432761251053e-07,
+      "maxAbs": 1.1920928955078125e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer32.f32",
+      "relativeL2": 5.936723817564743e-07,
+      "maxAbs": 1.430511474609375e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer33.f32",
+      "relativeL2": 4.909317399996986e-07,
+      "maxAbs": 7.152557373046875e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer34.f32",
+      "relativeL2": 2.1022052612482602e-07,
+      "maxAbs": 4.76837158203125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer35.f32",
+      "relativeL2": 3.7824699735635454e-07,
+      "maxAbs": 1.430511474609375e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer36.f32",
+      "relativeL2": 3.8390005704650103e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer37.f32",
+      "relativeL2": 3.6491450989593025e-07,
+      "maxAbs": 5.364418029785156e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer38.f32",
+      "relativeL2": 2.3757632239656538e-07,
+      "maxAbs": 3.814697265625e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer39.f32",
+      "relativeL2": 3.400797179261621e-07,
+      "maxAbs": 2.6702880859375e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer4.f32",
+      "relativeL2": 2.3848130366441134e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer5.f32",
+      "relativeL2": 2.2525553799916745e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer6.f32",
+      "relativeL2": 2.5561374068028394e-07,
+      "maxAbs": 1.6689300537109375e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer7.f32",
+      "relativeL2": 2.321566128599755e-07,
+      "maxAbs": 1.1920928955078125e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer8.f32",
+      "relativeL2": 1.976813241238961e-07,
+      "maxAbs": 1.1920928955078125e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p0-layer9.f32",
+      "relativeL2": 1.876382553921669e-07,
+      "maxAbs": 9.5367431640625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer0.f32",
+      "relativeL2": 3.228264400584166e-07,
+      "maxAbs": 2.9802322387695312e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer1.f32",
+      "relativeL2": 3.6025850430757794e-07,
+      "maxAbs": 3.3527612686157227e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer10.f32",
+      "relativeL2": 5.079617620113017e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer11.f32",
+      "relativeL2": 6.702062192054433e-06,
+      "maxAbs": 7.3909759521484375e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer12.f32",
+      "relativeL2": 6.081141485191507e-06,
+      "maxAbs": 2.4437904357910156e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer13.f32",
+      "relativeL2": 5.923333723845695e-06,
+      "maxAbs": 1.2442469596862793e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer14.f32",
+      "relativeL2": 5.612015834816234e-06,
+      "maxAbs": 1.3709068298339844e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer15.f32",
+      "relativeL2": 0.00012403639366253007,
+      "maxAbs": 3.0133873224258423e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer16.f32",
+      "relativeL2": 0.00011001054542620595,
+      "maxAbs": 2.9284507036209106e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer17.f32",
+      "relativeL2": 9.898833184667e-05,
+      "maxAbs": 2.1219253540039062e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer18.f32",
+      "relativeL2": 8.506575885049088e-05,
+      "maxAbs": 1.8969178199768066e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer19.f32",
+      "relativeL2": 0.0006131303820005352,
+      "maxAbs": 0.0002339966595172882,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer2.f32",
+      "relativeL2": 3.58599320051068e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer20.f32",
+      "relativeL2": 0.0005854323695653156,
+      "maxAbs": 0.00021225959062576294,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer21.f32",
+      "relativeL2": 0.0005721503320818127,
+      "maxAbs": 0.00022720545530319214,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer22.f32",
+      "relativeL2": 0.0005293160241065092,
+      "maxAbs": 0.0004495382308959961,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer23.f32",
+      "relativeL2": 0.0006358201075851595,
+      "maxAbs": 0.00020812824368476868,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer24.f32",
+      "relativeL2": 0.000558790617347008,
+      "maxAbs": 0.0003255605697631836,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer25.f32",
+      "relativeL2": 0.0005217758949808574,
+      "maxAbs": 0.00022351741790771484,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer26.f32",
+      "relativeL2": 0.00041827380717102597,
+      "maxAbs": 0.00024700164794921875,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer27.f32",
+      "relativeL2": 0.0007160175623517306,
+      "maxAbs": 0.00028711557388305664,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer28.f32",
+      "relativeL2": 0.0006422929958798052,
+      "maxAbs": 0.00026470422744750977,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer29.f32",
+      "relativeL2": 0.0005825838291295186,
+      "maxAbs": 0.0003063678741455078,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer3.f32",
+      "relativeL2": 3.6037261663008907e-07,
+      "maxAbs": 8.940696716308594e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer30.f32",
+      "relativeL2": 0.0004742417958376042,
+      "maxAbs": 0.000268641859292984,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer31.f32",
+      "relativeL2": 0.0007395545483065601,
+      "maxAbs": 0.0012769699096679688,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer32.f32",
+      "relativeL2": 0.0006579900285494615,
+      "maxAbs": 0.0008443593978881836,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer33.f32",
+      "relativeL2": 0.0005624430732831981,
+      "maxAbs": 0.0007703304290771484,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer34.f32",
+      "relativeL2": 0.0004926717816364495,
+      "maxAbs": 0.00044396519660949707,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer35.f32",
+      "relativeL2": 0.0009234864126786002,
+      "maxAbs": 0.0006590858101844788,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer36.f32",
+      "relativeL2": 0.0008813659193791843,
+      "maxAbs": 0.000665862113237381,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer37.f32",
+      "relativeL2": 0.0008356494976349618,
+      "maxAbs": 0.0006828866899013519,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer38.f32",
+      "relativeL2": 0.0007288102328434808,
+      "maxAbs": 0.0014233589172363281,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer39.f32",
+      "relativeL2": 0.0012063686199188803,
+      "maxAbs": 0.0018072910606861115,
+      "passed": false
+    },
+    {
+      "tensor": "p16-layer4.f32",
+      "relativeL2": 3.796590775646603e-07,
+      "maxAbs": 5.960464477539063e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer5.f32",
+      "relativeL2": 4.2681666528260924e-07,
+      "maxAbs": 4.470348358154297e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer6.f32",
+      "relativeL2": 4.049110144169877e-07,
+      "maxAbs": 5.960464477539063e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer7.f32",
+      "relativeL2": 5.641855017738803e-07,
+      "maxAbs": 5.960464477539063e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer8.f32",
+      "relativeL2": 5.859541273814708e-07,
+      "maxAbs": 8.381903171539307e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p16-layer9.f32",
+      "relativeL2": 5.55409902795873e-07,
+      "maxAbs": 7.82310962677002e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer0.f32",
+      "relativeL2": 2.3102224146566964e-07,
+      "maxAbs": 2.60770320892334e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer1.f32",
+      "relativeL2": 2.6608929725006325e-07,
+      "maxAbs": 3.3527612686157227e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer10.f32",
+      "relativeL2": 3.619306076335102e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer11.f32",
+      "relativeL2": 1.4060127473543187e-06,
+      "maxAbs": 8.344650268554688e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer12.f32",
+      "relativeL2": 2.409113445868982e-06,
+      "maxAbs": 6.407499313354492e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer13.f32",
+      "relativeL2": 2.280912204334611e-06,
+      "maxAbs": 7.674098014831543e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer14.f32",
+      "relativeL2": 1.9708851691601e-06,
+      "maxAbs": 7.003545761108398e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer15.f32",
+      "relativeL2": 2.457761695845009e-05,
+      "maxAbs": 6.794929504394531e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer16.f32",
+      "relativeL2": 2.7194987966409672e-05,
+      "maxAbs": 1.704692840576172e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer17.f32",
+      "relativeL2": 2.5346069642884048e-05,
+      "maxAbs": 6.907619535923004e-06,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer18.f32",
+      "relativeL2": 2.4267664409646065e-05,
+      "maxAbs": 1.5616416931152344e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer19.f32",
+      "relativeL2": 0.0001211518403979158,
+      "maxAbs": 4.184246063232422e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer2.f32",
+      "relativeL2": 2.6476066212018616e-07,
+      "maxAbs": 5.960464477539063e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer20.f32",
+      "relativeL2": 0.00010014925885665618,
+      "maxAbs": 3.501772880554199e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer21.f32",
+      "relativeL2": 9.745447692325897e-05,
+      "maxAbs": 3.335624933242798e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer22.f32",
+      "relativeL2": 9.589306859730934e-05,
+      "maxAbs": 9.703636169433594e-05,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer23.f32",
+      "relativeL2": 0.00023661741864489086,
+      "maxAbs": 0.00010693073272705078,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer24.f32",
+      "relativeL2": 0.00023827404445944629,
+      "maxAbs": 7.533282041549683e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer25.f32",
+      "relativeL2": 0.0002328777611353092,
+      "maxAbs": 7.168203592300415e-05,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer26.f32",
+      "relativeL2": 0.0002169832034194281,
+      "maxAbs": 0.00010544061660766602,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer27.f32",
+      "relativeL2": 0.000666065303268501,
+      "maxAbs": 0.0002358369529247284,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer28.f32",
+      "relativeL2": 0.0006401091199384613,
+      "maxAbs": 0.00029587745666503906,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer29.f32",
+      "relativeL2": 0.0006175056478969372,
+      "maxAbs": 0.0002488158643245697,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer3.f32",
+      "relativeL2": 3.09721980144815e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer30.f32",
+      "relativeL2": 0.0005609958908611226,
+      "maxAbs": 0.0002289358526468277,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer31.f32",
+      "relativeL2": 0.0007001152491641436,
+      "maxAbs": 0.0004891753196716309,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer32.f32",
+      "relativeL2": 0.0007114117375293744,
+      "maxAbs": 0.00030897557735443115,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer33.f32",
+      "relativeL2": 0.0008914881885354145,
+      "maxAbs": 0.00038165971636772156,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer34.f32",
+      "relativeL2": 0.000929428988979708,
+      "maxAbs": 0.0006482601165771484,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer35.f32",
+      "relativeL2": 0.0019613297849524966,
+      "maxAbs": 0.0010159928351640701,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer36.f32",
+      "relativeL2": 0.001966183183846182,
+      "maxAbs": 0.0012189745903015137,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer37.f32",
+      "relativeL2": 0.001998093749083227,
+      "maxAbs": 0.0021169185638427734,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer38.f32",
+      "relativeL2": 0.0018649925574558256,
+      "maxAbs": 0.0035614967346191406,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer39.f32",
+      "relativeL2": 0.002550493167395218,
+      "maxAbs": 0.003149747848510742,
+      "passed": false
+    },
+    {
+      "tensor": "p23-layer4.f32",
+      "relativeL2": 3.472078979069747e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer5.f32",
+      "relativeL2": 3.3946975686428857e-07,
+      "maxAbs": 1.7881393432617188e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer6.f32",
+      "relativeL2": 3.383228651806876e-07,
+      "maxAbs": 2.384185791015625e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer7.f32",
+      "relativeL2": 3.6961895203214867e-07,
+      "maxAbs": 1.7881393432617188e-07,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer8.f32",
+      "relativeL2": 3.6304832983497325e-07,
+      "maxAbs": 5.960464477539063e-08,
+      "passed": true
+    },
+    {
+      "tensor": "p23-layer9.f32",
+      "relativeL2": 4.003813219464704e-07,
+      "maxAbs": 1.1920928955078125e-07,
+      "passed": true
+    },
+    {
+      "tensor": "logits.f32",
+      "relativeL2": 0.0020538982852274955,
+      "maxAbs": 0.02856922149658203,
+      "passed": false
+    }
+  ],
+  "passed": false,
+  "worstRelative": 0.002550493167395218,
+  "worstMaxAbs": 0.02856922149658203
+}
