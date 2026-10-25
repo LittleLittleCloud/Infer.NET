@@ -1,5 +1,20 @@
 [
   {
+    "id": "decode-profile-20261025",
+    "title": "Metal decode stage diagnostics: M5 encoder timestamp fallback",
+    "kind": "2026-10-25 · Collection in progress · No optimization adopted",
+    "source": "docs/EXPERIMENT-70-DECODE-PROFILE-RESULTS-20261025.md",
+    "question": "Which native Metal decode regions dominate at short,8K and32K contexts?",
+    "setup": "M5 Pro20 GPU/48GiB, affine8/FP32, fused-fp32 attention, local only, fixed128 outputs. Main4f51f24; encoder candidate43c81fa.",
+    "change": "Default-off representative CPU/GPU timing; M5 lacks dispatch timestamps, so use coarse encoder boundaries with explicit perturbation controls.",
+    "result": "Partial: short/8K formal stage samples complete;32K and final controls/pilot/restoration pending. No expected value is plotted.",
+    "validation": "Two-encoder independent outputs/timestamps/coverage check passed. Full-model samples cover675 dispatches in273 valid regions.",
+    "conclusion": "Preliminary data prioritize linear projections/MoE and long-context attention. These are instrumented stage shares, not physical utilization or a speedup.",
+    "next": "Complete registered controls and pilot, verify restoration, retain unsupported/interrupted phase. Code/results require independent review.",
+    "commands": [],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/70; code PR90; results PR91; docs/evaluations/issue70/."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
