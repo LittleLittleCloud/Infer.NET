@@ -130,8 +130,8 @@
     },
     {
       "path": "artifacts/dual-host/issue84-evaluation-20261025/windows-gpu.csv",
-      "sha256": "5529f9bbb2e5d4e36c7d49b461af66ea6a69f6d7ad50a63e212d74f05ada8f8c",
-      "bytes": 227745,
+      "sha256": "eafefe4fbad2737dc3c01bb50e45e8206fc24c7c328e31bc953da97d13aaaea5",
+      "bytes": 432606,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
@@ -165,6 +165,60 @@
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-followup-completed.json",
+      "sha256": "eaf92c40690aa76327d729642deab325fd96355589e16c4f5320c509923b35ca",
+      "bytes": 112,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/queue-responses.json",
+      "sha256": "6cedeafe069608341f1d6e99f1a5bf368cd65f44a00207330961b444005d41e4",
+      "bytes": 62786,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/request-0.json",
+      "sha256": "9592ac9ecc4eac3bdcab34ad1fecfd73e05018e5c01563868e80c7c6f4dcbcfe",
+      "bytes": 7729,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/request-1.json",
+      "sha256": "206187ec6f31557ff50b08ace6253718c78b3d7aaf21fedd2bd6bd51c180fe55",
+      "bytes": 7720,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/request-2.json",
+      "sha256": "4eb5e4fc36775683b3427ecbe9244c87a1dbe66bf4eca7313b299c0cb6471080",
+      "bytes": 7729,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/response-0.json",
+      "sha256": "dd2695b6fdc60494986b6bcc5c0b43a358ead2979e49561db6fd794e7719596f",
+      "bytes": 5800,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/response-1.json",
+      "sha256": "e034a5fd9d0f61ed942a22851dfc14ace806fc9055483ca1d71957e1d8913685",
+      "bytes": 5791,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/response-2.json",
+      "sha256": "6a3283ad04ee92e90445856f3455943c90e5a025d235137588dd0fbb8048ebec",
+      "bytes": 5800,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/candidate-lifecycle/summary.json",
+      "sha256": "e8c79d079319492b2f42027f088bf22a100ed070b80dd7a5a93a6237fae88f78",
+      "bytes": 23351,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/capacity-preflight.json",
       "sha256": "b740328d95eb14bf2bf288dd0cced9abe32649279027da4c4bca3216e970bada",
       "bytes": 1108,
@@ -192,6 +246,120 @@
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control/issue84-matrix.py",
       "sha256": "43f4a8f1272920fa7103740d9ad5ebba13eb467f24ebbbfa716ef0f7527b3391",
       "bytes": 2975,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/collection-failures.json",
+      "sha256": "8711de39e8c745b6840b224d64e089d1cf6c091e6df21f6f815866235a19888a",
+      "bytes": 875,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/hashes.json",
+      "sha256": "6c1da1014bcebf1ef4db253115c51e69e8c62d2de22ebca943657298b3099ed7",
+      "bytes": 968,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-ab.py",
+      "sha256": "a53eafdcd65e71a8233bee60b78f8a4d8a1de48edebe659f91c4fd86d7b47c1c",
+      "bytes": 2605,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-export.py",
+      "sha256": "ba14512dd074164f6179e40c56a7bf68a5e95dbaf6baf8f29110e2d185e6ffed",
+      "bytes": 3768,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-lifecycle-extra.py",
+      "sha256": "d3c45805f4d9c0394bdd2c545ead86fb666e59da1253e4032ae394db35cc4554",
+      "bytes": 5318,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-pilot-export.py",
+      "sha256": "4395e245f66b64fe1dda80dd4c4be5d46ef4482f9d50dff1d3d6860fb1b68fac",
+      "bytes": 3914,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-pilot-finalize.py",
+      "sha256": "dd4f34aa98ab305076ea60a3e6056b6e7278466194b1dd1f41c560671d5db011",
+      "bytes": 981,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-restore-windows.py",
+      "sha256": "e609256ee00e9d399a0aab0cb689b4440b621d961d8584caebe888be59010ca6",
+      "bytes": 2309,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-trend.py",
+      "sha256": "4260644733a2f604ce9e820df0053ae62879ad73cb05a94f2c4c466d90550f68",
+      "bytes": 6151,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-verify-restoration.py",
+      "sha256": "b3c8faf4afe694b14301fcbd2189db18a2032fac0d0ad009b4ed8af6acab089d",
+      "bytes": 3687,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-final/issue84-windows-evidence.py",
+      "sha256": "26565bdadf9fea6a0462ffd73a8bcee3b554024ae100fa001f116ea355665be9",
+      "bytes": 3083,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/hashes.json",
+      "sha256": "fb42e0860832b80e213a4fcb25d5a281d2fbc7b19a9a127e765bc3a032831eaa",
+      "bytes": 661,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-export.py",
+      "sha256": "94bea2a61ea3ef53b48e78ac12a4b04e29c6a34069830178f64d0cf021f0a1aa",
+      "bytes": 3026,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-fixed.py",
+      "sha256": "c3f76ec48df4c292178b675ebf407eee44dbd62df1352726af4a173ae0ad532b",
+      "bytes": 2881,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-followup.py",
+      "sha256": "dfd180f38cc67374b34eba498095c7955fd8731cca4ba88703688b4c24af22d3",
+      "bytes": 4307,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-main-agent.py",
+      "sha256": "0bca8d54000e3af65b2ab8e02a2009b10d540abb2ae41bfa7fbffd53abb55ff3",
+      "bytes": 1568,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-main-build.py",
+      "sha256": "796ea0328994cfeb1c50b353c56edd8ca64c1cce2a0c27e6f6506d4f12e50351",
+      "bytes": 1772,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-main-followup.py",
+      "sha256": "b3c6ca48e37784f6b09e31317a28b5b7d4a918084dc41c15f7da8c3edb54f613",
+      "bytes": 2695,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/control-followup/issue84-pilot-export.py",
+      "sha256": "5d63a3892786b1cc5050fe80525c1ed5566b50a65d1bd4c5dbb4f3d687f3680d",
+      "bytes": 3912,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
@@ -267,6 +435,60 @@
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/after-agent-reconnect.json",
+      "sha256": "1aea0051737eaae880a4964f0d7f126cae7d5130e9786740812f6545a08e6010",
+      "bytes": 7722,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/after-prefill-cancel.json",
+      "sha256": "f1cda0d1bcf52b0eb0120edc053a96828d6ab8b1613596801c6ab3eafcc2e07d",
+      "bytes": 7712,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/agent-1792959686671981000.ssh.log",
+      "sha256": "3e1741b3082bf5c1e88a2ed039f35ba788330812b0ed1f40bdab71664c43398f",
+      "bytes": 28,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/agent-1792959754919836000.ssh.log",
+      "sha256": "196724779d0fcaaf45ef3600e94a33a23ff3208f96b6692d7d7617a1125eb773",
+      "bytes": 28,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/mac.stderr.log",
+      "sha256": "512c052edc468f281e9b57c4df0a82433e6516ed5cec89a0e2729a33c125e52a",
+      "bytes": 10971,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/mac.stdout.log",
+      "sha256": "4b2a287da513fd220b7dee95322041256ea07a0957d03517089ab03fa9324d98",
+      "bytes": 450,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/reference.json",
+      "sha256": "bbc561c110be5035f452e2f63c623f75ce38d7904b590c711afaa24cf4111665",
+      "bytes": 7712,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/repeat.json",
+      "sha256": "c5538b10b5c0ea37c2e71d1f8a955638f35e770c7d9672bdbc11f5d2da407af9",
+      "bytes": 7713,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/extra-lifecycle/summary.json",
+      "sha256": "56aa97e0eb1bfd9380839ce438460b0a80456f7a6d8ae5c51e3bad42fb449188",
+      "bytes": 683,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-candidate/manifest.json",
       "sha256": "599520cd2fcadd149355443db606081a2feeb4a0c31f385710eb4e38acc32a7d",
       "bytes": 725,
@@ -291,9 +513,159 @@
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-candidate/response-3.json",
+      "sha256": "d7f8a7111936c884eb74e0b1eae09a87a9e87195e4fa37c275fa2173e79cff34",
+      "bytes": 28337,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-candidate/trials.json",
-      "sha256": "3866b2a3313ec7b5708c398b727cfc229eb20fca1cdb43d1f5ceb95c5ddf8ffe",
-      "bytes": 96757,
+      "sha256": "c2428c8ff3959a47a4fadbeab9a5118a050249d82218a21410ab15a6fb4bcc3c",
+      "bytes": 129007,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/manifest.json",
+      "sha256": "a91833d9a92991e5089d1b5f49e916a0e1131a9aac521145aca06cb1d81976d4",
+      "bytes": 722,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/response-0.json",
+      "sha256": "1a9f10eefa32dec44b88af175f24d6a96638b81b4f5da8d199dab78aea21d232",
+      "bytes": 28369,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/response-1.json",
+      "sha256": "08b09007391c4d74da6d8ca6402eb2fb378e00757fb82e9841167f79c815a4e0",
+      "bytes": 28380,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/response-2.json",
+      "sha256": "0d807844b215f300b01d93659c8af86af7bf939644253974f4dee269263dbd68",
+      "bytes": 28361,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/response-3.json",
+      "sha256": "dda8449dbc51c4092fd9a8bd245c2037bb74a7e38e1e446069404664e441da5a",
+      "bytes": 28366,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-128-main/trials.json",
+      "sha256": "4c8409ec8eea6bdabce9a1bf681e58e673a6d6d606a5abc053d66363c1fafa27",
+      "bytes": 129122,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/manifest.json",
+      "sha256": "6e65449a46d0db1efca7dea101dbd66839f22ec1ef2e770059376d02c8e54cc8",
+      "bytes": 726,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/response-0.json",
+      "sha256": "5caf040c4ab0faf7a7a449d38a751282d2772bbee47b15033457ce7e4c5a33db",
+      "bytes": 891023,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/response-1.json",
+      "sha256": "33fb87831c8cada43af3547a6c64b4b0dfabc43f4469540888befcc8c87d98ce",
+      "bytes": 891093,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/response-2.json",
+      "sha256": "1d0444bf01ded07f6d31785e2c7fa70f7f38328e2cf7f8621c6c79cb94463c93",
+      "bytes": 891007,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/response-3.json",
+      "sha256": "5d1fca55f95e5a6403a064440e829b08a7c9864a27636bc9c8bc6244032eb8f7",
+      "bytes": 891018,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-candidate/trials.json",
+      "sha256": "ac30c77367757b74636fbbbf42024bcebae307e7f569294d5a7f6abf5dcbe573",
+      "bytes": 3579122,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/manifest.json",
+      "sha256": "c38bb0274864b63c96fb5160da7571c7628ca9bab8479c280c9126345100049a",
+      "bytes": 723,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/response-0.json",
+      "sha256": "10900db114f9678609eaf7936f880e03f917ce7511b8a08266838a897708e037",
+      "bytes": 890993,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/response-1.json",
+      "sha256": "28744761065ebd52d300a06fb0ba7a42ea8e48eab39529292e67d7c24950f0f6",
+      "bytes": 891005,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/response-2.json",
+      "sha256": "441d12c4b7c727dd17adbedf6579a01ee5128b120ff37d646ce0954d29469cb4",
+      "bytes": 891154,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/response-3.json",
+      "sha256": "4cd2408becd271d4db1bbde8c8fe268262a871d9397cb5e21fc9033dcc04a351",
+      "bytes": 891048,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed32768-4096-main/trials.json",
+      "sha256": "35e692d42973df470a470a4bd48ce949184b5ebf16caee16ba6e37e48ceb28f1",
+      "bytes": 3579173,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/manifest.json",
+      "sha256": "9d3c41e325f87c488b0bde241556e7ecfdb167a309879d533ada1b7f554acbb0",
+      "bytes": 721,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/response-0.json",
+      "sha256": "d5f6e0f844890f6c941d3ca3fcd7b8b7126094f9e222e29fc8a83c28c71c68f2",
+      "bytes": 28305,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/response-1.json",
+      "sha256": "89b690b8fb733b0a2e23205750015ae115c9ea7f454b97f2372a50f85a5baeaa",
+      "bytes": 28277,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/response-2.json",
+      "sha256": "cad71883f9399dd29b2cd3a912b3bc8298e8b886eb1a754e4eb2174e18f625ab",
+      "bytes": 28331,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/response-3.json",
+      "sha256": "b6521b32ffc9d29a048f14761429130e676d56e39546c10258b913f250bd74a8",
+      "bytes": 28295,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/fixed8192-128-main/trials.json",
+      "sha256": "495d3e0dad83134c68cc53cffad70db23c29274792c9a68fc042f114e79f8d86",
+      "bytes": 128628,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
@@ -310,14 +682,26 @@
     },
     {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/followup-mac.stderr.log",
-      "sha256": "ce77b30cb850f90f0229df516e75fb8a829feaffd52660d6ca89a2419d9d2184",
-      "bytes": 86097,
+      "sha256": "f1ccef6cf2eb57f1cc5ee49c84d7a77005004dcacd2dc34025d2cdf317589e79",
+      "bytes": 2119065,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/followup-mac.stdout.log",
       "sha256": "82fbb1a9998bccb4a05d742d89afeb73b4a069226cc6b13c7b84a8bf511e0836",
       "bytes": 450,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/initial-mac-package.json",
+      "sha256": "be7501d6432f92bcd3ae145cdae97bf5d4591662791d393373085eb0fa2e4dc5",
+      "bytes": 327,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/initial-windows-package.json",
+      "sha256": "35f0cc19812f58fbe755d723a171d100d40a4b16bfa59c166c3276fde5f2a391",
+      "bytes": 325,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
@@ -351,9 +735,231 @@
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-agent.ssh.log",
+      "sha256": "b4f53d3ee0e3987c4a86cd74e2adba475fe6b17a7d04f3a5a2881d83138cdfd2",
+      "bytes": 22,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-followup-completed.json",
+      "sha256": "f471514b2d861548f1c8a0e2aef3b588952edf2b9b57b590f32c5238d63be15b",
+      "bytes": 112,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-mac-package.json",
+      "sha256": "1545b0b28204203a69a312293d2ddfcc0d02d260df2f5a054ae79fe866d1016c",
+      "bytes": 327,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-mac.pid",
+      "sha256": "155422cf942b0b7834362757c7f46ca583e013fa7e11edb4f1a41bc0a0024347",
+      "bytes": 5,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-mac.stderr.log",
+      "sha256": "c7cc870846c127dc915cddedb7d0390228fba9c1069d737050af57e4208a684f",
+      "bytes": 1686556,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-mac.stdout.log",
+      "sha256": "9f48bf125c2c13e45d4ef4130f94872bcd53a9a74245d309acb603e56cf240f9",
+      "bytes": 450,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-windows-build-status.json",
+      "sha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+      "bytes": 15,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-windows-build.log",
+      "sha256": "6e293b529758fe80c642be31b7ea7cf3b7e21026233c1f13f327117451a3092b",
+      "bytes": 6331,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/main-windows-package.json",
+      "sha256": "a61e3209ebaa19c229e62df3fe985b0b2445c7be60796c54514a14d1bc96b8e3",
+      "bytes": 341,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/matrix-completed.json",
       "sha256": "34c1d8ae2fb16a804477fc4fc82075aa1a58dd9f819ae8269ad8af652c1dcaab",
       "bytes": 172,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot-observer/coordinator.log",
+      "sha256": "49675e251045b7ad46a40b9a5734c95058700b370e22c458aa457359fa439b37",
+      "bytes": 70,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot-observer/manifest.json",
+      "sha256": "4be115d4b82be1e5ff519250705d1e2eb1ea0512c23dee4d25fd557d7cff80cf",
+      "bytes": 728,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot-observer/normalized-terminal-metrics.log",
+      "sha256": "23e25643b979c5e6570895b5040d731cbf9a1a47ef03910b8bb0157da9ee9cf5",
+      "bytes": 11559,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot-observer/requests.jsonl",
+      "sha256": "4741c9b9b3bd6b750f972f2f487050562ba78b15f9281dc67c066371eaa8ef4f",
+      "bytes": 25670,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot-observer.stdout.log",
+      "sha256": "ab804d552041d67114ca8f4f0168f78649f61a6510f5d183ce711776fa444b47",
+      "bytes": 61,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-149/events.jsonl",
+      "sha256": "14634013a8849b9c921f27e0791189ed0c63245be419259aca91f3c50c4b0505",
+      "bytes": 113811,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-149/solution.py",
+      "sha256": "e4eadeefde2f10d5b983c7a8ba05dbf977e56ab1d208f0be05b8af127b335d3c",
+      "bytes": 980,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-156/events.jsonl",
+      "sha256": "f10d69c659b0862838b6e51e89ef53b33df3823eaf6befe38ccbc066d3644f5f",
+      "bytes": 48955,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-156/solution.py",
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "bytes": 773,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-72/events.jsonl",
+      "sha256": "04e7ae5fadb3ddb855f4897d679ed9a83c444b31e0708dfa318da2f0c89b4148",
+      "bytes": 49004,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-72/solution.py",
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "bytes": 911,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-80/events.jsonl",
+      "sha256": "b8f464b8e39c1d5868164f6e5388ce51849a4cef60a252af3ad6d479f652cb8e",
+      "bytes": 47426,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-80/solution.py",
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "bytes": 571,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-94/events.jsonl",
+      "sha256": "e31f803382c67937546004b38357b5d71e22666e8cb23a50647a016ddad01b32",
+      "bytes": 54020,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/HumanEval-94/solution.py",
+      "sha256": "94e365c2f7db0a0f6f4969984db6717ca5b269aafe28761ac7622497e6365d9b",
+      "bytes": 1295,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/manifest.json",
+      "sha256": "50ed5690272a9380c688a174880ae6dcaf65b4b8ba18de13979e1ca820861d83",
+      "bytes": 919,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/official-validation.json",
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "bytes": 958,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/performance.json",
+      "sha256": "80c594daffea4c3042f7c21044c94576cb660797e016615c2e14f4766e630209",
+      "bytes": 15990,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/public-summary.json",
+      "sha256": "99dba2460ef927e55882b06c5a1d81715766c6372780e4ba19af48435c49c347",
+      "bytes": 55325,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/summary.json",
+      "sha256": "a9485d3aa1fa4c27de3d35e98d120f9bd96e1f691bd327921a8d6d215d9f5b2a",
+      "bytes": 518,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/pilot5/tasks.jsonl",
+      "sha256": "f7e3f8602e5e6e782626ae0b80a70fd641f454338a5190afa6612d5badb9ff04",
+      "bytes": 40269,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restoration-first-request-failure.json",
+      "sha256": "e35c2c444d7527be58513aa0f5b3f62bf15fefff6f89f2b1bc8c98b0052d8956",
+      "bytes": 337,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restoration-state-health.json",
+      "sha256": "2ffed5b4a442f107b19c54d0e75ce9c248576829a7b0a289ba8107c2f3b5add5",
+      "bytes": 69,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restoration-state-workers.json",
+      "sha256": "3f5f7eb3286da3b453cd8c6f34b8b4ac9408f9c1ce7b03977d488710a3d40bac",
+      "bytes": 1757,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restoration.json",
+      "sha256": "976557b90d77b1cf76c7e71b288c9057d3c4933a491ee3cba89018d52a7b4b7a",
+      "bytes": 1736,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restored-original-response-0.json",
+      "sha256": "77948a6b76d8f1c0b82d3e59b7c5a58fb200c61d6afd2c53e9b0bd0679515655",
+      "bytes": 7725,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restored-original-response-1.json",
+      "sha256": "b682aa33c468c65539b86379fa05c24cdabc258d3b27f5a6b588b6de0ee8c7db",
+      "bytes": 7711,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/restored-original-windows.json",
+      "sha256": "1cc5ee09dfacb523c0227e495ce5bd2f7dfc2c694cbefda6b879ec6c683eda44",
+      "bytes": 564,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {
@@ -576,6 +1182,180 @@
       "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/selection.json",
       "sha256": "d306fec158c0e9473d51cd80e68ba6379ee7a25305dc014b5e7c2c44c7050d96",
       "bytes": 599,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-evidence-collection.json",
+      "sha256": "de8c252e913647806e1e610c910604b355c07320659e46a8fca382796bc0eabb",
+      "bytes": 148,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/initial-original-tee-99f-only.log",
+      "sha256": "c852d4bf12540acc3edb774a8ba580a990efccf749e13396f0be9cdd2936ecf7",
+      "bytes": 108303,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-128.combined.log",
+      "sha256": "efe41ca212b5f797920f0c794e6c2661f47b1fa346e301144be0162b2077e43a",
+      "bytes": 657321,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-128.exit.txt",
+      "sha256": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+      "bytes": 4,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-128.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-128.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-32.combined.log",
+      "sha256": "2845aeb129bb61f2261bc7f1605138debad509908c634d45b16ab9a37410e68b",
+      "bytes": 112342,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-32.exit.txt",
+      "sha256": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+      "bytes": 4,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-32.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-32.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-64.combined.log",
+      "sha256": "de504552f80f7360463275fc9e5638b6ca3b1aa66b81b32558ac9a548e524004",
+      "bytes": 110702,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-64.exit.txt",
+      "sha256": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+      "bytes": 4,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-64.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/agent-64.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/main-agent.combined.log",
+      "sha256": "d6fdd3cb79c91806bb2f30b68b2195ec014faab6b14dd8635995a0706f66f95a",
+      "bytes": 510842,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/main-agent.exit.txt",
+      "sha256": "186a919b8c7cb84aebf4e53c70cd1cc028a93a1d183ee29dd6e10cd18a714577",
+      "bytes": 4,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/main-agent.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-batch-evaluation-20261025/main-agent.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-128.combined.log",
+      "sha256": "02ce9346292ddd335e4e5343e9a70536e8ca62a3be91ba478078c252b13e32d0",
+      "bytes": 55212,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-128.exit.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-128.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-128.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-32.exit.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-32.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-32.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-64.exit.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-64.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/agent-64.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "access": "Local-only; raw request/response text and host details are not published."
+    },
+    {
+      "path": "artifacts/dual-host/issue84-batch-evaluation-20261025/windows-logs/issue84-evaluation-20261025/build.txt",
+      "sha256": "ce1ec86835754cbd354fc125eb076bdd9092f8392e8cf367974832c2795cd682",
+      "bytes": 48,
       "access": "Local-only; raw request/response text and host details are not published."
     },
     {

@@ -1,0 +1,75 @@
+{
+  "comparisons": [
+    {
+      "shape": "8192/128",
+      "candidate": {
+        "runId": "screen-cuda128-metal128",
+        "source": "30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+        "medianPrefillMs": 11599.643,
+        "aggregateDecodeTokensPerSecond": 59.442332629464346,
+        "aggregatePrefillTokensPerSecond": 700.3237144923609
+      },
+      "main": {
+        "runId": "fixed8192-128-main",
+        "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "medianPrefillMs": 11685.2893,
+        "aggregateDecodeTokensPerSecond": 60.080664205146604,
+        "aggregatePrefillTokensPerSecond": 688.4407820542739
+      },
+      "candidatePrefillLatencyChangePercent": -0.7329412032614391,
+      "candidateDecodeRateChangePercent": -1.0624575878566578,
+      "allEightOutputTokenIdsEqual": true,
+      "outputTokenIdsSha256": "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b",
+      "inputSha256": "defa12f5be86a88aed8a25aa479ab1b17860a661ff364865708e121cac17206d"
+    },
+    {
+      "shape": "32768/128",
+      "candidate": {
+        "runId": "fixed32768-128-candidate",
+        "source": "30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+        "medianPrefillMs": 54090.382,
+        "aggregateDecodeTokensPerSecond": 44.65884178899663,
+        "aggregatePrefillTokensPerSecond": 606.1115899307448
+      },
+      "main": {
+        "runId": "fixed32768-128-main",
+        "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "medianPrefillMs": 53109.4468,
+        "aggregateDecodeTokensPerSecond": 44.43725776446022,
+        "aggregatePrefillTokensPerSecond": 617.0659555564044
+      },
+      "candidatePrefillLatencyChangePercent": 1.8470069998921534,
+      "candidateDecodeRateChangePercent": 0.4986446862021099,
+      "allEightOutputTokenIdsEqual": true,
+      "outputTokenIdsSha256": "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249",
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8"
+    },
+    {
+      "shape": "32768/4096",
+      "candidate": {
+        "runId": "fixed32768-4096-candidate",
+        "source": "30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+        "medianPrefillMs": 53956.6333,
+        "aggregateDecodeTokensPerSecond": 45.067538394629,
+        "aggregatePrefillTokensPerSecond": 606.7982964167456
+      },
+      "main": {
+        "runId": "fixed32768-4096-main",
+        "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "medianPrefillMs": 53296.4326,
+        "aggregateDecodeTokensPerSecond": 45.31972752355848,
+        "aggregatePrefillTokensPerSecond": 614.2088854503671
+      },
+      "candidatePrefillLatencyChangePercent": 1.2387333781886278,
+      "candidateDecodeRateChangePercent": -0.5564665603922325,
+      "allEightOutputTokenIdsEqual": true,
+      "outputTokenIdsSha256": "016603fc4201962f70dd199efd1c7c78472fd4b6899afadec3f03c1b11d09e16",
+      "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8"
+    }
+  ],
+  "fixedPrefillGainGatePassed": false,
+  "noFixedRegressionOverFivePercent": true,
+  "formalHumanEval20": "Not run: registered fixed-prefill gain prerequisite failed. Pilot5 is diagnostic, not a main comparison or adoption evidence.",
+  "adoption": "Not qualified; do not adopt or change defaults. Manual review and PR disposition remain pending.",
+  "ordering": "Candidate screening and long shapes first, diagnostic pilot5, then fresh same-round main. Blocked serial order, not randomized/interleaved; small differences are not claimed statistically significant."
+}

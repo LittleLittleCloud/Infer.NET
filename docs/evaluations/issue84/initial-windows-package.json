@@ -1,0 +1,8 @@
+{
+  "source": "99f7610b640d257601dfcd3c6bab5e51d892d4e2",
+  "artifacts": {
+    "deepinfer_cuda.dll": "932b13f07bf17e419d420b4480450ff3077772cb05091074091591c3a0636645",
+    "deepinfer.exe": "6d991bbeec24a8771838427e270f1b7ee90990d7234e43086c0be2b2825fb4a9"
+  },
+  "version": "0.3.0+99f7610b640d257601dfcd3c6bab5e51d892d4e2"
+}

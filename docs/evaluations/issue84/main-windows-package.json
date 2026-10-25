@@ -1,0 +1,9 @@
+{
+  "status": [],
+  "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "artifacts": {
+    "deepinfer_cuda.dll": "0cf15d6b43c755edc40d02f4bc23f251f3cd4d68c2b84af28770c39daf8e6433",
+    "deepinfer.exe": "ca5cd1d1ab7d81d293066bcf2365932636042ea03c628e0d7096541d17177142"
+  },
+  "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+}

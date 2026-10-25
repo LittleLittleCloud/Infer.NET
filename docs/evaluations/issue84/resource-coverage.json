@@ -1,0 +1,9 @@
+{
+  "windowsFullDeviceSamplePeriodMs": 500,
+  "windowsFullDeviceSamplePeakMiB": 20539.0,
+  "windowsFullDeviceSamples": 7936,
+  "maxCompletedRequestMetalAllocatedBytes": 39327547392,
+  "maxFormalRequestNewWholeMachineSwapoutBytes": 141492224,
+  "maxWarmupNewWholeMachineSwapoutBytes": 17367040,
+  "coverage": "Across all retained fixed cohorts and sampled monitor interval, not continuous exact peaks. Load swap, GPU allocator/physical residency peaks, process physical footprint and system memory-pressure series Not Obtained. Resource gate remains incomplete."
+}

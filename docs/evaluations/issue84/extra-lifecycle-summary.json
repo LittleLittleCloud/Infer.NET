@@ -1,0 +1,19 @@
+{
+  "source": "30a3b2c3b2a407975e6cda6fe8677fcbc676e785",
+  "startedUtc": "2026-10-25T20:21:26.669895+00:00",
+  "checks": [
+    {
+      "name": "Cancel long prefill after Busy; no completed result, same PID, deterministic next request",
+      "passed": true,
+      "cancelToValidatedNextRequestSeconds": 2.6583169589999898
+    },
+    {
+      "name": "Agent loss revokes readiness and rejects request; restart yields healthy registry and exact tokens without Mac reload",
+      "passed": true,
+      "unavailableRequestStatus": 503
+    }
+  ],
+  "macPid": 30002,
+  "outputTokenIdsSha256": "d04a473d98f7ec9b0e21f3177bb20488438df3367afe8e2b2bc65850132b680e",
+  "completedUtc": "2026-10-25T20:23:33.470280+00:00"
+}
