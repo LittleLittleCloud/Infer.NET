@@ -27,21 +27,23 @@ One final CPU compilation overlapped part of main 32768 trial3; the controller w
 - Initial instrumentation native graph check passed60 hardware cases and existing KV/profile guards. Existing legacy/fused decode attention checks at lengths17,2048,8192,32768 passed their independent numerical checks. Candidate counter-on/off full-model output checks provide the later reset/prefill instrumentation check.
 - Python compilation/help and whitespace checks passed. CI status is recorded in the PR.
 
-## Preliminary sampled stage shares
+## Sampled stage shares
 
-These are shares of measured GPU regions, not physical ALU/Tensor utilization or clean throughput. Short and8K have all three formal trials;32K currently has one formal trial. Final on/off perturbation and application-pilot results are pending.
+These are shares of measured GPU regions, not physical ALU/Tensor utilization or clean throughput. All three shapes have three formal counter-on trials:27 short-request samples and24 each at8K/32K,75 total. Every sample covers675 dispatches with273 valid encoder regions and zero invalid regions. Final default-off controls and application-pilot results are still pending.
 
-| Coarse region | Short prompt21 |8192 input|32768 input (partial)|
+| Coarse region | Short prompt21 |8192 input|32768 input|
 |---|---:|---:|---:|
-|MoE block|40.0%|33.6%|25.0%|
+|MoE block|40.0%|33.6%|24.9%|
 |Dense input/output projections|37.9%|31.8%|23.9%|
-|LM head|13.6%|11.3%|8.5%|
+|LM head|13.6%|11.3%|8.4%|
 |Attention preparation/core|3.5%|19.1%|39.6%|
 |Delta recurrence|2.1%|1.8%|1.3%|
 |Delta preparation/output gate|1.4%|1.2%|0.9%|
 |Other normalization/embedding/argmax|1.5%|1.3%|1.0%|
 
-The provisional priority is quantized linear projections/MoE and long-context attention. This does not identify the limiting hardware resource within those regions, establish achievable speedup, or demonstrate that native INT8 is faster than a BF16/tiled alternative. Delta input/output projections remain in the dense category.
+Measured-region sums account for91.49%,92.60%,94.31% of the sampled complete-command GPU durations, respectively. The unassigned remainder is not counted as a named stage or attributed to barriers.
+
+The diagnostic priority is quantized linear projections/MoE and long-context attention. This does not identify the limiting hardware resource within those regions, establish achievable speedup, or demonstrate that native INT8 is faster than a BF16/tiled alternative. Delta input/output projections remain in the dense category.
 
 ## 128K and resource limits
 
