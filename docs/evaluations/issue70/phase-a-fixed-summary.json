@@ -1,0 +1,147 @@
+{
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "candidate": "bd3daa6db80d3230e8ccec9d974989a536dabec9",
+  "scope": "Diagnostic fixed requests; counter-region shares are instrumented and not hardware utilization. No adoption comparison.",
+  "cohorts": {
+    "off-32768": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249"
+      ],
+      "formalMedianPrefillMs": 139635.8722,
+      "formalDecodeAggregate": 46.022890263600374,
+      "formalMedianDecode": 46.03422242090665,
+      "maxAllocationBytes": 38526271488,
+      "maxFormalSwapoutBytes": 137543680,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "main-32768": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249"
+      ],
+      "formalMedianPrefillMs": 139751.6875,
+      "formalDecodeAggregate": 45.85751991531314,
+      "formalMedianDecode": 45.85336469462773,
+      "maxAllocationBytes": 38526271488,
+      "maxFormalSwapoutBytes": 41877504,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "off-8192": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b"
+      ],
+      "formalMedianPrefillMs": 29978.5276,
+      "formalDecodeAggregate": 61.1044332822023,
+      "formalMedianDecode": 61.1364024866437,
+      "maxAllocationBytes": 37467340800,
+      "maxFormalSwapoutBytes": 231473152,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "main-8192": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b"
+      ],
+      "formalMedianPrefillMs": 29974.6587,
+      "formalDecodeAggregate": 61.07764825468935,
+      "formalMedianDecode": 61.087684011015384,
+      "maxAllocationBytes": 37467340800,
+      "maxFormalSwapoutBytes": 0,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "main-short": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "4cea6807b4f91c0c3d9b817d72c1f6722815513083e0894599541097c8e9b1f9"
+      ],
+      "formalMedianPrefillMs": 84.7056,
+      "formalDecodeAggregate": 70.69627780571817,
+      "formalMedianDecode": 70.71987711892343,
+      "maxAllocationBytes": 37114363904,
+      "maxFormalSwapoutBytes": 0,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "off-short": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "4cea6807b4f91c0c3d9b817d72c1f6722815513083e0894599541097c8e9b1f9"
+      ],
+      "formalMedianPrefillMs": 84.6247,
+      "formalDecodeAggregate": 70.40466662087591,
+      "formalMedianDecode": 70.3943876051336,
+      "maxAllocationBytes": 37114363904,
+      "maxFormalSwapoutBytes": 0,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    }
+  },
+  "paired": {},
+  "collectionStatus": "In progress; this is an intermediate snapshot, not final acceptance."
+}
