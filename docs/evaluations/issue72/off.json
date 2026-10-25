@@ -2,7 +2,8 @@
   "schema": "issue72-cohort-v1",
   "runId": "issue72-off-human20-20261024",
   "mode": "off",
-  "validForPerformanceComparison": true,
+  "validForDeclaredComparison": true,
+  "standardThroughputAvailable": true,
   "macCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
   "windowsCommit": null,
   "runtimeBuild": "0.3.0+afdb36fd1106cf29b19b66ac94745dda481fc429",
@@ -19,6 +20,22 @@
   },
   "startedUtc": "2026-10-24T23:17:11.188388+00:00",
   "endedUtc": "2026-10-24T23:37:01.740080+00:00",
+  "benchmarkConfiguration": {
+    "seed": 0,
+    "pi_version": "1.4.0",
+    "dataset_revision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+    "context_window": 32768,
+    "max_tokens": 4096,
+    "timeout_seconds": 300.0
+  },
+  "officialEvaluator": {
+    "method": "Official HumanEval test field against complete solution.py files; one offline restricted Docker container per task",
+    "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "image": "python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd",
+    "negative_control": "failed",
+    "count": 20,
+    "passed": 20
+  },
   "plannedTasks": 20,
   "attemptedTasks": 20,
   "piCompleted": 19,
@@ -29,6 +46,11 @@
   "observedRequestCount": 104,
   "workerInputTokens": 238352,
   "workerOutputTokens": 20429,
+  "piRequestTokenReconciliation": {
+    "matchingRequests": 103,
+    "observedRequests": 104,
+    "piRequests": 104
+  },
   "piUsageMatchesWorker": false,
   "prefillSeconds": 879.3294214999999,
   "prefillTokensPerSecond": 271.06109971096885,
@@ -321,7 +343,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1606,
+      "piOutputTokens": 358,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00027",
@@ -342,7 +367,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2031,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00028",
@@ -363,7 +391,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2124,
+      "piOutputTokens": 322,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00029",
@@ -384,7 +415,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2471,
+      "piOutputTokens": 270,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00030",
@@ -405,7 +439,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2765,
+      "piOutputTokens": 56,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00031",
@@ -426,7 +463,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1822,
+      "piOutputTokens": 590,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00032",
@@ -447,7 +487,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2482,
+      "piOutputTokens": 443,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00033",
@@ -468,7 +511,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3048,
+      "piOutputTokens": 81,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00034",
@@ -489,7 +535,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1731,
+      "piOutputTokens": 371,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00035",
@@ -510,7 +559,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2176,
+      "piOutputTokens": 207,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00036",
@@ -531,7 +583,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2407,
+      "piOutputTokens": 79,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00037",
@@ -552,7 +607,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1617,
+      "piOutputTokens": 272,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00038",
@@ -573,7 +631,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1956,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00039",
@@ -594,7 +655,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2051,
+      "piOutputTokens": 234,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00040",
@@ -615,7 +679,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2310,
+      "piOutputTokens": 161,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00041",
@@ -636,7 +703,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2495,
+      "piOutputTokens": 92,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00042",
@@ -657,7 +727,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1691,
+      "piOutputTokens": 378,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00043",
@@ -678,7 +751,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2149,
+      "piOutputTokens": 399,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00044",
@@ -699,7 +775,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2604,
+      "piOutputTokens": 110,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00045",
@@ -720,7 +799,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2735,
+      "piOutputTokens": 477,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00046",
@@ -741,7 +823,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 0,
+      "piOutputTokens": 0,
+      "piUsageMatchesWorker": false
     },
     {
       "id": "observer-00047",
@@ -762,7 +847,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1582,
+      "piOutputTokens": 162,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00048",
@@ -783,7 +871,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1801,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00049",
@@ -804,7 +895,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1897,
+      "piOutputTokens": 133,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00050",
@@ -825,7 +919,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2055,
+      "piOutputTokens": 62,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00051",
@@ -846,7 +943,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2160,
+      "piOutputTokens": 85,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00052",
@@ -867,7 +967,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1583,
+      "piOutputTokens": 178,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00053",
@@ -888,7 +991,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1832,
+      "piOutputTokens": 138,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00054",
@@ -909,7 +1015,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2007,
+      "piOutputTokens": 139,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00055",
@@ -930,7 +1039,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2171,
+      "piOutputTokens": 105,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00056",
@@ -951,7 +1063,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1762,
+      "piOutputTokens": 697,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00057",
@@ -972,7 +1087,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2525,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00058",
@@ -993,7 +1111,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2620,
+      "piOutputTokens": 660,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00059",
@@ -1014,7 +1135,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3305,
+      "piOutputTokens": 419,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00060",
@@ -1035,7 +1159,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3899,
+      "piOutputTokens": 58,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00061",
@@ -1056,7 +1183,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 4595,
+      "piOutputTokens": 171,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00062",
@@ -1077,7 +1207,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1624,
+      "piOutputTokens": 341,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00063",
@@ -1098,7 +1231,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2019,
+      "piOutputTokens": 331,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00064",
@@ -1119,7 +1255,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2383,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00065",
@@ -1140,7 +1279,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2478,
+      "piOutputTokens": 329,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00066",
@@ -1161,7 +1303,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2832,
+      "piOutputTokens": 319,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00067",
@@ -1182,7 +1327,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3297,
+      "piOutputTokens": 83,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00068",
@@ -1203,7 +1351,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1639,
+      "piOutputTokens": 340,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00069",
@@ -1224,7 +1375,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2046,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00070",
@@ -1245,7 +1399,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2140,
+      "piOutputTokens": 305,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00071",
@@ -1266,7 +1423,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 136232960,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2478,
+      "piOutputTokens": 78,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00072",
@@ -1287,7 +1447,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 167706624,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2635,
+      "piOutputTokens": 349,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00073",
@@ -1308,7 +1471,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3007,
+      "piOutputTokens": 74,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00074",
@@ -1329,7 +1495,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3362,
+      "piOutputTokens": 338,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00075",
@@ -1350,7 +1519,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3724,
+      "piOutputTokens": 97,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00076",
@@ -1371,7 +1543,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1611,
+      "piOutputTokens": 225,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00077",
@@ -1392,7 +1567,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1903,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00078",
@@ -1413,7 +1591,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1996,
+      "piOutputTokens": 189,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00079",
@@ -1434,7 +1615,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2210,
+      "piOutputTokens": 205,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00080",
@@ -1455,7 +1639,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2439,
+      "piOutputTokens": 158,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00081",
@@ -1476,7 +1663,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1622,
+      "piOutputTokens": 271,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00082",
@@ -1497,7 +1687,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1960,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00083",
@@ -1518,7 +1711,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2055,
+      "piOutputTokens": 235,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00084",
@@ -1539,7 +1735,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2323,
+      "piOutputTokens": 33,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00085",
@@ -1560,7 +1759,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2435,
+      "piOutputTokens": 232,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00086",
@@ -1581,7 +1783,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2690,
+      "piOutputTokens": 188,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00087",
@@ -1602,7 +1807,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2902,
+      "piOutputTokens": 97,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00088",
@@ -1623,7 +1831,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1610,
+      "piOutputTokens": 287,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00089",
@@ -1644,7 +1855,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1963,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00090",
@@ -1665,7 +1879,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2058,
+      "piOutputTokens": 252,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00091",
@@ -1686,7 +1903,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2343,
+      "piOutputTokens": 33,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00092",
@@ -1707,7 +1927,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2455,
+      "piOutputTokens": 249,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00093",
@@ -1728,7 +1951,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2727,
+      "piOutputTokens": 124,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00094",
@@ -1749,7 +1975,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2890,
+      "piOutputTokens": 109,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00095",
@@ -1770,7 +1999,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1611,
+      "piOutputTokens": 318,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00096",
@@ -1791,7 +2023,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2001,
+      "piOutputTokens": 257,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00097",
@@ -1812,7 +2047,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2282,
+      "piOutputTokens": 95,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00098",
@@ -1833,7 +2071,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1832,
+      "piOutputTokens": 486,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00099",
@@ -1854,7 +2095,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2389,
+      "piOutputTokens": 257,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00100",
@@ -1875,7 +2119,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2686,
+      "piOutputTokens": 68,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00101",
@@ -1896,7 +2143,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1570,
+      "piOutputTokens": 211,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00102",
@@ -1917,7 +2167,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1847,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00103",
@@ -1938,7 +2191,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1942,
+      "piOutputTokens": 174,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00104",
@@ -1959,7 +2215,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2141,
+      "piOutputTokens": 120,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00105",
@@ -1980,7 +2239,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2285,
+      "piOutputTokens": 55,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00106",
@@ -2001,7 +2263,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1583,
+      "piOutputTokens": 194,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00107",
@@ -2022,7 +2287,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1855,
+      "piOutputTokens": 243,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00108",
@@ -2043,7 +2311,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2135,
+      "piOutputTokens": 234,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00109",
@@ -2064,7 +2335,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2393,
+      "piOutputTokens": 68,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00110",
@@ -2085,7 +2359,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1591,
+      "piOutputTokens": 207,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00111",
@@ -2106,7 +2383,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1865,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00112",
@@ -2127,7 +2407,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1960,
+      "piOutputTokens": 171,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00113",
@@ -2148,7 +2431,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2164,
+      "piOutputTokens": 33,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00114",
@@ -2169,7 +2455,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2276,
+      "piOutputTokens": 168,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00115",
@@ -2190,7 +2479,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2467,
+      "piOutputTokens": 32,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00116",
@@ -2211,7 +2503,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2535,
+      "piOutputTokens": 33,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00117",
@@ -2232,7 +2527,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2715,
+      "piOutputTokens": 179,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00118",
@@ -2253,7 +2551,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2961,
+      "piOutputTokens": 47,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00119",
@@ -2274,7 +2575,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1576,
+      "piOutputTokens": 225,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00120",
@@ -2295,7 +2599,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1868,
+      "piOutputTokens": 31,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00121",
@@ -2316,7 +2623,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1962,
+      "piOutputTokens": 188,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00122",
@@ -2337,7 +2647,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2175,
+      "piOutputTokens": 215,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00123",
@@ -2358,7 +2671,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2455,
+      "piOutputTokens": 141,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00124",
@@ -2379,7 +2695,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2670,
+      "piOutputTokens": 380,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00125",
@@ -2400,7 +2719,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3216,
+      "piOutputTokens": 316,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00126",
@@ -2421,7 +2743,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 3600,
+      "piOutputTokens": 124,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00127",
@@ -2442,7 +2767,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 1708,
+      "piOutputTokens": 425,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00128",
@@ -2463,7 +2791,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2203,
+      "piOutputTokens": 415,
+      "piUsageMatchesWorker": true
     },
     {
       "id": "observer-00129",
@@ -2484,7 +2815,10 @@
       "contextCapacity": 6144,
       "snapshotHostBytes": null,
       "systemSwapOutBytes": 0,
-      "powerAc": true
+      "powerAc": true,
+      "piInputTokens": 2642,
+      "piOutputTokens": 98,
+      "piUsageMatchesWorker": true
     }
   ],
   "localEvidence": {

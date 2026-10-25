@@ -4,14 +4,14 @@
   "baselineCommit": "4ca29eed1a2acb8a870d33e980dce37dfbc1b7e3",
   "candidateCommit": "afdb36fd1106cf29b19b66ac94745dda481fc429",
   "date": "2026-10-24 America/Los_Angeles",
-  "status": "evaluation-in-progress",
+  "status": "evaluation-complete-not-accepted",
   "scope": "Synthetic speculative-state correctness reference; no real draft or acceleration claim.",
   "independentCpuTests": 430,
   "managedIntegrationChecks": 70,
   "implementationProvider": "GitHub Copilot CLI1.0.103 / claude-sonnet-5.5",
   "hardwareCorrectness": "95 real-model checks passed, zero failures",
-  "formalPerformance": "Main and disabled cohorts complete; enabled correctness cohort running. Disabled Pi stream failure and incomplete TTFT coverage retained.",
-  "restoration": "pending end of evaluation",
+  "formalPerformance": "All cohorts and official assertions complete. Main 20/20; off official 20/20 with Pi stream failure; on 19/20 with missing solution. No synthetic speed claim.",
+  "restoration": "Original cd6f7da worker Ready; coordinator registration and real chat independently verified; nine original package hashes match; all experiment ports closed; wired limit 0.",
   "windowsParticipating": false,
   "baselineFormal": {
     "runId": "issue72-main-human20-20261024",
@@ -44,5 +44,24 @@
       "totalObservedRequests": 104
     },
     "piUsageMatchesWorker": false
-  }
+  },
+  "acceptance": "Not all predeclared criteria met; code remains a draft candidate. No merge or adoption.",
+  "onFormal": {
+    "runId": "issue72-on-human20-20261024",
+    "piCompleted": 19,
+    "piErrors": 1,
+    "officialPassed": 19,
+    "observedRequestCount": 100,
+    "prefillTokensPerSecond": 271.6123995585477,
+    "decodeTokensPerSecond": null,
+    "clientTtftMedianMs": 17547.33483300015,
+    "coverage": {
+      "prefillRequests": 100,
+      "decodeRequests": 0,
+      "clientTtftRequests": 99,
+      "totalObservedRequests": 100
+    },
+    "piUsageMatchesWorker": false
+  },
+  "completedUtc": "2026-10-25T00:19:32.455374+00:00"
 }

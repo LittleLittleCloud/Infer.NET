@@ -11,7 +11,7 @@ for mode in ['baseline','off','on']:
  path=ROOT/'docs/evaluations/issue72'/(mode+'.json')
  if not path.exists():continue
  m=json.loads(path.read_text());rid=m['runId'];diagnostic=mode=='on';sha=m['macCommit']
- assert m['validForPerformanceComparison'] and m['attemptedTasks']==m['plannedTasks']==20
+ assert m['validForDeclaredComparison'] and m['attemptedTasks']==m['plannedTasks']==20
  existing=next((i for i,r in enumerate(data['runs']) if r['id']==rid),None)
  cfg_id='issue72-synthetic-correctness-human20' if diagnostic else 'issue72-local-fp32-human20'
  if not any(c['id']==cfg_id for c in data['configurations']):

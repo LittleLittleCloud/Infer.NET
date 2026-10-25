@@ -1,0 +1,35 @@
+{
+  "note": "System counters include unrelated system activity. Whole cohort includes between-request gaps; request sum includes only each measured request bracket. Loading and warmup are excluded. No continuous Metal peak measured.",
+  "cohorts": {
+    "baseline": {
+      "wholeCohortSystemSwapOutBytes": 723697664,
+      "sumRequestSystemSwapOutBytes": 723697664,
+      "sampleStartUtc": "2026-10-24T22:15:14.321418+00:00",
+      "sampleEndUtc": "2026-10-24T22:34:22.779752+00:00",
+      "vmmapFootprintLines": [
+        "Physical footprint:         35.1G",
+        "Physical footprint (peak):  35.1G"
+      ]
+    },
+    "off": {
+      "wholeCohortSystemSwapOutBytes": 314540032,
+      "sumRequestSystemSwapOutBytes": 303939584,
+      "sampleStartUtc": "2026-10-24T23:17:11.393483+00:00",
+      "sampleEndUtc": "2026-10-24T23:37:01.733383+00:00",
+      "vmmapFootprintLines": [
+        "Physical footprint:         35.1G",
+        "Physical footprint (peak):  35.1G"
+      ]
+    },
+    "on": {
+      "wholeCohortSystemSwapOutBytes": 257097728,
+      "sumRequestSystemSwapOutBytes": 257097728,
+      "sampleStartUtc": "2026-10-24T23:44:52.951037+00:00",
+      "sampleEndUtc": "2026-10-25T00:17:30.740723+00:00",
+      "vmmapFootprintLines": [
+        "Physical footprint:         35.1G",
+        "Physical footprint (peak):  35.1G"
+      ]
+    }
+  }
+}
