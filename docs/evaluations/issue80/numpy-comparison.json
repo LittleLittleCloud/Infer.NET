@@ -1,0 +1,188 @@
+{
+  "kind": "Independent NumPy FP32 draft equations, actual captured target taps and independent CPU affine8 embeddings; no native embedding checkpoint was supplied",
+  "ropeConvention": "Host double angles/cos/sin rounded once to FP32 table",
+  "numpyVersion": "2.3.5",
+  "promptRows": 84,
+  "scripts": {
+    "compare_numpy.py": "8a8b1b7017507233fc0643eb63a87efd0dc88dbe0ec923f71bda7a32730dbc8e",
+    "numpy_oracle.py": "4ec413791e41f17fab1f36ec964c98f029b9f5bec77b377a0a015e3253287413"
+  },
+  "allPass": false,
+  "comparisons": {
+    "attention-0": {
+      "relL2": 7.212569174435967e-07,
+      "maxAbs": 0.004150390625,
+      "referenceMaxAbs": 5878.0546875,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "output-0": {
+      "relL2": 5.576763481883171e-07,
+      "maxAbs": 0.0035400390625,
+      "referenceMaxAbs": 7019.98486328125,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-keys-0": {
+      "relL2": 1.134523904783271e-06,
+      "maxAbs": 1.239776611328125e-05,
+      "referenceMaxAbs": 8.826532363891602,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-0": {
+      "relL2": 1.733715731389161e-06,
+      "maxAbs": 2.8133392333984375e-05,
+      "referenceMaxAbs": 13.341588020324707,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "attention-1": {
+      "relL2": 5.59052559303933e-07,
+      "maxAbs": 0.00732421875,
+      "referenceMaxAbs": 10675.099609375,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "output-1": {
+      "relL2": 5.819074437063398e-07,
+      "maxAbs": 0.0068359375,
+      "referenceMaxAbs": 11195.921875,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-keys-1": {
+      "relL2": 1.2195903380516602e-06,
+      "maxAbs": 9.775161743164062e-06,
+      "referenceMaxAbs": 6.6727614402771,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-1": {
+      "relL2": 1.6627893713254591e-06,
+      "maxAbs": 3.0517578125e-05,
+      "referenceMaxAbs": 15.452162742614746,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "attention-2": {
+      "relL2": 5.406148238817781e-07,
+      "maxAbs": 0.013671875,
+      "referenceMaxAbs": 15723.3056640625,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "output-2": {
+      "relL2": 6.519161347365489e-07,
+      "maxAbs": 0.01171875,
+      "referenceMaxAbs": 16094.8291015625,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "context-keys-2": {
+      "relL2": 1.165191339151767e-06,
+      "maxAbs": 9.775161743164062e-06,
+      "referenceMaxAbs": 10.353218078613281,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-2": {
+      "relL2": 1.4579292334761667e-06,
+      "maxAbs": 4.76837158203125e-05,
+      "referenceMaxAbs": 20.986244201660156,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "attention-3": {
+      "relL2": 6.70582670908281e-07,
+      "maxAbs": 0.029296875,
+      "referenceMaxAbs": 25056.8203125,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "output-3": {
+      "relL2": 8.216076235002526e-07,
+      "maxAbs": 0.029296875,
+      "referenceMaxAbs": 24528.810546875,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "context-keys-3": {
+      "relL2": 1.175914843941295e-06,
+      "maxAbs": 1.0967254638671875e-05,
+      "referenceMaxAbs": 9.095582962036133,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-3": {
+      "relL2": 1.3831047596919795e-06,
+      "maxAbs": 3.814697265625e-05,
+      "referenceMaxAbs": 25.483644485473633,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "attention-4": {
+      "relL2": 7.526216508720184e-07,
+      "maxAbs": 0.03515625,
+      "referenceMaxAbs": 28957.24609375,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "output-4": {
+      "relL2": 1.089397676988482e-06,
+      "maxAbs": 0.03125,
+      "referenceMaxAbs": 26245.541015625,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "context-keys-4": {
+      "relL2": 1.1406873209870567e-06,
+      "maxAbs": 1.4781951904296875e-05,
+      "referenceMaxAbs": 12.237810134887695,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-4": {
+      "relL2": 1.6903901554784617e-06,
+      "maxAbs": 5.340576171875e-05,
+      "referenceMaxAbs": 30.2176513671875,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "attention-5": {
+      "relL2": 9.081385277164478e-07,
+      "maxAbs": 0.0390625,
+      "referenceMaxAbs": 36817.5703125,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "output-5": {
+      "relL2": 4.292138816385017e-06,
+      "maxAbs": 0.130859375,
+      "referenceMaxAbs": 12544.46484375,
+      "finite": true,
+      "passesOriginalTolerance": false
+    },
+    "context-keys-5": {
+      "relL2": 1.149666458505904e-06,
+      "maxAbs": 1.0013580322265625e-05,
+      "referenceMaxAbs": 10.510290145874023,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "context-values-5": {
+      "relL2": 1.5292714907507156e-06,
+      "maxAbs": 5.7220458984375e-05,
+      "referenceMaxAbs": 47.37734603881836,
+      "finite": true,
+      "passesOriginalTolerance": true
+    },
+    "final": {
+      "relL2": 3.2765012704736753e-06,
+      "maxAbs": 5.6862831115722656e-05,
+      "referenceMaxAbs": 23.631799697875977,
+      "finite": true,
+      "passesOriginalTolerance": true
+    }
+  }
+}

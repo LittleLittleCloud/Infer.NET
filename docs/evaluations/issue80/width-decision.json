@@ -1,0 +1,12 @@
+{
+  "utc": "2026-10-25T08:05:22.542000+00:00",
+  "selectedMode": "df4",
+  "rule": "Higher aggregate all-request worker decode rate among exact-target/resource-safe pilot blocks; tie block4. No task exclusion or answer retry.",
+  "pilotRates": {
+    "main-pilot": 68.0124760305233,
+    "off-pilot": 67.98728553905978,
+    "df4-pilot": 59.09132904697301,
+    "df8-pilot": 53.127298194092326
+  },
+  "qualification": "Diagnostic only; both original numerical failures retained; no adoption/merge/production update authorized."
+}

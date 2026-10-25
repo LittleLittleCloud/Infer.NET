@@ -1,0 +1,50 @@
+{
+  "main-human20": {
+    "samples": 568,
+    "allSamplesAcPower": true,
+    "minSystemFreeBytes": 15024128,
+    "maxSystemCompressorBytes": 3053010944,
+    "maxSystemWiredBytes": 40928542720,
+    "vmmapPhysicalFootprintRaw": "35.1G",
+    "vmmapPeakPhysicalFootprintRaw": "35.1G",
+    "pressureScope": "Whole-system vm_stat indicators, not a measured OS pressure-level gauge; no causal attribution to the worker. Loading/warmup excluded by cohort window.",
+    "continuousMetalDriverPeakObtained": false,
+    "osPressureLevelObtained": false
+  },
+  "off-human20": {
+    "samples": 667,
+    "allSamplesAcPower": true,
+    "minSystemFreeBytes": 52903936,
+    "maxSystemCompressorBytes": 2646163456,
+    "maxSystemWiredBytes": 41022357504,
+    "vmmapPhysicalFootprintRaw": "35.2G",
+    "vmmapPeakPhysicalFootprintRaw": "35.2G",
+    "pressureScope": "Whole-system vm_stat indicators, not a measured OS pressure-level gauge; no causal attribution to the worker. Loading/warmup excluded by cohort window.",
+    "continuousMetalDriverPeakObtained": false,
+    "osPressureLevelObtained": false
+  },
+  "mtp-human20": {
+    "samples": 471,
+    "allSamplesAcPower": true,
+    "minSystemFreeBytes": 45875200,
+    "maxSystemCompressorBytes": 4165468160,
+    "maxSystemWiredBytes": 42621943808,
+    "vmmapPhysicalFootprintRaw": "37.0G",
+    "vmmapPeakPhysicalFootprintRaw": "37.3G",
+    "pressureScope": "Whole-system vm_stat indicators, not a measured OS pressure-level gauge; no causal attribution to the worker. Loading/warmup excluded by cohort window.",
+    "continuousMetalDriverPeakObtained": false,
+    "osPressureLevelObtained": false
+  },
+  "df-human20": {
+    "samples": 520,
+    "allSamplesAcPower": true,
+    "minSystemFreeBytes": 51200000,
+    "maxSystemCompressorBytes": 3287072768,
+    "maxSystemWiredBytes": 42118086656,
+    "vmmapPhysicalFootprintRaw": "36.2G",
+    "vmmapPeakPhysicalFootprintRaw": "36.2G",
+    "pressureScope": "Whole-system vm_stat indicators, not a measured OS pressure-level gauge; no causal attribution to the worker. Loading/warmup excluded by cohort window.",
+    "continuousMetalDriverPeakObtained": false,
+    "osPressureLevelObtained": false
+  }
+}

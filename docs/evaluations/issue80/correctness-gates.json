@@ -1,0 +1,370 @@
+{
+  "schema": "issue80-correctness-v1",
+  "fixedFp32Tolerance": {
+    "relativeL2Exclusive": 0.0001,
+    "maxAbsoluteExclusive": 0.01
+  },
+  "runs": [
+    {
+      "run": "gates-attempt1",
+      "sourceCommit": "3e78b6fbfc1961bab2f010380f48790e21606c4f",
+      "startedUtc": "2026-10-25T06:33:14.827224+00:00",
+      "endedUtc": null,
+      "phases": [
+        {
+          "name": "G1",
+          "test": "TapsMatchTheActualScalarTargetPostLayerResidualsForPrefillAndVerify",
+          "startedUtc": "2026-10-25T06:33:16.896553+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:33:45.203531+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G2",
+          "test": "SharedTargetEmbeddingAndHeadAgreeWithTheIndependentAffine8Reference",
+          "startedUtc": "2026-10-25T06:33:45.210063+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:34:05.437478+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G3",
+          "test": "DrafterContextAndEveryIntermediateCheckpointMatchTheIndependentFp32Reference",
+          "startedUtc": "2026-10-25T06:34:05.443018+00:00",
+          "exitCode": 1,
+          "endedUtc": "2026-10-25T06:34:27.774455+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "0",
+            "failed": "1",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        }
+      ],
+      "sourceManifestSha256": "21ec8774d6062f95469e2a85e2c6d5a00db9a2efdb0ae6fe9d1e90e63ce2f77a",
+      "interpretation": "Draft numerical failures remain failed; separate target diagnostics do not supersede them."
+    },
+    {
+      "run": "gates-attempt2",
+      "sourceCommit": "c706064676ad5ad263ab23f146c285726167aa35",
+      "startedUtc": "2026-10-25T06:37:44.833429+00:00",
+      "endedUtc": null,
+      "phases": [
+        {
+          "name": "G1",
+          "test": "DrafterContextAndEveryIntermediateCheckpointMatchTheIndependentFp32Reference",
+          "startedUtc": "2026-10-25T06:37:46.889582+00:00",
+          "exitCode": 1,
+          "endedUtc": "2026-10-25T06:38:19.291170+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "0",
+            "failed": "1",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        }
+      ],
+      "sourceManifestSha256": "a642910774f59dc1a763b39d37823301b274127376909c1500ce8f3b432f86d7",
+      "interpretation": "Draft numerical failures remain failed; separate target diagnostics do not supersede them."
+    },
+    {
+      "run": "gates-target-diagnostic1",
+      "sourceCommit": "c706064676ad5ad263ab23f146c285726167aa35",
+      "startedUtc": "2026-10-25T06:42:57.061014+00:00",
+      "endedUtc": "2026-10-25T07:03:04.819851+00:00",
+      "phases": [
+        {
+          "name": "G1",
+          "test": "BatchedVerifyMatchesScalarPerRowLogitsTapsAndFullStateBeforeAndAfterEveryRollbackPrefix",
+          "startedUtc": "2026-10-25T06:42:59.129854+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:43:55.746513+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G2",
+          "test": "RingEvictionKeepsExactly2047RowsAtAbsolutePositionsAndInvisibleSlotsAreNeverRead",
+          "startedUtc": "2026-10-25T06:43:55.760158+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:44:28.138790+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G3",
+          "test": "FreshTargetConditionedContextAfterRejectionMatchesTheReferenceOfTheAdvertisedPrefix",
+          "startedUtc": "2026-10-25T06:44:28.145612+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:44:52.416195+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G4",
+          "test": "NativeGenerationActuallyCrosses2048CapacityAndEvictsCommittedContextForBothBlocks",
+          "startedUtc": "2026-10-25T06:44:52.422405+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:46:17.352148+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G5",
+          "test": "LongAbsolutePositionsCrossRopeAndRingBoundariesAndMatchSerialGreedy",
+          "startedUtc": "2026-10-25T06:46:17.366885+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:47:09.936964+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G6",
+          "test": "OutputCapTailsGrowthAndCancellationResetMatchSerialGreedy",
+          "startedUtc": "2026-10-25T06:47:09.944898+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:48:10.625061+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G7",
+          "test": "NaturalEosStopsExactlyLikeSerialGreedyWithoutIgnoreEos",
+          "startedUtc": "2026-10-25T06:48:10.635130+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:48:53.131850+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G8",
+          "test": "SerialReplayOracleAndBatchedReplayProduceTheSameOutput",
+          "startedUtc": "2026-10-25T06:48:53.145836+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T06:49:35.795473+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        },
+        {
+          "name": "G9",
+          "test": "SpeculativeOutputAndTerminalStateEqualSerialGreedyAcrossFixedLengthsAndWarmFormalRuns",
+          "startedUtc": "2026-10-25T06:49:35.808266+00:00",
+          "exitCode": 0,
+          "endedUtc": "2026-10-25T07:03:04.814350+00:00",
+          "counters": {
+            "total": "1",
+            "executed": "1",
+            "passed": "1",
+            "failed": "0",
+            "error": "0",
+            "timeout": "0",
+            "aborted": "0",
+            "inconclusive": "0",
+            "passedButRunAborted": "0",
+            "notRunnable": "0",
+            "notExecuted": "0",
+            "disconnected": "0",
+            "warning": "0",
+            "completed": "0",
+            "inProgress": "0",
+            "pending": "0"
+          }
+        }
+      ],
+      "sourceManifestSha256": "b5150a9f338e96065c30f34a1f0ebcb47ff839e64e94186f96e6d1ba69454316",
+      "interpretation": "Draft numerical failures remain failed; separate target diagnostics do not supersede them."
+    }
+  ],
+  "limitations": [
+    "No near32768 full-model test",
+    "No complete independent full-window NumPy forward",
+    "Shared embedding assertion checked vector length, not native embedding values",
+    "Continuous Metal-driver peak not obtained"
+  ]
+}

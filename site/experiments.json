@@ -900,5 +900,20 @@
       "python3 artifacts/dual-host/issue76-official-mtp/evaluate.py LABEL MODE pilot"
     ],
     "evidence": "docs/evaluations/issue76/; restricted local raw evidence with SHA256 inventory; prompts, credentials and generated solutions excluded."
+  },
+  {
+    "id": "dflash2-comparison-20261024",
+    "title": "DFlash2 diagnostic20: 57.98 token/s, slower than MTP69.56 and main67.78",
+    "kind": "2026-10-25 · Issue #80 · Diagnostic candidate; not adopted",
+    "question": "Does native BF16 DFlash2 improve unchanged affine8/FP32 target decode over fresh main and official MTP?",
+    "setup": "Single M5 Pro20GPU/48GiB; AC/HighPower; Pi1.4.0 seed0 ctx32768/out4096; same target revision; serial GPU jobs; wired0.",
+    "change": "Native six-layer DFlash2 plus trained selector, blocks4/8; minimal exact verifier/state dependencies explicitly ported from unmerged MTP. Code PR #81; independent results PR #82.",
+    "result": "All4 arms attempted20. Main67.782 token/s, official20/20; MTP69.563, official19/20; DFlash2-block4 57.981, official20/20. DFlash2 was16.65% slower than MTP and14.46% slower than main. Off official20/20 but Pi19/20; one canceled request lacks a terminal clock, so whole-arm speed is not obtained.",
+    "validation": "Both draft numerical failures retained; all9 target/state diagnostics passed. Main105/105, MTP88/88 and DFlash2 92/92 worker clocks complete; off114/115 only. MTP API failure and off timeout retained. Original service restored; final identity, registration, two chats, hashes, wired0 and closed temporary ports passed. Continuous Metal driver peak remains unavailable.",
+    "conclusion": "Do not adopt this prototype: numerical gate failed, full peak evidence missing, and decoding slower. Results PR #82 preserves failures independently of code PR #81; neither merge nor production update authorized.",
+    "next": "Human review of results; resolve numerical validation and profile draft/verification/replay before another optimization proposal.",
+    "commands": [],
+    "source": "docs/EXPERIMENT-80-DFLASH2-RESULTS-20261024.md",
+    "evidence": "docs/evaluations/issue80; private raw evidence remains local with public hashes."
   }
 ]

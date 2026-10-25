@@ -1,0 +1,66 @@
+{
+  "kind": "Independent FP32 same-input sublayer equations; native outputs are used only as inputs of the next isolated sublayer; chained full-network drift is reported separately",
+  "allPass": false,
+  "results": {
+    "attention-module-0": {
+      "relL2": 7.471168112657401e-07,
+      "maxAbs": 0.0042724609375,
+      "passesOriginalOperatorTolerance": true
+    },
+    "mlp-module-0": {
+      "relL2": 2.2777878371706924e-07,
+      "maxAbs": 0.00146484375,
+      "passesOriginalOperatorTolerance": true
+    },
+    "attention-module-1": {
+      "relL2": 3.8398354762348944e-07,
+      "maxAbs": 0.005859375,
+      "passesOriginalOperatorTolerance": true
+    },
+    "mlp-module-1": {
+      "relL2": 2.0981166135467637e-07,
+      "maxAbs": 0.001953125,
+      "passesOriginalOperatorTolerance": true
+    },
+    "attention-module-2": {
+      "relL2": 4.176146446465338e-07,
+      "maxAbs": 0.009765625,
+      "passesOriginalOperatorTolerance": true
+    },
+    "mlp-module-2": {
+      "relL2": 2.0664939882361278e-07,
+      "maxAbs": 0.001953125,
+      "passesOriginalOperatorTolerance": true
+    },
+    "attention-module-3": {
+      "relL2": 2.880577228973465e-07,
+      "maxAbs": 0.009765625,
+      "passesOriginalOperatorTolerance": true
+    },
+    "mlp-module-3": {
+      "relL2": 2.1027504560987942e-07,
+      "maxAbs": 0.001953125,
+      "passesOriginalOperatorTolerance": true
+    },
+    "attention-module-4": {
+      "relL2": 2.2074846434264712e-07,
+      "maxAbs": 0.009765625,
+      "passesOriginalOperatorTolerance": true
+    },
+    "mlp-module-4": {
+      "relL2": 4.5970466625393635e-07,
+      "maxAbs": 0.009765625,
+      "passesOriginalOperatorTolerance": true
+    },
+    "attention-module-5": {
+      "relL2": 4.350688281920022e-07,
+      "maxAbs": 0.01953125,
+      "passesOriginalOperatorTolerance": false
+    },
+    "mlp-module-5": {
+      "relL2": 3.660373551521036e-06,
+      "maxAbs": 0.119140625,
+      "passesOriginalOperatorTolerance": false
+    }
+  }
+}
