@@ -1834,6 +1834,16 @@
     "bytes": 3020,
     "availability": "Restricted local ignored artifact; not a public download"
   },
+  "selection-decision.json": {
+    "sha256": "f7ad90ba20c0eb2e2a315bd8129317d1b24deca8dd05b3aebd2a599c9a1fa1d7",
+    "bytes": 569,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
+  "session-final.json": {
+    "sha256": "15423d8bf0eb474ba66a89e60066155f9a9f7f2c92e55ad1b0fdd908a6ea7499",
+    "bytes": 344,
+    "availability": "Restricted local ignored artifact; not a public download"
+  },
   "source-inspection.json": {
     "sha256": "0fe027eb9ceb31bcb127f99b928d4e2696eae0f062f80d6e444921f517d84a76",
     "bytes": 8556,

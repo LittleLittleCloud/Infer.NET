@@ -1,6 +1,6 @@
 # Official Qwen3.6 MTP integration and evaluation
 
-Experiment: [Issue #76](https://github.com/LittleLittleCloud/Infer.NET/issues/76). Implementation: [draft PR #78](https://github.com/LittleLittleCloud/Infer.NET/pull/78). Research: [PR #77](https://github.com/LittleLittleCloud/Infer.NET/pull/77). DFlash is outside this experiment.
+Experiment: [Issue #76](https://github.com/LittleLittleCloud/Infer.NET/issues/76). Implementation: [draft PR #78](https://github.com/LittleLittleCloud/Infer.NET/pull/78). Independent results: [PR #79](https://github.com/LittleLittleCloud/Infer.NET/pull/79). Research: [PR #77](https://github.com/LittleLittleCloud/Infer.NET/pull/77). DFlash is outside this experiment.
 
 Status: implementation and both five-task pilots completed. G5 has no eligible width, so the approved plan stops before formal 20 tasks. Continuing with a diagnostic 20-task comparison requires approval of that decision-rule change. No adoption, merge, deployment update, or 128K acceptance is implied.
 
