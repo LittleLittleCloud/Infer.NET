@@ -32,6 +32,7 @@ mode = bind('execution_mode', [c.c_void_p, c.c_int])
 window = bind('window', [c.c_void_p, c.c_int])
 run = bind('run', [c.c_void_p, c.POINTER(c.c_int), c.c_int, c.c_int, c.POINTER(c.c_float), c.POINTER(c.c_float), c.c_char_p, c.c_int])
 state = bind('state', [c.c_void_p, c.c_int, c.c_int, c.c_int, c.c_void_p, c.c_int, c.c_char_p, c.c_int])
+kv_range = bind('kv_range', [c.c_void_p, c.c_int, c.c_int, c.c_int, c.c_int, c.c_void_p, c.c_int, c.c_char_p, c.c_int])
 if bind('abi_version', [])() != 7:
     raise ValueError('Wrong candidate ABI')
 def ok(code):
@@ -64,6 +65,13 @@ for size in (32, 64, 128):
                     count = length*512*4 if (layer+1)%4 == 0 else (32*128*128*4 if kind == 0 else 3*8192*4)
                     output = c.create_string_buffer(count)
                     ok(state(handle, layer, kind, length, output, count, error, len(error)))
+                    if (layer+1)%4 == 0:
+                        for at in range(0, length, size):
+                            take = min(size, length-at)
+                            chunk = c.create_string_buffer(take*512*4)
+                            ok(kv_range(handle, layer, kind, at, take, chunk, len(chunk), error, len(error)))
+                            if chunk.raw != output.raw[at*512*4:(at+take)*512*4]:
+                                raise AssertionError('Batch KV export changed bytes')
                     states.append(hashlib.sha256(output.raw).hexdigest())
             record = {'window': size, 'length': length, 'hidden': hashlib.sha256(all_hidden).hexdigest(),
                       'traces': hashlib.sha256(all_traces).hexdigest(), 'states': states}

@@ -110,7 +110,7 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public byte[] KvRange(int layer, int tensor, int position, int count)
     {
         ObjectDisposedException.ThrowIf(handle == 0, this);
-        if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count is < 1 or > 32)
+        if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count < 1 || count > ExecutionWindow)
             throw new ArgumentException("Invalid KV range descriptor.");
         var data = new byte[count*512*kvBytes]; var error = new byte[2048];
         fixed (byte* d = data) fixed (byte* e = error)

@@ -608,7 +608,7 @@ API int di_cuda_prefix_state(void *ptr, int layer, int kind, int position, void 
 API int di_cuda_prefix_kv_range(void *ptr,int layer,int kind,int position,int count,void *dest,int bytes,char *error,int cap) {
     try {
         auto *g=static_cast<Model*>(ptr);
-        if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>32||
+        if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>128||
            position>g->position-count||bytes!=count*512*(g->kvBf16?2:4))throw std::runtime_error("Invalid KV export range");
         auto &l=g->layers[layer];auto *src=static_cast<unsigned char*>(kind?l.values:l.keys);
         ck(cudaMemcpy(dest,src+size_t(position)*512*(g->kvBf16?2:4),bytes,cudaMemcpyDeviceToHost));return 0;

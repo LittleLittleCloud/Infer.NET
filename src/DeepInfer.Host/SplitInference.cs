@@ -41,6 +41,12 @@ public static class SplitInference
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
+                // Read each completed KV plane once per execution window, then preserve wire32.
+                // This avoids ten synchronous D2H calls for every individual wire frame.
+                var kv=incremental?new byte[10][]:null;
+                if(kv is not null)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
+                    kv[(layer/4)*2+kind]=gpu.KvRange(layer,kind,offset,count);
+                var kvTokenBytes=kv is null?0:kv[0].Length/count;
                 // Only completed prefix rows are delivered; the authenticated wire stays at 32.
                 for(var at=0;at<count;at+=32)
                 {
@@ -48,7 +54,7 @@ public static class SplitInference
                     var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,position,take,Bytes(hidden.AsSpan(at*2048,take*2048).ToArray())) };
                     if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,position,take,Bytes(trace.AsSpan(at*20*2048,take*20*2048).ToArray())));
                     if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
-                        frames.Add(new(SplitWire.KvRange,layer,kind,position,take,gpu.KvRange(layer,kind,position,take)));
+                        frames.Add(new(SplitWire.KvRange,layer,kind,position,take,kv![(layer/4)*2+kind].AsSpan(at*kvTokenBytes,take*kvTokenBytes).ToArray()));
                     computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
                     yield return frames.ToArray();
                     began=Stopwatch.GetTimestamp();
