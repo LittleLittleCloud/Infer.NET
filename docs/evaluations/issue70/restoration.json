@@ -1,0 +1,116 @@
+{
+  "phaseA": {
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 86795,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "plistUnchanged": true,
+    "binaryUnchanged": true,
+    "configUnchanged": true,
+    "wiredLimit": "0",
+    "restoredUtc": "2026-10-25T22:51:56.295102+00:00"
+  },
+  "encoder": {
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 135,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "plistUnchanged": true,
+    "binaryUnchanged": true,
+    "configUnchanged": true,
+    "wiredLimit": "0",
+    "restoredUtc": "2026-10-25T23:19:36.167210+00:00"
+  },
+  "application": {
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 2151,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "restoredUtc": "2026-10-25T23:24:55.968053+00:00",
+    "wiredLimit": "0"
+  },
+  "finalAudit": {
+    "verifiedUtc": "2026-10-25T23:26:49.662538+00:00",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 2151,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 2
+    },
+    "sameProbeTokens": true,
+    "probeExecutionPath": "cuda-metal-split",
+    "sameMacPidAcrossFinalProbe": true,
+    "coordinatorPidUnchanged": true,
+    "modelProcessCount": 1,
+    "binaryUnchanged": true,
+    "nativeLibraryUnchanged": true,
+    "workerConfigUnchanged": true,
+    "launchPlistUnchanged": true,
+    "launchAgentRunning": true,
+    "experimentalPortsClosed": {
+      "5270": true,
+      "5280": true,
+      "5281": true,
+      "5282": true,
+      "5290": true,
+      "5291": true,
+      "5292": true
+    },
+    "wiredLimit": "0",
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=22872163)\t74%; charging; 1:46 remaining present: true\n",
+    "windows": "Original foreground agent was not stopped, restarted, rebuilt or reconfigured in this experiment; final real request used its split path.",
+    "coordinatorExecutableVerified": true,
+    "verificationCompletedUtc": "2026-10-25T23:32:45.789942+00:00"
+  }
+}

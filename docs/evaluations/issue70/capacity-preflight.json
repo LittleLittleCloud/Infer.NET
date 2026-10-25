@@ -1,0 +1,4601 @@
+{
+  "phaseA": {
+    "main-128k-preflight.json": {
+      "observed": {
+        "prefillMs": 139904.9925,
+        "firstTokenMs": 139905.0166,
+        "decodeMs": 2768.0065999999933,
+        "decodeTokens": 127,
+        "decodeTokensPerSecond": 45.88139349089713,
+        "decodeWindows": [
+          {
+            "startOutputToken": 2,
+            "endOutputToken": 2,
+            "contextTokens": 32769,
+            "milliseconds": 21.826700000005076,
+            "tokensPerSecond": 45.8154462195278
+          },
+          {
+            "startOutputToken": 3,
+            "endOutputToken": 3,
+            "contextTokens": 32770,
+            "milliseconds": 21.68959999998333,
+            "tokensPerSecond": 46.105045736240804
+          },
+          {
+            "startOutputToken": 4,
+            "endOutputToken": 4,
+            "contextTokens": 32771,
+            "milliseconds": 21.70350000000326,
+            "tokensPerSecond": 46.075517773624064
+          },
+          {
+            "startOutputToken": 5,
+            "endOutputToken": 5,
+            "contextTokens": 32772,
+            "milliseconds": 21.774800000013784,
+            "tokensPerSecond": 45.92464683943673
+          },
+          {
+            "startOutputToken": 6,
+            "endOutputToken": 6,
+            "contextTokens": 32773,
+            "milliseconds": 21.69789999999921,
+            "tokensPerSecond": 46.087409380632984
+          },
+          {
+            "startOutputToken": 7,
+            "endOutputToken": 7,
+            "contextTokens": 32774,
+            "milliseconds": 21.73849999997765,
+            "tokensPerSecond": 46.00133403873442
+          },
+          {
+            "startOutputToken": 8,
+            "endOutputToken": 8,
+            "contextTokens": 32775,
+            "milliseconds": 21.679799999983516,
+            "tokensPerSecond": 46.125886770208226
+          },
+          {
+            "startOutputToken": 9,
+            "endOutputToken": 9,
+            "contextTokens": 32776,
+            "milliseconds": 22.160499999998137,
+            "tokensPerSecond": 45.12533561968746
+          },
+          {
+            "startOutputToken": 10,
+            "endOutputToken": 10,
+            "contextTokens": 32777,
+            "milliseconds": 21.70219999999972,
+            "tokensPerSecond": 46.07827777829035
+          },
+          {
+            "startOutputToken": 11,
+            "endOutputToken": 11,
+            "contextTokens": 32778,
+            "milliseconds": 21.708699999988312,
+            "tokensPerSecond": 46.06448106061341
+          },
+          {
+            "startOutputToken": 12,
+            "endOutputToken": 12,
+            "contextTokens": 32779,
+            "milliseconds": 21.66679999997723,
+            "tokensPerSecond": 46.15356213197385
+          },
+          {
+            "startOutputToken": 13,
+            "endOutputToken": 13,
+            "contextTokens": 32780,
+            "milliseconds": 21.66610000000219,
+            "tokensPerSecond": 46.15505328600435
+          },
+          {
+            "startOutputToken": 14,
+            "endOutputToken": 14,
+            "contextTokens": 32781,
+            "milliseconds": 21.713800000026822,
+            "tokensPerSecond": 46.053661726586995
+          },
+          {
+            "startOutputToken": 15,
+            "endOutputToken": 15,
+            "contextTokens": 32782,
+            "milliseconds": 21.672099999996135,
+            "tokensPerSecond": 46.14227509102387
+          },
+          {
+            "startOutputToken": 16,
+            "endOutputToken": 16,
+            "contextTokens": 32783,
+            "milliseconds": 21.832099999999627,
+            "tokensPerSecond": 45.804114125531534
+          },
+          {
+            "startOutputToken": 17,
+            "endOutputToken": 17,
+            "contextTokens": 32784,
+            "milliseconds": 21.78620000000228,
+            "tokensPerSecond": 45.90061598626173
+          },
+          {
+            "startOutputToken": 18,
+            "endOutputToken": 18,
+            "contextTokens": 32785,
+            "milliseconds": 21.703999999997905,
+            "tokensPerSecond": 46.07445632141985
+          },
+          {
+            "startOutputToken": 19,
+            "endOutputToken": 19,
+            "contextTokens": 32786,
+            "milliseconds": 21.749400000000605,
+            "tokensPerSecond": 45.97827986059258
+          },
+          {
+            "startOutputToken": 20,
+            "endOutputToken": 20,
+            "contextTokens": 32787,
+            "milliseconds": 21.73649999999907,
+            "tokensPerSecond": 46.005566673569476
+          },
+          {
+            "startOutputToken": 21,
+            "endOutputToken": 21,
+            "contextTokens": 32788,
+            "milliseconds": 21.697099999990314,
+            "tokensPerSecond": 46.08910868274776
+          },
+          {
+            "startOutputToken": 22,
+            "endOutputToken": 22,
+            "contextTokens": 32789,
+            "milliseconds": 21.69680000000517,
+            "tokensPerSecond": 46.089745953309325
+          },
+          {
+            "startOutputToken": 23,
+            "endOutputToken": 23,
+            "contextTokens": 32790,
+            "milliseconds": 21.69419999999809,
+            "tokensPerSecond": 46.09526970342709
+          },
+          {
+            "startOutputToken": 24,
+            "endOutputToken": 24,
+            "contextTokens": 32791,
+            "milliseconds": 21.694900000002235,
+            "tokensPerSecond": 46.09378240968601
+          },
+          {
+            "startOutputToken": 25,
+            "endOutputToken": 25,
+            "contextTokens": 32792,
+            "milliseconds": 21.69700000001467,
+            "tokensPerSecond": 46.089321104268976
+          },
+          {
+            "startOutputToken": 26,
+            "endOutputToken": 26,
+            "contextTokens": 32793,
+            "milliseconds": 21.79700000002049,
+            "tokensPerSecond": 45.877873101759874
+          },
+          {
+            "startOutputToken": 27,
+            "endOutputToken": 27,
+            "contextTokens": 32794,
+            "milliseconds": 22.11960000000545,
+            "tokensPerSecond": 45.208774118869854
+          },
+          {
+            "startOutputToken": 28,
+            "endOutputToken": 28,
+            "contextTokens": 32795,
+            "milliseconds": 21.82829999999376,
+            "tokensPerSecond": 45.812087977546845
+          },
+          {
+            "startOutputToken": 29,
+            "endOutputToken": 29,
+            "contextTokens": 32796,
+            "milliseconds": 21.707099999999627,
+            "tokensPerSecond": 46.06787640910196
+          },
+          {
+            "startOutputToken": 30,
+            "endOutputToken": 30,
+            "contextTokens": 32797,
+            "milliseconds": 21.661599999992177,
+            "tokensPerSecond": 46.16464157773946
+          },
+          {
+            "startOutputToken": 31,
+            "endOutputToken": 31,
+            "contextTokens": 32798,
+            "milliseconds": 21.731100000004517,
+            "tokensPerSecond": 46.016998679302574
+          },
+          {
+            "startOutputToken": 32,
+            "endOutputToken": 32,
+            "contextTokens": 32799,
+            "milliseconds": 21.674599999998463,
+            "tokensPerSecond": 46.13695293108389
+          },
+          {
+            "startOutputToken": 33,
+            "endOutputToken": 33,
+            "contextTokens": 32800,
+            "milliseconds": 21.690399999992223,
+            "tokensPerSecond": 46.103345258748504
+          },
+          {
+            "startOutputToken": 34,
+            "endOutputToken": 34,
+            "contextTokens": 32801,
+            "milliseconds": 21.691899999976158,
+            "tokensPerSecond": 46.100157201586725
+          },
+          {
+            "startOutputToken": 35,
+            "endOutputToken": 35,
+            "contextTokens": 32802,
+            "milliseconds": 21.683100000023842,
+            "tokensPerSecond": 46.11886676715508
+          },
+          {
+            "startOutputToken": 36,
+            "endOutputToken": 36,
+            "contextTokens": 32803,
+            "milliseconds": 21.668899999989662,
+            "tokensPerSecond": 46.149089247745714
+          },
+          {
+            "startOutputToken": 37,
+            "endOutputToken": 37,
+            "contextTokens": 32804,
+            "milliseconds": 21.663200000009965,
+            "tokensPerSecond": 46.16123195093707
+          },
+          {
+            "startOutputToken": 38,
+            "endOutputToken": 38,
+            "contextTokens": 32805,
+            "milliseconds": 21.677900000009686,
+            "tokensPerSecond": 46.12992955957695
+          },
+          {
+            "startOutputToken": 39,
+            "endOutputToken": 39,
+            "contextTokens": 32806,
+            "milliseconds": 21.655100000003586,
+            "tokensPerSecond": 46.178498367582435
+          },
+          {
+            "startOutputToken": 40,
+            "endOutputToken": 40,
+            "contextTokens": 32807,
+            "milliseconds": 21.71970000001602,
+            "tokensPerSecond": 46.041151581249395
+          },
+          {
+            "startOutputToken": 41,
+            "endOutputToken": 41,
+            "contextTokens": 32808,
+            "milliseconds": 21.69639999998617,
+            "tokensPerSecond": 46.09059567488788
+          },
+          {
+            "startOutputToken": 42,
+            "endOutputToken": 42,
+            "contextTokens": 32809,
+            "milliseconds": 21.685199999978067,
+            "tokensPerSecond": 46.11440060506758
+          },
+          {
+            "startOutputToken": 43,
+            "endOutputToken": 43,
+            "contextTokens": 32810,
+            "milliseconds": 21.713400000007823,
+            "tokensPerSecond": 46.05451011815928
+          },
+          {
+            "startOutputToken": 44,
+            "endOutputToken": 44,
+            "contextTokens": 32811,
+            "milliseconds": 21.693499999993946,
+            "tokensPerSecond": 46.09675709315136
+          },
+          {
+            "startOutputToken": 45,
+            "endOutputToken": 45,
+            "contextTokens": 32812,
+            "milliseconds": 21.689400000002934,
+            "tokensPerSecond": 46.10547087516781
+          },
+          {
+            "startOutputToken": 46,
+            "endOutputToken": 46,
+            "contextTokens": 32813,
+            "milliseconds": 21.6877000000095,
+            "tokensPerSecond": 46.10908487297233
+          },
+          {
+            "startOutputToken": 47,
+            "endOutputToken": 47,
+            "contextTokens": 32814,
+            "milliseconds": 21.756200000003446,
+            "tokensPerSecond": 45.96390913853713
+          },
+          {
+            "startOutputToken": 48,
+            "endOutputToken": 48,
+            "contextTokens": 32815,
+            "milliseconds": 21.71500000002561,
+            "tokensPerSecond": 46.05111673952662
+          },
+          {
+            "startOutputToken": 49,
+            "endOutputToken": 49,
+            "contextTokens": 32816,
+            "milliseconds": 21.791599999996834,
+            "tokensPerSecond": 45.88924172617639
+          },
+          {
+            "startOutputToken": 50,
+            "endOutputToken": 50,
+            "contextTokens": 32817,
+            "milliseconds": 22.00239999999758,
+            "tokensPerSecond": 45.449587317752155
+          },
+          {
+            "startOutputToken": 51,
+            "endOutputToken": 51,
+            "contextTokens": 32818,
+            "milliseconds": 21.817199999990407,
+            "tokensPerSecond": 45.835395926170165
+          },
+          {
+            "startOutputToken": 52,
+            "endOutputToken": 52,
+            "contextTokens": 32819,
+            "milliseconds": 21.926899999991292,
+            "tokensPerSecond": 45.606082027117246
+          },
+          {
+            "startOutputToken": 53,
+            "endOutputToken": 53,
+            "contextTokens": 32820,
+            "milliseconds": 22.13850000000093,
+            "tokensPerSecond": 45.17017864805465
+          },
+          {
+            "startOutputToken": 54,
+            "endOutputToken": 54,
+            "contextTokens": 32821,
+            "milliseconds": 21.97949999998673,
+            "tokensPerSecond": 45.496940330790224
+          },
+          {
+            "startOutputToken": 55,
+            "endOutputToken": 55,
+            "contextTokens": 32822,
+            "milliseconds": 21.841800000023795,
+            "tokensPerSecond": 45.78377239966077
+          },
+          {
+            "startOutputToken": 56,
+            "endOutputToken": 56,
+            "contextTokens": 32823,
+            "milliseconds": 21.75450000001001,
+            "tokensPerSecond": 45.967500976788244
+          },
+          {
+            "startOutputToken": 57,
+            "endOutputToken": 57,
+            "contextTokens": 32824,
+            "milliseconds": 22.13269999998738,
+            "tokensPerSecond": 45.18201575047645
+          },
+          {
+            "startOutputToken": 58,
+            "endOutputToken": 58,
+            "contextTokens": 32825,
+            "milliseconds": 22.206299999990733,
+            "tokensPerSecond": 45.032265618334314
+          },
+          {
+            "startOutputToken": 59,
+            "endOutputToken": 59,
+            "contextTokens": 32826,
+            "milliseconds": 21.798399999999674,
+            "tokensPerSecond": 45.87492660011812
+          },
+          {
+            "startOutputToken": 60,
+            "endOutputToken": 60,
+            "contextTokens": 32827,
+            "milliseconds": 21.846300000004703,
+            "tokensPerSecond": 45.77434165052136
+          },
+          {
+            "startOutputToken": 61,
+            "endOutputToken": 61,
+            "contextTokens": 32828,
+            "milliseconds": 21.79869999998482,
+            "tokensPerSecond": 45.874295256171074
+          },
+          {
+            "startOutputToken": 62,
+            "endOutputToken": 62,
+            "contextTokens": 32829,
+            "milliseconds": 21.717700000008335,
+            "tokensPerSecond": 46.04539154696935
+          },
+          {
+            "startOutputToken": 63,
+            "endOutputToken": 63,
+            "contextTokens": 32830,
+            "milliseconds": 21.68039999998291,
+            "tokensPerSecond": 46.12461024707977
+          },
+          {
+            "startOutputToken": 64,
+            "endOutputToken": 64,
+            "contextTokens": 32831,
+            "milliseconds": 21.826800000009825,
+            "tokensPerSecond": 45.81523631496829
+          },
+          {
+            "startOutputToken": 65,
+            "endOutputToken": 65,
+            "contextTokens": 32832,
+            "milliseconds": 22.043100000009872,
+            "tokensPerSecond": 45.365669982876824
+          },
+          {
+            "startOutputToken": 66,
+            "endOutputToken": 66,
+            "contextTokens": 32833,
+            "milliseconds": 22.242399999988265,
+            "tokensPerSecond": 44.95917706724668
+          },
+          {
+            "startOutputToken": 67,
+            "endOutputToken": 67,
+            "contextTokens": 32834,
+            "milliseconds": 22.095000000001164,
+            "tokensPerSecond": 45.25910839556222
+          },
+          {
+            "startOutputToken": 68,
+            "endOutputToken": 68,
+            "contextTokens": 32835,
+            "milliseconds": 21.918599999975413,
+            "tokensPerSecond": 45.62335185646536
+          },
+          {
+            "startOutputToken": 69,
+            "endOutputToken": 69,
+            "contextTokens": 32836,
+            "milliseconds": 21.773300000000745,
+            "tokensPerSecond": 45.927810667191736
+          },
+          {
+            "startOutputToken": 70,
+            "endOutputToken": 70,
+            "contextTokens": 32837,
+            "milliseconds": 21.821100000001024,
+            "tokensPerSecond": 45.827203944803564
+          },
+          {
+            "startOutputToken": 71,
+            "endOutputToken": 71,
+            "contextTokens": 32838,
+            "milliseconds": 21.769000000000233,
+            "tokensPerSecond": 45.93688272313792
+          },
+          {
+            "startOutputToken": 72,
+            "endOutputToken": 72,
+            "contextTokens": 32839,
+            "milliseconds": 21.7559000000183,
+            "tokensPerSecond": 45.9645429515285
+          },
+          {
+            "startOutputToken": 73,
+            "endOutputToken": 73,
+            "contextTokens": 32840,
+            "milliseconds": 22.15700000000652,
+            "tokensPerSecond": 45.13246378118453
+          },
+          {
+            "startOutputToken": 74,
+            "endOutputToken": 74,
+            "contextTokens": 32841,
+            "milliseconds": 22.595000000001164,
+            "tokensPerSecond": 44.25757911042038
+          },
+          {
+            "startOutputToken": 75,
+            "endOutputToken": 75,
+            "contextTokens": 32842,
+            "milliseconds": 22.359499999991385,
+            "tokensPerSecond": 44.72371922450794
+          },
+          {
+            "startOutputToken": 76,
+            "endOutputToken": 76,
+            "contextTokens": 32843,
+            "milliseconds": 21.852799999993294,
+            "tokensPerSecond": 45.7607263142621
+          },
+          {
+            "startOutputToken": 77,
+            "endOutputToken": 77,
+            "contextTokens": 32844,
+            "milliseconds": 21.783400000014808,
+            "tokensPerSecond": 45.9065159708457
+          },
+          {
+            "startOutputToken": 78,
+            "endOutputToken": 78,
+            "contextTokens": 32845,
+            "milliseconds": 21.736799999984214,
+            "tokensPerSecond": 46.00493172871472
+          },
+          {
+            "startOutputToken": 79,
+            "endOutputToken": 79,
+            "contextTokens": 32846,
+            "milliseconds": 21.673299999994924,
+            "tokensPerSecond": 46.139720301026344
+          },
+          {
+            "startOutputToken": 80,
+            "endOutputToken": 80,
+            "contextTokens": 32847,
+            "milliseconds": 21.75789999999688,
+            "tokensPerSecond": 45.960317861564924
+          },
+          {
+            "startOutputToken": 81,
+            "endOutputToken": 81,
+            "contextTokens": 32848,
+            "milliseconds": 21.713099999993574,
+            "tokensPerSecond": 46.05514643235171
+          },
+          {
+            "startOutputToken": 82,
+            "endOutputToken": 82,
+            "contextTokens": 32849,
+            "milliseconds": 21.701800000009825,
+            "tokensPerSecond": 46.07912707699579
+          },
+          {
+            "startOutputToken": 83,
+            "endOutputToken": 83,
+            "contextTokens": 32850,
+            "milliseconds": 21.720100000005914,
+            "tokensPerSecond": 46.04030368183055
+          },
+          {
+            "startOutputToken": 84,
+            "endOutputToken": 84,
+            "contextTokens": 32851,
+            "milliseconds": 21.727000000013504,
+            "tokensPerSecond": 46.025682330711945
+          },
+          {
+            "startOutputToken": 85,
+            "endOutputToken": 85,
+            "contextTokens": 32852,
+            "milliseconds": 21.706000000005588,
+            "tokensPerSecond": 46.070211001554526
+          },
+          {
+            "startOutputToken": 86,
+            "endOutputToken": 86,
+            "contextTokens": 32853,
+            "milliseconds": 21.739099999977043,
+            "tokensPerSecond": 46.00006440013874
+          },
+          {
+            "startOutputToken": 87,
+            "endOutputToken": 87,
+            "contextTokens": 32854,
+            "milliseconds": 21.658399999985704,
+            "tokensPerSecond": 46.17146234258579
+          },
+          {
+            "startOutputToken": 88,
+            "endOutputToken": 88,
+            "contextTokens": 32855,
+            "milliseconds": 21.709499999997206,
+            "tokensPerSecond": 46.0627835740173
+          },
+          {
+            "startOutputToken": 89,
+            "endOutputToken": 89,
+            "contextTokens": 32856,
+            "milliseconds": 21.718499999988126,
+            "tokensPerSecond": 46.043695467023355
+          },
+          {
+            "startOutputToken": 90,
+            "endOutputToken": 90,
+            "contextTokens": 32857,
+            "milliseconds": 21.70380000001751,
+            "tokensPerSecond": 46.07488089639571
+          },
+          {
+            "startOutputToken": 91,
+            "endOutputToken": 91,
+            "contextTokens": 32858,
+            "milliseconds": 21.698000000003958,
+            "tokensPerSecond": 46.08719697667147
+          },
+          {
+            "startOutputToken": 92,
+            "endOutputToken": 92,
+            "contextTokens": 32859,
+            "milliseconds": 21.66589999999269,
+            "tokensPerSecond": 46.15547934774634
+          },
+          {
+            "startOutputToken": 93,
+            "endOutputToken": 93,
+            "contextTokens": 32860,
+            "milliseconds": 21.756200000003446,
+            "tokensPerSecond": 45.96390913853713
+          },
+          {
+            "startOutputToken": 94,
+            "endOutputToken": 94,
+            "contextTokens": 32861,
+            "milliseconds": 21.756899999978486,
+            "tokensPerSecond": 45.962430309510495
+          },
+          {
+            "startOutputToken": 95,
+            "endOutputToken": 95,
+            "contextTokens": 32862,
+            "milliseconds": 21.709399999992456,
+            "tokensPerSecond": 46.0629957530078
+          },
+          {
+            "startOutputToken": 96,
+            "endOutputToken": 96,
+            "contextTokens": 32863,
+            "milliseconds": 21.705000000016298,
+            "tokensPerSecond": 46.07233356366041
+          },
+          {
+            "startOutputToken": 97,
+            "endOutputToken": 97,
+            "contextTokens": 32864,
+            "milliseconds": 21.7158000000054,
+            "tokensPerSecond": 46.04942023778775
+          },
+          {
+            "startOutputToken": 98,
+            "endOutputToken": 98,
+            "contextTokens": 32865,
+            "milliseconds": 21.74439999999595,
+            "tokensPerSecond": 45.98885230221052
+          },
+          {
+            "startOutputToken": 99,
+            "endOutputToken": 99,
+            "contextTokens": 32866,
+            "milliseconds": 21.743800000025658,
+            "tokensPerSecond": 45.99012132188578
+          },
+          {
+            "startOutputToken": 100,
+            "endOutputToken": 100,
+            "contextTokens": 32867,
+            "milliseconds": 21.694699999992736,
+            "tokensPerSecond": 46.0942073409789
+          },
+          {
+            "startOutputToken": 101,
+            "endOutputToken": 101,
+            "contextTokens": 32868,
+            "milliseconds": 21.682400000019697,
+            "tokensPerSecond": 46.12035568014111
+          },
+          {
+            "startOutputToken": 102,
+            "endOutputToken": 102,
+            "contextTokens": 32869,
+            "milliseconds": 21.72829999998794,
+            "tokensPerSecond": 46.022928623065546
+          },
+          {
+            "startOutputToken": 103,
+            "endOutputToken": 103,
+            "contextTokens": 32870,
+            "milliseconds": 21.777600000001257,
+            "tokensPerSecond": 45.91874219381118
+          },
+          {
+            "startOutputToken": 104,
+            "endOutputToken": 104,
+            "contextTokens": 32871,
+            "milliseconds": 21.694599999987986,
+            "tokensPerSecond": 46.094419809563384
+          },
+          {
+            "startOutputToken": 105,
+            "endOutputToken": 105,
+            "contextTokens": 32872,
+            "milliseconds": 21.70100000000093,
+            "tokensPerSecond": 46.08082576839579
+          },
+          {
+            "startOutputToken": 106,
+            "endOutputToken": 106,
+            "contextTokens": 32873,
+            "milliseconds": 21.72559999997611,
+            "tokensPerSecond": 46.02864823070937
+          },
+          {
+            "startOutputToken": 107,
+            "endOutputToken": 107,
+            "contextTokens": 32874,
+            "milliseconds": 21.706500000000233,
+            "tokensPerSecond": 46.06914979384006
+          },
+          {
+            "startOutputToken": 108,
+            "endOutputToken": 108,
+            "contextTokens": 32875,
+            "milliseconds": 21.778699999995297,
+            "tokensPerSecond": 45.91642292699821
+          },
+          {
+            "startOutputToken": 109,
+            "endOutputToken": 109,
+            "contextTokens": 32876,
+            "milliseconds": 21.73540000000503,
+            "tokensPerSecond": 46.00789495476359
+          },
+          {
+            "startOutputToken": 110,
+            "endOutputToken": 110,
+            "contextTokens": 32877,
+            "milliseconds": 21.751900000002934,
+            "tokensPerSecond": 45.972995462459146
+          },
+          {
+            "startOutputToken": 111,
+            "endOutputToken": 111,
+            "contextTokens": 32878,
+            "milliseconds": 21.692299999995157,
+            "tokensPerSecond": 46.09930712742417
+          },
+          {
+            "startOutputToken": 112,
+            "endOutputToken": 112,
+            "contextTokens": 32879,
+            "milliseconds": 21.713199999998324,
+            "tokensPerSecond": 46.054934325667205
+          },
+          {
+            "startOutputToken": 113,
+            "endOutputToken": 113,
+            "contextTokens": 32880,
+            "milliseconds": 21.752000000007683,
+            "tokensPerSecond": 45.97278411178957
+          },
+          {
+            "startOutputToken": 114,
+            "endOutputToken": 114,
+            "contextTokens": 32881,
+            "milliseconds": 21.714999999996508,
+            "tokensPerSecond": 46.051116739588345
+          },
+          {
+            "startOutputToken": 115,
+            "endOutputToken": 115,
+            "contextTokens": 32882,
+            "milliseconds": 21.735899999999674,
+            "tokensPerSecond": 46.00683661592181
+          },
+          {
+            "startOutputToken": 116,
+            "endOutputToken": 116,
+            "contextTokens": 32883,
+            "milliseconds": 21.709299999987707,
+            "tokensPerSecond": 46.06320793395302
+          },
+          {
+            "startOutputToken": 117,
+            "endOutputToken": 117,
+            "contextTokens": 32884,
+            "milliseconds": 21.714700000011362,
+            "tokensPerSecond": 46.051752959952324
+          },
+          {
+            "startOutputToken": 118,
+            "endOutputToken": 118,
+            "contextTokens": 32885,
+            "milliseconds": 21.751100000023143,
+            "tokensPerSecond": 45.974686337653544
+          },
+          {
+            "startOutputToken": 119,
+            "endOutputToken": 119,
+            "contextTokens": 32886,
+            "milliseconds": 21.867299999983516,
+            "tokensPerSecond": 45.73038280906897
+          },
+          {
+            "startOutputToken": 120,
+            "endOutputToken": 120,
+            "contextTokens": 32887,
+            "milliseconds": 22.131099999998696,
+            "tokensPerSecond": 45.18528224986824
+          },
+          {
+            "startOutputToken": 121,
+            "endOutputToken": 121,
+            "contextTokens": 32888,
+            "milliseconds": 21.752899999992223,
+            "tokensPerSecond": 45.9708820433302
+          },
+          {
+            "startOutputToken": 122,
+            "endOutputToken": 122,
+            "contextTokens": 32889,
+            "milliseconds": 21.717700000008335,
+            "tokensPerSecond": 46.04539154696935
+          },
+          {
+            "startOutputToken": 123,
+            "endOutputToken": 123,
+            "contextTokens": 32890,
+            "milliseconds": 21.73200000001816,
+            "tokensPerSecond": 46.01509295044931
+          },
+          {
+            "startOutputToken": 124,
+            "endOutputToken": 124,
+            "contextTokens": 32891,
+            "milliseconds": 21.709600000001956,
+            "tokensPerSecond": 46.06257139698152
+          },
+          {
+            "startOutputToken": 125,
+            "endOutputToken": 125,
+            "contextTokens": 32892,
+            "milliseconds": 21.71190000002389,
+            "tokensPerSecond": 46.05769186477921
+          },
+          {
+            "startOutputToken": 126,
+            "endOutputToken": 126,
+            "contextTokens": 32893,
+            "milliseconds": 21.767600000021048,
+            "tokensPerSecond": 45.93983718917258
+          },
+          {
+            "startOutputToken": 127,
+            "endOutputToken": 127,
+            "contextTokens": 32894,
+            "milliseconds": 21.715899999981048,
+            "tokensPerSecond": 46.04920818390547
+          },
+          {
+            "startOutputToken": 128,
+            "endOutputToken": 128,
+            "contextTokens": 32895,
+            "milliseconds": 21.68520000000717,
+            "tokensPerSecond": 46.114400605005684
+          }
+        ],
+        "contextCapacity": 34816,
+        "kvCacheBytes": 1426063360,
+        "metalAllocatedBytes": 38526271488,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 139904.9793,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.013199999986682087
+        }
+      },
+      "projectedAllocationBytes": 42636689408,
+      "limitBytes": 41339060224.0,
+      "assumption": "Retain observed non-KV allocation and replace FP32 KV with 135168-token capacity; excludes further attention/scratch growth. Not a measured peak.",
+      "eligible": false
+    },
+    "off-128k-preflight.json": {
+      "observed": {
+        "prefillMs": 139635.8722,
+        "firstTokenMs": 139635.8935,
+        "decodeMs": 2757.3310999999812,
+        "decodeTokens": 127,
+        "decodeTokensPerSecond": 46.05903150332612,
+        "decodeWindows": [
+          {
+            "startOutputToken": 2,
+            "endOutputToken": 2,
+            "contextTokens": 32769,
+            "milliseconds": 21.803200000023935,
+            "tokensPerSecond": 45.86482718128083
+          },
+          {
+            "startOutputToken": 3,
+            "endOutputToken": 3,
+            "contextTokens": 32770,
+            "milliseconds": 21.693700000003446,
+            "tokensPerSecond": 46.0963321148463
+          },
+          {
+            "startOutputToken": 4,
+            "endOutputToken": 4,
+            "contextTokens": 32771,
+            "milliseconds": 21.649499999999534,
+            "tokensPerSecond": 46.19044319730347
+          },
+          {
+            "startOutputToken": 5,
+            "endOutputToken": 5,
+            "contextTokens": 32772,
+            "milliseconds": 21.754899999999907,
+            "tokensPerSecond": 45.96665578789166
+          },
+          {
+            "startOutputToken": 6,
+            "endOutputToken": 6,
+            "contextTokens": 32773,
+            "milliseconds": 21.76829999999609,
+            "tokensPerSecond": 45.9383599086828
+          },
+          {
+            "startOutputToken": 7,
+            "endOutputToken": 7,
+            "contextTokens": 32774,
+            "milliseconds": 21.66520000001765,
+            "tokensPerSecond": 46.1569706256663
+          },
+          {
+            "startOutputToken": 8,
+            "endOutputToken": 8,
+            "contextTokens": 32775,
+            "milliseconds": 21.730099999986123,
+            "tokensPerSecond": 46.01911634095741
+          },
+          {
+            "startOutputToken": 9,
+            "endOutputToken": 9,
+            "contextTokens": 32776,
+            "milliseconds": 21.869300000020303,
+            "tokensPerSecond": 45.72620065567126
+          },
+          {
+            "startOutputToken": 10,
+            "endOutputToken": 10,
+            "contextTokens": 32777,
+            "milliseconds": 21.761199999979,
+            "tokensPerSecond": 45.953348160991354
+          },
+          {
+            "startOutputToken": 11,
+            "endOutputToken": 11,
+            "contextTokens": 32778,
+            "milliseconds": 22.07050000000163,
+            "tokensPerSecond": 45.309349584283375
+          },
+          {
+            "startOutputToken": 12,
+            "endOutputToken": 12,
+            "contextTokens": 32779,
+            "milliseconds": 21.720100000005914,
+            "tokensPerSecond": 46.04030368183055
+          },
+          {
+            "startOutputToken": 13,
+            "endOutputToken": 13,
+            "contextTokens": 32780,
+            "milliseconds": 21.70930000001681,
+            "tokensPerSecond": 46.06320793389126
+          },
+          {
+            "startOutputToken": 14,
+            "endOutputToken": 14,
+            "contextTokens": 32781,
+            "milliseconds": 21.660000000003492,
+            "tokensPerSecond": 46.16805170821047
+          },
+          {
+            "startOutputToken": 15,
+            "endOutputToken": 15,
+            "contextTokens": 32782,
+            "milliseconds": 21.776500000007218,
+            "tokensPerSecond": 45.92106169493117
+          },
+          {
+            "startOutputToken": 16,
+            "endOutputToken": 16,
+            "contextTokens": 32783,
+            "milliseconds": 21.682299999985844,
+            "tokensPerSecond": 46.12056838991495
+          },
+          {
+            "startOutputToken": 17,
+            "endOutputToken": 17,
+            "contextTokens": 32784,
+            "milliseconds": 21.695100000011735,
+            "tokensPerSecond": 46.093357486227724
+          },
+          {
+            "startOutputToken": 18,
+            "endOutputToken": 18,
+            "contextTokens": 32785,
+            "milliseconds": 21.708700000017416,
+            "tokensPerSecond": 46.06448106055166
+          },
+          {
+            "startOutputToken": 19,
+            "endOutputToken": 19,
+            "contextTokens": 32786,
+            "milliseconds": 21.66940000001341,
+            "tokensPerSecond": 46.14802440304674
+          },
+          {
+            "startOutputToken": 20,
+            "endOutputToken": 20,
+            "contextTokens": 32787,
+            "milliseconds": 21.675699999992503,
+            "tokensPerSecond": 46.13461156965385
+          },
+          {
+            "startOutputToken": 21,
+            "endOutputToken": 21,
+            "contextTokens": 32788,
+            "milliseconds": 21.68640000000596,
+            "tokensPerSecond": 46.11184890068085
+          },
+          {
+            "startOutputToken": 22,
+            "endOutputToken": 22,
+            "contextTokens": 32789,
+            "milliseconds": 21.65559999999823,
+            "tokensPerSecond": 46.177432165355924
+          },
+          {
+            "startOutputToken": 23,
+            "endOutputToken": 23,
+            "contextTokens": 32790,
+            "milliseconds": 21.683199999999488,
+            "tokensPerSecond": 46.11865407320062
+          },
+          {
+            "startOutputToken": 24,
+            "endOutputToken": 24,
+            "contextTokens": 32791,
+            "milliseconds": 21.638099999981932,
+            "tokensPerSecond": 46.21477856192711
+          },
+          {
+            "startOutputToken": 25,
+            "endOutputToken": 25,
+            "contextTokens": 32792,
+            "milliseconds": 21.710900000005495,
+            "tokensPerSecond": 46.059813273505334
+          },
+          {
+            "startOutputToken": 26,
+            "endOutputToken": 26,
+            "contextTokens": 32793,
+            "milliseconds": 21.674300000013318,
+            "tokensPerSecond": 46.13759152541884
+          },
+          {
+            "startOutputToken": 27,
+            "endOutputToken": 27,
+            "contextTokens": 32794,
+            "milliseconds": 21.72500000000582,
+            "tokensPerSecond": 46.029919447628636
+          },
+          {
+            "startOutputToken": 28,
+            "endOutputToken": 28,
+            "contextTokens": 32795,
+            "milliseconds": 21.634700000024168,
+            "tokensPerSecond": 46.222041442630726
+          },
+          {
+            "startOutputToken": 29,
+            "endOutputToken": 29,
+            "contextTokens": 32796,
+            "milliseconds": 21.668099999980768,
+            "tokensPerSecond": 46.15079310142041
+          },
+          {
+            "startOutputToken": 30,
+            "endOutputToken": 30,
+            "contextTokens": 32797,
+            "milliseconds": 21.69089999998687,
+            "tokensPerSecond": 46.10228252403567
+          },
+          {
+            "startOutputToken": 31,
+            "endOutputToken": 31,
+            "contextTokens": 32798,
+            "milliseconds": 21.657700000010664,
+            "tokensPerSecond": 46.1729546535185
+          },
+          {
+            "startOutputToken": 32,
+            "endOutputToken": 32,
+            "contextTokens": 32799,
+            "milliseconds": 21.68800000002375,
+            "tokensPerSecond": 46.108447067452275
+          },
+          {
+            "startOutputToken": 33,
+            "endOutputToken": 33,
+            "contextTokens": 32800,
+            "milliseconds": 21.65710000001127,
+            "tokensPerSecond": 46.174233854000754
+          },
+          {
+            "startOutputToken": 34,
+            "endOutputToken": 34,
+            "contextTokens": 32801,
+            "milliseconds": 21.66610000000219,
+            "tokensPerSecond": 46.15505328600435
+          },
+          {
+            "startOutputToken": 35,
+            "endOutputToken": 35,
+            "contextTokens": 32802,
+            "milliseconds": 21.716300000000047,
+            "tokensPerSecond": 46.04835998765894
+          },
+          {
+            "startOutputToken": 36,
+            "endOutputToken": 36,
+            "contextTokens": 32803,
+            "milliseconds": 21.668199999985518,
+            "tokensPerSecond": 46.150580112822865
+          },
+          {
+            "startOutputToken": 37,
+            "endOutputToken": 37,
+            "contextTokens": 32804,
+            "milliseconds": 21.843800000002375,
+            "tokensPerSecond": 45.779580475919545
+          },
+          {
+            "startOutputToken": 38,
+            "endOutputToken": 38,
+            "contextTokens": 32805,
+            "milliseconds": 21.722999999998137,
+            "tokensPerSecond": 46.03415734475375
+          },
+          {
+            "startOutputToken": 39,
+            "endOutputToken": 39,
+            "contextTokens": 32806,
+            "milliseconds": 21.65570000000298,
+            "tokensPerSecond": 46.17721893080632
+          },
+          {
+            "startOutputToken": 40,
+            "endOutputToken": 40,
+            "contextTokens": 32807,
+            "milliseconds": 21.65119999999297,
+            "tokensPerSecond": 46.18681643513176
+          },
+          {
+            "startOutputToken": 41,
+            "endOutputToken": 41,
+            "contextTokens": 32808,
+            "milliseconds": 21.711899999994785,
+            "tokensPerSecond": 46.05769186484095
+          },
+          {
+            "startOutputToken": 42,
+            "endOutputToken": 42,
+            "contextTokens": 32809,
+            "milliseconds": 21.654999999998836,
+            "tokensPerSecond": 46.17871161394845
+          },
+          {
+            "startOutputToken": 43,
+            "endOutputToken": 43,
+            "contextTokens": 32810,
+            "milliseconds": 21.701399999990826,
+            "tokensPerSecond": 46.079976407071555
+          },
+          {
+            "startOutputToken": 44,
+            "endOutputToken": 44,
+            "contextTokens": 32811,
+            "milliseconds": 21.66030000001774,
+            "tokensPerSecond": 46.16741227033702
+          },
+          {
+            "startOutputToken": 45,
+            "endOutputToken": 45,
+            "contextTokens": 32812,
+            "milliseconds": 21.799599999998463,
+            "tokensPerSecond": 45.87240132846797
+          },
+          {
+            "startOutputToken": 46,
+            "endOutputToken": 46,
+            "contextTokens": 32813,
+            "milliseconds": 21.695899999991525,
+            "tokensPerSecond": 46.09165787085996
+          },
+          {
+            "startOutputToken": 47,
+            "endOutputToken": 47,
+            "contextTokens": 32814,
+            "milliseconds": 21.726699999999255,
+            "tokensPerSecond": 46.02631784854738
+          },
+          {
+            "startOutputToken": 48,
+            "endOutputToken": 48,
+            "contextTokens": 32815,
+            "milliseconds": 21.6646999999939,
+            "tokensPerSecond": 46.158035883270095
+          },
+          {
+            "startOutputToken": 49,
+            "endOutputToken": 49,
+            "contextTokens": 32816,
+            "milliseconds": 21.645199999999022,
+            "tokensPerSecond": 46.19961931513893
+          },
+          {
+            "startOutputToken": 50,
+            "endOutputToken": 50,
+            "contextTokens": 32817,
+            "milliseconds": 21.651600000011967,
+            "tokensPerSecond": 46.18596316205026
+          },
+          {
+            "startOutputToken": 51,
+            "endOutputToken": 51,
+            "contextTokens": 32818,
+            "milliseconds": 21.666399999987334,
+            "tokensPerSecond": 46.15441420820185
+          },
+          {
+            "startOutputToken": 52,
+            "endOutputToken": 52,
+            "contextTokens": 32819,
+            "milliseconds": 21.6475999999966,
+            "tokensPerSecond": 46.19449731148751
+          },
+          {
+            "startOutputToken": 53,
+            "endOutputToken": 53,
+            "contextTokens": 32820,
+            "milliseconds": 21.671799999981886,
+            "tokensPerSecond": 46.14291383276128
+          },
+          {
+            "startOutputToken": 54,
+            "endOutputToken": 54,
+            "contextTokens": 32821,
+            "milliseconds": 21.654000000009546,
+            "tokensPerSecond": 46.18084418581136
+          },
+          {
+            "startOutputToken": 55,
+            "endOutputToken": 55,
+            "contextTokens": 32822,
+            "milliseconds": 21.647100000001956,
+            "tokensPerSecond": 46.19556430191156
+          },
+          {
+            "startOutputToken": 56,
+            "endOutputToken": 56,
+            "contextTokens": 32823,
+            "milliseconds": 21.689299999998184,
+            "tokensPerSecond": 46.105683447602445
+          },
+          {
+            "startOutputToken": 57,
+            "endOutputToken": 57,
+            "contextTokens": 32824,
+            "milliseconds": 21.657700000010664,
+            "tokensPerSecond": 46.1729546535185
+          },
+          {
+            "startOutputToken": 58,
+            "endOutputToken": 58,
+            "contextTokens": 32825,
+            "milliseconds": 21.653200000000652,
+            "tokensPerSecond": 46.18255038516108
+          },
+          {
+            "startOutputToken": 59,
+            "endOutputToken": 59,
+            "contextTokens": 32826,
+            "milliseconds": 21.6875,
+            "tokensPerSecond": 46.10951008645533
+          },
+          {
+            "startOutputToken": 60,
+            "endOutputToken": 60,
+            "contextTokens": 32827,
+            "milliseconds": 21.673099999985425,
+            "tokensPerSecond": 46.14014607973352
+          },
+          {
+            "startOutputToken": 61,
+            "endOutputToken": 61,
+            "contextTokens": 32828,
+            "milliseconds": 21.66390000001411,
+            "tokensPerSecond": 46.15974039758994
+          },
+          {
+            "startOutputToken": 62,
+            "endOutputToken": 62,
+            "contextTokens": 32829,
+            "milliseconds": 21.684800000017276,
+            "tokensPerSecond": 46.11525123585199
+          },
+          {
+            "startOutputToken": 63,
+            "endOutputToken": 63,
+            "contextTokens": 32830,
+            "milliseconds": 21.706999999994878,
+            "tokensPerSecond": 46.0680886350134
+          },
+          {
+            "startOutputToken": 64,
+            "endOutputToken": 64,
+            "contextTokens": 32831,
+            "milliseconds": 21.636700000002747,
+            "tokensPerSecond": 46.217768883419055
+          },
+          {
+            "startOutputToken": 65,
+            "endOutputToken": 65,
+            "contextTokens": 32832,
+            "milliseconds": 21.73629999998957,
+            "tokensPerSecond": 46.00598997991746
+          },
+          {
+            "startOutputToken": 66,
+            "endOutputToken": 66,
+            "contextTokens": 32833,
+            "milliseconds": 21.69570000001113,
+            "tokensPerSecond": 46.092082762920164
+          },
+          {
+            "startOutputToken": 67,
+            "endOutputToken": 67,
+            "contextTokens": 32834,
+            "milliseconds": 21.668399999995017,
+            "tokensPerSecond": 46.15015414152545
+          },
+          {
+            "startOutputToken": 68,
+            "endOutputToken": 68,
+            "contextTokens": 32835,
+            "milliseconds": 21.663899999985006,
+            "tokensPerSecond": 46.15974039765195
+          },
+          {
+            "startOutputToken": 69,
+            "endOutputToken": 69,
+            "contextTokens": 32836,
+            "milliseconds": 21.652100000006612,
+            "tokensPerSecond": 46.18489661509482
+          },
+          {
+            "startOutputToken": 70,
+            "endOutputToken": 70,
+            "contextTokens": 32837,
+            "milliseconds": 21.833599999983562,
+            "tokensPerSecond": 45.8009673164642
+          },
+          {
+            "startOutputToken": 71,
+            "endOutputToken": 71,
+            "contextTokens": 32838,
+            "milliseconds": 21.666400000016438,
+            "tokensPerSecond": 46.154414208139855
+          },
+          {
+            "startOutputToken": 72,
+            "endOutputToken": 72,
+            "contextTokens": 32839,
+            "milliseconds": 21.671100000006845,
+            "tokensPerSecond": 46.14440429879813
+          },
+          {
+            "startOutputToken": 73,
+            "endOutputToken": 73,
+            "contextTokens": 32840,
+            "milliseconds": 21.643400000000838,
+            "tokensPerSecond": 46.203461563338536
+          },
+          {
+            "startOutputToken": 74,
+            "endOutputToken": 74,
+            "contextTokens": 32841,
+            "milliseconds": 21.658900000009453,
+            "tokensPerSecond": 46.1703964651743
+          },
+          {
+            "startOutputToken": 75,
+            "endOutputToken": 75,
+            "contextTokens": 32842,
+            "milliseconds": 21.66410000002361,
+            "tokensPerSecond": 46.159314257177094
+          },
+          {
+            "startOutputToken": 76,
+            "endOutputToken": 76,
+            "contextTokens": 32843,
+            "milliseconds": 21.66339999999036,
+            "tokensPerSecond": 46.160805783046285
+          },
+          {
+            "startOutputToken": 77,
+            "endOutputToken": 77,
+            "contextTokens": 32844,
+            "milliseconds": 21.677899999980582,
+            "tokensPerSecond": 46.12992955963888
+          },
+          {
+            "startOutputToken": 78,
+            "endOutputToken": 78,
+            "contextTokens": 32845,
+            "milliseconds": 21.410000000003492,
+            "tokensPerSecond": 46.70714619335997
+          },
+          {
+            "startOutputToken": 79,
+            "endOutputToken": 79,
+            "contextTokens": 32846,
+            "milliseconds": 21.66339999999036,
+            "tokensPerSecond": 46.160805783046285
+          },
+          {
+            "startOutputToken": 80,
+            "endOutputToken": 80,
+            "contextTokens": 32847,
+            "milliseconds": 21.67269999999553,
+            "tokensPerSecond": 46.140997660660936
+          },
+          {
+            "startOutputToken": 81,
+            "endOutputToken": 81,
+            "contextTokens": 32848,
+            "milliseconds": 21.70380000001751,
+            "tokensPerSecond": 46.07488089639571
+          },
+          {
+            "startOutputToken": 82,
+            "endOutputToken": 82,
+            "contextTokens": 32849,
+            "milliseconds": 21.655100000003586,
+            "tokensPerSecond": 46.178498367582435
+          },
+          {
+            "startOutputToken": 83,
+            "endOutputToken": 83,
+            "contextTokens": 32850,
+            "milliseconds": 21.66009999997914,
+            "tokensPerSecond": 46.16783856034659
+          },
+          {
+            "startOutputToken": 84,
+            "endOutputToken": 84,
+            "contextTokens": 32851,
+            "milliseconds": 21.721099999995204,
+            "tokensPerSecond": 46.038184069877715
+          },
+          {
+            "startOutputToken": 85,
+            "endOutputToken": 85,
+            "contextTokens": 32852,
+            "milliseconds": 21.659899999998743,
+            "tokensPerSecond": 46.16826485810452
+          },
+          {
+            "startOutputToken": 86,
+            "endOutputToken": 86,
+            "contextTokens": 32853,
+            "milliseconds": 21.680099999997765,
+            "tokensPerSecond": 46.12524849978105
+          },
+          {
+            "startOutputToken": 87,
+            "endOutputToken": 87,
+            "contextTokens": 32854,
+            "milliseconds": 21.730600000009872,
+            "tokensPerSecond": 46.018057485736506
+          },
+          {
+            "startOutputToken": 88,
+            "endOutputToken": 88,
+            "contextTokens": 32855,
+            "milliseconds": 21.644300000014482,
+            "tokensPerSecond": 46.20154035932467
+          },
+          {
+            "startOutputToken": 89,
+            "endOutputToken": 89,
+            "contextTokens": 32856,
+            "milliseconds": 21.674900000012713,
+            "tokensPerSecond": 46.13631435436442
+          },
+          {
+            "startOutputToken": 90,
+            "endOutputToken": 90,
+            "contextTokens": 32857,
+            "milliseconds": 21.65580000000773,
+            "tokensPerSecond": 46.17700569822602
+          },
+          {
+            "startOutputToken": 91,
+            "endOutputToken": 91,
+            "contextTokens": 32858,
+            "milliseconds": 22.29099999999744,
+            "tokensPerSecond": 44.86115472612781
+          },
+          {
+            "startOutputToken": 92,
+            "endOutputToken": 92,
+            "contextTokens": 32859,
+            "milliseconds": 21.78220000001602,
+            "tokensPerSecond": 45.90904500001215
+          },
+          {
+            "startOutputToken": 93,
+            "endOutputToken": 93,
+            "contextTokens": 32860,
+            "milliseconds": 21.66370000000461,
+            "tokensPerSecond": 46.16016654587107
+          },
+          {
+            "startOutputToken": 94,
+            "endOutputToken": 94,
+            "contextTokens": 32861,
+            "milliseconds": 21.668699999980163,
+            "tokensPerSecond": 46.14951519938508
+          },
+          {
+            "startOutputToken": 95,
+            "endOutputToken": 95,
+            "contextTokens": 32862,
+            "milliseconds": 21.86149999999907,
+            "tokensPerSecond": 45.74251538092275
+          },
+          {
+            "startOutputToken": 96,
+            "endOutputToken": 96,
+            "contextTokens": 32863,
+            "milliseconds": 21.92259999999078,
+            "tokensPerSecond": 45.61502741465066
+          },
+          {
+            "startOutputToken": 97,
+            "endOutputToken": 97,
+            "contextTokens": 32864,
+            "milliseconds": 21.72520000001532,
+            "tokensPerSecond": 46.02949570081264
+          },
+          {
+            "startOutputToken": 98,
+            "endOutputToken": 98,
+            "contextTokens": 32865,
+            "milliseconds": 21.66349999999511,
+            "tokensPerSecond": 46.160592702020715
+          },
+          {
+            "startOutputToken": 99,
+            "endOutputToken": 99,
+            "contextTokens": 32866,
+            "milliseconds": 21.737600000022212,
+            "tokensPerSecond": 46.003238627952406
+          },
+          {
+            "startOutputToken": 100,
+            "endOutputToken": 100,
+            "contextTokens": 32867,
+            "milliseconds": 21.665600000007544,
+            "tokensPerSecond": 46.15611845504633
+          },
+          {
+            "startOutputToken": 101,
+            "endOutputToken": 101,
+            "contextTokens": 32868,
+            "milliseconds": 21.65490000002319,
+            "tokensPerSecond": 46.178924862221905
+          },
+          {
+            "startOutputToken": 102,
+            "endOutputToken": 102,
+            "contextTokens": 32869,
+            "milliseconds": 21.650800000003073,
+            "tokensPerSecond": 46.187669739679734
+          },
+          {
+            "startOutputToken": 103,
+            "endOutputToken": 103,
+            "contextTokens": 32870,
+            "milliseconds": 21.66240000000107,
+            "tokensPerSecond": 46.16293670137891
+          },
+          {
+            "startOutputToken": 104,
+            "endOutputToken": 104,
+            "contextTokens": 32871,
+            "milliseconds": 21.65659999998752,
+            "tokensPerSecond": 46.17529990859951
+          },
+          {
+            "startOutputToken": 105,
+            "endOutputToken": 105,
+            "contextTokens": 32872,
+            "milliseconds": 21.730400000000373,
+            "tokensPerSecond": 46.018481021977635
+          },
+          {
+            "startOutputToken": 106,
+            "endOutputToken": 106,
+            "contextTokens": 32873,
+            "milliseconds": 21.658599999995204,
+            "tokensPerSecond": 46.17103598571567
+          },
+          {
+            "startOutputToken": 107,
+            "endOutputToken": 107,
+            "contextTokens": 32874,
+            "milliseconds": 21.662599999981467,
+            "tokensPerSecond": 46.16251050201063
+          },
+          {
+            "startOutputToken": 108,
+            "endOutputToken": 108,
+            "contextTokens": 32875,
+            "milliseconds": 21.70319999998901,
+            "tokensPerSecond": 46.076154668459324
+          },
+          {
+            "startOutputToken": 109,
+            "endOutputToken": 109,
+            "contextTokens": 32876,
+            "milliseconds": 21.689199999993434,
+            "tokensPerSecond": 46.105896021997246
+          },
+          {
+            "startOutputToken": 110,
+            "endOutputToken": 110,
+            "contextTokens": 32877,
+            "milliseconds": 21.65109999998822,
+            "tokensPerSecond": 46.18702975832841
+          },
+          {
+            "startOutputToken": 111,
+            "endOutputToken": 111,
+            "contextTokens": 32878,
+            "milliseconds": 21.63159999999334,
+            "tokensPerSecond": 46.228665470899415
+          },
+          {
+            "startOutputToken": 112,
+            "endOutputToken": 112,
+            "contextTokens": 32879,
+            "milliseconds": 21.71379999999772,
+            "tokensPerSecond": 46.05366172664873
+          },
+          {
+            "startOutputToken": 113,
+            "endOutputToken": 113,
+            "contextTokens": 32880,
+            "milliseconds": 21.671000000002095,
+            "tokensPerSecond": 46.14461723039561
+          },
+          {
+            "startOutputToken": 114,
+            "endOutputToken": 114,
+            "contextTokens": 32881,
+            "milliseconds": 21.68869999999879,
+            "tokensPerSecond": 46.10695892331287
+          },
+          {
+            "startOutputToken": 115,
+            "endOutputToken": 115,
+            "contextTokens": 32882,
+            "milliseconds": 21.680999999982305,
+            "tokensPerSecond": 46.123333794604314
+          },
+          {
+            "startOutputToken": 116,
+            "endOutputToken": 116,
+            "contextTokens": 32883,
+            "milliseconds": 21.690600000001723,
+            "tokensPerSecond": 46.10292015895921
+          },
+          {
+            "startOutputToken": 117,
+            "endOutputToken": 117,
+            "contextTokens": 32884,
+            "milliseconds": 21.72829999998794,
+            "tokensPerSecond": 46.022928623065546
+          },
+          {
+            "startOutputToken": 118,
+            "endOutputToken": 118,
+            "contextTokens": 32885,
+            "milliseconds": 21.66120000000228,
+            "tokensPerSecond": 46.165494063112604
+          },
+          {
+            "startOutputToken": 119,
+            "endOutputToken": 119,
+            "contextTokens": 32886,
+            "milliseconds": 21.72819999998319,
+            "tokensPerSecond": 46.02314043504633
+          },
+          {
+            "startOutputToken": 120,
+            "endOutputToken": 120,
+            "contextTokens": 32887,
+            "milliseconds": 21.690199999982724,
+            "tokensPerSecond": 46.10377036637728
+          },
+          {
+            "startOutputToken": 121,
+            "endOutputToken": 121,
+            "contextTokens": 32888,
+            "milliseconds": 21.676000000006752,
+            "tokensPerSecond": 46.133973057745365
+          },
+          {
+            "startOutputToken": 122,
+            "endOutputToken": 122,
+            "contextTokens": 32889,
+            "milliseconds": 21.715200000006007,
+            "tokensPerSecond": 46.050692602404
+          },
+          {
+            "startOutputToken": 123,
+            "endOutputToken": 123,
+            "contextTokens": 32890,
+            "milliseconds": 21.676500000001397,
+            "tokensPerSecond": 46.13290891056838
+          },
+          {
+            "startOutputToken": 124,
+            "endOutputToken": 124,
+            "contextTokens": 32891,
+            "milliseconds": 21.654200000019046,
+            "tokensPerSecond": 46.18041765565666
+          },
+          {
+            "startOutputToken": 125,
+            "endOutputToken": 125,
+            "contextTokens": 32892,
+            "milliseconds": 21.66359999999986,
+            "tokensPerSecond": 46.16037962296232
+          },
+          {
+            "startOutputToken": 126,
+            "endOutputToken": 126,
+            "contextTokens": 32893,
+            "milliseconds": 21.677399999985937,
+            "tokensPerSecond": 46.13099356936942
+          },
+          {
+            "startOutputToken": 127,
+            "endOutputToken": 127,
+            "contextTokens": 32894,
+            "milliseconds": 21.679799999983516,
+            "tokensPerSecond": 46.125886770208226
+          },
+          {
+            "startOutputToken": 128,
+            "endOutputToken": 128,
+            "contextTokens": 32895,
+            "milliseconds": 21.68289999998524,
+            "tokensPerSecond": 46.119292161135306
+          }
+        ],
+        "contextCapacity": 34816,
+        "kvCacheBytes": 1426063360,
+        "metalAllocatedBytes": 38526271488,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 139635.8606,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.011599999997997656
+        }
+      },
+      "projectedAllocationBytes": 42636689408,
+      "limitBytes": 41339060224.0,
+      "assumption": "Retain observed non-KV allocation and replace FP32 KV with 135168-token capacity; excludes further attention/scratch growth. Not a measured peak.",
+      "eligible": false
+    },
+    "on-128k-preflight.json": {
+      "observed": {
+        "prefillMs": 29985.433,
+        "firstTokenMs": 29985.4343,
+        "decodeMs": 2076.778599999998,
+        "decodeTokens": 127,
+        "decodeTokensPerSecond": 61.15240209042992,
+        "decodeWindows": [
+          {
+            "startOutputToken": 2,
+            "endOutputToken": 2,
+            "contextTokens": 8193,
+            "milliseconds": 16.451700000001438,
+            "tokensPerSecond": 60.78399192788056
+          },
+          {
+            "startOutputToken": 3,
+            "endOutputToken": 3,
+            "contextTokens": 8194,
+            "milliseconds": 16.41400000000067,
+            "tokensPerSecond": 60.923601803336126
+          },
+          {
+            "startOutputToken": 4,
+            "endOutputToken": 4,
+            "contextTokens": 8195,
+            "milliseconds": 16.34179999999833,
+            "tokensPerSecond": 61.192769462366584
+          },
+          {
+            "startOutputToken": 5,
+            "endOutputToken": 5,
+            "contextTokens": 8196,
+            "milliseconds": 16.349300000001676,
+            "tokensPerSecond": 61.164698182790545
+          },
+          {
+            "startOutputToken": 6,
+            "endOutputToken": 6,
+            "contextTokens": 8197,
+            "milliseconds": 16.39099999999962,
+            "tokensPerSecond": 61.00909035446422
+          },
+          {
+            "startOutputToken": 7,
+            "endOutputToken": 7,
+            "contextTokens": 8198,
+            "milliseconds": 16.340500000002066,
+            "tokensPerSecond": 61.19763777117429
+          },
+          {
+            "startOutputToken": 8,
+            "endOutputToken": 8,
+            "contextTokens": 8199,
+            "milliseconds": 16.351699999999255,
+            "tokensPerSecond": 61.155720811906136
+          },
+          {
+            "startOutputToken": 9,
+            "endOutputToken": 9,
+            "contextTokens": 8200,
+            "milliseconds": 16.359700000000885,
+            "tokensPerSecond": 61.1258152655578
+          },
+          {
+            "startOutputToken": 10,
+            "endOutputToken": 10,
+            "contextTokens": 8201,
+            "milliseconds": 16.263600000002043,
+            "tokensPerSecond": 61.48700164784392
+          },
+          {
+            "startOutputToken": 11,
+            "endOutputToken": 11,
+            "contextTokens": 8202,
+            "milliseconds": 16.340299999999843,
+            "tokensPerSecond": 61.19838681052426
+          },
+          {
+            "startOutputToken": 12,
+            "endOutputToken": 12,
+            "contextTokens": 8203,
+            "milliseconds": 16.298900000001595,
+            "tokensPerSecond": 61.35383369429238
+          },
+          {
+            "startOutputToken": 13,
+            "endOutputToken": 13,
+            "contextTokens": 8204,
+            "milliseconds": 16.31470000000263,
+            "tokensPerSecond": 61.29441546579702
+          },
+          {
+            "startOutputToken": 14,
+            "endOutputToken": 14,
+            "contextTokens": 8205,
+            "milliseconds": 16.33770000000004,
+            "tokensPerSecond": 61.20812599080639
+          },
+          {
+            "startOutputToken": 15,
+            "endOutputToken": 15,
+            "contextTokens": 8206,
+            "milliseconds": 16.322299999999814,
+            "tokensPerSecond": 61.265875519994815
+          },
+          {
+            "startOutputToken": 16,
+            "endOutputToken": 16,
+            "contextTokens": 8207,
+            "milliseconds": 16.30439999999726,
+            "tokensPerSecond": 61.33313706730503
+          },
+          {
+            "startOutputToken": 17,
+            "endOutputToken": 17,
+            "contextTokens": 8208,
+            "milliseconds": 16.31040000000212,
+            "tokensPerSecond": 61.31057484794181
+          },
+          {
+            "startOutputToken": 18,
+            "endOutputToken": 18,
+            "contextTokens": 8209,
+            "milliseconds": 16.30779999999868,
+            "tokensPerSecond": 61.320349771280064
+          },
+          {
+            "startOutputToken": 19,
+            "endOutputToken": 19,
+            "contextTokens": 8210,
+            "milliseconds": 16.306500000002416,
+            "tokensPerSecond": 61.3252384018552
+          },
+          {
+            "startOutputToken": 20,
+            "endOutputToken": 20,
+            "contextTokens": 8211,
+            "milliseconds": 16.310800000002928,
+            "tokensPerSecond": 61.309071290177094
+          },
+          {
+            "startOutputToken": 21,
+            "endOutputToken": 21,
+            "contextTokens": 8212,
+            "milliseconds": 16.310600000000704,
+            "tokensPerSecond": 61.309823059848
+          },
+          {
+            "startOutputToken": 22,
+            "endOutputToken": 22,
+            "contextTokens": 8213,
+            "milliseconds": 16.30529999999999,
+            "tokensPerSecond": 61.32975167583551
+          },
+          {
+            "startOutputToken": 23,
+            "endOutputToken": 23,
+            "contextTokens": 8214,
+            "milliseconds": 16.32300000000032,
+            "tokensPerSecond": 61.26324817741717
+          },
+          {
+            "startOutputToken": 24,
+            "endOutputToken": 24,
+            "contextTokens": 8215,
+            "milliseconds": 16.337500000001455,
+            "tokensPerSecond": 61.20887528691115
+          },
+          {
+            "startOutputToken": 25,
+            "endOutputToken": 25,
+            "contextTokens": 8216,
+            "milliseconds": 16.1916999999994,
+            "tokensPerSecond": 61.76003755010512
+          },
+          {
+            "startOutputToken": 26,
+            "endOutputToken": 26,
+            "contextTokens": 8217,
+            "milliseconds": 16.289600000000064,
+            "tokensPerSecond": 61.38886160495016
+          },
+          {
+            "startOutputToken": 27,
+            "endOutputToken": 27,
+            "contextTokens": 8218,
+            "milliseconds": 16.310700000001816,
+            "tokensPerSecond": 61.30944717270802
+          },
+          {
+            "startOutputToken": 28,
+            "endOutputToken": 28,
+            "contextTokens": 8219,
+            "milliseconds": 16.394599999999627,
+            "tokensPerSecond": 60.99569370402588
+          },
+          {
+            "startOutputToken": 29,
+            "endOutputToken": 29,
+            "contextTokens": 8220,
+            "milliseconds": 16.67019999999684,
+            "tokensPerSecond": 59.98728269607981
+          },
+          {
+            "startOutputToken": 30,
+            "endOutputToken": 30,
+            "contextTokens": 8221,
+            "milliseconds": 16.513099999996484,
+            "tokensPerSecond": 60.55798123915031
+          },
+          {
+            "startOutputToken": 31,
+            "endOutputToken": 31,
+            "contextTokens": 8222,
+            "milliseconds": 16.387500000000728,
+            "tokensPerSecond": 61.02212051868531
+          },
+          {
+            "startOutputToken": 32,
+            "endOutputToken": 32,
+            "contextTokens": 8223,
+            "milliseconds": 16.304699999996956,
+            "tokensPerSecond": 61.332008561959846
+          },
+          {
+            "startOutputToken": 33,
+            "endOutputToken": 33,
+            "contextTokens": 8224,
+            "milliseconds": 16.434400000001915,
+            "tokensPerSecond": 60.847977413223695
+          },
+          {
+            "startOutputToken": 34,
+            "endOutputToken": 34,
+            "contextTokens": 8225,
+            "milliseconds": 16.49109999999928,
+            "tokensPerSecond": 60.638768790441134
+          },
+          {
+            "startOutputToken": 35,
+            "endOutputToken": 35,
+            "contextTokens": 8226,
+            "milliseconds": 16.330900000000838,
+            "tokensPerSecond": 61.23361235449049
+          },
+          {
+            "startOutputToken": 36,
+            "endOutputToken": 36,
+            "contextTokens": 8227,
+            "milliseconds": 16.31510000000344,
+            "tokensPerSecond": 61.29291270049152
+          },
+          {
+            "startOutputToken": 37,
+            "endOutputToken": 37,
+            "contextTokens": 8228,
+            "milliseconds": 16.3166999999994,
+            "tokensPerSecond": 61.286902376095455
+          },
+          {
+            "startOutputToken": 38,
+            "endOutputToken": 38,
+            "contextTokens": 8229,
+            "milliseconds": 16.311400000002322,
+            "tokensPerSecond": 61.30681609180436
+          },
+          {
+            "startOutputToken": 39,
+            "endOutputToken": 39,
+            "contextTokens": 8230,
+            "milliseconds": 16.37199999999939,
+            "tokensPerSecond": 61.079892499391484
+          },
+          {
+            "startOutputToken": 40,
+            "endOutputToken": 40,
+            "contextTokens": 8231,
+            "milliseconds": 16.341599999999744,
+            "tokensPerSecond": 61.19351838253388
+          },
+          {
+            "startOutputToken": 41,
+            "endOutputToken": 41,
+            "contextTokens": 8232,
+            "milliseconds": 16.333700000002864,
+            "tokensPerSecond": 61.22311539943948
+          },
+          {
+            "startOutputToken": 42,
+            "endOutputToken": 42,
+            "contextTokens": 8233,
+            "milliseconds": 16.355900000002293,
+            "tokensPerSecond": 61.14001675235602
+          },
+          {
+            "startOutputToken": 43,
+            "endOutputToken": 43,
+            "contextTokens": 8234,
+            "milliseconds": 16.337600000002567,
+            "tokensPerSecond": 61.20850063655879
+          },
+          {
+            "startOutputToken": 44,
+            "endOutputToken": 44,
+            "contextTokens": 8235,
+            "milliseconds": 16.30620000000272,
+            "tokensPerSecond": 61.326366658070754
+          },
+          {
+            "startOutputToken": 45,
+            "endOutputToken": 45,
+            "contextTokens": 8236,
+            "milliseconds": 16.296900000001187,
+            "tokensPerSecond": 61.36136320404047
+          },
+          {
+            "startOutputToken": 46,
+            "endOutputToken": 46,
+            "contextTokens": 8237,
+            "milliseconds": 16.316100000000006,
+            "tokensPerSecond": 61.28915610960951
+          },
+          {
+            "startOutputToken": 47,
+            "endOutputToken": 47,
+            "contextTokens": 8238,
+            "milliseconds": 16.431300000000192,
+            "tokensPerSecond": 60.85945725535949
+          },
+          {
+            "startOutputToken": 48,
+            "endOutputToken": 48,
+            "contextTokens": 8239,
+            "milliseconds": 16.46690000000308,
+            "tokensPerSecond": 60.72788442267901
+          },
+          {
+            "startOutputToken": 49,
+            "endOutputToken": 49,
+            "contextTokens": 8240,
+            "milliseconds": 16.325000000000728,
+            "tokensPerSecond": 61.25574272587782
+          },
+          {
+            "startOutputToken": 50,
+            "endOutputToken": 50,
+            "contextTokens": 8241,
+            "milliseconds": 16.241699999998673,
+            "tokensPerSecond": 61.569909553807896
+          },
+          {
+            "startOutputToken": 51,
+            "endOutputToken": 51,
+            "contextTokens": 8242,
+            "milliseconds": 16.311799999999494,
+            "tokensPerSecond": 61.30531271840208
+          },
+          {
+            "startOutputToken": 52,
+            "endOutputToken": 52,
+            "contextTokens": 8243,
+            "milliseconds": 16.313899999997375,
+            "tokensPerSecond": 61.29742121749924
+          },
+          {
+            "startOutputToken": 53,
+            "endOutputToken": 53,
+            "contextTokens": 8244,
+            "milliseconds": 16.329099999999016,
+            "tokensPerSecond": 61.24036229798705
+          },
+          {
+            "startOutputToken": 54,
+            "endOutputToken": 54,
+            "contextTokens": 8245,
+            "milliseconds": 16.37540000000081,
+            "tokensPerSecond": 61.06721057195248
+          },
+          {
+            "startOutputToken": 55,
+            "endOutputToken": 55,
+            "contextTokens": 8246,
+            "milliseconds": 16.31840000000011,
+            "tokensPerSecond": 61.280517697813096
+          },
+          {
+            "startOutputToken": 56,
+            "endOutputToken": 56,
+            "contextTokens": 8247,
+            "milliseconds": 16.317199999997683,
+            "tokensPerSecond": 61.28502439144841
+          },
+          {
+            "startOutputToken": 57,
+            "endOutputToken": 57,
+            "contextTokens": 8248,
+            "milliseconds": 16.335000000002765,
+            "tokensPerSecond": 61.21824303641449
+          },
+          {
+            "startOutputToken": 58,
+            "endOutputToken": 58,
+            "contextTokens": 8249,
+            "milliseconds": 16.341300000000047,
+            "tokensPerSecond": 61.19464179716407
+          },
+          {
+            "startOutputToken": 59,
+            "endOutputToken": 59,
+            "contextTokens": 8250,
+            "milliseconds": 16.34400000000096,
+            "tokensPerSecond": 61.184532550167724
+          },
+          {
+            "startOutputToken": 60,
+            "endOutputToken": 60,
+            "contextTokens": 8251,
+            "milliseconds": 16.32010000000082,
+            "tokensPerSecond": 61.274134349663896
+          },
+          {
+            "startOutputToken": 61,
+            "endOutputToken": 61,
+            "contextTokens": 8252,
+            "milliseconds": 16.4346000000005,
+            "tokensPerSecond": 60.847236926969295
+          },
+          {
+            "startOutputToken": 62,
+            "endOutputToken": 62,
+            "contextTokens": 8253,
+            "milliseconds": 16.351999999998952,
+            "tokensPerSecond": 61.15459882583562
+          },
+          {
+            "startOutputToken": 63,
+            "endOutputToken": 63,
+            "contextTokens": 8254,
+            "milliseconds": 16.31750000000102,
+            "tokensPerSecond": 61.28389765588709
+          },
+          {
+            "startOutputToken": 64,
+            "endOutputToken": 64,
+            "contextTokens": 8255,
+            "milliseconds": 16.401600000001054,
+            "tokensPerSecond": 60.96966149643546
+          },
+          {
+            "startOutputToken": 65,
+            "endOutputToken": 65,
+            "contextTokens": 8256,
+            "milliseconds": 16.366399999998976,
+            "tokensPerSecond": 61.10079186626641
+          },
+          {
+            "startOutputToken": 66,
+            "endOutputToken": 66,
+            "contextTokens": 8257,
+            "milliseconds": 16.324499999998807,
+            "tokensPerSecond": 61.2576189163572
+          },
+          {
+            "startOutputToken": 67,
+            "endOutputToken": 67,
+            "contextTokens": 8258,
+            "milliseconds": 16.345699999998033,
+            "tokensPerSecond": 61.17816918211642
+          },
+          {
+            "startOutputToken": 68,
+            "endOutputToken": 68,
+            "contextTokens": 8259,
+            "milliseconds": 16.327699999998003,
+            "tokensPerSecond": 61.2456132829561
+          },
+          {
+            "startOutputToken": 69,
+            "endOutputToken": 69,
+            "contextTokens": 8260,
+            "milliseconds": 16.31800000000294,
+            "tokensPerSecond": 61.282019855363394
+          },
+          {
+            "startOutputToken": 70,
+            "endOutputToken": 70,
+            "contextTokens": 8261,
+            "milliseconds": 16.36710000000312,
+            "tokensPerSecond": 61.098178663282404
+          },
+          {
+            "startOutputToken": 71,
+            "endOutputToken": 71,
+            "contextTokens": 8262,
+            "milliseconds": 16.35149999999703,
+            "tokensPerSecond": 61.15646882550112
+          },
+          {
+            "startOutputToken": 72,
+            "endOutputToken": 72,
+            "contextTokens": 8263,
+            "milliseconds": 16.326700000001438,
+            "tokensPerSecond": 61.24936453783753
+          },
+          {
+            "startOutputToken": 73,
+            "endOutputToken": 73,
+            "contextTokens": 8264,
+            "milliseconds": 16.352899999998044,
+            "tokensPerSecond": 61.15123311462307
+          },
+          {
+            "startOutputToken": 74,
+            "endOutputToken": 74,
+            "contextTokens": 8265,
+            "milliseconds": 16.325400000001537,
+            "tokensPerSecond": 61.25424185624278
+          },
+          {
+            "startOutputToken": 75,
+            "endOutputToken": 75,
+            "contextTokens": 8266,
+            "milliseconds": 16.25749999999971,
+            "tokensPerSecond": 61.510072274336025
+          },
+          {
+            "startOutputToken": 76,
+            "endOutputToken": 76,
+            "contextTokens": 8267,
+            "milliseconds": 16.31720000000132,
+            "tokensPerSecond": 61.285024391434746
+          },
+          {
+            "startOutputToken": 77,
+            "endOutputToken": 77,
+            "contextTokens": 8268,
+            "milliseconds": 16.322700000000623,
+            "tokensPerSecond": 61.26437415378349
+          },
+          {
+            "startOutputToken": 78,
+            "endOutputToken": 78,
+            "contextTokens": 8269,
+            "milliseconds": 16.348799999999756,
+            "tokensPerSecond": 61.1665688001575
+          },
+          {
+            "startOutputToken": 79,
+            "endOutputToken": 79,
+            "contextTokens": 8270,
+            "milliseconds": 16.32259999999951,
+            "tokensPerSecond": 61.264749488441176
+          },
+          {
+            "startOutputToken": 80,
+            "endOutputToken": 80,
+            "contextTokens": 8271,
+            "milliseconds": 16.334500000000844,
+            "tokensPerSecond": 61.220116930420176
+          },
+          {
+            "startOutputToken": 81,
+            "endOutputToken": 81,
+            "contextTokens": 8272,
+            "milliseconds": 16.314800000000105,
+            "tokensPerSecond": 61.294039767572606
+          },
+          {
+            "startOutputToken": 82,
+            "endOutputToken": 82,
+            "contextTokens": 8273,
+            "milliseconds": 16.327100000002247,
+            "tokensPerSecond": 61.24786398073525
+          },
+          {
+            "startOutputToken": 83,
+            "endOutputToken": 83,
+            "contextTokens": 8274,
+            "milliseconds": 16.333300000002055,
+            "tokensPerSecond": 61.224614744104024
+          },
+          {
+            "startOutputToken": 84,
+            "endOutputToken": 84,
+            "contextTokens": 8275,
+            "milliseconds": 16.351599999998143,
+            "tokensPerSecond": 61.15609481641635
+          },
+          {
+            "startOutputToken": 85,
+            "endOutputToken": 85,
+            "contextTokens": 8276,
+            "milliseconds": 16.32430000000022,
+            "tokensPerSecond": 61.25836942472182
+          },
+          {
+            "startOutputToken": 86,
+            "endOutputToken": 86,
+            "contextTokens": 8277,
+            "milliseconds": 16.35809999999765,
+            "tokensPerSecond": 61.131794034768326
+          },
+          {
+            "startOutputToken": 87,
+            "endOutputToken": 87,
+            "contextTokens": 8278,
+            "milliseconds": 16.333000000002357,
+            "tokensPerSecond": 61.22573930079322
+          },
+          {
+            "startOutputToken": 88,
+            "endOutputToken": 88,
+            "contextTokens": 8279,
+            "milliseconds": 16.321599999999307,
+            "tokensPerSecond": 61.26850308793516
+          },
+          {
+            "startOutputToken": 89,
+            "endOutputToken": 89,
+            "contextTokens": 8280,
+            "milliseconds": 16.310599999997066,
+            "tokensPerSecond": 61.30982305986168
+          },
+          {
+            "startOutputToken": 90,
+            "endOutputToken": 90,
+            "contextTokens": 8281,
+            "milliseconds": 16.32719999999972,
+            "tokensPerSecond": 61.24748885295808
+          },
+          {
+            "startOutputToken": 91,
+            "endOutputToken": 91,
+            "contextTokens": 8282,
+            "milliseconds": 16.335800000000745,
+            "tokensPerSecond": 61.215245044623124
+          },
+          {
+            "startOutputToken": 92,
+            "endOutputToken": 92,
+            "contextTokens": 8283,
+            "milliseconds": 16.342000000000553,
+            "tokensPerSecond": 61.19202056051684
+          },
+          {
+            "startOutputToken": 93,
+            "endOutputToken": 93,
+            "contextTokens": 8284,
+            "milliseconds": 16.312799999999697,
+            "tokensPerSecond": 61.301554607425984
+          },
+          {
+            "startOutputToken": 94,
+            "endOutputToken": 94,
+            "contextTokens": 8285,
+            "milliseconds": 16.344099999998434,
+            "tokensPerSecond": 61.1841581977653
+          },
+          {
+            "startOutputToken": 95,
+            "endOutputToken": 95,
+            "contextTokens": 8286,
+            "milliseconds": 16.36620000000039,
+            "tokensPerSecond": 61.1015385367389
+          },
+          {
+            "startOutputToken": 96,
+            "endOutputToken": 96,
+            "contextTokens": 8287,
+            "milliseconds": 16.331099999999424,
+            "tokensPerSecond": 61.23286245262323
+          },
+          {
+            "startOutputToken": 97,
+            "endOutputToken": 97,
+            "contextTokens": 8288,
+            "milliseconds": 16.33469999999943,
+            "tokensPerSecond": 61.21936735905985
+          },
+          {
+            "startOutputToken": 98,
+            "endOutputToken": 98,
+            "contextTokens": 8289,
+            "milliseconds": 16.300499999997555,
+            "tokensPerSecond": 61.347811416836905
+          },
+          {
+            "startOutputToken": 99,
+            "endOutputToken": 99,
+            "contextTokens": 8290,
+            "milliseconds": 16.32679999999891,
+            "tokensPerSecond": 61.24898939167912
+          },
+          {
+            "startOutputToken": 100,
+            "endOutputToken": 100,
+            "contextTokens": 8291,
+            "milliseconds": 16.366900000000896,
+            "tokensPerSecond": 61.09892526990116
+          },
+          {
+            "startOutputToken": 101,
+            "endOutputToken": 101,
+            "contextTokens": 8292,
+            "milliseconds": 16.30489999999918,
+            "tokensPerSecond": 61.33125624812482
+          },
+          {
+            "startOutputToken": 102,
+            "endOutputToken": 102,
+            "contextTokens": 8293,
+            "milliseconds": 16.316899999997986,
+            "tokensPerSecond": 61.286151168428034
+          },
+          {
+            "startOutputToken": 103,
+            "endOutputToken": 103,
+            "contextTokens": 8294,
+            "milliseconds": 16.320700000000215,
+            "tokensPerSecond": 61.27188172075872
+          },
+          {
+            "startOutputToken": 104,
+            "endOutputToken": 104,
+            "contextTokens": 8295,
+            "milliseconds": 16.34729999999763,
+            "tokensPerSecond": 61.17218133882323
+          },
+          {
+            "startOutputToken": 105,
+            "endOutputToken": 105,
+            "contextTokens": 8296,
+            "milliseconds": 16.284599999999045,
+            "tokensPerSecond": 61.40771035211541
+          },
+          {
+            "startOutputToken": 106,
+            "endOutputToken": 106,
+            "contextTokens": 8297,
+            "milliseconds": 16.3791999999994,
+            "tokensPerSecond": 61.05304288365956
+          },
+          {
+            "startOutputToken": 107,
+            "endOutputToken": 107,
+            "contextTokens": 8298,
+            "milliseconds": 16.34270000000106,
+            "tokensPerSecond": 61.189399548418265
+          },
+          {
+            "startOutputToken": 108,
+            "endOutputToken": 108,
+            "contextTokens": 8299,
+            "milliseconds": 16.323499999998603,
+            "tokensPerSecond": 61.26137164211631
+          },
+          {
+            "startOutputToken": 109,
+            "endOutputToken": 109,
+            "contextTokens": 8300,
+            "milliseconds": 16.32969999999841,
+            "tokensPerSecond": 61.23811215148455
+          },
+          {
+            "startOutputToken": 110,
+            "endOutputToken": 110,
+            "contextTokens": 8301,
+            "milliseconds": 16.30789999999979,
+            "tokensPerSecond": 61.31997375505202
+          },
+          {
+            "startOutputToken": 111,
+            "endOutputToken": 111,
+            "contextTokens": 8302,
+            "milliseconds": 16.329900000000634,
+            "tokensPerSecond": 61.23736213938611
+          },
+          {
+            "startOutputToken": 112,
+            "endOutputToken": 112,
+            "contextTokens": 8303,
+            "milliseconds": 16.368999999998778,
+            "tokensPerSecond": 61.09108681043892
+          },
+          {
+            "startOutputToken": 113,
+            "endOutputToken": 113,
+            "contextTokens": 8304,
+            "milliseconds": 16.316800000000512,
+            "tokensPerSecond": 61.28652676995297
+          },
+          {
+            "startOutputToken": 114,
+            "endOutputToken": 114,
+            "contextTokens": 8305,
+            "milliseconds": 16.31209999999919,
+            "tokensPerSecond": 61.304185236729154
+          },
+          {
+            "startOutputToken": 115,
+            "endOutputToken": 115,
+            "contextTokens": 8306,
+            "milliseconds": 16.29869999999937,
+            "tokensPerSecond": 61.354586562120815
+          },
+          {
+            "startOutputToken": 116,
+            "endOutputToken": 116,
+            "contextTokens": 8307,
+            "milliseconds": 16.32010000000082,
+            "tokensPerSecond": 61.274134349663896
+          },
+          {
+            "startOutputToken": 117,
+            "endOutputToken": 117,
+            "contextTokens": 8308,
+            "milliseconds": 16.36620000000039,
+            "tokensPerSecond": 61.1015385367389
+          },
+          {
+            "startOutputToken": 118,
+            "endOutputToken": 118,
+            "contextTokens": 8309,
+            "milliseconds": 16.322800000001735,
+            "tokensPerSecond": 61.26399882372471
+          },
+          {
+            "startOutputToken": 119,
+            "endOutputToken": 119,
+            "contextTokens": 8310,
+            "milliseconds": 16.318899999998393,
+            "tokensPerSecond": 61.27864010442484
+          },
+          {
+            "startOutputToken": 120,
+            "endOutputToken": 120,
+            "contextTokens": 8311,
+            "milliseconds": 16.302800000001298,
+            "tokensPerSecond": 61.33915646391542
+          },
+          {
+            "startOutputToken": 121,
+            "endOutputToken": 121,
+            "contextTokens": 8312,
+            "milliseconds": 16.29899999999907,
+            "tokensPerSecond": 61.35345726732052
+          },
+          {
+            "startOutputToken": 122,
+            "endOutputToken": 122,
+            "contextTokens": 8313,
+            "milliseconds": 16.33719999999812,
+            "tokensPerSecond": 61.209999265487056
+          },
+          {
+            "startOutputToken": 123,
+            "endOutputToken": 123,
+            "contextTokens": 8314,
+            "milliseconds": 16.413000000000466,
+            "tokensPerSecond": 60.92731371473659
+          },
+          {
+            "startOutputToken": 124,
+            "endOutputToken": 124,
+            "contextTokens": 8315,
+            "milliseconds": 16.378099999998085,
+            "tokensPerSecond": 61.05714338049694
+          },
+          {
+            "startOutputToken": 125,
+            "endOutputToken": 125,
+            "contextTokens": 8316,
+            "milliseconds": 16.477900000001682,
+            "tokensPerSecond": 60.687344867968484
+          },
+          {
+            "startOutputToken": 126,
+            "endOutputToken": 126,
+            "contextTokens": 8317,
+            "milliseconds": 16.3137999999999,
+            "tokensPerSecond": 61.29779695717773
+          },
+          {
+            "startOutputToken": 127,
+            "endOutputToken": 127,
+            "contextTokens": 8318,
+            "milliseconds": 16.305599999999686,
+            "tokensPerSecond": 61.328623295065455
+          },
+          {
+            "startOutputToken": 128,
+            "endOutputToken": 128,
+            "contextTokens": 8319,
+            "milliseconds": 16.370300000002317,
+            "tokensPerSecond": 61.08623543855998
+          }
+        ],
+        "contextCapacity": 10240,
+        "kvCacheBytes": 419430400,
+        "metalAllocatedBytes": 37467340800,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 29985.432,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010000000002037268
+        }
+      },
+      "projectedAllocationBytes": 42584391680,
+      "limitBytes": 41339060224.0,
+      "assumption": "Retain observed non-KV allocation and replace FP32 KV with 135168-token capacity; excludes further attention/scratch growth. Not a measured peak.",
+      "eligible": false
+    }
+  },
+  "encoder": {
+    "off-128k-preflight.json": {
+      "observed": {
+        "prefillMs": 139756.4615,
+        "firstTokenMs": 139756.481,
+        "decodeMs": 2760.580799999996,
+        "decodeTokens": 127,
+        "decodeTokensPerSecond": 46.004811741065566,
+        "decodeWindows": [
+          {
+            "startOutputToken": 2,
+            "endOutputToken": 2,
+            "contextTokens": 32769,
+            "milliseconds": 21.847899999993388,
+            "tokensPerSecond": 45.770989431492396
+          },
+          {
+            "startOutputToken": 3,
+            "endOutputToken": 3,
+            "contextTokens": 32770,
+            "milliseconds": 21.725399999995716,
+            "tokensPerSecond": 46.02907196186018
+          },
+          {
+            "startOutputToken": 4,
+            "endOutputToken": 4,
+            "contextTokens": 32771,
+            "milliseconds": 21.706200000015087,
+            "tokensPerSecond": 46.06978651257728
+          },
+          {
+            "startOutputToken": 5,
+            "endOutputToken": 5,
+            "contextTokens": 32772,
+            "milliseconds": 21.738899999996647,
+            "tokensPerSecond": 46.00048760517571
+          },
+          {
+            "startOutputToken": 6,
+            "endOutputToken": 6,
+            "contextTokens": 32773,
+            "milliseconds": 21.716400000004796,
+            "tokensPerSecond": 46.04814794347954
+          },
+          {
+            "startOutputToken": 7,
+            "endOutputToken": 7,
+            "contextTokens": 32774,
+            "milliseconds": 21.73649999999907,
+            "tokensPerSecond": 46.005566673569476
+          },
+          {
+            "startOutputToken": 8,
+            "endOutputToken": 8,
+            "contextTokens": 32775,
+            "milliseconds": 21.71950000000652,
+            "tokensPerSecond": 46.04157554270125
+          },
+          {
+            "startOutputToken": 9,
+            "endOutputToken": 9,
+            "contextTokens": 32776,
+            "milliseconds": 21.689099999988684,
+            "tokensPerSecond": 46.10610859835225
+          },
+          {
+            "startOutputToken": 10,
+            "endOutputToken": 10,
+            "contextTokens": 32777,
+            "milliseconds": 21.67170000000624,
+            "tokensPerSecond": 46.14312675054158
+          },
+          {
+            "startOutputToken": 11,
+            "endOutputToken": 11,
+            "contextTokens": 32778,
+            "milliseconds": 21.67919999998412,
+            "tokensPerSecond": 46.12716336399556
+          },
+          {
+            "startOutputToken": 12,
+            "endOutputToken": 12,
+            "contextTokens": 32779,
+            "milliseconds": 21.711000000010245,
+            "tokensPerSecond": 46.059601123832536
+          },
+          {
+            "startOutputToken": 13,
+            "endOutputToken": 13,
+            "contextTokens": 32780,
+            "milliseconds": 21.69000000000233,
+            "tokensPerSecond": 46.1041954817839
+          },
+          {
+            "startOutputToken": 14,
+            "endOutputToken": 14,
+            "contextTokens": 32781,
+            "milliseconds": 21.597299999993993,
+            "tokensPerSecond": 46.30208405681628
+          },
+          {
+            "startOutputToken": 15,
+            "endOutputToken": 15,
+            "contextTokens": 32782,
+            "milliseconds": 21.651400000002468,
+            "tokensPerSecond": 46.18638979465005
+          },
+          {
+            "startOutputToken": 16,
+            "endOutputToken": 16,
+            "contextTokens": 32783,
+            "milliseconds": 21.677700000000186,
+            "tokensPerSecond": 46.130355157603965
+          },
+          {
+            "startOutputToken": 17,
+            "endOutputToken": 17,
+            "contextTokens": 32784,
+            "milliseconds": 21.66930000000866,
+            "tokensPerSecond": 46.148237368055284
+          },
+          {
+            "startOutputToken": 18,
+            "endOutputToken": 18,
+            "contextTokens": 32785,
+            "milliseconds": 21.677399999985937,
+            "tokensPerSecond": 46.13099356936942
+          },
+          {
+            "startOutputToken": 19,
+            "endOutputToken": 19,
+            "contextTokens": 32786,
+            "milliseconds": 21.656400000007125,
+            "tokensPerSecond": 46.1757263441602
+          },
+          {
+            "startOutputToken": 20,
+            "endOutputToken": 20,
+            "contextTokens": 32787,
+            "milliseconds": 21.746400000003632,
+            "tokensPerSecond": 45.984622742147344
+          },
+          {
+            "startOutputToken": 21,
+            "endOutputToken": 21,
+            "contextTokens": 32788,
+            "milliseconds": 21.931400000001304,
+            "tokensPerSecond": 45.596724331321326
+          },
+          {
+            "startOutputToken": 22,
+            "endOutputToken": 22,
+            "contextTokens": 32789,
+            "milliseconds": 21.984700000000885,
+            "tokensPerSecond": 45.486179024501574
+          },
+          {
+            "startOutputToken": 23,
+            "endOutputToken": 23,
+            "contextTokens": 32790,
+            "milliseconds": 21.76459999999497,
+            "tokensPerSecond": 45.946169467862084
+          },
+          {
+            "startOutputToken": 24,
+            "endOutputToken": 24,
+            "contextTokens": 32791,
+            "milliseconds": 21.701600000000326,
+            "tokensPerSecond": 46.07955173812
+          },
+          {
+            "startOutputToken": 25,
+            "endOutputToken": 25,
+            "contextTokens": 32792,
+            "milliseconds": 21.855199999990873,
+            "tokensPerSecond": 45.75570116038369
+          },
+          {
+            "startOutputToken": 26,
+            "endOutputToken": 26,
+            "contextTokens": 32793,
+            "milliseconds": 21.70219999999972,
+            "tokensPerSecond": 46.07827777829035
+          },
+          {
+            "startOutputToken": 27,
+            "endOutputToken": 27,
+            "contextTokens": 32794,
+            "milliseconds": 21.67870000001858,
+            "tokensPerSecond": 46.12822724605917
+          },
+          {
+            "startOutputToken": 28,
+            "endOutputToken": 28,
+            "contextTokens": 32795,
+            "milliseconds": 21.6929999999993,
+            "tokensPerSecond": 46.09781957313567
+          },
+          {
+            "startOutputToken": 29,
+            "endOutputToken": 29,
+            "contextTokens": 32796,
+            "milliseconds": 21.69759999998496,
+            "tokensPerSecond": 46.088046604264676
+          },
+          {
+            "startOutputToken": 30,
+            "endOutputToken": 30,
+            "contextTokens": 32797,
+            "milliseconds": 21.732400000008056,
+            "tokensPerSecond": 46.014246010547815
+          },
+          {
+            "startOutputToken": 31,
+            "endOutputToken": 31,
+            "contextTokens": 32798,
+            "milliseconds": 21.657900000020163,
+            "tokensPerSecond": 46.172528269087444
+          },
+          {
+            "startOutputToken": 32,
+            "endOutputToken": 32,
+            "contextTokens": 32799,
+            "milliseconds": 21.691599999991013,
+            "tokensPerSecond": 46.10079477772107
+          },
+          {
+            "startOutputToken": 33,
+            "endOutputToken": 33,
+            "contextTokens": 32800,
+            "milliseconds": 21.673299999994924,
+            "tokensPerSecond": 46.139720301026344
+          },
+          {
+            "startOutputToken": 34,
+            "endOutputToken": 34,
+            "contextTokens": 32801,
+            "milliseconds": 21.672700000024633,
+            "tokensPerSecond": 46.14099766059898
+          },
+          {
+            "startOutputToken": 35,
+            "endOutputToken": 35,
+            "contextTokens": 32802,
+            "milliseconds": 21.642699999996694,
+            "tokensPerSecond": 46.20495594358157
+          },
+          {
+            "startOutputToken": 36,
+            "endOutputToken": 36,
+            "contextTokens": 32803,
+            "milliseconds": 21.63190000000759,
+            "tokensPerSecond": 46.228024352907006
+          },
+          {
+            "startOutputToken": 37,
+            "endOutputToken": 37,
+            "contextTokens": 32804,
+            "milliseconds": 21.665299999993294,
+            "tokensPerSecond": 46.1567575801078
+          },
+          {
+            "startOutputToken": 38,
+            "endOutputToken": 38,
+            "contextTokens": 32805,
+            "milliseconds": 21.698800000012852,
+            "tokensPerSecond": 46.08549781552011
+          },
+          {
+            "startOutputToken": 39,
+            "endOutputToken": 39,
+            "contextTokens": 32806,
+            "milliseconds": 21.671999999991385,
+            "tokensPerSecond": 46.14248800297146
+          },
+          {
+            "startOutputToken": 40,
+            "endOutputToken": 40,
+            "contextTokens": 32807,
+            "milliseconds": 21.65549999999348,
+            "tokensPerSecond": 46.17764540187486
+          },
+          {
+            "startOutputToken": 41,
+            "endOutputToken": 41,
+            "contextTokens": 32808,
+            "milliseconds": 21.7160000000149,
+            "tokensPerSecond": 46.048996131852725
+          },
+          {
+            "startOutputToken": 42,
+            "endOutputToken": 42,
+            "contextTokens": 32809,
+            "milliseconds": 21.676399999996647,
+            "tokensPerSecond": 46.133121736088775
+          },
+          {
+            "startOutputToken": 43,
+            "endOutputToken": 43,
+            "contextTokens": 32810,
+            "milliseconds": 21.67009999998845,
+            "tokensPerSecond": 46.14653370314548
+          },
+          {
+            "startOutputToken": 44,
+            "endOutputToken": 44,
+            "contextTokens": 32811,
+            "milliseconds": 21.65580000000773,
+            "tokensPerSecond": 46.17700569822602
+          },
+          {
+            "startOutputToken": 45,
+            "endOutputToken": 45,
+            "contextTokens": 32812,
+            "milliseconds": 21.729600000020582,
+            "tokensPerSecond": 46.02017524478374
+          },
+          {
+            "startOutputToken": 46,
+            "endOutputToken": 46,
+            "contextTokens": 32813,
+            "milliseconds": 21.67050000000745,
+            "tokensPerSecond": 46.145681917798676
+          },
+          {
+            "startOutputToken": 47,
+            "endOutputToken": 47,
+            "contextTokens": 32814,
+            "milliseconds": 21.660199999983888,
+            "tokensPerSecond": 46.16762541438878
+          },
+          {
+            "startOutputToken": 48,
+            "endOutputToken": 48,
+            "contextTokens": 32815,
+            "milliseconds": 21.667900000000373,
+            "tokensPerSecond": 46.15121908445132
+          },
+          {
+            "startOutputToken": 49,
+            "endOutputToken": 49,
+            "contextTokens": 32816,
+            "milliseconds": 21.681199999991804,
+            "tokensPerSecond": 46.12290832612484
+          },
+          {
+            "startOutputToken": 50,
+            "endOutputToken": 50,
+            "contextTokens": 32817,
+            "milliseconds": 21.66009999997914,
+            "tokensPerSecond": 46.16783856034659
+          },
+          {
+            "startOutputToken": 51,
+            "endOutputToken": 51,
+            "contextTokens": 32818,
+            "milliseconds": 21.83629999999539,
+            "tokensPerSecond": 45.795304149522174
+          },
+          {
+            "startOutputToken": 52,
+            "endOutputToken": 52,
+            "contextTokens": 32819,
+            "milliseconds": 21.85869999998249,
+            "tokensPerSecond": 45.748374789022265
+          },
+          {
+            "startOutputToken": 53,
+            "endOutputToken": 53,
+            "contextTokens": 32820,
+            "milliseconds": 21.90429999999469,
+            "tokensPerSecond": 45.65313659876108
+          },
+          {
+            "startOutputToken": 54,
+            "endOutputToken": 54,
+            "contextTokens": 32821,
+            "milliseconds": 21.815800000011222,
+            "tokensPerSecond": 45.83833735180399
+          },
+          {
+            "startOutputToken": 55,
+            "endOutputToken": 55,
+            "contextTokens": 32822,
+            "milliseconds": 21.716500000009546,
+            "tokensPerSecond": 46.047935901252984
+          },
+          {
+            "startOutputToken": 56,
+            "endOutputToken": 56,
+            "contextTokens": 32823,
+            "milliseconds": 21.67269999999553,
+            "tokensPerSecond": 46.140997660660936
+          },
+          {
+            "startOutputToken": 57,
+            "endOutputToken": 57,
+            "contextTokens": 32824,
+            "milliseconds": 21.686900000000605,
+            "tokensPerSecond": 46.11078577389909
+          },
+          {
+            "startOutputToken": 58,
+            "endOutputToken": 58,
+            "contextTokens": 32825,
+            "milliseconds": 21.68979999999283,
+            "tokensPerSecond": 46.104620605092286
+          },
+          {
+            "startOutputToken": 59,
+            "endOutputToken": 59,
+            "contextTokens": 32826,
+            "milliseconds": 21.675099999993108,
+            "tokensPerSecond": 46.135888646433834
+          },
+          {
+            "startOutputToken": 60,
+            "endOutputToken": 60,
+            "contextTokens": 32827,
+            "milliseconds": 21.738599999982398,
+            "tokensPerSecond": 46.00112242742448
+          },
+          {
+            "startOutputToken": 61,
+            "endOutputToken": 61,
+            "contextTokens": 32828,
+            "milliseconds": 21.709900000016205,
+            "tokensPerSecond": 46.061934877602084
+          },
+          {
+            "startOutputToken": 62,
+            "endOutputToken": 62,
+            "contextTokens": 32829,
+            "milliseconds": 21.67280000000028,
+            "tokensPerSecond": 46.140784762466645
+          },
+          {
+            "startOutputToken": 63,
+            "endOutputToken": 63,
+            "contextTokens": 32830,
+            "milliseconds": 21.67149999999674,
+            "tokensPerSecond": 46.143552592121004
+          },
+          {
+            "startOutputToken": 64,
+            "endOutputToken": 64,
+            "contextTokens": 32831,
+            "milliseconds": 21.68619999999646,
+            "tokensPerSecond": 46.112274165144804
+          },
+          {
+            "startOutputToken": 65,
+            "endOutputToken": 65,
+            "contextTokens": 32832,
+            "milliseconds": 21.683199999999488,
+            "tokensPerSecond": 46.11865407320062
+          },
+          {
+            "startOutputToken": 66,
+            "endOutputToken": 66,
+            "contextTokens": 32833,
+            "milliseconds": 21.687900000019,
+            "tokensPerSecond": 46.108659667331736
+          },
+          {
+            "startOutputToken": 67,
+            "endOutputToken": 67,
+            "contextTokens": 32834,
+            "milliseconds": 21.69649999999092,
+            "tokensPerSecond": 46.09038324155594
+          },
+          {
+            "startOutputToken": 68,
+            "endOutputToken": 68,
+            "contextTokens": 32835,
+            "milliseconds": 21.665500000002794,
+            "tokensPerSecond": 46.156331494766846
+          },
+          {
+            "startOutputToken": 69,
+            "endOutputToken": 69,
+            "contextTokens": 32836,
+            "milliseconds": 21.659500000008848,
+            "tokensPerSecond": 46.16911747730056
+          },
+          {
+            "startOutputToken": 70,
+            "endOutputToken": 70,
+            "contextTokens": 32837,
+            "milliseconds": 21.653099999995902,
+            "tokensPerSecond": 46.18276366895222
+          },
+          {
+            "startOutputToken": 71,
+            "endOutputToken": 71,
+            "contextTokens": 32838,
+            "milliseconds": 21.880199999985052,
+            "tokensPerSecond": 45.703421358154095
+          },
+          {
+            "startOutputToken": 72,
+            "endOutputToken": 72,
+            "contextTokens": 32839,
+            "milliseconds": 21.700600000011036,
+            "tokensPerSecond": 46.08167516103202
+          },
+          {
+            "startOutputToken": 73,
+            "endOutputToken": 73,
+            "contextTokens": 32840,
+            "milliseconds": 21.67269999999553,
+            "tokensPerSecond": 46.140997660660936
+          },
+          {
+            "startOutputToken": 74,
+            "endOutputToken": 74,
+            "contextTokens": 32841,
+            "milliseconds": 21.657399999996414,
+            "tokensPerSecond": 46.17359424493086
+          },
+          {
+            "startOutputToken": 75,
+            "endOutputToken": 75,
+            "contextTokens": 32842,
+            "milliseconds": 21.68989999999758,
+            "tokensPerSecond": 46.10440804245808
+          },
+          {
+            "startOutputToken": 76,
+            "endOutputToken": 76,
+            "contextTokens": 32843,
+            "milliseconds": 21.665399999998044,
+            "tokensPerSecond": 46.15654453645399
+          },
+          {
+            "startOutputToken": 77,
+            "endOutputToken": 77,
+            "contextTokens": 32844,
+            "milliseconds": 21.665600000007544,
+            "tokensPerSecond": 46.15611845504633
+          },
+          {
+            "startOutputToken": 78,
+            "endOutputToken": 78,
+            "contextTokens": 32845,
+            "milliseconds": 21.66620000000694,
+            "tokensPerSecond": 46.154840258083084
+          },
+          {
+            "startOutputToken": 79,
+            "endOutputToken": 79,
+            "contextTokens": 32846,
+            "milliseconds": 21.75830000001588,
+            "tokensPerSecond": 45.95947293673082
+          },
+          {
+            "startOutputToken": 80,
+            "endOutputToken": 80,
+            "contextTokens": 32847,
+            "milliseconds": 21.712999999988824,
+            "tokensPerSecond": 46.05535854098995
+          },
+          {
+            "startOutputToken": 81,
+            "endOutputToken": 81,
+            "contextTokens": 32848,
+            "milliseconds": 21.710800000000745,
+            "tokensPerSecond": 46.06002542513245
+          },
+          {
+            "startOutputToken": 82,
+            "endOutputToken": 82,
+            "contextTokens": 32849,
+            "milliseconds": 21.672200000000885,
+            "tokensPerSecond": 46.14206218104111
+          },
+          {
+            "startOutputToken": 83,
+            "endOutputToken": 83,
+            "contextTokens": 32850,
+            "milliseconds": 21.668499999999767,
+            "tokensPerSecond": 46.14994115882552
+          },
+          {
+            "startOutputToken": 84,
+            "endOutputToken": 84,
+            "contextTokens": 32851,
+            "milliseconds": 21.66150000001653,
+            "tokensPerSecond": 46.16485469608461
+          },
+          {
+            "startOutputToken": 85,
+            "endOutputToken": 85,
+            "contextTokens": 32852,
+            "milliseconds": 21.669099999999162,
+            "tokensPerSecond": 46.14866330396919
+          },
+          {
+            "startOutputToken": 86,
+            "endOutputToken": 86,
+            "contextTokens": 32853,
+            "milliseconds": 21.67170000000624,
+            "tokensPerSecond": 46.14312675054158
+          },
+          {
+            "startOutputToken": 87,
+            "endOutputToken": 87,
+            "contextTokens": 32854,
+            "milliseconds": 21.656600000016624,
+            "tokensPerSecond": 46.17529990853746
+          },
+          {
+            "startOutputToken": 88,
+            "endOutputToken": 88,
+            "contextTokens": 32855,
+            "milliseconds": 21.71909999998752,
+            "tokensPerSecond": 46.042423489029225
+          },
+          {
+            "startOutputToken": 89,
+            "endOutputToken": 89,
+            "contextTokens": 32856,
+            "milliseconds": 21.665099999983795,
+            "tokensPerSecond": 46.157183673315515
+          },
+          {
+            "startOutputToken": 90,
+            "endOutputToken": 90,
+            "contextTokens": 32857,
+            "milliseconds": 21.66709999999148,
+            "tokensPerSecond": 46.1529230954024
+          },
+          {
+            "startOutputToken": 91,
+            "endOutputToken": 91,
+            "contextTokens": 32858,
+            "milliseconds": 21.679000000003725,
+            "tokensPerSecond": 46.1275889109197
+          },
+          {
+            "startOutputToken": 92,
+            "endOutputToken": 92,
+            "contextTokens": 32859,
+            "milliseconds": 21.67379999998957,
+            "tokensPerSecond": 46.13865588869886
+          },
+          {
+            "startOutputToken": 93,
+            "endOutputToken": 93,
+            "contextTokens": 32860,
+            "milliseconds": 22.364100000006147,
+            "tokensPerSecond": 44.714520146114765
+          },
+          {
+            "startOutputToken": 94,
+            "endOutputToken": 94,
+            "contextTokens": 32861,
+            "milliseconds": 22.10319999998319,
+            "tokensPerSecond": 45.242317854462726
+          },
+          {
+            "startOutputToken": 95,
+            "endOutputToken": 95,
+            "contextTokens": 32862,
+            "milliseconds": 21.71249999999418,
+            "tokensPerSecond": 46.05641911342628
+          },
+          {
+            "startOutputToken": 96,
+            "endOutputToken": 96,
+            "contextTokens": 32863,
+            "milliseconds": 21.721900000004098,
+            "tokensPerSecond": 46.0364885207929
+          },
+          {
+            "startOutputToken": 97,
+            "endOutputToken": 97,
+            "contextTokens": 32864,
+            "milliseconds": 21.699899999977788,
+            "tokensPerSecond": 46.08316167360327
+          },
+          {
+            "startOutputToken": 98,
+            "endOutputToken": 98,
+            "contextTokens": 32865,
+            "milliseconds": 21.67829999999958,
+            "tokensPerSecond": 46.12907838714379
+          },
+          {
+            "startOutputToken": 99,
+            "endOutputToken": 99,
+            "contextTokens": 32866,
+            "milliseconds": 22.292199999996228,
+            "tokensPerSecond": 44.858739828288336
+          },
+          {
+            "startOutputToken": 100,
+            "endOutputToken": 100,
+            "contextTokens": 32867,
+            "milliseconds": 21.95569999999134,
+            "tokensPerSecond": 45.54625905803024
+          },
+          {
+            "startOutputToken": 101,
+            "endOutputToken": 101,
+            "contextTokens": 32868,
+            "milliseconds": 22.244999999995343,
+            "tokensPerSecond": 44.95392222972395
+          },
+          {
+            "startOutputToken": 102,
+            "endOutputToken": 102,
+            "contextTokens": 32869,
+            "milliseconds": 21.754699999990407,
+            "tokensPerSecond": 45.96707837848561
+          },
+          {
+            "startOutputToken": 103,
+            "endOutputToken": 103,
+            "contextTokens": 32870,
+            "milliseconds": 21.714500000001863,
+            "tokensPerSecond": 46.05217711666924
+          },
+          {
+            "startOutputToken": 104,
+            "endOutputToken": 104,
+            "contextTokens": 32871,
+            "milliseconds": 21.670100000017555,
+            "tokensPerSecond": 46.146533703083506
+          },
+          {
+            "startOutputToken": 105,
+            "endOutputToken": 105,
+            "contextTokens": 32872,
+            "milliseconds": 21.68530000001192,
+            "tokensPerSecond": 46.11418795218191
+          },
+          {
+            "startOutputToken": 106,
+            "endOutputToken": 106,
+            "contextTokens": 32873,
+            "milliseconds": 21.674200000008568,
+            "tokensPerSecond": 46.13780439414625
+          },
+          {
+            "startOutputToken": 107,
+            "endOutputToken": 107,
+            "contextTokens": 32874,
+            "milliseconds": 21.705500000010943,
+            "tokensPerSecond": 46.071272258160185
+          },
+          {
+            "startOutputToken": 108,
+            "endOutputToken": 108,
+            "contextTokens": 32875,
+            "milliseconds": 21.707099999999627,
+            "tokensPerSecond": 46.06787640910196
+          },
+          {
+            "startOutputToken": 109,
+            "endOutputToken": 109,
+            "contextTokens": 32876,
+            "milliseconds": 21.683500000013737,
+            "tokensPerSecond": 46.11801600292234
+          },
+          {
+            "startOutputToken": 110,
+            "endOutputToken": 110,
+            "contextTokens": 32877,
+            "milliseconds": 21.692700000014156,
+            "tokensPerSecond": 46.0984570846113
+          },
+          {
+            "startOutputToken": 111,
+            "endOutputToken": 111,
+            "contextTokens": 32878,
+            "milliseconds": 21.6875,
+            "tokensPerSecond": 46.10951008645533
+          },
+          {
+            "startOutputToken": 112,
+            "endOutputToken": 112,
+            "contextTokens": 32879,
+            "milliseconds": 21.66459999998915,
+            "tokensPerSecond": 46.1582489406913
+          },
+          {
+            "startOutputToken": 113,
+            "endOutputToken": 113,
+            "contextTokens": 32880,
+            "milliseconds": 21.66920000000391,
+            "tokensPerSecond": 46.148450335029416
+          },
+          {
+            "startOutputToken": 114,
+            "endOutputToken": 114,
+            "contextTokens": 32881,
+            "milliseconds": 21.644999999989523,
+            "tokensPerSecond": 46.20004620006856
+          },
+          {
+            "startOutputToken": 115,
+            "endOutputToken": 115,
+            "contextTokens": 32882,
+            "milliseconds": 21.690600000001723,
+            "tokensPerSecond": 46.10292015895921
+          },
+          {
+            "startOutputToken": 116,
+            "endOutputToken": 116,
+            "contextTokens": 32883,
+            "milliseconds": 21.707899999979418,
+            "tokensPerSecond": 46.06617867232428
+          },
+          {
+            "startOutputToken": 117,
+            "endOutputToken": 117,
+            "contextTokens": 32884,
+            "milliseconds": 21.65360000001965,
+            "tokensPerSecond": 46.181697269696144
+          },
+          {
+            "startOutputToken": 118,
+            "endOutputToken": 118,
+            "contextTokens": 32885,
+            "milliseconds": 21.798099999985425,
+            "tokensPerSecond": 45.875557961504384
+          },
+          {
+            "startOutputToken": 119,
+            "endOutputToken": 119,
+            "contextTokens": 32886,
+            "milliseconds": 21.68210000000545,
+            "tokensPerSecond": 46.12099381516314
+          },
+          {
+            "startOutputToken": 120,
+            "endOutputToken": 120,
+            "contextTokens": 32887,
+            "milliseconds": 21.662000000011176,
+            "tokensPerSecond": 46.16378912378747
+          },
+          {
+            "startOutputToken": 121,
+            "endOutputToken": 121,
+            "contextTokens": 32888,
+            "milliseconds": 21.67290000000503,
+            "tokensPerSecond": 46.140571866237
+          },
+          {
+            "startOutputToken": 122,
+            "endOutputToken": 122,
+            "contextTokens": 32889,
+            "milliseconds": 21.72860000000219,
+            "tokensPerSecond": 46.022293198820876
+          },
+          {
+            "startOutputToken": 123,
+            "endOutputToken": 123,
+            "contextTokens": 32890,
+            "milliseconds": 21.660700000007637,
+            "tokensPerSecond": 46.16655971412039
+          },
+          {
+            "startOutputToken": 124,
+            "endOutputToken": 124,
+            "contextTokens": 32891,
+            "milliseconds": 21.662699999986216,
+            "tokensPerSecond": 46.16229740524663
+          },
+          {
+            "startOutputToken": 125,
+            "endOutputToken": 125,
+            "contextTokens": 32892,
+            "milliseconds": 21.651699999987613,
+            "tokensPerSecond": 46.18574984876809
+          },
+          {
+            "startOutputToken": 126,
+            "endOutputToken": 126,
+            "contextTokens": 32893,
+            "milliseconds": 21.768699999985984,
+            "tokensPerSecond": 45.93751579105063
+          },
+          {
+            "startOutputToken": 127,
+            "endOutputToken": 127,
+            "contextTokens": 32894,
+            "milliseconds": 21.756099999998696,
+            "tokensPerSecond": 45.964120407612576
+          },
+          {
+            "startOutputToken": 128,
+            "endOutputToken": 128,
+            "contextTokens": 32895,
+            "milliseconds": 21.652499999996508,
+            "tokensPerSecond": 46.184043413008254
+          }
+        ],
+        "contextCapacity": 34816,
+        "kvCacheBytes": 1426063360,
+        "metalAllocatedBytes": 38526271488,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 139756.4505,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.010999999998603016
+        }
+      },
+      "projectedAllocationBytes": 42636689408,
+      "limitBytes": 41339060224.0,
+      "assumption": "Retain observed non-KV allocation and replace FP32 KV with 135168-token capacity; excludes further attention/scratch growth. Not a measured peak.",
+      "eligible": false
+    },
+    "on-128k-preflight.json": {
+      "observed": {
+        "prefillMs": 139869.6089,
+        "firstTokenMs": 139869.628,
+        "decodeMs": 2779.2937000000093,
+        "decodeTokens": 127,
+        "decodeTokensPerSecond": 45.69506274201952,
+        "decodeWindows": [
+          {
+            "startOutputToken": 2,
+            "endOutputToken": 2,
+            "contextTokens": 32769,
+            "milliseconds": 26.015400000003865,
+            "tokensPerSecond": 38.43877088185657
+          },
+          {
+            "startOutputToken": 3,
+            "endOutputToken": 3,
+            "contextTokens": 32770,
+            "milliseconds": 23.717299999989336,
+            "tokensPerSecond": 42.16331538583437
+          },
+          {
+            "startOutputToken": 4,
+            "endOutputToken": 4,
+            "contextTokens": 32771,
+            "milliseconds": 23.596999999979744,
+            "tokensPerSecond": 42.37826842398857
+          },
+          {
+            "startOutputToken": 5,
+            "endOutputToken": 5,
+            "contextTokens": 32772,
+            "milliseconds": 23.50779999999213,
+            "tokensPerSecond": 42.53907213777277
+          },
+          {
+            "startOutputToken": 6,
+            "endOutputToken": 6,
+            "contextTokens": 32773,
+            "milliseconds": 23.48749999998836,
+            "tokensPerSecond": 42.5758382118359
+          },
+          {
+            "startOutputToken": 7,
+            "endOutputToken": 7,
+            "contextTokens": 32774,
+            "milliseconds": 23.564800000021933,
+            "tokensPerSecond": 42.43617599126957
+          },
+          {
+            "startOutputToken": 8,
+            "endOutputToken": 8,
+            "contextTokens": 32775,
+            "milliseconds": 23.467199999984587,
+            "tokensPerSecond": 42.61266789393949
+          },
+          {
+            "startOutputToken": 9,
+            "endOutputToken": 9,
+            "contextTokens": 32776,
+            "milliseconds": 23.54099999999744,
+            "tokensPerSecond": 42.47907905357074
+          },
+          {
+            "startOutputToken": 10,
+            "endOutputToken": 10,
+            "contextTokens": 32777,
+            "milliseconds": 21.596099999995204,
+            "tokensPerSecond": 46.30465685935063
+          },
+          {
+            "startOutputToken": 11,
+            "endOutputToken": 11,
+            "contextTokens": 32778,
+            "milliseconds": 21.67980000001262,
+            "tokensPerSecond": 46.12588677014631
+          },
+          {
+            "startOutputToken": 12,
+            "endOutputToken": 12,
+            "contextTokens": 32779,
+            "milliseconds": 21.705300000001444,
+            "tokensPerSecond": 46.07169677451744
+          },
+          {
+            "startOutputToken": 13,
+            "endOutputToken": 13,
+            "contextTokens": 32780,
+            "milliseconds": 21.729000000021188,
+            "tokensPerSecond": 46.02144599378825
+          },
+          {
+            "startOutputToken": 14,
+            "endOutputToken": 14,
+            "contextTokens": 32781,
+            "milliseconds": 21.73300000000745,
+            "tokensPerSecond": 46.0129756591201
+          },
+          {
+            "startOutputToken": 15,
+            "endOutputToken": 15,
+            "contextTokens": 32782,
+            "milliseconds": 21.790299999993294,
+            "tokensPerSecond": 45.89197945876412
+          },
+          {
+            "startOutputToken": 16,
+            "endOutputToken": 16,
+            "contextTokens": 32783,
+            "milliseconds": 21.683099999994738,
+            "tokensPerSecond": 46.118866767216986
+          },
+          {
+            "startOutputToken": 17,
+            "endOutputToken": 17,
+            "contextTokens": 32784,
+            "milliseconds": 21.66400000001886,
+            "tokensPerSecond": 46.159527326399996
+          },
+          {
+            "startOutputToken": 18,
+            "endOutputToken": 18,
+            "contextTokens": 32785,
+            "milliseconds": 21.700299999996787,
+            "tokensPerSecond": 46.08231222610508
+          },
+          {
+            "startOutputToken": 19,
+            "endOutputToken": 19,
+            "contextTokens": 32786,
+            "milliseconds": 21.695000000006985,
+            "tokensPerSecond": 46.09356994697755
+          },
+          {
+            "startOutputToken": 20,
+            "endOutputToken": 20,
+            "contextTokens": 32787,
+            "milliseconds": 21.706000000005588,
+            "tokensPerSecond": 46.070211001554526
+          },
+          {
+            "startOutputToken": 21,
+            "endOutputToken": 21,
+            "contextTokens": 32788,
+            "milliseconds": 21.703100000013364,
+            "tokensPerSecond": 46.07636697058873
+          },
+          {
+            "startOutputToken": 22,
+            "endOutputToken": 22,
+            "contextTokens": 32789,
+            "milliseconds": 21.670799999992596,
+            "tokensPerSecond": 46.145043099486024
+          },
+          {
+            "startOutputToken": 23,
+            "endOutputToken": 23,
+            "contextTokens": 32790,
+            "milliseconds": 21.679899999988265,
+            "tokensPerSecond": 46.12567401143646
+          },
+          {
+            "startOutputToken": 24,
+            "endOutputToken": 24,
+            "contextTokens": 32791,
+            "milliseconds": 22.12589999998454,
+            "tokensPerSecond": 45.19590163567126
+          },
+          {
+            "startOutputToken": 25,
+            "endOutputToken": 25,
+            "contextTokens": 32792,
+            "milliseconds": 22.56390000000829,
+            "tokensPerSecond": 44.31857967814219
+          },
+          {
+            "startOutputToken": 26,
+            "endOutputToken": 26,
+            "contextTokens": 32793,
+            "milliseconds": 21.785299999988638,
+            "tokensPerSecond": 45.90251224451908
+          },
+          {
+            "startOutputToken": 27,
+            "endOutputToken": 27,
+            "contextTokens": 32794,
+            "milliseconds": 21.74179999998887,
+            "tokensPerSecond": 45.99435189361101
+          },
+          {
+            "startOutputToken": 28,
+            "endOutputToken": 28,
+            "contextTokens": 32795,
+            "milliseconds": 21.68959999998333,
+            "tokensPerSecond": 46.105045736240804
+          },
+          {
+            "startOutputToken": 29,
+            "endOutputToken": 29,
+            "contextTokens": 32796,
+            "milliseconds": 21.70120000001043,
+            "tokensPerSecond": 46.080401083788885
+          },
+          {
+            "startOutputToken": 30,
+            "endOutputToken": 30,
+            "contextTokens": 32797,
+            "milliseconds": 21.705300000001444,
+            "tokensPerSecond": 46.07169677451744
+          },
+          {
+            "startOutputToken": 31,
+            "endOutputToken": 31,
+            "contextTokens": 32798,
+            "milliseconds": 21.681200000020908,
+            "tokensPerSecond": 46.122908326062934
+          },
+          {
+            "startOutputToken": 32,
+            "endOutputToken": 32,
+            "contextTokens": 32799,
+            "milliseconds": 21.739899999985937,
+            "tokensPerSecond": 45.998371657673076
+          },
+          {
+            "startOutputToken": 33,
+            "endOutputToken": 33,
+            "contextTokens": 32800,
+            "milliseconds": 21.853799999982584,
+            "tokensPerSecond": 45.75863236603231
+          },
+          {
+            "startOutputToken": 34,
+            "endOutputToken": 34,
+            "contextTokens": 32801,
+            "milliseconds": 21.733399999997346,
+            "tokensPerSecond": 46.01212879715655
+          },
+          {
+            "startOutputToken": 35,
+            "endOutputToken": 35,
+            "contextTokens": 32802,
+            "milliseconds": 21.722399999998743,
+            "tokensPerSecond": 46.035428866057984
+          },
+          {
+            "startOutputToken": 36,
+            "endOutputToken": 36,
+            "contextTokens": 32803,
+            "milliseconds": 21.747599999973318,
+            "tokensPerSecond": 45.98208537959255
+          },
+          {
+            "startOutputToken": 37,
+            "endOutputToken": 37,
+            "contextTokens": 32804,
+            "milliseconds": 21.70209999999497,
+            "tokensPerSecond": 46.07849010004708
+          },
+          {
+            "startOutputToken": 38,
+            "endOutputToken": 38,
+            "contextTokens": 32805,
+            "milliseconds": 21.687799999985145,
+            "tokensPerSecond": 46.10887226923362
+          },
+          {
+            "startOutputToken": 39,
+            "endOutputToken": 39,
+            "contextTokens": 32806,
+            "milliseconds": 21.674800000007963,
+            "tokensPerSecond": 46.1365272113068
+          },
+          {
+            "startOutputToken": 40,
+            "endOutputToken": 40,
+            "contextTokens": 32807,
+            "milliseconds": 21.718000000022585,
+            "tokensPerSecond": 46.0447555023004
+          },
+          {
+            "startOutputToken": 41,
+            "endOutputToken": 41,
+            "contextTokens": 32808,
+            "milliseconds": 21.70250000001397,
+            "tokensPerSecond": 46.07764082476011
+          },
+          {
+            "startOutputToken": 42,
+            "endOutputToken": 42,
+            "contextTokens": 32809,
+            "milliseconds": 21.69430000000284,
+            "tokensPerSecond": 46.09505722700751
+          },
+          {
+            "startOutputToken": 43,
+            "endOutputToken": 43,
+            "contextTokens": 32810,
+            "milliseconds": 21.7098999999871,
+            "tokensPerSecond": 46.06193487766384
+          },
+          {
+            "startOutputToken": 44,
+            "endOutputToken": 44,
+            "contextTokens": 32811,
+            "milliseconds": 21.687599999975646,
+            "tokensPerSecond": 46.10929747879539
+          },
+          {
+            "startOutputToken": 45,
+            "endOutputToken": 45,
+            "contextTokens": 32812,
+            "milliseconds": 21.676700000010896,
+            "tokensPerSecond": 46.13248326541851
+          },
+          {
+            "startOutputToken": 46,
+            "endOutputToken": 46,
+            "contextTokens": 32813,
+            "milliseconds": 21.76569999998901,
+            "tokensPerSecond": 45.94384742969465
+          },
+          {
+            "startOutputToken": 47,
+            "endOutputToken": 47,
+            "contextTokens": 32814,
+            "milliseconds": 21.879699999990407,
+            "tokensPerSecond": 45.70446578337173
+          },
+          {
+            "startOutputToken": 48,
+            "endOutputToken": 48,
+            "contextTokens": 32815,
+            "milliseconds": 22.027399999991758,
+            "tokensPerSecond": 45.3980043037478
+          },
+          {
+            "startOutputToken": 49,
+            "endOutputToken": 49,
+            "contextTokens": 32816,
+            "milliseconds": 21.744300000020303,
+            "tokensPerSecond": 45.98906380058527
+          },
+          {
+            "startOutputToken": 50,
+            "endOutputToken": 50,
+            "contextTokens": 32817,
+            "milliseconds": 21.742800000007264,
+            "tokensPerSecond": 45.992236510461666
+          },
+          {
+            "startOutputToken": 51,
+            "endOutputToken": 51,
+            "contextTokens": 32818,
+            "milliseconds": 21.7554999999993,
+            "tokensPerSecond": 45.9653880627902
+          },
+          {
+            "startOutputToken": 52,
+            "endOutputToken": 52,
+            "contextTokens": 32819,
+            "milliseconds": 21.744400000025053,
+            "tokensPerSecond": 45.98885230214896
+          },
+          {
+            "startOutputToken": 53,
+            "endOutputToken": 53,
+            "contextTokens": 32820,
+            "milliseconds": 21.73190000001341,
+            "tokensPerSecond": 46.01530469031161
+          },
+          {
+            "startOutputToken": 54,
+            "endOutputToken": 54,
+            "contextTokens": 32821,
+            "milliseconds": 21.697199999995064,
+            "tokensPerSecond": 46.08889626312278
+          },
+          {
+            "startOutputToken": 55,
+            "endOutputToken": 55,
+            "contextTokens": 32822,
+            "milliseconds": 21.700400000001537,
+            "tokensPerSecond": 46.082099869123574
+          },
+          {
+            "startOutputToken": 56,
+            "endOutputToken": 56,
+            "contextTokens": 32823,
+            "milliseconds": 21.685099999973318,
+            "tokensPerSecond": 46.11461325985264
+          },
+          {
+            "startOutputToken": 57,
+            "endOutputToken": 57,
+            "contextTokens": 32824,
+            "milliseconds": 21.693299999984447,
+            "tokensPerSecond": 46.097182079292544
+          },
+          {
+            "startOutputToken": 58,
+            "endOutputToken": 58,
+            "contextTokens": 32825,
+            "milliseconds": 22.035699999978533,
+            "tokensPerSecond": 45.380904622996965
+          },
+          {
+            "startOutputToken": 59,
+            "endOutputToken": 59,
+            "contextTokens": 32826,
+            "milliseconds": 22.17050000000745,
+            "tokensPerSecond": 45.10498184522965
+          },
+          {
+            "startOutputToken": 60,
+            "endOutputToken": 60,
+            "contextTokens": 32827,
+            "milliseconds": 21.748899999976857,
+            "tokensPerSecond": 45.97933688605236
+          },
+          {
+            "startOutputToken": 61,
+            "endOutputToken": 61,
+            "contextTokens": 32828,
+            "milliseconds": 21.733299999992596,
+            "tokensPerSecond": 46.01234050974038
+          },
+          {
+            "startOutputToken": 62,
+            "endOutputToken": 62,
+            "contextTokens": 32829,
+            "milliseconds": 21.706700000009732,
+            "tokensPerSecond": 46.068725324418345
+          },
+          {
+            "startOutputToken": 63,
+            "endOutputToken": 63,
+            "contextTokens": 32830,
+            "milliseconds": 21.710800000000745,
+            "tokensPerSecond": 46.06002542513245
+          },
+          {
+            "startOutputToken": 64,
+            "endOutputToken": 64,
+            "contextTokens": 32831,
+            "milliseconds": 21.69289999999455,
+            "tokensPerSecond": 46.098032075022296
+          },
+          {
+            "startOutputToken": 65,
+            "endOutputToken": 65,
+            "contextTokens": 32832,
+            "milliseconds": 21.72870000000694,
+            "tokensPerSecond": 46.02208139463846
+          },
+          {
+            "startOutputToken": 66,
+            "endOutputToken": 66,
+            "contextTokens": 32833,
+            "milliseconds": 21.73570000001928,
+            "tokensPerSecond": 46.00725994557861
+          },
+          {
+            "startOutputToken": 67,
+            "endOutputToken": 67,
+            "contextTokens": 32834,
+            "milliseconds": 21.734900000010384,
+            "tokensPerSecond": 46.00895334229843
+          },
+          {
+            "startOutputToken": 68,
+            "endOutputToken": 68,
+            "contextTokens": 32835,
+            "milliseconds": 21.707099999999627,
+            "tokensPerSecond": 46.06787640910196
+          },
+          {
+            "startOutputToken": 69,
+            "endOutputToken": 69,
+            "contextTokens": 32836,
+            "milliseconds": 21.730999999999767,
+            "tokensPerSecond": 46.01721043670382
+          },
+          {
+            "startOutputToken": 70,
+            "endOutputToken": 70,
+            "contextTokens": 32837,
+            "milliseconds": 21.65470000001369,
+            "tokensPerSecond": 46.17935136480153
+          },
+          {
+            "startOutputToken": 71,
+            "endOutputToken": 71,
+            "contextTokens": 32838,
+            "milliseconds": 21.681400000001304,
+            "tokensPerSecond": 46.122482865494845
+          },
+          {
+            "startOutputToken": 72,
+            "endOutputToken": 72,
+            "contextTokens": 32839,
+            "milliseconds": 21.690700000006473,
+            "tokensPerSecond": 46.102707612004295
+          },
+          {
+            "startOutputToken": 73,
+            "endOutputToken": 73,
+            "contextTokens": 32840,
+            "milliseconds": 21.70559999998659,
+            "tokensPerSecond": 46.07106000297701
+          },
+          {
+            "startOutputToken": 74,
+            "endOutputToken": 74,
+            "contextTokens": 32841,
+            "milliseconds": 21.687699999980396,
+            "tokensPerSecond": 46.109084873034206
+          },
+          {
+            "startOutputToken": 75,
+            "endOutputToken": 75,
+            "contextTokens": 32842,
+            "milliseconds": 21.729000000021188,
+            "tokensPerSecond": 46.02144599378825
+          },
+          {
+            "startOutputToken": 76,
+            "endOutputToken": 76,
+            "contextTokens": 32843,
+            "milliseconds": 21.767500000016298,
+            "tokensPerSecond": 45.94004823701625
+          },
+          {
+            "startOutputToken": 77,
+            "endOutputToken": 77,
+            "contextTokens": 32844,
+            "milliseconds": 21.74069999999483,
+            "tokensPerSecond": 45.99667903978426
+          },
+          {
+            "startOutputToken": 78,
+            "endOutputToken": 78,
+            "contextTokens": 32845,
+            "milliseconds": 21.69069999997737,
+            "tokensPerSecond": 46.102707612066155
+          },
+          {
+            "startOutputToken": 79,
+            "endOutputToken": 79,
+            "contextTokens": 32846,
+            "milliseconds": 21.675000000017462,
+            "tokensPerSecond": 46.13610149938613
+          },
+          {
+            "startOutputToken": 80,
+            "endOutputToken": 80,
+            "contextTokens": 32847,
+            "milliseconds": 21.762400000006892,
+            "tokensPerSecond": 45.95081424841393
+          },
+          {
+            "startOutputToken": 81,
+            "endOutputToken": 81,
+            "contextTokens": 32848,
+            "milliseconds": 21.797400000010384,
+            "tokensPerSecond": 45.87703120553477
+          },
+          {
+            "startOutputToken": 82,
+            "endOutputToken": 82,
+            "contextTokens": 32849,
+            "milliseconds": 21.695699999982025,
+            "tokensPerSecond": 46.092082762981995
+          },
+          {
+            "startOutputToken": 83,
+            "endOutputToken": 83,
+            "contextTokens": 32850,
+            "milliseconds": 21.707800000003772,
+            "tokensPerSecond": 46.06639088253191
+          },
+          {
+            "startOutputToken": 84,
+            "endOutputToken": 84,
+            "contextTokens": 32851,
+            "milliseconds": 21.684500000003027,
+            "tokensPerSecond": 46.11588922962763
+          },
+          {
+            "startOutputToken": 85,
+            "endOutputToken": 85,
+            "contextTokens": 32852,
+            "milliseconds": 21.705300000001444,
+            "tokensPerSecond": 46.07169677451744
+          },
+          {
+            "startOutputToken": 86,
+            "endOutputToken": 86,
+            "contextTokens": 32853,
+            "milliseconds": 21.69409999999334,
+            "tokensPerSecond": 46.09548218180551
+          },
+          {
+            "startOutputToken": 87,
+            "endOutputToken": 87,
+            "contextTokens": 32854,
+            "milliseconds": 21.66579999998794,
+            "tokensPerSecond": 46.15569238156711
+          },
+          {
+            "startOutputToken": 88,
+            "endOutputToken": 88,
+            "contextTokens": 32855,
+            "milliseconds": 21.750499999994645,
+            "tokensPerSecond": 45.9759545757682
+          },
+          {
+            "startOutputToken": 89,
+            "endOutputToken": 89,
+            "contextTokens": 32856,
+            "milliseconds": 21.685399999987567,
+            "tokensPerSecond": 46.11397530138127
+          },
+          {
+            "startOutputToken": 90,
+            "endOutputToken": 90,
+            "contextTokens": 32857,
+            "milliseconds": 21.68910000001779,
+            "tokensPerSecond": 46.106108598290376
+          },
+          {
+            "startOutputToken": 91,
+            "endOutputToken": 91,
+            "contextTokens": 32858,
+            "milliseconds": 21.71840000001248,
+            "tokensPerSecond": 46.04390747013709
+          },
+          {
+            "startOutputToken": 92,
+            "endOutputToken": 92,
+            "contextTokens": 32859,
+            "milliseconds": 21.690099999977974,
+            "tokensPerSecond": 46.10398292313154
+          },
+          {
+            "startOutputToken": 93,
+            "endOutputToken": 93,
+            "contextTokens": 32860,
+            "milliseconds": 21.722000000008848,
+            "tokensPerSecond": 46.03627658593098
+          },
+          {
+            "startOutputToken": 94,
+            "endOutputToken": 94,
+            "contextTokens": 32861,
+            "milliseconds": 21.685199999978067,
+            "tokensPerSecond": 46.11440060506758
+          },
+          {
+            "startOutputToken": 95,
+            "endOutputToken": 95,
+            "contextTokens": 32862,
+            "milliseconds": 21.702799999999115,
+            "tokensPerSecond": 46.077003888901004
+          },
+          {
+            "startOutputToken": 96,
+            "endOutputToken": 96,
+            "contextTokens": 32863,
+            "milliseconds": 21.71700000000419,
+            "tokensPerSecond": 46.04687571947355
+          },
+          {
+            "startOutputToken": 97,
+            "endOutputToken": 97,
+            "contextTokens": 32864,
+            "milliseconds": 21.68969999998808,
+            "tokensPerSecond": 46.104833169686515
+          },
+          {
+            "startOutputToken": 98,
+            "endOutputToken": 98,
+            "contextTokens": 32865,
+            "milliseconds": 21.76469999999972,
+            "tokensPerSecond": 45.94595836377312
+          },
+          {
+            "startOutputToken": 99,
+            "endOutputToken": 99,
+            "contextTokens": 32866,
+            "milliseconds": 21.67840000000433,
+            "tokensPerSecond": 46.12886559892797
+          },
+          {
+            "startOutputToken": 100,
+            "endOutputToken": 100,
+            "contextTokens": 32867,
+            "milliseconds": 21.919699999998556,
+            "tokensPerSecond": 45.62106233206047
+          },
+          {
+            "startOutputToken": 101,
+            "endOutputToken": 101,
+            "contextTokens": 32868,
+            "milliseconds": 21.777100000006612,
+            "tokensPerSecond": 45.91979648344804
+          },
+          {
+            "startOutputToken": 102,
+            "endOutputToken": 102,
+            "contextTokens": 32869,
+            "milliseconds": 21.67620000001625,
+            "tokensPerSecond": 46.13354739295865
+          },
+          {
+            "startOutputToken": 103,
+            "endOutputToken": 103,
+            "contextTokens": 32870,
+            "milliseconds": 21.68420000001788,
+            "tokensPerSecond": 46.116527240994614
+          },
+          {
+            "startOutputToken": 104,
+            "endOutputToken": 104,
+            "contextTokens": 32871,
+            "milliseconds": 21.738199999992503,
+            "tokensPerSecond": 46.00196888428411
+          },
+          {
+            "startOutputToken": 105,
+            "endOutputToken": 105,
+            "contextTokens": 32872,
+            "milliseconds": 21.706199999985984,
+            "tokensPerSecond": 46.06978651263905
+          },
+          {
+            "startOutputToken": 106,
+            "endOutputToken": 106,
+            "contextTokens": 32873,
+            "milliseconds": 21.707999999984168,
+            "tokensPerSecond": 46.06596646401001
+          },
+          {
+            "startOutputToken": 107,
+            "endOutputToken": 107,
+            "contextTokens": 32874,
+            "milliseconds": 21.712999999988824,
+            "tokensPerSecond": 46.05535854098995
+          },
+          {
+            "startOutputToken": 108,
+            "endOutputToken": 108,
+            "contextTokens": 32875,
+            "milliseconds": 21.697299999999814,
+            "tokensPerSecond": 46.08868384545582
+          },
+          {
+            "startOutputToken": 109,
+            "endOutputToken": 109,
+            "contextTokens": 32876,
+            "milliseconds": 21.680600000021514,
+            "tokensPerSecond": 46.12418475498868
+          },
+          {
+            "startOutputToken": 110,
+            "endOutputToken": 110,
+            "contextTokens": 32877,
+            "milliseconds": 21.722399999998743,
+            "tokensPerSecond": 46.035428866057984
+          },
+          {
+            "startOutputToken": 111,
+            "endOutputToken": 111,
+            "contextTokens": 32878,
+            "milliseconds": 21.748099999997066,
+            "tokensPerSecond": 45.98102822775943
+          },
+          {
+            "startOutputToken": 112,
+            "endOutputToken": 112,
+            "contextTokens": 32879,
+            "milliseconds": 21.690300000016578,
+            "tokensPerSecond": 46.10355781152108
+          },
+          {
+            "startOutputToken": 113,
+            "endOutputToken": 113,
+            "contextTokens": 32880,
+            "milliseconds": 21.63249999997788,
+            "tokensPerSecond": 46.22674217039281
+          },
+          {
+            "startOutputToken": 114,
+            "endOutputToken": 114,
+            "contextTokens": 32881,
+            "milliseconds": 21.70309999998426,
+            "tokensPerSecond": 46.07636697065052
+          },
+          {
+            "startOutputToken": 115,
+            "endOutputToken": 115,
+            "contextTokens": 32882,
+            "milliseconds": 21.695000000006985,
+            "tokensPerSecond": 46.09356994697755
+          },
+          {
+            "startOutputToken": 116,
+            "endOutputToken": 116,
+            "contextTokens": 32883,
+            "milliseconds": 21.713199999998324,
+            "tokensPerSecond": 46.054934325667205
+          },
+          {
+            "startOutputToken": 117,
+            "endOutputToken": 117,
+            "contextTokens": 32884,
+            "milliseconds": 21.720999999990454,
+            "tokensPerSecond": 46.03839602230282
+          },
+          {
+            "startOutputToken": 118,
+            "endOutputToken": 118,
+            "contextTokens": 32885,
+            "milliseconds": 21.690499999996973,
+            "tokensPerSecond": 46.10313270787393
+          },
+          {
+            "startOutputToken": 119,
+            "endOutputToken": 119,
+            "contextTokens": 32886,
+            "milliseconds": 21.7502000000095,
+            "tokensPerSecond": 45.976588721003175
+          },
+          {
+            "startOutputToken": 120,
+            "endOutputToken": 120,
+            "contextTokens": 32887,
+            "milliseconds": 21.679100000008475,
+            "tokensPerSecond": 46.1273761364452
+          },
+          {
+            "startOutputToken": 121,
+            "endOutputToken": 121,
+            "contextTokens": 32888,
+            "milliseconds": 21.682600000000093,
+            "tokensPerSecond": 46.119930266665236
+          },
+          {
+            "startOutputToken": 122,
+            "endOutputToken": 122,
+            "contextTokens": 32889,
+            "milliseconds": 21.700299999996787,
+            "tokensPerSecond": 46.08231222610508
+          },
+          {
+            "startOutputToken": 123,
+            "endOutputToken": 123,
+            "contextTokens": 32890,
+            "milliseconds": 21.70370000001276,
+            "tokensPerSecond": 46.07509318684888
+          },
+          {
+            "startOutputToken": 124,
+            "endOutputToken": 124,
+            "contextTokens": 32891,
+            "milliseconds": 21.724300000001676,
+            "tokensPerSecond": 46.03140262286577
+          },
+          {
+            "startOutputToken": 125,
+            "endOutputToken": 125,
+            "contextTokens": 32892,
+            "milliseconds": 21.690499999996973,
+            "tokensPerSecond": 46.10313270787393
+          },
+          {
+            "startOutputToken": 126,
+            "endOutputToken": 126,
+            "contextTokens": 32893,
+            "milliseconds": 21.800300000002608,
+            "tokensPerSecond": 45.87092838171403
+          },
+          {
+            "startOutputToken": 127,
+            "endOutputToken": 127,
+            "contextTokens": 32894,
+            "milliseconds": 21.757400000002235,
+            "tokensPerSecond": 45.96137406123421
+          },
+          {
+            "startOutputToken": 128,
+            "endOutputToken": 128,
+            "contextTokens": 32895,
+            "milliseconds": 21.771200000017416,
+            "tokensPerSecond": 45.93224075839642
+          }
+        ],
+        "contextCapacity": 34816,
+        "kvCacheBytes": 1426063360,
+        "metalAllocatedBytes": 38526287872,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 139869.598,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.010899999993853271
+        }
+      },
+      "projectedAllocationBytes": 42636705792,
+      "limitBytes": 41339060224.0,
+      "assumption": "Retain observed non-KV allocation and replace FP32 KV with 135168-token capacity; excludes further attention/scratch growth. Not a measured peak.",
+      "eligible": false
+    }
+  }
+}

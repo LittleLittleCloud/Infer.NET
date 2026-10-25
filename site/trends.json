@@ -50,6 +50,11 @@
       "sha": "c706064676ad5ad263ab23f146c285726167aa35",
       "committedAt": "2026-10-25T06:36:41Z",
       "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/c706064676ad5ad263ab23f146c285726167aa35"
+    },
+    {
+      "sha": "43c81faff69a5e503a0f04be9ca664c73d89cce8",
+      "committedAt": "2026-10-25T22:53:36Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/43c81faff69a5e503a0f04be9ca664c73d89cce8"
     }
   ],
   "configurations": [
@@ -559,6 +564,36 @@
         "wall": "Pi task subprocess start to exit, including tools",
         "prefill": "Sum worker input tokens / sum ServiceEvent.result.timings.prefillMs; needed draft bootstrap included",
         "decode": "Sum(N-1)/sum worker decode seconds; all measured requests, failures retained",
+        "ttft": "client-send-to-first-valid-output-token"
+      },
+      "latestBaselineRun": null
+    },
+    {
+      "id": "issue70-local-profiled-human5-affine8-fp32",
+      "label": "Issue #70 · local Metal · fixed5 · encoder profiling ON · diagnostic only",
+      "model": "qwen3.6-35b-a3b",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weights": "affine8 / group64",
+      "kv": "FP32 KV / recurrence; unchanged existing arithmetic",
+      "cache": "No prefix cache; every request clears state; no speculation/MTP",
+      "chunking": "Managed prefill32, scratch128; fused-fp32 decode; encoder timestamp regions on first8 classifier forwards and absolute positions divisible by128",
+      "topology": "Single M5 Pro20 GPU/48GiB, full model Metal; Windows absent",
+      "network": "Loopback only, two streaming observation hops, actual/observer coordinators43c81fa",
+      "power": "AC / High Power; serial cohort; fixed tests and application cohort separate",
+      "workload": "Pi1.4.0; seed0; fixed5, fresh workspace/session; context32768, max output4096, timeout300s; counter-on diagnostic, not clean throughput",
+      "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+      "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "plannedTasks": [
+        "HumanEval/156",
+        "HumanEval/94",
+        "HumanEval/72",
+        "HumanEval/80",
+        "HumanEval/149"
+      ],
+      "timing": {
+        "wall": "Pi subprocess start-to-exit per task, including tools/files",
+        "prefill": "Sum actual worker prompt tokens / sum raw ServiceEvent.result.timings.prefillMs",
+        "decode": "Sum worker output intervals N-1 / sum raw worker decodeMs; counter-on diagnostic",
         "ttft": "client-send-to-first-valid-output-token"
       },
       "latestBaselineRun": null
@@ -31608,6 +31643,407 @@
           "role": "evidence",
           "label": "Local evidence hashes",
           "url": "docs/evaluations/issue80/evidence.json"
+        }
+      ]
+    },
+    {
+      "id": "issue70-encoder-pilot5",
+      "experimentId": "decode-profile-20261025",
+      "configurationId": "issue70-local-profiled-human5-affine8-fp32",
+      "title": "Issue #70 · profiled local Metal pilot5 · diagnostic only",
+      "date": "2026-10-25 America/Los_Angeles",
+      "measuredCommit": "43c81faff69a5e503a0f04be9ca664c73d89cce8",
+      "state": "pending-review",
+      "change": "Default-off encoder-region profiling; this cohort explicitly enables counters. No arithmetic optimization.",
+      "result": "Official5/5;19/19 worker clocks; prefill271.867, decode67.527 token/s; median observer TTFT11818.036ms. No main20 comparison or adoption.",
+      "provenance": {
+        "kind": "candidate",
+        "mainCommit": null,
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/pull/90"
+      },
+      "baselineRunId": null,
+      "runtime": {
+        "coordinator": {
+          "commit": "43c81faff69a5e503a0f04be9ca664c73d89cce8"
+        },
+        "macServe": {
+          "commit": "43c81faff69a5e503a0f04be9ca664c73d89cce8"
+        }
+      },
+      "conditions": {
+        "profiling": "Counter-on, encoder boundaries change diagnostic scheduling; separate series, not clean speedup evidence.",
+        "TTFT": "Observer HTTP client immediately before forwarding to the actual experiment coordinator until first valid text/tool-call output received; role/usage/keepalive ignored. Pi-to-observer dispatch is outside this interval. Two loopback proxy hops; buffered tool-call output may include decode before first valid emission.",
+        "resources": "Loading/warmup whole-machine swap+3.890GiB; pilot cohort+0bytes; completed Metal max34.648GiB. Continuous transient/per-submission residency peaks not obtained.",
+        "adoption": "Diagnostic only; full20 and formal128K acceptance not run; no baseline change."
+      },
+      "binarySha256": {
+        "macExecutable": "d54bf54c6ef45c8ed32413f9f9aadf933ab03bf1b193c725443236b01194edd7",
+        "macMetalLibrary": "351a7a0b3f8d52228222bf045ab00c1fdf95c09917bca070776667ab8a0fb346"
+      },
+      "binaryEvidence": "docs/evaluations/issue70/runtime-manifests.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "requestCount": 19,
+      "requests": [
+        {
+          "id": "observer-00001",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 1608,
+          "outputTokens": 349,
+          "prefillSeconds": 5.8379935,
+          "decodeSeconds": 5.127953200000001,
+          "clientTtftMs": 10987.437458,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2013,
+          "outputTokens": 31,
+          "prefillSeconds": 7.3842779,
+          "decodeSeconds": 0.4562582000000002,
+          "clientTtftMs": 7857.797165999999,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2108,
+          "outputTokens": 322,
+          "prefillSeconds": 7.756946200000001,
+          "decodeSeconds": 4.739503900000001,
+          "clientTtftMs": 12513.914874999997,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2455,
+          "outputTokens": 270,
+          "prefillSeconds": 9.0668157,
+          "decodeSeconds": 3.9855494,
+          "clientTtftMs": 13069.862083000004,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2749,
+          "outputTokens": 59,
+          "prefillSeconds": 10.151993200000001,
+          "decodeSeconds": 0.870661,
+          "clientTtftMs": 11039.842,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 1823,
+          "outputTokens": 590,
+          "prefillSeconds": 6.6258824,
+          "decodeSeconds": 8.690024900000001,
+          "clientTtftMs": 15332.826292,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2484,
+          "outputTokens": 413,
+          "prefillSeconds": 9.133779800000001,
+          "decodeSeconds": 6.1351905,
+          "clientTtftMs": 15286.186040999994,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3014,
+          "outputTokens": 76,
+          "prefillSeconds": 11.1065722,
+          "decodeSeconds": 1.1273122999999996,
+          "clientTtftMs": 12251.135875000004,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 1731,
+          "outputTokens": 374,
+          "prefillSeconds": 6.3358729,
+          "decodeSeconds": 5.515427999999999,
+          "clientTtftMs": 11868.203291,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2176,
+          "outputTokens": 207,
+          "prefillSeconds": 8.0411204,
+          "decodeSeconds": 3.0555105000000005,
+          "clientTtftMs": 11113.744792000005,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2407,
+          "outputTokens": 92,
+          "prefillSeconds": 8.938105,
+          "decodeSeconds": 1.3588316999999988,
+          "clientTtftMs": 10314.06716699999,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1616,
+          "outputTokens": 278,
+          "prefillSeconds": 5.8565266000000005,
+          "decodeSeconds": 4.088370900000001,
+          "clientTtftMs": 9961.67141699999,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1964,
+          "outputTokens": 275,
+          "prefillSeconds": 7.2221148,
+          "decodeSeconds": 4.0574439,
+          "clientTtftMs": 11296.461291999974,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2263,
+          "outputTokens": 66,
+          "prefillSeconds": 8.3494725,
+          "decodeSeconds": 0.9747880999999997,
+          "clientTtftMs": 9341.654042000016,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 1692,
+          "outputTokens": 386,
+          "prefillSeconds": 6.1311978,
+          "decodeSeconds": 5.6699761,
+          "clientTtftMs": 11818.035834,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2144,
+          "outputTokens": 31,
+          "prefillSeconds": 7.8824439,
+          "decodeSeconds": 0.4567302,
+          "clientTtftMs": 8356.138041999999,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2239,
+          "outputTokens": 346,
+          "prefillSeconds": 8.2353435,
+          "decodeSeconds": 5.097603899999998,
+          "clientTtftMs": 13350.071750000012,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2610,
+          "outputTokens": 407,
+          "prefillSeconds": 9.646252500000001,
+          "decodeSeconds": 6.011487300000001,
+          "clientTtftMs": 15674.925083000006,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3107,
+          "outputTokens": 51,
+          "prefillSeconds": 11.5312798,
+          "decodeSeconds": 0.7615851999999995,
+          "clientTtftMs": 12310.256750000008,
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        }
+      ],
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 55.75009875,
+          "inputTokens": 10933,
+          "outputTokens": 1031,
+          "modelRequests": 5,
+          "status": "passed",
+          "officialValidation": "passed",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 43.140483125,
+          "inputTokens": 7321,
+          "outputTokens": 1079,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 33.568092375000006,
+          "inputTokens": 6314,
+          "outputTokens": 673,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 30.87017479100001,
+          "inputTokens": 5843,
+          "outputTokens": 619,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 61.78461679199998,
+          "inputTokens": 11792,
+          "outputTokens": 1221,
+          "modelRequests": 5,
+          "status": "passed",
+          "officialValidation": "passed",
+          "source": "docs/evaluations/issue70/pilot5.json"
+        }
+      ],
+      "reportedTotals": {
+        "wallSeconds": 225.113465833,
+        "inputTokens": 42203,
+        "outputTokens": 4623,
+        "modelRequests": 19
+      },
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue70/evidence.json",
+        "availability": "Restricted local artifacts, public hashes only"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #70",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/70"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate code #90",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/90"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #91",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/91"
+        },
+        {
+          "role": "report",
+          "label": "Stage diagnostics report",
+          "url": "docs/EXPERIMENT-70-DECODE-PROFILE-RESULTS-20261025.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Restricted evidence hashes",
+          "url": "docs/evaluations/issue70/evidence.json"
         }
       ]
     }
