@@ -6,12 +6,14 @@
 #include <cstring>
 #include <cuda_bf16.h>
 #include <cuda_runtime.h>
+#include "../kv_layout.h"
+#include "q8_kv.cuh"
 #include <fstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
 #define API extern "C" __declspec(dllexport)
-API int di_cuda_prefix_abi_version() { return 6; }
+API int di_cuda_prefix_abi_version() { return 7; }
 static void ck(cudaError_t e) {
     if (e != cudaSuccess)
         throw std::runtime_error(cudaGetErrorString(e));
@@ -38,6 +40,7 @@ struct Model {
     Matrix embedding;
     Layer layers[20];
     int position = 0, capacity;
+    bool kvQ8=false; int *kvError=nullptr;
     bool kvBf16 = true, batchReadback = false, layerBatch=false, bf16Projections=false;
     ChunkWorkspace chunk;
     bool profileEnabled=false,denseReuse=false,densePacked=false,expertPacked=false;double profileTotals[9]{};
@@ -50,6 +53,9 @@ struct Model {
             cudaFree(p);
     }
     template <class T> T *alloc(size_t n) {
+        size_t free=0,total=0;ck(cudaMemGetInfo(&free,&total));
+        const size_t budget=std::min<size_t>(size_t(22)*1024*1024*1024,total>size_t(2)*1024*1024*1024?total-size_t(2)*1024*1024*1024:0);
+        if(total-free>budget||n>SIZE_MAX/sizeof(T)||n*sizeof(T)>budget-(total-free))throw std::runtime_error("CUDA allocation exceeds full-device memory budget");
         T *p = nullptr;
         ck(cudaMalloc(&p, n * sizeof(T)));
         memory.push_back(p);
@@ -168,7 +174,7 @@ __global__ void deltaNorm(float *x, const float *z, const float *w, float eps) {
 }
 template <class KV>
 __global__ void head(const float *raw, const float *k, const float *v, const float *p, float *q,
-                     KV *keys, KV *values, int pos, float eps, float theta) {
+                     KV *keys, KV *values, int pos, float eps, float theta, int *kvError=nullptr) {
     int t = threadIdx.x, h = blockIdx.x;
     bool query = h < 16;
     int index = query ? h : h - 16;
@@ -185,8 +191,8 @@ __global__ void head(const float *raw, const float *k, const float *v, const flo
     if (query)
         q[index * 256 + t] = val;
     else {
-        keys[pos * 512 + index * 256 + t] = KV(val);
-        values[pos * 512 + index * 256 + t] = KV(v[index * 256 + t]);
+        kv_write(keys,pos * 512 + index * 256 + t,val,kvError);
+        kv_write(values,pos * 512 + index * 256 + t,v[index * 256 + t],kvError);
     }
 }
 template <class KV>
@@ -196,7 +202,7 @@ __global__ void scores(const float *q, const KV *k, float *s, int pos, int capac
         return;
     float v = 0;
     for (int d = lane; d < 256; d += 32)
-        v += q[h * 256 + d] * float(k[t * 512 + (h / 8) * 256 + d]);
+        v += q[h * 256 + d] * kv_read(k,t * 512 + (h / 8) * 256 + d);
     v = sum32(v);
     if (lane == 0)
         s[h * capacity + t] = v / 16.f;
@@ -234,7 +240,7 @@ __global__ void attend(float *s, const KV *v, const float *raw, float *out, int 
     __syncthreads();
     float result = 0;
     for (int i = 0; i <= pos; i++)
-        result += prob[i] * float(v[i * 512 + (h / 8) * 256 + t]);
+        result += prob[i] * kv_read(v,i * 512 + (h / 8) * 256 + t);
     out[h * 256 + t] = result * sig(raw[h * 512 + 256 + t]);
 }
 __global__ void top8(const float *logits, int *ids, float *prob) {
@@ -322,7 +328,7 @@ static void err(char *error, int cap, const std::exception &e) {
 API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, char *error, int cap) {
     Model *g = nullptr;
     try {
-        if ((kvBytes != 2 && kvBytes != 4) || capacity < 1 || capacity > 262144)
+        if ((kvBytes != 1 && kvBytes != 2 && kvBytes != 4) || capacity < 1 || capacity > 262144)
             throw std::runtime_error("CUDA prefix capacity exceeds the pinned 262144-token model window");
         cudaDeviceProp prop;
         ck(cudaGetDeviceProperties(&prop, 0));
@@ -330,7 +336,7 @@ API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, cha
             throw std::runtime_error("Expected CUDA SM89 device");
         g = new Model();
         g->capacity = capacity;
-        g->kvBf16 = kvBytes == 2;
+        g->kvBf16 = kvBytes == 2;g->kvQ8=kvBytes==1;g->kvError=g->alloc<int>(1);
         std::ifstream f(path, std::ios::binary);
         char header[48];
         read(f, header, 48);
@@ -397,8 +403,8 @@ API void *di_cuda_prefix_create(const char *path, int capacity, int kvBytes, cha
                 v.state = g->alloc<float>(32 * 128 * 128);
                 v.history = g->alloc<float>(3 * 8192);
             } else {
-                v.keys = g->alloc<unsigned char>(size_t(capacity) * 512 * kvBytes);
-                v.values = g->alloc<unsigned char>(size_t(capacity) * 512 * kvBytes);
+                v.keys = g->alloc<unsigned char>(size_t(capacity) * di_kv_token_bytes(kvBytes));
+                v.values = g->alloc<unsigned char>(size_t(capacity) * di_kv_token_bytes(kvBytes));
             }
         }
         if (f.peek() != EOF)
@@ -448,8 +454,12 @@ API int di_cuda_prefix_reserve(void *ptr, int capacity, char *error, int cap) {
         if (capacity <= g->capacity) return 0;
         capacity = ((capacity + 2047) / 2048) * 2048;
         ck(cudaDeviceSynchronize());
+        size_t free=0,total=0;ck(cudaMemGetInfo(&free,&total));
+        const size_t budget=std::min<size_t>(size_t(22)*1024*1024*1024,total-size_t(2)*1024*1024*1024);
+        const size_t need=size_t(capacity)*(10*(g->kvQ8?544:512*(g->kvBf16?2:4))+16*4);
+        if(total-free>budget||need>budget-(total-free))throw std::runtime_error("CUDA KV reservation exceeds transient full-device budget");
         for (int i=0; i<11; ++i) {
-            void *p=nullptr; size_t bytes=i==10?size_t(16)*capacity*4:size_t(capacity)*512*(g->kvBf16?2:4);
+            void *p=nullptr; size_t bytes=i==10?size_t(16)*capacity*4:size_t(capacity)*(g->kvQ8?544:512*(g->kvBf16?2:4));
             ck(cudaMalloc(&p,bytes)); allocated.push_back(p); ck(cudaMemset(p,0,bytes));
         }
         int at=0;
@@ -473,8 +483,8 @@ API int di_cuda_prefix_reset(void *ptr, char *error, int cap) {
                 ck(cudaMemset(l.state, 0, 32 * 128 * 128 * sizeof(float)));
                 ck(cudaMemset(l.history, 0, 3 * 8192 * sizeof(float)));
             } else {
-                ck(cudaMemset(l.keys, 0, size_t(g->capacity) * 512 * (g->kvBf16 ? 2 : 4)));
-                ck(cudaMemset(l.values, 0, size_t(g->capacity) * 512 * (g->kvBf16 ? 2 : 4)));
+                ck(cudaMemset(l.keys, 0, size_t(g->capacity) * (g->kvQ8?544:512*(g->kvBf16?2:4))));
+                ck(cudaMemset(l.values, 0, size_t(g->capacity) * (g->kvQ8?544:512*(g->kvBf16?2:4))));
             }
         }
         ck(cudaDeviceSynchronize());
@@ -513,7 +523,8 @@ API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position
         for (int i = 0; i < count; i++)
             if (tokens[i] < 0 || tokens[i] >= 248320)
                 throw std::runtime_error("Invalid token");
-        if(g->layerBatch){run_chunk(g,tokens,count,hidden,trace);return 0;}
+        ck(cudaMemset(g->kvError,0,4));
+        if(g->layerBatch){run_chunk(g,tokens,count,hidden,trace);int invalid=0;ck(cudaMemcpy(&invalid,g->kvError,4,cudaMemcpyDeviceToHost));if(invalid)throw std::runtime_error("Invalid Q8 KV input/scale; reset required");return 0;}
         for (int i = 0; i < count; i++) {
             int pos = g->position;
             embed<<<16, 128>>>(g->embedding, tokens[i], g->x);
@@ -532,7 +543,11 @@ API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position
                 } else {
                     mv(m[1], g->norm, g->k);
                     mv(m[2], g->norm, g->v);
-                    if (g->kvBf16) {
+                    if(g->kvQ8) {
+                        head<<<18,256>>>(g->qkv,g->k,g->v,v.p,g->q,(unsigned char*)v.keys,(unsigned char*)v.values,pos,g->eps,g->theta,g->kvError);
+                        scores<<<dim3((pos+4)/4,16),128>>>(g->q,(unsigned char*)v.keys,g->scores,pos,g->capacity);
+                        attend<<<16,256>>>(g->scores,(unsigned char*)v.values,g->qkv,g->attention,pos,g->capacity);
+                    } else if (g->kvBf16) {
                         head<<<18, 256>>>(g->qkv, g->k, g->v, v.p, g->q, (__nv_bfloat16 *)v.keys,
                                           (__nv_bfloat16 *)v.values, pos, g->eps, g->theta);
                         scores<<<dim3((pos + 4) / 4, 16), 128>>>(g->q, (__nv_bfloat16 *)v.keys,
@@ -572,6 +587,7 @@ API int di_cuda_prefix_run(void *ptr, const int *tokens, int count, int position
         }
         if (g->batchReadback) ck(cudaMemcpy(hidden, g->batchHidden, size_t(count) * 2048 * 4, cudaMemcpyDeviceToHost));
         ck(cudaGetLastError());
+        int invalid=0;ck(cudaMemcpy(&invalid,g->kvError,4,cudaMemcpyDeviceToHost));if(invalid)throw std::runtime_error("Invalid Q8 KV input/scale; reset required");
         return 0;
     } catch (const std::exception &e) {
         err(error, cap, e);
@@ -588,7 +604,7 @@ API int di_cuda_prefix_state(void *ptr, int layer, int kind, int position, void 
         auto &l = g->layers[layer];
         bool lin = (layer + 1) % 4;
         int expected =
-            lin ? (kind ? 3 * 8192 * 4 : 32 * 128 * 128 * 4) : position * 512 * (g->kvBf16 ? 2 : 4);
+            lin ? (kind ? 3 * 8192 * 4 : 32 * 128 * 128 * 4) : position * (g->kvQ8?544:512*(g->kvBf16?2:4));
         if (bytes != expected)
             throw std::runtime_error("Invalid state size");
         void *src = lin ? (void *)(kind ? l.history : l.state) : (void *)(kind ? l.values : l.keys);
@@ -604,9 +620,9 @@ API int di_cuda_prefix_kv_range(void *ptr,int layer,int kind,int position,int co
     try {
         auto *g=static_cast<Model*>(ptr);
         if(!g||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||!dest||position<0||count<1||count>32||
-           position>g->position-count||bytes!=count*512*(g->kvBf16?2:4))throw std::runtime_error("Invalid KV export range");
+           position>g->position-count||bytes!=count*(g->kvQ8?544:512*(g->kvBf16?2:4)))throw std::runtime_error("Invalid KV export range");
         auto &l=g->layers[layer];auto *src=static_cast<unsigned char*>(kind?l.values:l.keys);
-        ck(cudaMemcpy(dest,src+size_t(position)*512*(g->kvBf16?2:4),bytes,cudaMemcpyDeviceToHost));return 0;
+        ck(cudaMemcpy(dest,src+size_t(position)*(g->kvQ8?544:512*(g->kvBf16?2:4)),bytes,cudaMemcpyDeviceToHost));return 0;
     }catch(const std::exception &e){err(error,cap,e);return -1;}
 }
 // Deterministic operator checks independent of model files. Outputs [GEMV, Delta]

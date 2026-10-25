@@ -200,7 +200,7 @@ kernel void prefill_delta_norm(device float *x [[buffer(0)]],device const float 
 
 kernel void prefill_head(device const float *raw [[buffer(0)]],device const float *k [[buffer(1)]],
  device const float *v [[buffer(2)]],device const float *qw [[buffer(3)]],device const float *kw [[buffer(4)]],
- device float *q [[buffer(5)]],device DIKV *keys [[buffer(6)]],device DIKV *values [[buffer(7)]],constant PShape &s [[buffer(8)]],
+ device float *q [[buffer(5)]],device DIKV *keys [[buffer(6)]],device DIKV *values [[buffer(7)]],constant PShape &s [[buffer(8)]],device atomic_uint *kvError [[buffer(9)]],
  uint2 group [[threadgroup_position_in_grid]],uint tid [[thread_index_in_threadgroup]],
  uint lane [[thread_index_in_simdgroup]],uint sg [[simdgroup_index_in_threadgroup]]) {
     uint head=group.x,token=group.y,position=s.position+token;raw+=token*8192;k+=token*512;v+=token*512;q+=token*4096;
@@ -216,13 +216,13 @@ kernel void prefill_head(device const float *raw [[buffer(0)]],device const floa
         value=value*cos(angle)+(tid<32?-other:other)*sin(angle);
     }
     if(query)q[h*256+tid]=value;
-    else {keys[position*512+h*256+tid]=DIKV(value);values[position*512+h*256+tid]=DIKV(v[h*256+tid]);}
+    else {kv_write(keys,position*512+h*256+tid,value,kvError);kv_write(values,position*512+h*256+tid,v[h*256+tid],kvError);}
 }
 kernel void prefill_scores(device const float *q [[buffer(0)]],device const DIKV *keys [[buffer(1)]],
  device float *scores [[buffer(2)]],constant PShape &s [[buffer(3)]],uint3 group [[threadgroup_position_in_grid]],
  uint lane [[thread_index_in_simdgroup]],uint sg [[simdgroup_index_in_threadgroup]]) {
     uint t=group.x*4+sg,h=group.y,token=group.z;if(t>s.position+token)return;q+=token*4096;scores+=token*16*s.capacity;
-    float sum=0;for(uint d=lane;d<256;d+=32)sum+=q[h*256+d]*float(keys[t*512+(h/8)*256+d]);
+    float sum=0;for(uint d=lane;d<256;d+=32)sum+=q[h*256+d]*kv_read(keys,t*512+(h/8)*256+d);
     sum=simd_sum(sum);if(lane==0)scores[h*s.capacity+t]=sum/16.0f;
 }
 kernel void prefill_attention(device const float *scores [[buffer(0)]],device const DIKV *values [[buffer(1)]],
@@ -240,7 +240,7 @@ kernel void prefill_attention(device const float *scores [[buffer(0)]],device co
     sum=reduce_sum(sum,partials,tid,lane,sg);
     for(uint t=tid;t<=position;t+=256)prob[t]/=sum;
     threadgroup_barrier(mem_flags::mem_threadgroup);float result=0;
-    for(uint t=0;t<=position;t++)result+=prob[t]*float(values[t*512+(h/8)*256+tid]);
+    for(uint t=0;t<=position;t++)result+=prob[t]*kv_read(values,t*512+(h/8)*256+tid);
     out[h*256+tid]=result*sigmoid(raw[h*512+256+tid]);
 }
 
@@ -268,7 +268,7 @@ kernel void prefill_fused_attention(device const float *q [[buffer(0)]],device c
             for(uint i=tid;i<32*32;i+=128){uint row=i/32,d=dim+i%32,t=qbase+row/8,h=kh*8+row%8;
                 temp[i]=t<s.tokens?q[t*4096+h*256+d]:0;
                 uint key=block+i%32,kdim=dim+i/32;
-                temp[1024+i]=key<end?float(keys[key*512+kh*256+kdim]):0;
+                temp[1024+i]=key<end?kv_read(keys,key*512+kh*256+kdim):0;
             }
             threadgroup_barrier(mem_flags::mem_threadgroup);
             for(uint inner=0;inner<4;inner++) {
@@ -300,7 +300,7 @@ kernel void prefill_fused_attention(device const float *q [[buffer(0)]],device c
         #pragma clang loop unroll(full)
         for(uint feature=0;feature<Features;feature+=64) {
             for(uint i=tid;i<32*64;i+=128){uint key=block+i/64,d=featureBase+feature+i%64;
-                temp[i]=key<end?float(values[key*512+kh*256+d]):0;}
+                temp[i]=key<end?kv_read(values,key*512+kh*256+d):0;}
             threadgroup_barrier(mem_flags::mem_threadgroup);
             #pragma clang loop unroll(full)
             for(uint inner=0;inner<4;inner++){
@@ -338,7 +338,7 @@ kernel void decode_fused_attention(device const float *q [[buffer(0)]],device co
         simdgroup_float8x8 dots(0.0f);
         for(uint dim=0;dim<256;dim+=32) {
             for(uint i=tid;i<8*32;i+=128)temp[i]=q[(kh*8+i/32)*256+dim+i%32];
-            for(uint i=tid;i<32*32;i+=128){uint key=block+i%32;temp[256+i]=key<end?float(keys[key*512+kh*256+dim+i/32]):0;}
+            for(uint i=tid;i<32*32;i+=128){uint key=block+i%32;temp[256+i]=key<end?kv_read(keys,key*512+kh*256+dim+i/32):0;}
             threadgroup_barrier(mem_flags::mem_threadgroup);
             for(uint inner=0;inner<4;inner++) {
                 simdgroup_float8x8 a,b;simdgroup_load(a,temp+inner*8,32);
@@ -364,7 +364,7 @@ kernel void decode_fused_attention(device const float *q [[buffer(0)]],device co
         for(uint j=0;j<8;j++)accumulated[j].thread_elements()*=rescale.thread_elements();
         // Two 16-key value tiles keep total threadgroup memory below 18 KiB.
         for(uint keyHalf=0;keyHalf<32;keyHalf+=16) {
-            for(uint i=tid;i<16*256;i+=128){uint key=block+keyHalf+i/256;temp[i]=key<end?float(values[key*512+kh*256+i%256]):0;}
+            for(uint i=tid;i<16*256;i+=128){uint key=block+keyHalf+i/256;temp[i]=key<end?kv_read(values,key*512+kh*256+i%256):0;}
             threadgroup_barrier(mem_flags::mem_threadgroup);
             for(uint inner=0;inner<16;inner+=8) {
                 simdgroup_float8x8 a,b;simdgroup_load(a,scores+keyHalf+inner,32);
@@ -647,6 +647,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
  if((uint32_t)count>p->maxTokens){error_text(error,capacity,@"Prefill chunk exceeds configured scratch capacity");return -1;}
  if(trace&&p->trace.length<NSUInteger(count)*40*2048*4){p->trace=g_buffer(g,NSUInteger(count)*40*2048);if(!p->trace){error_text(error,capacity,@"Cannot allocate prefill trace");return -1;}}
  memcpy(p->tokens.contents,tokens,count*4);p->submissions=0;
+ if(g->kvError)memset(g->kvError.contents,0,4);
  g->dispatches=0;g->profileCount=0;PShape shape{0,0,(uint32_t)count,g->position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
  auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
  if(!command||!e){error_text(error,capacity,@"Cannot create prefill command");return -1;}
@@ -681,7 +682,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   } else {
    p_gemv(g,e,m[GK],p->norm,p->k,shape);p_gemv(g,e,m[GV],p->norm,p->v,shape);g_barrier(e);if(!checkpoint("attention-projections"))return -1;
    g_bind(e,p->qkv,0);g_bind(e,p->k,1);g_bind(e,p->v,2);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
-   g_bind(e,p->q,5);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];p_run(g,e,PHead,MTLSizeMake(18,count,1),256);g_barrier(e);if(!checkpoint("attention-head"))return -1;
+   g_bind(e,p->q,5);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];g_bind(e,g->kvError,9);p_run(g,e,PHead,MTLSizeMake(18,count,1),256);g_barrier(e);if(!checkpoint("attention-head"))return -1;
    for(uint32_t offset=0;offset<(uint32_t)count;offset+=p->attentionBatchTokens){uint32_t n=std::min(p->attentionBatchTokens,(uint32_t)count-offset);
     if(p->fusedAttention&&(p->attentionBf16||p->fusedAll||g->position+offset+n>2048))p_fused_attention(g,e,p->q,l.keys,l.values,p->qkv,p->attention,n,offset);
     else {
@@ -721,6 +722,7 @@ extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int coun
   g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,g->nextToken,2);g_run(g,e,GArgFinal,1,32);
  }
  [e endEncoding];double finalMs=0;if(!q_complete(command,&finalMs,error,capacity))return -1;p->submissions++;if(ms)*ms=profileMs+finalMs;
+ if(g->kvQ8&&*static_cast<uint32_t*>(g->kvError.contents)){error_text(error,capacity,@"Q8 KV rejected nonfinite input or invalid scale; reset required");return -1;}
  *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
  if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);if(trace)memcpy(trace,p->trace.contents,count*40*2048*4);
  if(output)memcpy(output,p->x.contents,NSUInteger(count)*2048*4);
@@ -752,17 +754,27 @@ static int g_reserve(void *graph,int tokens,char *error,int capacity,bool preser
  if((uint32_t)tokens<=g->capacity)return 0;
  // Reserve a bounded 2K page, not the next power of two: 128K + decode must not allocate 256K.
  uint32_t target=((uint32_t(tokens)+2047)/2048)*2048;
- for(auto &l:g->layers)if(l.loaded&&!l.linear){
-  auto k=g_kv_buffer(g,NSUInteger(target)*512),v=g_kv_buffer(g,NSUInteger(target)*512);
-  if(!k||!v){error_text(error,capacity,@"Cannot allocate KV cache for requested context");return -1;}
-  if(preserve&&g->position){NSUInteger bytes=NSUInteger(g->position)*512*(g->kvBf16?2:4);memcpy(k.contents,l.keys.contents,bytes);memcpy(v.contents,l.values.contents,bytes);}
-  l.keys=k;l.values=v;
+ const uint64_t tokenBytes=g->kvQ8?544:512*(g->kvBf16?2:4);
+ const bool legacy=g->prefill&&!g->prefill->fusedAttention;
+ const uint64_t scoreBytes=uint64_t(16)*target*4;
+ const uint64_t pscoreBytes=legacy?uint64_t(std::min(128u,g->prefill->maxTokens))*16*target*4:0;
+ const uint64_t partsBytes=uint64_t(g->prefill?std::min(g->prefill->attentionBatchTokens,g->prefill->maxTokens):32)*16*((target+1023)/1024)*258*4;
+ uint64_t kvBytes=0;for(auto &l:g->layers)if(l.loaded&&!l.linear)kvBytes+=2*uint64_t(target)*tokenBytes;
+ const uint64_t budget=std::min<uint64_t>(uint64_t(38.5*1024*1024*1024),g->compute.device.recommendedMaxWorkingSetSize);
+ const uint64_t need=kvBytes+scoreBytes+pscoreBytes+partsBytes;
+ if(g->compute.device.currentAllocatedSize>budget||need>budget-g->compute.device.currentAllocatedSize){error_text(error,capacity,@"KV reservation exceeds Metal transient memory budget");return -1;}
+ // Allocate transactionally: a failed plan/allocation leaves every old state intact.
+ std::array<id<MTLBuffer>,40> keys{},values{};
+ for(int i=0;i<40;i++)if(g->layers[i].loaded&&!g->layers[i].linear){
+  keys[i]=g_kv_buffer(g,NSUInteger(target)*512);values[i]=g_kv_buffer(g,NSUInteger(target)*512);
+  if(!keys[i]||!values[i]){error_text(error,capacity,@"Cannot allocate KV cache for requested context");return -1;}
+  if(preserve&&g->position){NSUInteger bytes=NSUInteger(g->position)*tokenBytes;memcpy(keys[i].contents,g->layers[i].keys.contents,bytes);memcpy(values[i].contents,g->layers[i].values.contents,bytes);}
  }
- auto scores=g_buffer(g,NSUInteger(16)*target);
- bool legacy=g->prefill&&!g->prefill->fusedAttention;
- auto pscores=legacy?g_buffer(g,NSUInteger(std::min(128u,g->prefill->maxTokens))*16*target):nil;
- auto parts=g_buffer(g,NSUInteger(g->prefill?std::min(g->prefill->attentionBatchTokens,g->prefill->maxTokens):32)*16*((target+1023)/1024)*258);
+ auto scores=g_buffer(g,scoreBytes/4);
+ auto pscores=legacy?g_buffer(g,pscoreBytes/4):nil;
+ auto parts=g_buffer(g,partsBytes/4);
  if(!scores||(legacy&&!pscores)||!parts){error_text(error,capacity,@"Cannot allocate long-attention scratch");return -1;}
+ for(int i=0;i<40;i++)if(keys[i]){g->layers[i].keys=keys[i];g->layers[i].values=values[i];}
  g->scores=scores;if(legacy){g->prefill->scores=pscores;g->prefill->scoreCapacity=target;}g->attentionParts=parts;g->capacity=target;return 0;
  }
 }
@@ -772,15 +784,15 @@ extern "C" int di_graph_grow(void *graph,int tokens,char *error,int capacity){re
 extern "C" int di_graph_execution_profile(void *graph,int *values,int count) {
  if(!graph||!values||count!=14)return -1;
  auto *g=static_cast<GModel*>(graph);auto *p=g->prefill;if(!p)return -1;
- const int actual[]={g->kvBf16?2:4,p->bf16Gemm,p->matrix,p->chunkedDelta,p->groupedExperts,
+ const int actual[]={g->kvQ8?1:(g->kvBf16?2:4),p->bf16Gemm,p->matrix,p->chunkedDelta,p->groupedExperts,
   p->packedExperts,p->expandedGemm,p->deviceDelta,int(p->maxTokens),p->fusedAttention,
   p->fusedAll,int(p->attentionFeatures),int(p->attentionBatchTokens),int(p->matrixRows)};
  memcpy(values,actual,sizeof(actual));return 0;
 }
 extern "C" int di_graph_stats(void *graph,int *capacity,uint64_t *kvBytes,uint64_t *allocatedBytes) {
  if(!graph||!capacity||!kvBytes||!allocatedBytes)return -1;
- auto *g=static_cast<GModel*>(graph);*capacity=g->capacity;*kvBytes=uint64_t(g->capacity)*(g->kvBf16?20480:40960);
- *allocatedBytes=g->compute.device.currentAllocatedSize;return 0;
+ auto *g=static_cast<GModel*>(graph);*capacity=g->capacity;*kvBytes=uint64_t(g->capacity)*(g->kvQ8?10880:(g->kvBf16?20480:40960));
+ *allocatedBytes=std::max<uint64_t>(g->allocationPeak,g->compute.device.currentAllocatedSize);return 0;
 }
 
 extern "C" int di_graph_prefill_submissions(void *graph){auto *g=static_cast<GModel*>(graph);return g&&g->prefill?g->prefill->submissions:0;}
@@ -795,8 +807,9 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
 extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position,void *data,int bytes,int importState){
  if(!graph||!data||layer<0||layer>=20||kind<0||kind>1||position<1)return -1;
  auto *g=static_cast<GModel*>(graph);if(g->position!=(uint32_t)position)return -1;
- auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*(g->kvBf16?2:4);
+ auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*(g->kvQ8?544:512*(g->kvBf16?2:4));
  if(bytes!=expected)return -1;
+ if(importState&&g->kvQ8&&!l.linear&&!di_q8_valid(data,size_t(bytes)))return -1;
  uint64_t bit=1ull<<(layer*2+kind);
  if(importState&&(!g->splitActive||!(g->splitMissing&bit)||(!l.linear&&g->splitKvWritten[layer*2+kind]!=0)))return -1;
  auto buffer=l.linear?(kind?l.history:l.state):(kind?l.values:l.keys);
@@ -813,10 +826,11 @@ extern "C" int di_graph_prefix_kv_range(void *graph,int layer,int kind,int posit
  auto *g=static_cast<GModel*>(graph);auto &l=g->layers[layer];auto index=layer*2+kind;uint64_t bit=1ull<<index;
  if(!g->splitActive||!l.loaded||l.linear||!(g->splitMissing&bit)||(uint32_t)total>g->capacity||
     (uint32_t)(position+count)>g->position||g->splitKvWritten[index]!=(uint32_t)position||
-    (g->splitTarget&&g->splitTarget!=(uint32_t)total)||bytes!=count*512*(g->kvBf16?2:4))return -1;
+    (g->splitTarget&&g->splitTarget!=(uint32_t)total)||bytes!=count*(g->kvQ8?544:512*(g->kvBf16?2:4)))return -1;
+ if(g->kvQ8&&!di_q8_valid(data,size_t(bytes)))return -1;
  auto buffer=kind?l.values:l.keys;if(!buffer)return -1;
  g->splitTarget=uint32_t(total);
- memcpy(static_cast<unsigned char*>(buffer.contents)+size_t(position)*512*(g->kvBf16?2:4),data,bytes);
+ memcpy(static_cast<unsigned char*>(buffer.contents)+size_t(position)*(g->kvQ8?544:512*(g->kvBf16?2:4)),data,bytes);
  g->splitKvWritten[index]+=uint32_t(count);
  if(g->splitKvWritten[index]==g->splitTarget)g->splitMissing&=~bit;
  return 0;

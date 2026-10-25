@@ -12,13 +12,13 @@ public sealed class MetalSplitSession : IDisposable
     private readonly QwenTokenizer tokenizer;
     public MetalSplitSession(string directory, int kvBytes = 2, bool? residency = null, int residencyRefreshMilliseconds = 1000, int prefillScratchTokens = 0, bool fusedFp32Decode = false)
     {
-        if (kvBytes is not (2 or 4) || Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != (kvBytes == 2 ? "bf16" : "fp32"))
+        if (kvBytes is not (1 or 2 or 4))
             throw new InvalidOperationException("Split session KV precision must match the selected protocol profile.");
         device = new(residency: residency, residencyRefreshMilliseconds: residencyRefreshMilliseconds);
         try
         {
             weights = new(directory, device);
-            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights, prefillScratchTokens); graph.ConfigureFusedFp32Decode(fusedFp32Decode); tokenizer = new(Path.Combine(directory, "tokenizer.json")); device.PrepareResidency(); }
+            try { if (weights.WeightBits != 8) throw new NotSupportedException("Split execution requires affine8 weights."); graph = new(device, weights, prefillScratchTokens, kvBytes); graph.ConfigureFusedFp32Decode(fusedFp32Decode); tokenizer = new(Path.Combine(directory, "tokenizer.json")); device.PrepareResidency(); }
             catch { graph?.Dispose(); weights.Dispose(); throw; }
         }
         catch { device.Dispose(); throw; }
@@ -62,8 +62,8 @@ public sealed unsafe class CudaPrefixSession : IDisposable
     public CudaPrefixSession(string bundle, int capacity, int kvBytes = 2, bool batchReadback = false, bool layerBatch = true, bool packedWeights = false)
     {
         if(packedWeights && !layerBatch) throw new ArgumentException("Packed weights require layer-major prefill.");
-        if(kvBytes is not (2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
-        if(CudaPrefixNative.AbiVersion()!=6) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
+        if(kvBytes is not (1 or 2 or 4)) throw new ArgumentException("KV element width must be 2 or 4.");
+        if(CudaPrefixNative.AbiVersion()!=7) throw new InvalidOperationException("CUDA prefix ABI mismatch; rebuild native and managed components.");
         this.kvBytes = kvBytes;
         var error = new byte[2048];
         fixed (byte* e = error) handle = CudaPrefixNative.Create(bundle, capacity, kvBytes, e, error.Length);
@@ -108,17 +108,18 @@ public sealed unsafe class CudaPrefixSession : IDisposable
         ObjectDisposedException.ThrowIf(handle == 0, this);
         if (layer is < 0 or >= 20 || (layer+1)%4 != 0 || tensor is < 0 or > 1 || position < 0 || count is < 1 or > 32)
             throw new ArgumentException("Invalid KV range descriptor.");
-        var data = new byte[count*512*kvBytes]; var error = new byte[2048];
+        var data = new byte[count*KvTokenBytes(kvBytes)]; var error = new byte[2048];
         fixed (byte* d = data) fixed (byte* e = error)
             if (CudaPrefixNative.KvRange(handle, layer, tensor, position, count, d, data.Length, e, error.Length) != 0)
                 throw new InvalidOperationException(Message(error));
         return data;
     }
+    public static int KvTokenBytes(int profile) => profile switch { 1 => 544, 2 => 1024, 4 => 2048, _ => throw new ArgumentException("Invalid KV profile.") };
     public static int StateBytes(int layer, int tensor, int position, int kvBytes = 2)
     {
-        if (kvBytes is not (2 or 4)) throw new ArgumentException("Invalid KV width.");
+        if (kvBytes is not (1 or 2 or 4)) throw new ArgumentException("Invalid KV width.");
         if (layer is < 0 or >= 20 || tensor is < 0 or > 1 || position is < 1 or > DeepInfer.Core.Protocol.Qwen36Context) throw new ArgumentException("Invalid state descriptor.");
-        return (layer+1)%4 == 0 ? position*512*kvBytes : tensor == 0 ? 32*128*128*4 : 3*8192*4;
+        return (layer+1)%4 == 0 ? position*KvTokenBytes(kvBytes) : tensor == 0 ? 32*128*128*4 : 3*8192*4;
     }
     public void Dispose() { if(handle != 0) CudaPrefixNative.Destroy(handle); handle = 0; }
 }

@@ -1,13 +1,33 @@
+#include "../kv_layout.h"
 // Original fixed-geometry Qwen3.6 GPU executor. One submitted command buffer per
 // token; tensors, convolution history, recurrent state and KV remain on device.
 #include <array>
 static NSString *graph_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
-#ifdef DEEPINFER_KV_BF16
+#if defined(DEEPINFER_KV_Q8)
+typedef uchar DIKV;
+inline float kv_read(device const DIKV *p,uint index) {
+ device const uchar *b=p+(index/32)*34;
+ return float(*reinterpret_cast<device const half*>(b))*float(as_type<char>(b[2+index%32]));
+}
+inline void kv_write(device DIKV *p,uint index,float value,device atomic_uint *error) {
+ float maximum=simd_max(abs(value));bool invalid=simd_any(!isfinite(value));
+ half hs=half(maximum/127.0f);float scale=float(hs);
+ invalid=invalid||!isfinite(scale)||(maximum!=0.0f&&scale==0.0f);
+ if(invalid){atomic_store_explicit(error,1u,memory_order_relaxed);return;}
+ device uchar *b=p+(index/32)*34;
+ if(index%32==0)*reinterpret_cast<device half*>(b)=hs;
+ b[2+index%32]=as_type<uchar>(char(scale==0.0f?0:clamp(int(rint(value/scale)),-127,127)));
+}
+#elif defined(DEEPINFER_KV_BF16)
 typedef bfloat DIKV;
+inline float kv_read(device const DIKV *p,uint index){return float(p[index]);}
+inline void kv_write(device DIKV *p,uint index,float value,device atomic_uint *){p[index]=DIKV(value);}
 #else
 typedef float DIKV;
+inline float kv_read(device const DIKV *p,uint index){return p[index];}
+inline void kv_write(device DIKV *p,uint index,float value,device atomic_uint *){p[index]=value;}
 #endif
 struct Step { uint position,layer,trace; float epsilon,theta; uint capacity; };
 inline float sigmoid(float x){return 1.0f/(1.0f+exp(-x));}
@@ -90,7 +110,7 @@ kernel void graph_delta_norm(device float *x [[buffer(0)]],device const float *z
 }
 kernel void graph_head_prepare(device const float *raw [[buffer(0)]],device const float *k [[buffer(1)]],
  device const float *v [[buffer(2)]],device const float *qw [[buffer(3)]],device const float *kw [[buffer(4)]],
- device float *q [[buffer(5)]],device DIKV *keys [[buffer(6)]],device DIKV *values [[buffer(7)]],constant Step &s [[buffer(8)]],
+ device float *q [[buffer(5)]],device DIKV *keys [[buffer(6)]],device DIKV *values [[buffer(7)]],constant Step &s [[buffer(8)]],device atomic_uint *kvError [[buffer(9)]],
  uint head [[threadgroup_position_in_grid]],uint tid [[thread_index_in_threadgroup]],
  uint lane [[thread_index_in_simdgroup]],uint sg [[simdgroup_index_in_threadgroup]]) {
     threadgroup float partials[8];bool query=head<16;uint h=query?head:head-16;
@@ -105,13 +125,13 @@ kernel void graph_head_prepare(device const float *raw [[buffer(0)]],device cons
         value=value*cos(angle)+(tid<32?-other:other)*sin(angle);
     }
     if(query)q[h*256+tid]=value;
-    else {keys[s.position*512+h*256+tid]=DIKV(value);values[s.position*512+h*256+tid]=DIKV(v[h*256+tid]);}
+    else {kv_write(keys,s.position*512+h*256+tid,value,kvError);kv_write(values,s.position*512+h*256+tid,v[h*256+tid],kvError);}
 }
 kernel void graph_attention_scores(device const float *q [[buffer(0)]],device const DIKV *keys [[buffer(1)]],
  device float *scores [[buffer(2)]],constant Step &s [[buffer(3)]],uint2 group [[threadgroup_position_in_grid]],
  uint lane [[thread_index_in_simdgroup]],uint sg [[simdgroup_index_in_threadgroup]]) {
     uint t=group.x*4+sg,h=group.y;if(t>s.position)return;
-    float sum=0;for(uint d=lane;d<256;d+=32)sum+=q[h*256+d]*float(keys[t*512+(h/8)*256+d]);
+    float sum=0;for(uint d=lane;d<256;d+=32)sum+=q[h*256+d]*kv_read(keys,t*512+(h/8)*256+d);
     sum=simd_sum(sum);if(lane==0)scores[h*s.capacity+t]=sum/16.0f;
 }
 kernel void graph_attention_output(device const float *scores [[buffer(0)]],device const DIKV *values [[buffer(1)]],
@@ -128,7 +148,7 @@ kernel void graph_attention_output(device const float *scores [[buffer(0)]],devi
     sum=reduce_sum(sum,partials,tid,lane,sg);
     for(uint t=tid;t<=s.position;t+=256)prob[t]/=sum;
     threadgroup_barrier(mem_flags::mem_threadgroup);float result=0;
-    for(uint t=0;t<=s.position;t++)result+=prob[t]*float(values[t*512+(h/8)*256+tid]);
+    for(uint t=0;t<=s.position;t++)result+=prob[t]*kv_read(values,t*512+(h/8)*256+tid);
     out[h*256+tid]=result*sigmoid(raw[h*512+256+tid]);
 }
 kernel void graph_top8(device const float *logits [[buffer(0)]],device uint *ids [[buffer(1)]],
@@ -193,7 +213,7 @@ kernel void graph_attention_split(device const float *scores [[buffer(0)]],devic
     for(uint i=tid;i<count;i+=256){float p=exp(scores[start+i]-maximum);prob[i]=p;sum+=p;}
     sum=reduce_sum(sum,partials,tid,lane,sg);
     if(tid==0){out[0]=maximum;out[1]=sum;}
-    float result=0;for(uint i=0;i<count;i++)result+=prob[i]*float(values[(start+i)*512+(h/8)*256+tid]);
+    float result=0;for(uint i=0;i<count;i++)result+=prob[i]*kv_read(values,(start+i)*512+(h/8)*256+tid);
     out[2+tid]=result;
 }
 kernel void graph_attention_combine(device const float *parts [[buffer(0)]],device const float *raw [[buffer(1)]],
@@ -234,6 +254,7 @@ struct GModel {
         sharedOut,expertAct,expertOut,scores,logits,zero,trace;
     float epsilon,theta;
     uint32_t position=0,capacity=2048;
+    uint64_t allocationPeak=0;
     uint64_t splitMissing=0; // Two state tensors per prefix layer; decode requires all 40.
     bool splitActive=false;
     bool decodeFusedFp32=false;
@@ -249,7 +270,8 @@ struct GModel {
     id<MTLBuffer> forcedRoutes;
     uint32_t forcedPositions=0;
     id<MTLBuffer> argValues,argIds,nextToken;
-    bool concurrent=true,kvBf16=false;
+    bool concurrent=true,kvBf16=false,kvQ8=false;
+    id<MTLBuffer> kvError;
     GPrefill *prefill=nullptr;
     ~GModel(){g_prefill_destroy(prefill);}
 };
@@ -261,9 +283,9 @@ static void g_profile_begin(GModel *g,id<MTLComputeCommandEncoder> e,int tag){
 static void g_profile_end(GModel *g,id<MTLComputeCommandEncoder> e){
     if(g_profiling(g)&&g->profileCount<g->profileTags.size()){[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2+1 withBarrier:YES];g->profileCount++;}
 }
-static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){return [g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];}
-static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){return [g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];}
-static NSString *g_kv_source(GModel *g){return g->kvBf16?[@"#define DEEPINFER_KV_BF16\n" stringByAppendingString:graph_source]:graph_source;}
+static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){auto b=[g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];g->allocationPeak=std::max<uint64_t>(g->allocationPeak,g->compute.device.currentAllocatedSize);return b;}
+static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){auto b=[g->compute.device newBufferWithLength:(elements/512)*(g->kvQ8?544:512*(g->kvBf16?2:4)) options:MTLResourceStorageModeShared];g->allocationPeak=std::max<uint64_t>(g->allocationPeak,g->compute.device.currentAllocatedSize);return b;}
+static NSString *g_kv_source(GModel *g){return g->kvQ8?[@"#define DEEPINFER_KV_Q8\n" stringByAppendingString:graph_source]:(g->kvBf16?[@"#define DEEPINFER_KV_BF16\n" stringByAppendingString:graph_source]:graph_source);}
 static void g_bind(id<MTLComputeCommandEncoder> e,id<MTLBuffer> b,int index,NSUInteger offset=0){[e setBuffer:b offset:offset atIndex:index];}
 static void g_run(GModel *g,id<MTLComputeCommandEncoder> e,int pipeline,int groups,int threads){
     [e setComputePipelineState:g->ps[pipeline]];
@@ -320,7 +342,7 @@ static void g_router(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,GStep &s
 }
 extern "C" {
 void di_graph_destroy(void *p){delete static_cast<GModel*>(p);}
-void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const float *norm,float epsilon,float theta,char *error,int capacity){
+void *di_graph_create_profile(void *ctx,QMatrix *embedding,QMatrix *classifier,const float *norm,float epsilon,float theta,int kvProfile,char *error,int capacity){
     @autoreleasepool {
         if(!ctx||!embedding||!classifier||!norm||embedding->rows!=248320||embedding->columns!=2048||(embedding->bits!=5&&embedding->bits!=8)||
             classifier->rows!=248320||classifier->columns!=2048||(classifier->bits!=5&&classifier->bits!=8)){error_text(error,capacity,@"Unsupported graph weights");return nullptr;}
@@ -337,11 +359,14 @@ void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const flo
             if(!g->counters)fprintf(stderr,"GPU per-dispatch timestamps unavailable\n");
         }
         NSError *failure=nil;MTLCompileOptions *options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
-        if(const char *kv=std::getenv("DEEPINFER_METAL_KV")){
-            if(strcmp(kv,"bf16")&&strcmp(kv,"fp32")){error_text(error,capacity,@"DEEPINFER_METAL_KV must be fp32 or bf16");delete g;return nullptr;}
-            g->kvBf16=strcmp(kv,"bf16")==0;
+        if(kvProfile!=0&&kvProfile!=1&&kvProfile!=2&&kvProfile!=4){error_text(error,capacity,@"Invalid KV profile");delete g;return nullptr;}
+        if(kvProfile){g->kvQ8=kvProfile==1;g->kvBf16=kvProfile==2;}
+        else if(const char *kv=std::getenv("DEEPINFER_METAL_KV")){
+            if(strcmp(kv,"bf16")&&strcmp(kv,"fp32")&&strcmp(kv,"q8")){error_text(error,capacity,@"DEEPINFER_METAL_KV must be fp32 or bf16");delete g;return nullptr;}
+            g->kvBf16=strcmp(kv,"bf16")==0;g->kvQ8=strcmp(kv,"q8")==0;
         }
         if(g->kvBf16){if(@available(macOS 15.0,*)){options.languageVersion=MTLLanguageVersion3_1;}}
+        g->kvError=g_buffer(g,1);if(!g->kvError){delete g;return nullptr;}
         auto library=[g->compute.device newLibraryWithSource:g_kv_source(g) options:options error:&failure];
         if(!library){error_text(error,capacity,failure.localizedDescription);delete g;return nullptr;}
         NSArray<NSString*> *names=@[@"graph_embedding",@"graph_norm",@"graph_add_norm",@"graph_merge_norm",@"graph_linear_prepare",@"graph_delta_norm",@"graph_head_prepare",@"graph_attention_scores",@"graph_attention_output",@"graph_top8",@"graph_debug_router",@"graph_force_route",@"graph_argmax_blocks",@"graph_argmax_final",@"graph_attention_split",@"graph_attention_combine"];
@@ -373,6 +398,9 @@ void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const flo
         memcpy(g->finalNorm.contents,norm,2048*4);memset(g->zero.contents,0,4);return g;
     }
 }
+void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const float *norm,float epsilon,float theta,char *error,int capacity){
+ return di_graph_create_profile(ctx,embedding,classifier,norm,epsilon,theta,0,error,capacity);
+}
 int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *parameters,int count,char *error,int capacity){
     @autoreleasepool {
         if(!graph||index<0||index>=40||!matrices||!parameters||count!=37568){error_text(error,capacity,@"Invalid graph layer");return -1;}
@@ -399,6 +427,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
         if((uint32_t)position>=g->capacity){error_text(error,capacity,@"Reserve graph context before execution");return -1;}
         if((uint32_t)position!=g->position){error_text(error,capacity,@"Graph token positions must be contiguous; reset between requests");return -1;}
         if(g->forcedRoutes&&(uint32_t)position>=g->forcedPositions){error_text(error,capacity,@"Diagnostic route sequence exhausted");return -1;}
+        if(g->kvError)memset(g->kvError.contents,0,4);
         g->dispatches=0;g->profileCount=0;GStep s{(uint32_t)position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
         auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
         if(!command||!e){error_text(error,capacity,@"Cannot create graph encoder");return -1;}
@@ -425,7 +454,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
                 g_gemv(g,e,m[GK],g->norm,g->k);g_gemv(g,e,m[GV],g->norm,g->v);g_barrier(e);
                 g_bind(e,g->qkv,0);g_bind(e,g->k,1);g_bind(e,g->v,2);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
                 g_bind(e,g->q,5);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&s length:sizeof(s) atIndex:8];
-                g_run(g,e,GHead,18,256);g_barrier(e);
+                g_bind(e,g->kvError,9);g_run(g,e,GHead,18,256);g_barrier(e);
                 if(!g_try_fused_attention(g,e,l)){
                 g_bind(e,g->q,0);g_bind(e,l.keys,1);g_bind(e,g->scores,2);[e setBytes:&s length:sizeof(s) atIndex:3];
                 [e setComputePipelineState:g->ps[GScores]];
@@ -447,6 +476,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
             g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);
             g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,g->nextToken,2);g_run(g,e,GArgFinal,1,32);}
         [e endEncoding];if(!q_complete(command,ms,error,capacity))return -1;
+        if(g->kvQ8&&*static_cast<uint32_t*>(g->kvError.contents)){error_text(error,capacity,@"Q8 KV rejected nonfinite input or invalid scale; reset required");return -1;}
         *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
         if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);
         if(trace)memcpy(trace,g->trace.contents,40*2048*4);

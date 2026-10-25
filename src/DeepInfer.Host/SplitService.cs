@@ -32,7 +32,7 @@ public static class SplitService
     {
         // Managed environment changes below do not configure libc getenv on Unix.
         // Keep the managed chunk policy; verify native precision before warming or accepting requests.
-        if (o.Get("kv", "fp32") != "fp32") throw new ArgumentException("Deployment currently accepts only verified FP32 KV; BF16 remains experimental.");
+        if (o.Get("kv", "fp32") is not ("fp32" or "q8")) throw new ArgumentException("Deployment accepts fp32 or experimental q8 KV; BF16 remains experimental.");
         foreach (System.Collections.DictionaryEntry item in Environment.GetEnvironmentVariables())
             if (item.Key is string key && key.StartsWith("DEEPINFER_METAL_", StringComparison.Ordinal) || item.Key is string k && k.StartsWith("DEEPINFER_GRAPH_", StringComparison.Ordinal))
                 Environment.SetEnvironmentVariable((string)item.Key, null);
@@ -57,16 +57,16 @@ public static class SplitService
     }
     public static async Task RunAgent(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
+        Profile(o); var kvProfile = SplitInference.KvBytes(o); var kvName = o.Get("kv", "fp32"); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
         var peer = o.Get("tls-peer-sha256", ""); var uri = new Uri(o.Get("endpoint", "tcp://127.0.0.1:5210"));
         if (uri.Scheme != "tcp") throw new ArgumentException("Agent endpoint must use tcp:// (mandatory TLS inside).");
         var bundle = o.Get("weights", "artifacts/split/prefix.bin");
         Console.WriteLine("AGENT Loading: verifying pinned 8bit prefix");
         await using (var f = File.OpenRead(bundle))
             if (Convert.ToHexStringLower(await SHA256.HashDataAsync(f, ct)) != SplitInference.PrefixHash) throw new InvalidDataException("Prefix bundle hash mismatch.");
-        using var gpu = new CudaPrefixSession(bundle, 2048, 4, o.Get("cuda-readback", "token") == "batch", o.Get("cuda-prefill", "batch-fp32") != "serial", o.Get("cuda-prefill", "batch-fp32") == "batch-fp32-packed");
+        using var gpu = new CudaPrefixSession(bundle, 2048, kvProfile, o.Get("cuda-readback", "token") == "batch", o.Get("cuda-prefill", "batch-fp32") != "serial", o.Get("cuda-prefill", "batch-fp32") == "batch-fp32-packed");
         gpu.Run([1, 2, 3, 4], 0, null); gpu.Reset();
-        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context} prefill={o.Get("cuda-prefill", "batch-fp32")} sendOverlap={o.Get("cuda-send-overlap", "on")} readback={o.Get("cuda-readback", "token")}");
+        Console.WriteLine($"AGENT Ready pid={Environment.ProcessId} build={Build} kv={kvName} modelWindow={Protocol.Qwen36Context} prefill={o.Get("cuda-prefill", "batch-fp32")} sendOverlap={o.Get("cuda-send-overlap", "on")} readback={o.Get("cuda-readback", "token")}");
         while (!ct.IsCancellationRequested)
         {
             try
@@ -75,7 +75,7 @@ public static class SplitService
                 using var connect = CancellationTokenSource.CreateLinkedTokenSource(ct); connect.CancelAfter(TimeSpan.FromSeconds(20));
                 await client.ConnectAsync(uri.Host, uri.Port, connect.Token);
                 await using var tls = await SplitTls.Authenticate(client.GetStream(), certificate, peer, false, connect.Token);
-                var wire = await SplitWire.ConnectAsync(tls, token, false, Guid.NewGuid(), connect.Token, 4);
+                var wire = await SplitWire.ConnectAsync(tls, token, false, Guid.NewGuid(), connect.Token, kvProfile);
                 var start = await wire.ReceiveAsync(ct); // Idle connections are cancelled by service shutdown, not the request deadline.
                 using var request = CancellationTokenSource.CreateLinkedTokenSource(ct);
                 request.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
@@ -102,7 +102,7 @@ public static class SplitService
     }
     public static async Task RunMac(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        Profile(o); var kvProfile = SplitInference.KvBytes(o); var kvName = o.Get("kv", "fp32"); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         var incrementalKv = SplitInference.IncrementalKv(o);
         var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
@@ -127,7 +127,7 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, kvName, Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
@@ -143,7 +143,7 @@ public static class SplitService
             var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : shortPrefillLimit > 0 ? "ReadyLocal" : "WaitingForAgent";
             return registration with { Telemetry = new(DateTimeOffset.UtcNow, currentState, accepting,
                 queue.Busy, queue.WaitingCount, queue.WaitingCapacity, Interlocked.Read(ref completed), Environment.ProcessId,
-                Build, connected, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
+                Build, connected, 8, kvName, Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
         }
         app.MapGet("/v1/capabilities", () => Results.Json(Advertisement(), RpcJson.Default.WorkerRegistration));
         async Task Handle(InferenceRequest input, HttpContext context, bool streaming)
@@ -179,7 +179,7 @@ public static class SplitService
                 {
                     Volatile.Write(ref activePeer, peer);
                     var resetStart = Stopwatch.GetTimestamp();
-                    gpu.Reset(ids.Length + Math.Min(maxTokens, 32));
+                    gpu.Reset(ids.Length + (input.UseRemainingContext ? Math.Min(maxTokens, 32) : maxTokens));
                     var resetMs = Stopwatch.GetElapsedTime(resetStart).TotalMilliseconds;
                     double hiddenWaitMs = 0, suffixMs = 0, stateWaitMs = 0, importMs = 0;
                     PrefixAgentTiming? agentTiming = null;
@@ -200,7 +200,7 @@ public static class SplitService
                         {
                             var count = Math.Min(suffixChunk, ids.Length - offset);
                             var hidden = new float[count * 2048];
-                            var kv = incrementalKv ? Enumerable.Range(0,10).Select(_ => new byte[count*512*4]).ToArray() : null;
+                            var kv = incrementalKv ? Enumerable.Range(0,10).Select(_ => new byte[count*CudaPrefixSession.KvTokenBytes(kvProfile)]).ToArray() : null;
                             for (var at = 0; at < count; at += 32)
                             {
                                 var receiving = Stopwatch.GetTimestamp();
@@ -215,7 +215,7 @@ public static class SplitService
                                     hiddenWaitMs+=Stopwatch.GetElapsedTime(receiving).TotalMilliseconds;
                                     if(range.Kind!=SplitWire.KvRange||range.Layer!=layer||range.Tensor!=tensor||range.Position!=offset+at||range.Count!=frame.Count)
                                         throw new InvalidDataException("Noncontiguous KV range stream.");
-                                    range.Data.CopyTo(kv[(layer/4)*2+tensor],at*512*4);
+                                    range.Data.CopyTo(kv[(layer/4)*2+tensor],at*CudaPrefixSession.KvTokenBytes(kvProfile));
                                     stateBytes+=range.Data.Length;
                                 }
                             }
@@ -291,6 +291,10 @@ public static class SplitService
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
                     Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
                         timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
+                    Console.WriteLine("INFERENCE_METRIC " + JsonSerializer.Serialize(new InferenceMetric(
+                        requestId, DateTimeOffset.UtcNow, Build, ids.Length, output.Count, prefillMs,
+                        Math.Max(0, output.Count - 1), output.Count > 1 ? last - first : 0,
+                        executionPath, kvName), ServiceJson.Default.InferenceMetric));
                     Interlocked.Increment(ref completed);
                 }
             }
@@ -311,16 +315,16 @@ public static class SplitService
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
                 var scratchTokens = o.Number("metal-scratch-tokens", 512, 128, 512);
-                gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: scratchTokens, fusedFp32Decode: SplitInference.FusedDecode(o));
+                gpu = new MetalSplitSession(directory, kvProfile, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: scratchTokens, fusedFp32Decode: SplitInference.FusedDecode(o));
                 var nativeProfile = gpu.ExecutionProfile();
                 Console.WriteLine($"METAL_NATIVE_PROFILE {nativeProfile}");
-                if (nativeProfile.KvElementBytes != 4 || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
+                if (nativeProfile.KvElementBytes != kvProfile || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
                     throw new InvalidOperationException("Native Metal profile differs from the verified FP32 deployment profile.");
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }
                 gpu.Reset(2048); warmed = true; state = "Ready"; listener.Start(1);
-                Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
+                Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv={kvName} modelWindow={Protocol.Qwen36Context}");
                 while (!life.IsCancellationRequested)
                 {
                     var client = await listener.AcceptTcpClientAsync(life.Token); client.NoDelay = true;
@@ -329,7 +333,7 @@ public static class SplitService
                     {
                         using var handshake = CancellationTokenSource.CreateLinkedTokenSource(life.Token); handshake.CancelAfter(TimeSpan.FromSeconds(15));
                         tls = await SplitTls.Authenticate(client.GetStream(), certificate, o.Get("tls-peer-sha256", ""), true, handshake.Token);
-                        var wire = await SplitWire.ConnectAsync(tls, token, true, Guid.Empty, handshake.Token, 4);
+                        var wire = await SplitWire.ConnectAsync(tls, token, true, Guid.Empty, handshake.Token, kvProfile);
                         var peer = new Peer(client, tls, wire);
                         Interlocked.Exchange(ref lastPeerSeen, Stopwatch.GetTimestamp());
                         if (peers.Reader.TryPeek(out var stale) && !stale.Connected && peers.Reader.TryRead(out stale)) stale.Dispose();
@@ -374,6 +378,8 @@ public static class SplitService
 }
 public sealed record ServiceStatus(string State, bool Ready, int Pid, string Build, string Revision, int WeightBits, string Kv, int MaxContextTokens, int MaxOutputTokens, long CompletedRequests);
 public sealed record ServiceEvent(string? Text, int? TokenId, InferenceResult? Result, RpcError? Error, int? PromptTokens = null);
+public sealed record InferenceMetric(Guid RequestId, DateTimeOffset CompletedAt, string Build, int InputTokens, int OutputTokens, double PrefillMs, int DecodeIntervals, double DecodeMs, string ExecutionPath, string Kv);
+[JsonSerializable(typeof(InferenceMetric))]
 [JsonSerializable(typeof(ServiceStatus))]
 [JsonSerializable(typeof(ServiceEvent))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]

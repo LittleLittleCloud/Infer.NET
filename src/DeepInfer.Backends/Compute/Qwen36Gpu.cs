@@ -14,14 +14,14 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
     private readonly QuantizedMetal device;
     private readonly int prefillChunk = Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK") switch
     { "32" => 32, "64" => 64, "128" => 128, "256" => 256, "512" => 512, "1024" => 1024, _ => 2048 };
-    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights, int prefillScratchTokens = 0)
+    public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights, int prefillScratchTokens = 0, int kvProfile = 0)
     {
         this.device = device;
         Span<byte> error = stackalloc byte[2048]; error.Clear();
         fixed (float* norm = weights.FinalNorm) fixed (byte* e = error)
         {
             var p = GraphNative.Create(device.Context, weights.Embedding.Handle, weights.Classifier.Handle,
-                norm, weights.Epsilon, weights.RopeTheta, e, error.Length);
+                norm, weights.Epsilon, weights.RopeTheta, kvProfile, e, error.Length);
             if (p == 0) throw new InvalidOperationException(Message(error));
             handle = new(p);
         }
@@ -182,9 +182,9 @@ internal static unsafe partial class GraphNative
     internal static partial int DecodeFusedFp32(GraphHandle graph, int enabled);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefix_state")]
     internal static partial int PrefixState(GraphHandle graph, int layer, int kind, int position, byte* data, int bytes, int importState);
-    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create")]
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_create_profile")]
     internal static partial nint Create(QuantHandle context, QuantHandle embedding, QuantHandle classifier,
-        float* norm, float epsilon, float theta, byte* error, int capacity);
+        float* norm, float epsilon, float theta, int kvProfile, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_layer")]
     internal static partial int Layer(GraphHandle graph, int index, nint* matrices, float* parameters, int count, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_reset")]
