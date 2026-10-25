@@ -42,6 +42,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--model', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--trace-all', action='store_true')
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
     model, tokenizer = load(str(a.model), trust_remote_code=False)
@@ -63,7 +64,7 @@ def main():
         x = lm.model.embed_tokens(mx.array([[inputs[position]]]))
         for layer, block in enumerate(lm.model.layers):
             x = block(x, cache=cache[layer])
-            if position in positions:
+            if a.trace_all or position in positions:
                 mx.eval(x)
                 np.asarray(x, dtype=np.float32).tofile(a.output / f'p{position}-layer{layer}.f32')
         logits = lm.lm_head(lm.model.norm(x))
