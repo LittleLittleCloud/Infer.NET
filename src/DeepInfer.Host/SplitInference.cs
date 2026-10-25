@@ -35,18 +35,24 @@ public static class SplitInference
         long sentBytes=0;
         IEnumerable<SplitWire.Frame[]> Chunks()
         {
-            for(var offset=0;offset<tokens.Length;offset+=32)
+            for(var offset=0;offset<tokens.Length;offset+=gpu.ExecutionWindow)
             {
-                ct.ThrowIfCancellationRequested();var count=Math.Min(32,tokens.Length-offset);
+                ct.ThrowIfCancellationRequested();var count=Math.Min(gpu.ExecutionWindow,tokens.Length-offset);
                 var trace=verify?new float[count*20*2048]:null;
                 var began=Stopwatch.GetTimestamp();
                 var hidden=gpu.Run(tokens.AsSpan(offset,count).ToArray(),offset,trace);
-                var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,offset,count,Bytes(hidden)) };
-                if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,offset,count,Bytes(trace)));
-                if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
-                    frames.Add(new(SplitWire.KvRange,layer,kind,offset,count,gpu.KvRange(layer,kind,offset,count)));
-                computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
-                yield return frames.ToArray();
+                // Only completed prefix rows are delivered; the authenticated wire stays at 32.
+                for(var at=0;at<count;at+=32)
+                {
+                    var take=Math.Min(32,count-at);var position=offset+at;
+                    var frames=new List<SplitWire.Frame> { new(SplitWire.Hidden,20,0,position,take,Bytes(hidden.AsSpan(at*2048,take*2048).ToArray())) };
+                    if(trace is not null)frames.Add(new(SplitWire.Trace,0,0,position,take,Bytes(trace.AsSpan(at*20*2048,take*20*2048).ToArray())));
+                    if(incremental)for(var layer=3;layer<20;layer+=4)for(var kind=0;kind<2;kind++)
+                        frames.Add(new(SplitWire.KvRange,layer,kind,position,take,gpu.KvRange(layer,kind,position,take)));
+                    computeMs+=Stopwatch.GetElapsedTime(began).TotalMilliseconds;
+                    yield return frames.ToArray();
+                    began=Stopwatch.GetTimestamp();
+                }
             }
         }
         async ValueTask Send(SplitWire.Frame frame,CancellationToken cancel)
