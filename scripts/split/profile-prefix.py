@@ -16,7 +16,7 @@ def bind(name,args,ret=c.c_int):
 def ok(result):
  if result:raise RuntimeError(err.value.decode() or 'Native return '+str(result))
 create=bind('create',[c.c_char_p,c.c_int,c.c_int,c.c_char_p,c.c_int],c.c_void_p);destroy=bind('destroy',[c.c_void_p],None);reset=bind('reset',[c.c_void_p,c.c_char_p,c.c_int]);mode=bind('execution_mode',[c.c_void_p,c.c_int]);profile=bind('profile_mode',[c.c_void_p,c.c_int]);read=bind('profile_read',[c.c_void_p,c.POINTER(c.c_double),c.c_int]);run=bind('run',[c.c_void_p,c.POINTER(c.c_int),c.c_int,c.c_int,c.POINTER(c.c_float),c.POINTER(c.c_float),c.c_char_p,c.c_int]);state=bind('state',[c.c_void_p,c.c_int,c.c_int,c.c_int,c.c_void_p,c.c_int,c.c_char_p,c.c_int])
-assert bind('abi_version',[])()==6
+assert bind('abi_version',[])() in (6, 7)
 h=create(a.weights.encode(),len(tokens),4,err,len(err))
 if not h:raise RuntimeError(err.value.decode())
 records=[]

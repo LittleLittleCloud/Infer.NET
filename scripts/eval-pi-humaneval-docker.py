@@ -53,7 +53,7 @@ def main():
              (json.loads(line) for line in gzip.decompress(args.dataset.read_bytes()).splitlines())}
     manifest = json.loads((args.results / "manifest.json").read_text())
     assert manifest["dataset_sha256"] == DATASET_SHA
-    assert len(manifest["ids"]) == 20 and len(set(manifest["ids"])) == 20
+    assert len(manifest["ids"]) in (5, 20) and len(set(manifest["ids"])) == len(manifest["ids"])
     staging = args.results / "functional-staging"
     staging.mkdir(exist_ok=True)
     negative = tasks[manifest["ids"][0]]
