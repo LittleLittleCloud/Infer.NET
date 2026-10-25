@@ -54,24 +54,26 @@ kernel void restore(device const DIKV *x [[buffer(0)]],device float *out [[buffe
     g.kvError=error;
     char message[2048]{};
     if(di_graph_prepare_prefill_scratch(&g,32,message,sizeof(message))){fprintf(stderr,"%s\n",message);return 1;}
-    for(auto pair:{std::make_pair(GScores,@"graph_attention_scores"),std::make_pair(GAttention,@"graph_attention_output"),std::make_pair(GAttentionCombine,@"graph_attention_combine")}){
+    for(auto pair:{std::make_pair(GScores,@"graph_attention_scores"),std::make_pair(GAttention,@"graph_attention_output"),std::make_pair(GAttentionCombine,@"graph_attention_combine"),std::make_pair(GAttentionSplit,@"graph_attention_split")}){
         g.ps[pair.first]=[g.compute.device newComputePipelineStateWithFunction:[lib newFunctionWithName:pair.second] error:&failure];
         if(!g.ps[pair.first])return 1;
     }
     // Restore valid fixtures after invalid-append arms, then attend to their decoded values.
     memcpy(y.contents,expected.data(),expected.size());
     auto q=g_buffer(&g,3*4096),raw=g_buffer(&g,3*8192),out=g_buffer(&g,3*4096),scores=g_buffer(&g,3*16*g.capacity);
-    g.attentionParts=g_buffer(&g,3*16*258);memset(raw.contents,0,raw.length);
+    g.capacity=12288;scores=g_buffer(&g,3*16*g.capacity);g.attentionParts=g_buffer(&g,3*16*((g.capacity+127)/128)*258);memset(raw.contents,0,raw.length);
     for(int i=0;i<3*4096;i++)static_cast<float*>(q.contents)[i]=float(int(i%29)-14)*.003f;
-    auto decoded=[&](int i){auto *b=reinterpret_cast<const unsigned char*>(expected.data())+(i/32)*34;__fp16 h;memcpy(&h,b,2);return float(h)*float(static_cast<signed char>(b[2+i%32]));};
-    for(int mode=0;mode<3;mode++){
-        g.position=mode==2?2:4;const int count=mode==2?3:1;
+    auto decoded=[&](int i){i%=512*5;auto *b=reinterpret_cast<const unsigned char*>(expected.data())+(i/32)*34;__fp16 h;memcpy(&h,b,2);return float(h)*float(static_cast<signed char>(b[2+i%32]));};
+    auto history=[g.compute.device newBufferWithLength:8193*544 options:MTLResourceStorageModeShared];
+    for(int t=0;t<8193;t++)memcpy(static_cast<char*>(history.contents)+t*544,expected.data()+(t%5)*544,544);
+    for(int length:{5,2049,8193})for(int mode=0;mode<3;mode++){
+        g.position=mode==2?length-3:length-1;const int count=mode==2?3:1;
         auto cb=[g.compute.queue commandBuffer];auto e=[cb computeCommandEncoder];
         if(mode==0){GStep shape{g.position,0,0,1e-6f,1e7f,g.capacity};
-            g_bind(e,q,0);g_bind(e,y,1);g_bind(e,scores,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];[e setComputePipelineState:g.ps[GScores]];[e dispatchThreadgroups:MTLSizeMake(2,16,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g_barrier(e);
-            g_bind(e,scores,0);g_bind(e,y,1);g_bind(e,raw,2);g_bind(e,out,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];g_run(&g,e,GAttention,16,256);
-        }else if(mode==1)p_decode_attention(&g,e,q,y,y,raw,out);
-        else p_fused_attention(&g,e,q,y,y,raw,out,count);
+            g_bind(e,q,0);g_bind(e,history,1);g_bind(e,scores,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];[e setComputePipelineState:g.ps[GScores]];[e dispatchThreadgroups:MTLSizeMake((length+3)/4,16,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g_barrier(e);
+            g_bind(e,scores,0);g_bind(e,history,1);g_bind(e,raw,2);g_bind(e,out,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];if(g.position<2048)g_run(&g,e,GAttention,16,256);else g_long_attention(&g,e,scores,history,raw,out,1);
+        }else if(mode==1)p_decode_attention(&g,e,q,history,history,raw,out);
+        else p_fused_attention(&g,e,q,history,history,raw,out,count);
         [e endEncoding];if(!q_complete(cb,nullptr,message,sizeof(message)))return 1;
         double squared=0,norm=0,worst=0;
         for(int t=0;t<count;t++)for(int h=0;h<16;h++){
@@ -84,7 +86,7 @@ kernel void restore(device const DIKV *x [[buffer(0)]],device float *out [[buffe
         if(worst>=.01||sqrt(squared/std::max(norm,1e-30))>=1e-4){fprintf(stderr,"Q8 attention oracle failed mode=%d max=%g relative=%g\n",mode,worst,sqrt(squared/norm));return 1;}
     }
     // Import exact bytes, reject invalid blocks and preserve history across growth.
-    g.position=5;g.layers[3].loaded=true;g.layers[3].keys=g_kv_buffer(&g,2048*512);g.layers[3].values=g_kv_buffer(&g,2048*512);
+    g.capacity=2048;g.position=5;g.layers[3].loaded=true;g.layers[3].keys=g_kv_buffer(&g,2048*512);g.layers[3].values=g_kv_buffer(&g,2048*512);
     g.splitActive=true;g.splitMissing=1ull<<6;
     if(di_graph_prefix_kv_range(&g,3,0,0,5,5,expected.data(),int(expected.size())))return 1;
     if(memcmp(g.layers[3].keys.contents,expected.data(),expected.size()))return 1;
