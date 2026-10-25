@@ -10,7 +10,7 @@
     "result": "Codec and selected attention checks pass; full-model relative L2 reaches0.00255049 and logits maxAbs0.0285692, exceeding the approved bounds. Greedy8 match.",
     "validation": "All121 sampled hidden/logit comparisons and exact prompt-cache byte differences retained. HumanEval/speed/long-quality gates not run after numerical failure.",
     "conclusion": "Do not adopt. No performance point, default switch or relaxed gate.",
-    "next": "Review independent negative results; restoration record follows experiment84.",
+    "next": "Review negative results PR #87 independently of code PR #85. Original deployment restored and two real split requests verified; no candidate adopted. Numerical redesign requires a scoped follow-up.",
     "commands": [],
     "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/33; https://github.com/LittleLittleCloud/Infer.NET/pull/85; docs/evaluations/issue33/evidence.json"
   },

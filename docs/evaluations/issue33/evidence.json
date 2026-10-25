@@ -43,5 +43,11 @@
   "ttftMs": null,
   "humanEval": "Not run: independent numerical gate failed",
   "resourceAcceptance": "Not passed; no formal benchmark resource cohort",
-  "followup": "Full-trace diagnostic interrupted after position 1; attempted second diagnostic startup exited without captured status. No follow-up timing/resource attribution. Logs retained locally."
+  "followup": "Full-trace diagnostic interrupted after position 1; attempted second diagnostic startup exited without captured status. No follow-up timing/resource attribution. Logs retained locally.",
+  "restoration": {
+    "status": "Verified original deployment after both P0 experiments",
+    "evidence": "docs/evaluations/issue33/restoration.json",
+    "source": "cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "firstCoordinatorRequest503Retained": true
+  }
 }

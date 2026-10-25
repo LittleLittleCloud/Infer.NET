@@ -77,8 +77,17 @@ results PR preserves the implementation attempt and negative result; merging
 records would not adopt the candidate. Further numerical redesign or a different
 acceptance contract requires an explicitly scoped follow-up.
 
-The original service restoration is recorded after the independent P0 experiments
-finish; it remains pending while experiment84 uses isolated packages and ports.
+After both independent P0 experiments, the original
+`cd6f7da401fadf044dac13e87b415d27bb5eadfb` deployment was restored and verified.
+The Mac login LaunchAgent and original Windows foreground agent are running;
+this does not claim Windows SCM hosting. Original binaries, configurations and
+plist hashes are unchanged. Two real split requests produced identical 32-token
+outputs, registry readiness is healthy, all six temporary ports are closed and
+the wired limit remains 0. The first coordinator request returned 503 before the
+final acceptance; its body was not captured. Waiting for matching fresh PID and
+accepting/agent-connected telemetry preceded the two successful requests.
+[Restoration evidence](evaluations/issue33/restoration.json) preserves both the
+failure and subsequent verification. No candidate was adopted.
 
 Raw files are local-only under `artifacts/dual-host/issue33-*` in the experiment
 checkout, including independent/native traces, prompt-state tensors, startup logs
