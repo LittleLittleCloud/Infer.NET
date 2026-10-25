@@ -27,7 +27,7 @@ __global__ void chunk_delta_norm(float *x, const float *z, const float *w, float
 
 template <class KV>
 __global__ void chunk_head(const float *raw, const float *k, const float *v, const float *p, float *q,
-                     KV *keys, KV *values, int pos, float eps, float theta) {
+                     KV *keys, KV *values, int pos, float eps, float theta, int *kvError=nullptr) {
     int seq=blockIdx.y;raw+=seq*8192;k+=seq*512;v+=seq*512;q+=seq*4096;pos+=seq;
 
     int t = threadIdx.x, h = blockIdx.x;
@@ -46,8 +46,8 @@ __global__ void chunk_head(const float *raw, const float *k, const float *v, con
     if (query)
         q[index * 256 + t] = val;
     else {
-        keys[pos * 512 + index * 256 + t] = KV(val);
-        values[pos * 512 + index * 256 + t] = KV(v[index * 256 + t]);
+        kv_write(keys,pos * 512 + index * 256 + t,val,kvError);
+        kv_write(values,pos * 512 + index * 256 + t,v[index * 256 + t],kvError);
     }
 }
 
@@ -60,7 +60,7 @@ __global__ void chunk_scores(const float *q, const KV *k, float *s, int pos, int
         return;
     float v = 0;
     for (int d = lane; d < 256; d += 32)
-        v += q[h * 256 + d] * float(k[t * 512 + (h / 8) * 256 + d]);
+        v += q[h * 256 + d] * kv_read(k,t * 512 + (h / 8) * 256 + d);
     v = sum32(v);
     if (lane == 0)
         s[h * capacity + t] = v / 16.f;
@@ -101,7 +101,7 @@ __global__ void chunk_attend(float *s, const KV *v, const float *raw, float *out
     __syncthreads();
     float result = 0;
     for (int i = 0; i <= pos; i++)
-        result += prob[i] * float(v[i * 512 + (h / 8) * 256 + t]);
+        result += prob[i] * kv_read(v,i * 512 + (h / 8) * 256 + t);
     out[h * 256 + t] = result * sig(raw[h * 512 + 256 + t]);
 }
 

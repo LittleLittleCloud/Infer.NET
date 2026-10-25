@@ -181,7 +181,7 @@ public static class SplitInference
     { "fused-fp32"=>true,"legacy"=>false,_=>throw new ArgumentException("--decode-attention must be legacy or fused-fp32.") };
     internal static bool IncrementalKv(Options o)=>o.Get("kv-transfer","final") switch
     { "incremental"=>true,"final"=>false,_=>throw new ArgumentException("--kv-transfer must be final or incremental.") };
-    private static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be fp32 or bf16.") };
+    internal static int KvBytes(Options o)=>o.Get("kv","fp32") switch { "q8"=>1,"bf16"=>2,"fp32"=>4,_=>throw new ArgumentException("--kv must be q8, fp32 or bf16.") };
     private static string RequireToken(Options o)=>o.Token is {Length:>=32} t?t:throw new ArgumentException("Set DEEPINFER_TOKEN to a random secret of at least 32 characters.");
     private static byte[] Bytes(float[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();
     private static byte[] Bytes(int[] x)=>MemoryMarshal.AsBytes(x.AsSpan()).ToArray();

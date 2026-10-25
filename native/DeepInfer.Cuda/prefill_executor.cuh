@@ -61,7 +61,11 @@ static void run_chunk(Model *g,const int *tokens,int count,float *hidden,float *
         } else {
             chunk_mv(g,m[1],p.norm,p.k,count);chunk_mv(g,m[2],p.norm,p.v,count);
             profile.mark(0);
-            if(g->kvBf16) {
+            if(g->kvQ8) {
+                chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(unsigned char*)v.keys,(unsigned char*)v.values,pos,g->eps,g->theta,g->kvError);
+                chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(unsigned char*)v.keys,p.scores,pos,g->capacity);
+                chunk_attend<<<dim3(16,count),256>>>(p.scores,(unsigned char*)v.values,p.qkv,p.attention,pos,g->capacity);
+            } else if(g->kvBf16) {
                 chunk_head<<<dim3(18,count),256>>>(p.qkv,p.k,p.v,v.p,p.q,(__nv_bfloat16*)v.keys,(__nv_bfloat16*)v.values,pos,g->eps,g->theta);
                 chunk_scores<<<dim3((pos+count+3)/4,16,count),128>>>(p.q,(__nv_bfloat16*)v.keys,p.scores,pos,g->capacity);
                 chunk_attend<<<dim3(16,count),256>>>(p.scores,(__nv_bfloat16*)v.values,p.qkv,p.attention,pos,g->capacity);

@@ -14,5 +14,5 @@ shutil.copytree(source,out,ignore=shutil.ignore_patterns('*.pdb','*.dbg','*.dSYM
 shutil.copytree(repo/'scripts/deploy',out/'deploy',ignore=shutil.ignore_patterns('__pycache__'))
 sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
 files={str(f.relative_to(out)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.rglob('*')) if f.is_file()}
-manifest={'source':sha,'rid':a.rid,'modelRevision':'e06a74e6236a60c8367e1a3214e83d8b61b637b0','weightBits':8,'kv':'fp32','splitProtocol':4,'maxContextTokens':262144,'maxOutputTokens':262144,'requiredPlatform':'macOS 26+ / Apple M5' if a.rid=='osx-arm64' else 'Windows x64 / RTX 4090 SM89 / CUDA 13 compatible driver','files':files}
+manifest={'source':sha,'rid':a.rid,'modelRevision':'e06a74e6236a60c8367e1a3214e83d8b61b637b0','weightBits':8,'kvProfiles':['fp32','q8-experimental'],'cudaAbi':7,'kv':'fp32','splitProtocol':4,'maxContextTokens':262144,'maxOutputTokens':262144,'requiredPlatform':'macOS 26+ / Apple M5' if a.rid=='osx-arm64' else 'Windows x64 / RTX 4090 SM89 / CUDA 13 compatible driver','files':files}
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(out)
