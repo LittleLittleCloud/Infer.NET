@@ -106,7 +106,9 @@ public class MtpGpuVerifierTests(Xunit.Abstractions.ITestOutputHelper output)
             }
             Assert.Equal(prompt.Length + rows, s.ConsumedPosition());
             Assert.All(hidden, v => Assert.True(float.IsFinite(v)));
-            Assert.True(digest.AsSpan().SequenceEqual(s.StateDigest()), $"rows={rows}: all-layer state digest differs from single-token decode");
+            var actualDigest = s.StateDigest();
+            output.WriteLine($"rows={rows} mismatched state tensors: {string.Join(',', Enumerable.Range(0, 80).Where(i => digest[i] != actualDigest[i]).Select(i => $"layer{i / 2}/kind{i % 2}"))}");
+            Assert.True(digest.AsSpan().SequenceEqual(actualDigest), $"rows={rows}: all-layer state digest differs from single-token decode");
         }
     }
 

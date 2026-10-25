@@ -635,6 +635,46 @@ static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatri
   [e dispatchThreadgroups:MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
 }
+// Verification retains layer-major batched projections and uses the actual decode pipelines
+// for stateful and reduction operations. Separate prefill kernels can change final FP32 bits.
+static GStep p_decode_step(GModel *g,int row,int layer=0){return GStep{g->position+uint32_t(row),uint32_t(layer),0,g->epsilon,g->theta,g->capacity};}
+static void p_exact_start(GModel *g,id<MTLComputeCommandEncoder> e,const int32_t *tokens,int count){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row);
+  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->x,3,NSUInteger(row)*2048*4);
+  [e setBytes:tokens+row length:4 atIndex:4];[e setBytes:&g->embedding.bits length:4 atIndex:5];g_run(g,e,GEmbed,16,128);g_barrier(e);
+  g_bind(e,p->x,0,NSUInteger(row)*2048*4);g_bind(e,g->layers[0].parameters,1);g_bind(e,p->norm,2,NSUInteger(row)*2048*4);[e setBytes:&s length:sizeof(s) atIndex:3];g_run(g,e,GNorm,1,256);g_barrier(e);
+ }
+}
+static void p_exact_linear(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->qkv,0,r*8192*4);g_bind(e,l.history,1);g_bind(e,l.parameters,2,4096*4);g_bind(e,p->conv,3,r*8192*4);
+  g_bind(e,p->a,4,r*32*4);g_bind(e,p->b,5,r*32*4);g_bind(e,l.parameters,6,36864*4);g_bind(e,l.parameters,7,36896*4);g_run(g,e,GLinear,64,128);g_barrier(e);
+  [e setComputePipelineState:g->compute.delta];g_bind(e,l.state,0);g_bind(e,p->conv,1,r*8192*4);g_bind(e,p->conv,2,(r*8192+2048)*4);
+  g_bind(e,p->conv,3,(r*8192+4096)*4);g_bind(e,p->a,4,r*32*4);g_bind(e,p->b,5,r*32*4);g_bind(e,p->attention,6,r*4096*4);
+  [e dispatchThreadgroups:MTLSizeMake(2048,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];g->dispatches++;g_barrier(e);
+  g_bind(e,p->attention,0,r*4096*4);g_bind(e,p->z,1,r*4096*4);g_bind(e,l.parameters,2,36928*4);[e setBytes:&s length:sizeof(s) atIndex:3];g_run(g,e,GDeltaNorm,32,128);g_barrier(e);
+ }
+}
+static void p_exact_heads(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->qkv,0,r*8192*4);g_bind(e,p->k,1,r*512*4);g_bind(e,p->v,2,r*512*4);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
+  g_bind(e,p->q,5,r*4096*4);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&s length:sizeof(s) atIndex:8];g_run(g,e,GHead,18,256);g_barrier(e);
+ }
+}
+static void p_exact_add(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->x,0,r*2048*4);g_bind(e,p->out,1,r*2048*4);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3,r*2048*4);[e setBytes:&s length:sizeof(s) atIndex:4];g_run(g,e,GAddNorm,1,256);g_barrier(e);
+ }
+}
+static void p_exact_top(GModel *g,id<MTLComputeCommandEncoder> e,int count){auto *p=g->prefill;
+ for(int row=0;row<count;row++){NSUInteger r=NSUInteger(row);g_bind(e,p->router,0,r*256*4);g_bind(e,p->ids,1,r*8*4);g_bind(e,p->prob,2,r*8*4);g_run(g,e,GTop8,1,32);g_barrier(e);}
+}
+static void p_exact_merge(GModel *g,id<MTLComputeCommandEncoder> e,int count,int layer){auto *p=g->prefill;
+ for(int row=0;row<count;row++){auto s=p_decode_step(g,row,layer);NSUInteger r=NSUInteger(row);
+  g_bind(e,p->x,0,r*2048*4);g_bind(e,p->expertOut,1,r*8*2048*4);g_bind(e,p->sharedOut,2,r*2048*4);g_bind(e,p->sharedRoute,3,r*4);g_bind(e,p->prob,4,r*8*4);
+  g_bind(e,layer==39?g->finalNorm:g->layers[layer+1].parameters,5);g_bind(e,p->norm,6,r*2048*4);g_bind(e,g->trace,7);[e setBytes:&s length:sizeof(s) atIndex:8];g_run(g,e,GMerge,1,256);g_barrier(e);
+ }
+}
 struct PVerifyIO {int32_t *next;float *hidden;float *logits;};
 static int p_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
  int *nextToken,int *dispatches,double *ms,char *error,int capacity,const PVerifyIO *verifyIO) {
@@ -675,25 +715,34 @@ static int p_range(void *graph,const int32_t *tokens,int count,int classifier,in
  };
 
 
+ if(verify)p_exact_start(g,e,tokens,count);
+ else {
  if(begin==0){
  g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,p->tokens,3);g_bind(e,p->x,4);[e setBytes:&g->embedding.bits length:4 atIndex:5];
  p_run(g,e,PEmbed,MTLSizeMake(16,count,1),128);g_barrier(e);
  }else memcpy(p->x.contents,hidden,NSUInteger(count)*2048*4);
  g_bind(e,p->x,0);g_bind(e,g->layers[begin].parameters,1);g_bind(e,p->norm,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PNorm,MTLSizeMake(count,1,1),256);g_barrier(e);
+ }
  if(!checkpoint("embedding-norm"))return -1;
  for(int index=begin;index<end;index++) {
   shape.layer=index;auto &l=g->layers[index];auto &m=l.m;
   p_gemv(g,e,m[GQ],p->norm,p->qkv,shape);
   if(l.linear){p_gemv(g,e,m[GZ],p->norm,p->z,shape);p_gemv(g,e,m[GA],p->norm,p->a,shape);p_gemv(g,e,m[GB],p->norm,p->b,shape);g_barrier(e);if(!checkpoint("linear-projections"))return -1;
+   if(verify)p_exact_linear(g,e,l,count,index);
+   else {
    g_bind(e,p->qkv,0);g_bind(e,l.history,1);g_bind(e,l.parameters,2,4096*4);g_bind(e,p->conv,3);
    g_bind(e,p->a,4);g_bind(e,p->b,5);g_bind(e,l.parameters,6,36864*4);g_bind(e,l.parameters,7,36896*4);[e setBytes:&shape length:sizeof(shape) atIndex:8];
    p_run(g,e,PLinear,MTLSizeMake(64,count,1),128);g_barrier(e);if(!checkpoint("linear-convolution"))return -1;
    p_delta(g,e,l.state,l.history,shape);if(!checkpoint("delta"))return -1;
    g_bind(e,p->attention,0);g_bind(e,p->z,1);g_bind(e,l.parameters,2,36928*4);[e setBytes:&shape length:sizeof(shape) atIndex:3];p_run(g,e,PDeltaNorm,MTLSizeMake(32,count,1),128);g_barrier(e);if(!checkpoint("delta-norm"))return -1;
+   }
   } else {
    p_gemv(g,e,m[GK],p->norm,p->k,shape);p_gemv(g,e,m[GV],p->norm,p->v,shape);g_barrier(e);if(!checkpoint("attention-projections"))return -1;
+   if(verify)p_exact_heads(g,e,l,count,index);
+   else {
    g_bind(e,p->qkv,0);g_bind(e,p->k,1);g_bind(e,p->v,2);g_bind(e,l.parameters,3,37056*4);g_bind(e,l.parameters,4,37312*4);
    g_bind(e,p->q,5);g_bind(e,l.keys,6);g_bind(e,l.values,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];p_run(g,e,PHead,MTLSizeMake(18,count,1),256);g_barrier(e);if(!checkpoint("attention-head"))return -1;
+   }
    if(verify){for(uint32_t row=0;row<(uint32_t)count;row++)p_decode_attention(g,e,p->q,l.keys,l.values,p->qkv,p->attention,row);}
    else for(uint32_t offset=0;offset<(uint32_t)count;offset+=p->attentionBatchTokens){uint32_t n=std::min(p->attentionBatchTokens,(uint32_t)count-offset);
     if(p->fusedAttention&&(p->attentionBf16||p->fusedAll||g->position+offset+n>2048))p_fused_attention(g,e,p->q,l.keys,l.values,p->qkv,p->attention,n,offset);
@@ -709,14 +758,23 @@ static int p_range(void *graph,const int32_t *tokens,int count,int classifier,in
   }
   if(!l.linear&&!checkpoint("attention"))return -1;
   p_gemv(g,e,m[GO],p->attention,p->out,shape);g_barrier(e);if(!checkpoint("output-projection"))return -1;
+  if(verify)p_exact_add(g,e,l,count,index);
+  else {
   g_bind(e,p->x,0);g_bind(e,p->out,1);g_bind(e,l.parameters,2,2048*4);g_bind(e,p->norm,3);[e setBytes:&shape length:sizeof(shape) atIndex:4];p_run(g,e,PAdd,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("residual-norm"))return -1;
+  }
   p_gemv(g,e,m[GR],p->norm,p->router,shape);p_gate(g,e,m[GSG],m[GSU],p->sharedAct,shape,false);p_gemv(g,e,m[GSR],p->norm,p->sharedRoute,shape);g_barrier(e);if(!checkpoint("router-shared-gate"))return -1;
+  if(verify)p_exact_top(g,e,count);
+  else {
   g_bind(e,p->router,0);g_bind(e,p->ids,1);g_bind(e,p->prob,2);g_bind(e,p->groupedTileCount,3);p_run(g,e,PTop,MTLSizeMake(count,1,1),32);g_barrier(e);
+  }
   if(p->groupedExperts&&count>=64)p_build_groups(g,e,shape,m[GEG].rows,m[GED].rows);if(!checkpoint("routing"))return -1;
   p_gate(g,e,m[GEG],m[GEU],p->expertAct,shape,true);g_barrier(e);if(!checkpoint("expert-gate"))return -1;
   p_gemv(g,e,m[GED],p->expertAct,p->expertOut,shape,true);p_gemv(g,e,m[GSD],p->sharedAct,p->sharedOut,shape);g_barrier(e);if(!checkpoint("expert-shared-down"))return -1;
+  if(verify)p_exact_merge(g,e,count,index);
+  else {
   g_bind(e,p->x,0);g_bind(e,p->expertOut,1);g_bind(e,p->sharedOut,2);g_bind(e,p->sharedRoute,3);g_bind(e,p->prob,4);
   g_bind(e,index==39?g->finalNorm:g->layers[index+1].parameters,5);g_bind(e,p->norm,6);g_bind(e,p->trace,7);[e setBytes:&shape length:sizeof(shape) atIndex:8];p_run(g,e,PMerge,MTLSizeMake(count,1,1),256);g_barrier(e);if(!checkpoint("merge"))return -1;
+  }
  }
  // The 8-bit vocabulary matrix adds ~0.5 GiB to a command's resource set.
  // Finish the layer stack before binding it, so long KV + prefill scratch
