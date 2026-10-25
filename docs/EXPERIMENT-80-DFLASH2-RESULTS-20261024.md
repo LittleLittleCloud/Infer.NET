@@ -73,11 +73,12 @@ The completed five-task pilots use the same frozen target and dataset. The enabl
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Fresh main | 68.012 | 272.730 | 5/5 | 5/5 | 15 |
 | Candidate off | 67.987 | 272.272 | 5/5 | 5/5 | 19 |
+| DFlash2 block 8 | 53.127 | 265.692 | 4/5 | 4/5 | 15 |
 | DFlash2 block 4 | 59.091 | 265.862 | 4/5 | 4/5 | 13 |
 
 Block 4's failed HumanEval/149 request generated 327 worker tokens and ended at EOS, while Pi reported `Stream ended without finish_reason`; no valid client first-output timestamp was captured for that request. No answer retry or exclusion was performed. All 13 worker clocks are complete and token totals reconcile when the recorded API failure is included. All six frozen replay requests matched main target tokens and finish reasons; the five timing controls measured 61.668 token/s versus main 67.867 token/s. These are separate fixed-input controls, not substitutes for the HumanEval cohort.
 
-Block 4 also passed all eight fixed128/4096 warm/formal controls and 15 serving checks. Its fixed4096 formal rates were 53.965, 53.979, and 53.967 token/s, with zero new swap-out. Block8 pilots and fresh four-arm HumanEval20 are still pending. The width selection rule remains the higher aggregate diagnostic worker rate among target/resource-safe pilots, tie block4; it is not an adoption decision.
+Block 4 also passed all eight fixed128/4096 warm/formal controls and 15 serving checks. Its fixed4096 formal rates were 53.965, 53.979, and 53.967 token/s, with zero new swap-out. Block8 completed at 53.127 token/s, with 4/5 official passes, 15 complete worker clocks, and maximum per-request swap-out 283,131,904 bytes. The predeclared selection therefore froze block4 before any formal20 measurement; [decision](https://github.com/LittleLittleCloud/Infer.NET/issues/80#issuecomment-6395198735). Fresh four-arm HumanEval20 is in progress. The width selection rule remains the higher aggregate diagnostic worker rate among target/resource-safe pilots, tie block4; it is not an adoption decision.
 
 Main/MTP/DFlash2 HumanEval20 rates are **not obtained**. No pilot or fixed correctness clock is presented as a formal application speedup. The old MTP five-task evidence remains in [PR #79](https://github.com/LittleLittleCloud/Infer.NET/pull/79), without being relabeled as this comparison's main or 20-task result.
 

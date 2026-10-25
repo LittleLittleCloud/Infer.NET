@@ -21,5 +21,28 @@
     },
     "proposalAcceptanceFraction": 0.8319268635724332,
     "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
+  },
+  "df8-pilot": {
+    "requestCoverage": 15,
+    "totals": {
+      "block": 120,
+      "cycles": 643,
+      "proposed": 4501,
+      "accepted": 2947,
+      "rejectedCycles": 313,
+      "fullAccept": 330,
+      "arSteps": 0,
+      "replays": 313,
+      "contextRows": 32386,
+      "bootstrapMs": 2980.7950000000005,
+      "draftMs": 8215.405,
+      "verifyMs": 47055.93,
+      "ingestMs": 774.5709999999999,
+      "snapshotMs": 684.8899999999999,
+      "replayMs": 10486.859,
+      "arMs": 0.0
+    },
+    "proposalAcceptanceFraction": 0.6547433903576982,
+    "costScope": "Worker host component timers; diagnostic breakdown, not independent or necessarily additive end-to-end clocks. Bootstrap belongs to prefill; proposal work belongs to decode. DFlash2 draftMs includes its selector."
   }
 }

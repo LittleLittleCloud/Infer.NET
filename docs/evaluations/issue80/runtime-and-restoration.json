@@ -109,6 +109,20 @@
       "wiredLimit": "0",
       "passed": true,
       "endedUtc": "2026-10-25T07:53:06.425168+00:00"
+    },
+    "df8-pilot": {
+      "startedUtc": "2026-10-25T08:04:39.329753+00:00",
+      "expectedBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "bootstrapExitCode": 0,
+      "ready": true,
+      "actualBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "coordinatorRegistrationReady": true,
+      "realChatsPassed": 2,
+      "originalPackageHashesUnchanged": true,
+      "workerConfigUnchanged": true,
+      "wiredLimit": "0",
+      "passed": true,
+      "endedUtc": "2026-10-25T08:05:21.648252+00:00"
     }
   },
   "windowsUsed": false
