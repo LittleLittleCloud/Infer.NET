@@ -577,10 +577,10 @@ static void p_decode_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBu
 }
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer){
  if(!g->prefill)return false;
- if(g->decodeFusedFp32){p_decode_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention);return true;}
+ if(g->decodeFusedFp32){g_profile_begin(g,e,GPFusedAttention);p_decode_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention);g_profile_end(g,e);return true;}
  if(!g->prefill->attentionBf16)return false;
  if(const char *v=std::getenv("DEEPINFER_METAL_DECODE_ATTENTION"))if(strcmp(v,"legacy")==0)return false;
- p_fused_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention,1);return true;
+ g_profile_begin(g,e,GPFusedAttention);p_fused_attention(g,e,g->q,layer.keys,layer.values,g->qkv,g->attention,1);g_profile_end(g,e);return true;
 }
 struct EShape {uint32_t rows,columns,tokens,experts,grouped,bits,maxTiles;};
 static void p_pack_expert(GModel *g,id<MTLComputeCommandEncoder> e,PShape shape,bool gate,id<MTLBuffer> input){

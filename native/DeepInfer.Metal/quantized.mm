@@ -212,7 +212,8 @@ kernel void delta_step(device float *state [[buffer(0)]],
     result=simd_sum(result); if(lane==0)out[row]=result;
 }
 )metal";
-static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, int capacity) {
+struct QCompletionTiming { double commitMs=0,waitMs=0,gpuMs=0; };
+static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, int capacity,QCompletionTiming *timing=nullptr) {
     auto started=std::chrono::steady_clock::now();
     [command commit];auto committed=std::chrono::steady_clock::now();
     [command waitUntilCompleted];auto completed=std::chrono::steady_clock::now();
@@ -224,7 +225,10 @@ static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, in
     if(command.status!=MTLCommandBufferStatusCompleted) {
         error_text(error,capacity,command.error.localizedDescription ?: @"Quantized Metal command failed"); return false;
     }
-    if(ms)*ms=std::max(0.0,(command.GPUEndTime-command.GPUStartTime)*1000.0);
+    double gpuMs=std::max(0.0,(command.GPUEndTime-command.GPUStartTime)*1000.0);
+    if(ms)*ms=gpuMs;
+    if(timing)*timing={std::chrono::duration<double,std::milli>(committed-started).count(),
+        std::chrono::duration<double,std::milli>(completed-committed).count(),gpuMs};
     return true;
 }
 static void q_encode(QContext *c,id<MTLComputeCommandEncoder> e,QMatrix *m,

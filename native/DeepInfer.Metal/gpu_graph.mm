@@ -243,7 +243,9 @@ struct GModel {
     int dispatches=0;
     id<MTLCounterSampleBuffer> counters;
     std::array<int,1024> profileTags{};
-    uint32_t profileCount=0;
+    uint32_t profileCount=0,profileDispatchStart=0,profileCoveredDispatches=0;
+    bool decodeTiming=false,profileActive=false;
+    uint32_t profileFirstPosition=UINT32_MAX,profileRequest=0;
     id<MTLBuffer> debugRouter;
     uint32_t debugPosition=511;
     id<MTLBuffer> forcedRoutes;
@@ -254,12 +256,20 @@ struct GModel {
     ~GModel(){g_prefill_destroy(prefill);}
 };
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer);
-static bool g_profiling(GModel *g){return g->counters&&g->position==32;}
+static bool g_profiling(GModel *g){return g->counters&&g->profileActive;}
+static constexpr int GPFusedAttention=GPCount+7;
+static constexpr int GPProfileCount=GPCount+8;
+static const char *g_profile_names[GPProfileCount]={
+    "embedding","initial_norm","residual_norm","moe_merge_norm","delta_prepare",
+    "delta_output_norm_gate","attention_qk_norm_rope_store","attention_qk","attention_softmax_pv",
+    "router_top8","debug","forced_routes","argmax_blocks","argmax_final",
+    "attention_split_pv","attention_combine","gemv_other","gemv_dense8","lm_head",
+    "expert_down","shared_gate_up","expert_gate_up","delta_recurrence","attention_fused"};
 static void g_profile_begin(GModel *g,id<MTLComputeCommandEncoder> e,int tag){
-    if(g_profiling(g)&&g->profileCount<g->profileTags.size()){g->profileTags[g->profileCount]=tag;[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2 withBarrier:YES];}
+    if(g_profiling(g)&&g->profileCount<g->profileTags.size()){g->profileDispatchStart=g->dispatches;g->profileTags[g->profileCount]=tag;[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2 withBarrier:YES];}
 }
 static void g_profile_end(GModel *g,id<MTLComputeCommandEncoder> e){
-    if(g_profiling(g)&&g->profileCount<g->profileTags.size()){[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2+1 withBarrier:YES];g->profileCount++;}
+    if(g_profiling(g)&&g->profileCount<g->profileTags.size()){[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2+1 withBarrier:YES];g->profileCoveredDispatches+=g->dispatches-g->profileDispatchStart;g->profileCount++;}
 }
 static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){return [g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];}
 static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){return [g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];}
@@ -277,10 +287,12 @@ static void g_long_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuff
     AttentionShape shape{g->position+offset,count,g->capacity,(g->position+offset+count+1023)/1024};
     g_bind(e,scores,0);g_bind(e,values,1);g_bind(e,g->attentionParts,2);[e setBytes:&shape length:sizeof(shape) atIndex:3];
     [e setComputePipelineState:g->ps[GAttentionSplit]];
-    [e dispatchThreadgroups:MTLSizeMake(shape.partitions,16,count) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
+    g_profile_begin(g,e,GAttentionSplit);
+    [e dispatchThreadgroups:MTLSizeMake(shape.partitions,16,count) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_profile_end(g,e);g_barrier(e);
     g_bind(e,g->attentionParts,0);g_bind(e,raw,1,NSUInteger(offset)*8192*4);g_bind(e,out,2,NSUInteger(offset)*4096*4);[e setBytes:&shape length:sizeof(shape) atIndex:3];
     [e setComputePipelineState:g->ps[GAttentionCombine]];
-    [e dispatchThreadgroups:MTLSizeMake(16,count,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
+    g_profile_begin(g,e,GAttentionCombine);
+    [e dispatchThreadgroups:MTLSizeMake(16,count,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_profile_end(g,e);g_barrier(e);
 }
 static void g_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuffer> x,id<MTLBuffer> out,bool experts=false){
     auto *c=&g->compute;bool small=m.rows<128;
@@ -326,7 +338,9 @@ void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const flo
             classifier->rows!=248320||classifier->columns!=2048||(classifier->bits!=5&&classifier->bits!=8)){error_text(error,capacity,@"Unsupported graph weights");return nullptr;}
         auto *g=new GModel{};g->compute=*static_cast<QContext*>(ctx);g->embedding=*embedding;g->classifier=*classifier;g->epsilon=epsilon;g->theta=theta;
         if(const char *serial=std::getenv("DEEPINFER_METAL_SERIAL_GRAPH"))g->concurrent=strcmp(serial,"1")!=0;
+        const char *timing=std::getenv("DEEPINFER_METAL_DECODE_TIMING");
         const char *profile=std::getenv("DEEPINFER_METAL_GPU_PROFILE");
+        g->decodeTiming=(timing&&strcmp(timing,"1")==0)||(profile&&strcmp(profile,"1")==0);
         if(profile&&strcmp(profile,"1")==0) {
             if([g->compute.device supportsCounterSampling:MTLCounterSamplingPointAtDispatchBoundary]) {
                 for(id<MTLCounterSet> set in g->compute.device.counterSets)if([set.name isEqualToString:MTLCommonCounterSetTimestamp]) {
@@ -389,7 +403,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->profileFirstPosition=UINT32_MAX;g->profileRequest++;return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {
@@ -399,7 +413,12 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
         if((uint32_t)position>=g->capacity){error_text(error,capacity,@"Reserve graph context before execution");return -1;}
         if((uint32_t)position!=g->position){error_text(error,capacity,@"Graph token positions must be contiguous; reset between requests");return -1;}
         if(g->forcedRoutes&&(uint32_t)position>=g->forcedPositions){error_text(error,capacity,@"Diagnostic route sequence exhausted");return -1;}
-        g->dispatches=0;g->profileCount=0;GStep s{(uint32_t)position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
+        if(classifier&&g->profileFirstPosition==UINT32_MAX)g->profileFirstPosition=position;
+        g->profileActive=g->decodeTiming&&classifier&&
+            ((uint32_t)position%128==0||((uint32_t)position>=g->profileFirstPosition&&
+            (uint32_t)position-g->profileFirstPosition<8));
+        auto encodeStarted=g->profileActive?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point{};
+        g->dispatches=0;g->profileCount=0;g->profileCoveredDispatches=0;GStep s{(uint32_t)position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
         auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
         if(!command||!e){error_text(error,capacity,@"Cannot create graph encoder");return -1;}
         g_bind(e,g->embedding.packed,0);g_bind(e,g->embedding.scales,1);g_bind(e,g->embedding.biases,2);g_bind(e,g->x,3);
@@ -446,20 +465,39 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
         if(classifier){g_gemv(g,e,g->classifier,g->norm,g->logits);g_barrier(e);
             g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);
             g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,g->nextToken,2);g_run(g,e,GArgFinal,1,32);}
-        [e endEncoding];if(!q_complete(command,ms,error,capacity))return -1;
+        [e endEncoding];
+        auto encoded=g->profileActive?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point{};
+        QCompletionTiming completion;
+        if(!q_complete(command,ms,error,capacity,g->profileActive?&completion:nullptr))return -1;
         *nextToken=classifier?static_cast<const int32_t*>(g->nextToken.contents)[0]:-1;
         if(classifier&&logits)memcpy(logits,g->logits.contents,248320*4);
         if(trace)memcpy(trace,g->trace.contents,40*2048*4);
         if(g->debugRouter&&g->position==g->debugPosition){char path[4096];snprintf(path,sizeof(path),"%s/gpu-routers.f32",std::getenv("DEEPINFER_GRAPH_DEBUG_DIR"));
             if(FILE *f=fopen(path,"wb")){fwrite(g->debugRouter.contents,4,40*264,f);fclose(f);}}
-        if(g_profiling(g)) {
-            NSData *data=[g->counters resolveCounterRange:NSMakeRange(0,g->profileCount*2)];
-            if(data.length>=g->profileCount*2*sizeof(MTLCounterResultTimestamp)) {
-                auto *samples=static_cast<const MTLCounterResultTimestamp*>(data.bytes);std::array<uint64_t,GPCount+7> totals{};
-                for(uint32_t i=0;i<g->profileCount;i++)if(samples[i*2+1].timestamp>=samples[i*2].timestamp)
-                    totals[g->profileTags[i]]+=samples[i*2+1].timestamp-samples[i*2].timestamp;
-                fprintf(stderr,"GPU_TIMESTAMP_PROFILE position=32 ");for(int i=0;i<GPCount+7;i++)fprintf(stderr,"%d:%llu ",i,(unsigned long long)totals[i]);fprintf(stderr,"\n");
+        if(g->profileActive) {
+            std::array<uint64_t,GPProfileCount> totals{};
+            uint32_t valid=0,invalid=0;
+            if(g_profiling(g)) {
+                NSData *data=[g->counters resolveCounterRange:NSMakeRange(0,g->profileCount*2)];
+                if(data.length>=g->profileCount*2*sizeof(MTLCounterResultTimestamp)) {
+                    auto *samples=static_cast<const MTLCounterResultTimestamp*>(data.bytes);
+                    for(uint32_t i=0;i<g->profileCount;i++) {
+                        auto first=samples[i*2].timestamp,last=samples[i*2+1].timestamp;
+                        if(first!=MTLCounterErrorValue&&last!=MTLCounterErrorValue&&last>=first){
+                            totals[g->profileTags[i]]+=last-first;valid++;
+                        }else invalid++;
+                    }
+                }else invalid=g->profileCount;
             }
+            auto ready=std::chrono::steady_clock::now();
+            fprintf(stderr,"DECODE_STAGE_PROFILE {\"requestOrdinal\":%u,\"position\":%u,\"dispatches\":%d,"
+                "\"coveredDispatches\":%u,\"counterRegions\":%u,\"validRegions\":%u,\"invalidRegions\":%u,\"countersAvailable\":%s,"
+                "\"encodeMs\":%.6f,\"commitMs\":%.6f,\"waitMs\":%.6f,\"gpuMs\":%.6f,\"nativeReadyMs\":%.6f,\"stageNs\":{",
+                g->profileRequest,g->position,g->dispatches,g->profileCoveredDispatches,g->profileCount,valid,invalid,g->counters?"true":"false",
+                std::chrono::duration<double,std::milli>(encoded-encodeStarted).count(),completion.commitMs,
+                completion.waitMs,completion.gpuMs,std::chrono::duration<double,std::milli>(ready-encodeStarted).count());
+            for(int i=0;i<GPProfileCount;i++)fprintf(stderr,"%s\"%s\":%llu",i?",":"",g_profile_names[i],(unsigned long long)totals[i]);
+            fprintf(stderr,"}}\n");
         }
         *dispatches=g->dispatches;g->position++;return 0;
     }
