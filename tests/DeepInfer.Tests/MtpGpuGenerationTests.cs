@@ -78,4 +78,47 @@ public class MtpGpuGenerationTests
             }
         }
     }
+    [MtpGpuFact]
+    public void TargetAndDraftKvGrowDuringGenerationWithoutChangingTokensStateOrCache()
+    {
+        var width = int.Parse(Environment.GetEnvironmentVariable("DEEPINFER_MTP_FIXTURE_WIDTH") ?? "1");
+        var outDir = Environment.GetEnvironmentVariable("DEEPINFER_MTP_FIXTURE_OUTPUT") ?? throw new InvalidOperationException("Fixture output directory required.");
+        Directory.CreateDirectory(outDir);
+        using var s = MtpGpuFixture.Open(true, width: width);
+        var ids = s.Tokenize(string.Concat(Enumerable.Repeat(MtpGpuFixture.Text + " ", 64)), CancellationToken.None)[..2000];
+        s.Reset(ids.Length + 32);
+        Assert.Equal(2048, s.Stats().Capacity); Assert.Equal(2048, s.MtpState().Capacity);
+        var hidden = new Dictionary<int, float[]>();
+        void Observe(int start, float[] rows) { for (var i = 0; i < rows.Length / 2048; i++) hidden[start + i] = rows.AsSpan(i * 2048, 2048).ToArray(); }
+        var actual = new List<int>(); var timer = Stopwatch.StartNew(); int actualPosition, pending; string? finish;
+        using (var generation = s.StartMtp(128, true, () => timer.Elapsed.TotalMilliseconds, Observe))
+        {
+            generation.Engine.Prefill(ids, CancellationToken.None);
+            while (generation.Engine.TryNext(CancellationToken.None, out var block)) actual.AddRange(block.Tokens);
+            actualPosition = generation.Engine.Committed; pending = generation.Engine.Anchor; finish = generation.Engine.Finish;
+        }
+        Assert.Equal(128, actual.Count); Assert.Equal("length", finish);
+        Assert.Equal(4096, s.Stats().Capacity); Assert.Equal(4096, s.MtpState().Capacity);
+        var actualDigest = s.StateDigest(); var valid = checked((int)s.MtpState().ValidRows); var cache = s.MtpExportKv(valid);
+        // Serial oracle uses an already-grown graph, so equality proves the generation-time copy preserved active state.
+        s.Reset(ids.Length + 128 + 8);
+        var expected = new List<int>(); var next = s.Prefill(ids, CancellationToken.None);
+        for (var i = 0; i < 128; i++) { expected.Add(next); if (i < 127) next = s.Forward(next, ids.Length + i); }
+        Assert.Equal(expected, actual); Assert.Equal(next, pending);
+        Assert.Equal(ids.Length + 127, actualPosition); Assert.Equal(actualPosition, s.ConsumedPosition());
+        Assert.Equal(actualDigest, s.StateDigest());
+        s.MtpReset(); var stream = ids.Concat(expected).ToArray();
+        for (var start = 0; start < valid; start += 32)
+        {
+            var count = Math.Min(32, valid - start); var features = new float[count * 2048];
+            for (var i = 0; i < count; i++) hidden[start + i].CopyTo(features, i * 2048);
+            s.MtpRun(stream[(start + 1)..(start + 1 + count)], features, start, true, false);
+        }
+        var fresh = s.MtpExportKv(valid); Assert.Equal(cache.Keys, fresh.Keys); Assert.Equal(cache.Values, fresh.Values);
+        Assert.Equal(actualDigest, s.StateDigest());
+        File.WriteAllText(Path.Combine(outDir, "growth.json"), JsonSerializer.Serialize(new { width, promptTokens = ids.Length, outputTokens = actual.Count,
+            initialTargetCapacity = 2048, finalTargetCapacity = s.Stats().Capacity, initialDraftCapacity = 2048, finalDraftCapacity = s.MtpState().Capacity,
+            exactTokens = true, exactState = true, exactFreshDraftKv = true }, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
 }

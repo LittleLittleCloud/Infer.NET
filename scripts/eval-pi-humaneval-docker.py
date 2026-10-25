@@ -47,13 +47,15 @@ def main():
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--expected-count", type=int, choices=(5, 20), default=20,
+                        help="Fixed pilot or formal cohort size; default 20 preserves formal evaluation")
     args = parser.parse_args()
     assert hashlib.sha256(args.dataset.read_bytes()).hexdigest() == DATASET_SHA
     tasks = {item["task_id"]: item for item in
              (json.loads(line) for line in gzip.decompress(args.dataset.read_bytes()).splitlines())}
     manifest = json.loads((args.results / "manifest.json").read_text())
     assert manifest["dataset_sha256"] == DATASET_SHA
-    assert len(manifest["ids"]) == 20 and len(set(manifest["ids"])) == 20
+    assert len(manifest["ids"]) == args.expected_count and len(set(manifest["ids"])) == args.expected_count
     staging = args.results / "functional-staging"
     staging.mkdir(exist_ok=True)
     negative = tasks[manifest["ids"][0]]
