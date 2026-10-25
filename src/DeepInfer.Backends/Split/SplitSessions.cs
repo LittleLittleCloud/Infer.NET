@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using DeepInfer.Backends.Compute;
 using DeepInfer.Backends.Models;
+using DeepInfer.Backends.Mtp;
 namespace DeepInfer.Backends.Split;
 
 // Dedicated, single-request sessions. A failed request is disposed, never reused.
@@ -52,6 +53,50 @@ public sealed class MetalSplitSession : IDisposable
                 trace is null ? null : (p,l,x) => trace(offset+p,l,x));
         }
         return next;
+    }
+    private MtpDevice? mtp; private ulong mtpRequest;
+    public bool MtpEnabled => mtp is not null;
+    public static void ConfigureMtpAllocationTrace(bool enabled) => MtpNative.EnableAllocationTrace(enabled ? 1 : 0);
+    public (long ValidRows, long Capacity, long AllocatedBytes, long Runs) MtpState() => mtp?.State() ?? throw new InvalidOperationException("MTP is not enabled.");
+    public MtpResidencyEvidence MtpEvidence() => mtp?.Evidence() ?? throw new InvalidOperationException("MTP is not enabled.");
+    public static MtpAllocatorTrace MtpAllocatorTrace() => MtpDevice.AllocatorTrace();
+    // Opt-in: loads the pinned official MTP sidecar next to the already-loaded target. Never called on the default path.
+    public void EnableMtp(string sidecarDirectory, int width, MtpReplayMode replay = MtpReplayMode.Batched, bool verifyHashes = true, bool debug = false)
+    {
+        new MtpOptions(width).Validate();
+        if (mtp is not null) throw new InvalidOperationException("MTP is already enabled.");
+        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV") != "fp32") throw new InvalidOperationException("MTP requires FP32 KV.");
+        if (Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK") != "32") throw new InvalidOperationException("MTP requires DEEPINFER_METAL_PREFILL_CHUNK=32.");
+        if (!graph.ExecutionProfile().FusedAttention) throw new InvalidOperationException("MTP requires fused-fp32 decode attention.");
+        using var sidecar = Qwen36MtpWeights.Load(sidecarDirectory, new Qwen36MtpLoadOptions(VerifySidecarHash: verifyHashes));
+        mtp = graph.AttachMtp(sidecar, debug);
+        mtpReplay = replay; mtpWidth = width;
+    }
+    private MtpReplayMode mtpReplay; private int mtpWidth;
+    // Diagnostics for G2/G3 (parent-run GPU gates). Not used by the serving path.
+    public int PrefillWithHidden(int[] tokens, CancellationToken ct, Action<int[], float[]> sink) { graph.PrepareVerify(); return graph.PrefillWithHidden(tokens, ct, (_, t, h) => sink(t, h)); }
+    public (int[] Argmax, float[] Hidden) VerifyRows(int[] tokens, float[]? logits = null) { graph.PrepareVerify(); return graph.Verify(tokens, logits); }
+    public ulong[] StateDigest() => graph.StateDigest();
+    public int ConsumedPosition() => graph.ConsumedPosition();
+    public void PoisonKvSuffix(int rows) => graph.PoisonKvSuffix(rows);
+    public ulong SnapshotCreate() => graph.SnapshotCreate();
+    public double SnapshotCapture(ulong snapshot, ulong request) => graph.SnapshotCapture(snapshot, request);
+    public double SnapshotRestore(ulong snapshot, ulong request) => graph.SnapshotRestore(snapshot, request);
+    public void SnapshotRelease(ulong snapshot) => graph.SnapshotRelease(snapshot);
+    private MtpDevice Draft => mtp ?? throw new InvalidOperationException("MTP is not enabled.");
+    public (int Next, float[] Output, float[]? Logits) MtpRun(int[] tokens, float[]? hidden, int baseRow, bool commit, bool classify, bool fullLogits = false) => Draft.Run(tokens, hidden, baseRow, commit, classify, fullLogits);
+    public void MtpReset() => Draft.Reset();
+    public void MtpTruncate(int rows) => Draft.Truncate(rows);
+    public void MtpReserve(int tokens) => Draft.Reserve(tokens);
+    public (float[] Keys, float[] Values) MtpExportKv(int rows) => Draft.ExportKv(rows);
+    public void MtpPoison(int from, int rows) => Draft.Poison(from, rows);
+    public byte[] MtpDebugTensor(int index, int bytes) => Draft.DebugTensor(index, bytes);
+    // One generation per call; the caller drives TryNext and must Dispose it (releases the request snapshot).
+    public MetalMtpGeneration StartMtp(int maxTokens, bool ignoreEos, Func<double> clock)
+    {
+        var drafter = mtp ?? throw new InvalidOperationException("MTP is not enabled.");
+        var target = new MetalMtpTarget(graph, mtpReplay, ++mtpRequest);
+        return new(target, new MetalMtpDrafter(drafter), new MtpOptions(mtpWidth, ignoreEos), maxTokens, IsEnd, clock);
     }
     public void Dispose() { graph.Dispose(); weights.Dispose(); device.Dispose(); }
 }

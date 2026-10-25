@@ -1,6 +1,7 @@
 // Original fixed-geometry Qwen3.6 GPU executor. One submitted command buffer per
 // token; tensors, convolution history, recurrent state and KV remain on device.
 #include <array>
+#include <atomic>
 static NSString *graph_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
@@ -225,6 +226,9 @@ struct GLayer {
 };
 struct GPrefill;
 static void g_prefill_destroy(GPrefill *p);
+struct GSnapshotStore;
+static void g_snapshot_destroy(GSnapshotStore *s);
+static uint64_t g_next_graph_identity(){static std::atomic<uint64_t> next{1};return next.fetch_add(1);}
 struct GModel {
     QContext compute;
     std::array<id<MTLComputePipelineState>,GPCount> ps;
@@ -251,7 +255,9 @@ struct GModel {
     id<MTLBuffer> argValues,argIds,nextToken;
     bool concurrent=true,kvBf16=false;
     GPrefill *prefill=nullptr;
-    ~GModel(){g_prefill_destroy(prefill);}
+    GSnapshotStore *snapshots=nullptr;
+    uint64_t instanceId=g_next_graph_identity(),epoch=1; // epoch changes on every reset
+    ~GModel(){g_prefill_destroy(prefill);g_snapshot_destroy(snapshots);}
 };
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer);
 static bool g_profiling(GModel *g){return g->counters&&g->position==32;}
@@ -261,8 +267,8 @@ static void g_profile_begin(GModel *g,id<MTLComputeCommandEncoder> e,int tag){
 static void g_profile_end(GModel *g,id<MTLComputeCommandEncoder> e){
     if(g_profiling(g)&&g->profileCount<g->profileTags.size()){[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2+1 withBarrier:YES];g->profileCount++;}
 }
-static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){return [g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];}
-static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){return [g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];}
+static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){auto b=[g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];q_trace_alloc(g->compute.device);return b;}
+static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){auto b=[g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];q_trace_alloc(g->compute.device);return b;}
 static NSString *g_kv_source(GModel *g){return g->kvBf16?[@"#define DEEPINFER_KV_BF16\n" stringByAppendingString:graph_source]:graph_source;}
 static void g_bind(id<MTLComputeCommandEncoder> e,id<MTLBuffer> b,int index,NSUInteger offset=0){[e setBuffer:b offset:offset atIndex:index];}
 static void g_run(GModel *g,id<MTLComputeCommandEncoder> e,int pipeline,int groups,int threads){
@@ -389,7 +395,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->epoch++;return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {

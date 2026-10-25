@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
+using DeepInfer.Backends.Mtp;
 using DeepInfer.Backends.Split;
 using DeepInfer.Core;
 using DeepInfer.Runtime;
@@ -49,6 +50,7 @@ public static class SplitService
         if (o.Get("cuda-send-overlap", "on") is not ("on" or "off")) throw new ArgumentException("cuda-send-overlap must be on or off.");
         if (o.Get("cuda-prefill", "batch-fp32") is not ("serial" or "batch-fp32" or "batch-fp32-packed")) throw new ArgumentException("cuda-prefill must be serial, batch-fp32 or batch-fp32-packed.");
         if (o.Get("cuda-readback", "token") is not ("batch" or "token")) throw new ArgumentException("cuda-readback must be batch or token.");
+
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_KV", "fp32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK", "32");
         Environment.SetEnvironmentVariable("DEEPINFER_METAL_PREFILL_GEMM", "fp32");
@@ -57,7 +59,8 @@ public static class SplitService
     }
     public static async Task RunAgent(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
+        Profile(o); if (MtpHostConfig.Parse(o) is not null) throw new ArgumentException("--mtp is supported only by the local Mac worker.");
+        var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
         var peer = o.Get("tls-peer-sha256", ""); var uri = new Uri(o.Get("endpoint", "tcp://127.0.0.1:5210"));
         if (uri.Scheme != "tcp") throw new ArgumentException("Agent endpoint must use tcp:// (mandatory TLS inside).");
         var bundle = o.Get("weights", "artifacts/split/prefix.bin");
@@ -102,7 +105,10 @@ public static class SplitService
     }
     public static async Task RunMac(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        Profile(o); var mtpConfig = MtpHostConfig.Parse(o);
+        var advertisedContext = mtpConfig is null ? Protocol.Qwen36Context : DeepInfer.Backends.Mtp.MtpLimits.MaxContextTokens;
+        var advertisedOutput = mtpConfig is null ? Protocol.MaxTokens : DeepInfer.Backends.Mtp.MtpLimits.MaxOutputTokens;
+        var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         var incrementalKv = SplitInference.IncrementalKv(o);
         var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
@@ -127,7 +133,7 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", advertisedContext, advertisedOutput, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
@@ -143,7 +149,7 @@ public static class SplitService
             var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : shortPrefillLimit > 0 ? "ReadyLocal" : "WaitingForAgent";
             return registration with { Telemetry = new(DateTimeOffset.UtcNow, currentState, accepting,
                 queue.Busy, queue.WaitingCount, queue.WaitingCapacity, Interlocked.Read(ref completed), Environment.ProcessId,
-                Build, connected, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
+                Build, connected, 8, "fp32", advertisedContext, advertisedOutput, Volatile.Read(ref lastRequest)) };
         }
         app.MapGet("/v1/capabilities", () => Results.Json(Advertisement(), RpcJson.Default.WorkerRegistration));
         async Task Handle(InferenceRequest input, HttpContext context, bool streaming)
@@ -152,6 +158,8 @@ public static class SplitService
             if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal")
             { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens within the model window is supported."); return; }
             if (!warmed) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
+            if (mtpConfig is not null && DeepInfer.Backends.Mtp.MtpLimits.CheckOutput(input.MaxTokens, input.UseRemainingContext) is { } outputLimit)
+            { await Fail(context, 400, "mtp_limit", outputLimit); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
             try
@@ -161,7 +169,9 @@ public static class SplitService
                 var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
                 var maxTokens = input.UseRemainingContext ? Protocol.Qwen36Context - ids.Length : input.MaxTokens;
                 if (maxTokens < 1 || (long)ids.Length + maxTokens > Protocol.Qwen36Context) { await Fail(context, 400, "context_length", $"Prompt plus output exceeds the model's {Protocol.Qwen36Context}-token window; no silent truncation."); return; }
+                if (mtpConfig is not null && DeepInfer.Backends.Mtp.MtpLimits.Check(ids.Length, maxTokens) is { } limit) { await Fail(context, 400, "mtp_limit", limit); return; }
                 var localPrefill = ids.Length <= shortPrefillLimit;
+                if (mtpConfig is not null && !localPrefill) { await Fail(context, 400, "mtp_unsupported", "MTP supports only fully local Metal prefill; no split fallback."); return; }
                 var executionPath = localPrefill ? "metal-local" : "cuda-metal-split";
                 Peer? peer = null;
                 var requestId = Guid.NewGuid();
@@ -186,10 +196,12 @@ public static class SplitService
                     long stateBytes = 0;
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
                     var next = -1;
+                    using var mtpGeneration = mtpConfig is null ? null : gpu.StartMtp(maxTokens, input.BenchmarkIgnoreEos, () => timer.Elapsed.TotalMilliseconds);
                     if (localPrefill)
                     {
                         var phase = Stopwatch.GetTimestamp();
-                        next = gpu.Prefill(ids, timeout.Token);
+                        if (mtpGeneration is not null) { mtpGeneration.Engine.Prefill(ids, timeout.Token); next = mtpGeneration.Engine.Anchor; }
+                        else next = gpu.Prefill(ids, timeout.Token);
                         suffixMs = Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                     }
                     else
@@ -256,6 +268,27 @@ public static class SplitService
                         : null;
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
+                    if (mtpGeneration is not null)
+                    {
+                        // Tokens in one validated block share a ready time; no intra-block spacing is invented.
+                        var engine = mtpGeneration.Engine;
+                        while (engine.TryNext(timeout.Token, out var block))
+                        {
+                            last = block.ReadyMs; if (output.Count == 0) first = block.ReadyMs;
+                            foreach (var emitted in block.Tokens)
+                            {
+                                output.Add(emitted);
+                                if (!streaming) continue;
+                                var bytes = gpu.Piece(emitted); var chars = new char[bytes.Length + 4];
+                                var length = decoder.GetChars(bytes, chars, false);
+                                await Event(context, "token", new ServiceEvent(new string(chars, 0, length), emitted, null, null, ids.Length), timeout.Token);
+                            }
+                        }
+                        finish = engine.Finish ?? "length";
+                        Console.Error.WriteLine($"MTP_STATS request={requestId} " + engine.Stats.ToLogLine());
+                        Console.Error.WriteLine($"MTP_EVIDENCE request={requestId} " + gpu.MtpEvidence().ToLogLine() + " " + MetalSplitSession.MtpAllocatorTrace().ToLogLine());
+                    }
+                    else
                     for (var i = 0; i < maxTokens; i++)
                     {
                         timeout.Token.ThrowIfCancellationRequested();
@@ -310,8 +343,10 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
+                if (mtpConfig is not null) MetalSplitSession.ConfigureMtpAllocationTrace(true);
                 var scratchTokens = o.Number("metal-scratch-tokens", 512, 128, 512);
                 gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: scratchTokens, fusedFp32Decode: SplitInference.FusedDecode(o));
+                if (mtpConfig is not null) gpu.EnableMtp(mtpConfig.SidecarDirectory, mtpConfig.Width, mtpConfig.Replay);
                 var nativeProfile = gpu.ExecutionProfile();
                 Console.WriteLine($"METAL_NATIVE_PROFILE {nativeProfile}");
                 if (nativeProfile.KvElementBytes != 4 || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
@@ -319,6 +354,14 @@ public static class SplitService
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }
+                if (mtpConfig is not null)
+                {
+                    // Real MTP warmup: bootstrap, drafting, verification and rollback execute before readiness.
+                    gpu.Reset(2048);
+                    using var generation = gpu.StartMtp(32, true, () => Stopwatch.GetTimestamp() * 1000.0 / Stopwatch.Frequency);
+                    generation.Engine.Prefill(warm, life.Token);
+                    while (generation.Engine.TryNext(life.Token, out _)) { }
+                }
                 gpu.Reset(2048); warmed = true; state = "Ready"; listener.Start(1);
                 Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
                 while (!life.IsCancellationRequested)

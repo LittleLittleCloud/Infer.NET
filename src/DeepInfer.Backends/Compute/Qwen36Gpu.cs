@@ -163,8 +163,103 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         if (GraphNative.DecodeFusedFp32(handle, enabled ? 1 : 0) != 0)
             throw new InvalidOperationException("FP32 decode attention configuration rejected; reset and use FP32 KV/prepared scratch.");
     }
-    public void Dispose() => handle.Dispose();
+    public delegate void PrefillHiddenSink(int offset, int[] tokens, float[] hidden);
+    // Prefill that also exports each chunk's post-final-norm hidden rows (device -> managed copy after the chunk completes).
+    public int PrefillWithHidden(ReadOnlySpan<int> tokens, CancellationToken ct, PrefillHiddenSink sink)
+    {
+        var next = -1;
+        Span<byte> error = stackalloc byte[2048];
+        for (var offset = 0; offset < tokens.Length; offset += prefillChunk)
+        {
+            ct.ThrowIfCancellationRequested();
+            var chunk = tokens.Slice(offset, Math.Min(prefillChunk, tokens.Length - offset));
+            var final = offset + chunk.Length == tokens.Length;
+            error.Clear();
+            fixed (int* ids = chunk) fixed (byte* e = error)
+            {
+                if (GraphNative.Prefill(handle, ids, chunk.Length, final ? 1 : 0, null, null, out next, out var dispatches, out var ms, e, error.Length) != 0)
+                    throw new InvalidOperationException(Message(error));
+                device.Count(ms, dispatches, GraphNative.PrefillSubmissions(handle));
+            }
+            var hidden = new float[chunk.Length * 2048];
+            fixed (float* h = hidden) if (GraphNative.PrefillHidden(handle, chunk.Length, h) != 0) throw new InvalidOperationException("Cannot export prefill hidden rows.");
+            sink(offset, chunk.ToArray(), hidden);
+        }
+        if (next is < 0 or >= Qwen36Weights.Vocabulary) throw new InvalidOperationException("GPU prefill produced non-finite logits or invalid argmax.");
+        return next;
+    }
+    public void PrepareVerify()
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error) if (GraphNative.PrepareVerify(handle, e, error.Length) != 0) throw new InvalidOperationException(Message(error));
+    }
+    // Exact-decode multi-row verification: per-row argmax and post-final-norm hidden rows in one batched pass. Advances position by tokens.Length.
+    public (int[] Argmax, float[] Hidden) Verify(ReadOnlySpan<int> tokens, float[]? logits = null)
+    {
+        if (tokens.Length is < 1 or > 8) throw new ArgumentException("Verification supports 1..8 rows.");
+        if (logits is not null && logits.Length != tokens.Length * Qwen36Weights.Vocabulary) throw new ArgumentException("Invalid verification logits geometry.");
+        var next = new int[tokens.Length]; var hidden = new float[tokens.Length * 2048];
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (int* ids = tokens) fixed (int* n = next) fixed (float* h = hidden) fixed (float* y = logits) fixed (byte* e = error)
+        {
+            if (GraphNative.VerifyRows(handle, ids, tokens.Length, n, h, y, out var dispatches, out var ms, e, error.Length) != 0)
+                throw new InvalidOperationException(Message(error));
+            device.Count(ms, dispatches, GraphNative.PrefillSubmissions(handle));
+        }
+        return (next, hidden);
+    }
+    public ulong SnapshotCreate()
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error) { if (GraphNative.SnapshotCreate(handle, out var id, e, error.Length) != 0) throw new InvalidOperationException(Message(error)); return id; }
+    }
+    public double SnapshotCapture(ulong snapshot, ulong request)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error) { if (GraphNative.SnapshotCapture(handle, snapshot, request, out var ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error)); return ms; }
+    }
+    public double SnapshotRestore(ulong snapshot, ulong request)
+    {
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        fixed (byte* e = error) { if (GraphNative.SnapshotRestore(handle, snapshot, request, out var ms, e, error.Length) != 0) throw new InvalidOperationException(Message(error)); return ms; }
+    }
+    public void SnapshotRelease(ulong snapshot) { if (GraphNative.SnapshotRelease(handle, snapshot) != 0) throw new InvalidOperationException("Unknown snapshot handle."); }
+    public ulong[] StateDigest()
+    {
+        var digests = new ulong[80];
+        fixed (ulong* d = digests) if (GraphNative.StateDigest(handle, d, 80) != 0) throw new InvalidOperationException("State digest rejected.");
+        return digests;
+    }
+    public int ConsumedPosition()
+    {
+        if (GraphNative.Position(handle, out var position) != 0) throw new InvalidOperationException("Position unavailable.");
+        return position;
+    }
+    public void PoisonKvSuffix(int rows) { if (GraphNative.PoisonKvSuffix(handle, rows) != 0) throw new InvalidOperationException("KV poison rejected."); }
+    public MtpDevice AttachMtp(Qwen36MtpWeights weights, bool debug = false)
+    {
+        if (mtp is not null) throw new InvalidOperationException("MTP is already attached to this graph.");
+        Span<byte> error = stackalloc byte[2048]; error.Clear();
+        nint raw;
+        fixed (byte* e = error) raw = MtpNative.Create(handle, debug ? 1 : 0, e, error.Length);
+        if (raw == 0) throw new InvalidOperationException(Message(error));
+        var attached = new MtpDevice(this, new MtpHandle(raw));
+        try { attached.Load(weights); mtp = attached; return attached; }
+        catch { attached.Dispose(); throw; }
+    }
+    internal GraphHandle Handle => handle;
+    internal QuantizedMetal Device => device;
+    internal static string ErrorText(ReadOnlySpan<byte> error) => Message(error);
+    private MtpDevice? mtp;
+    public void Dispose() { mtp?.Dispose(); handle.Dispose(); }
 }
+
+internal sealed class MtpHandle : SafeHandleZeroOrMinusOneIsInvalid
+{
+    public MtpHandle(nint p) : base(true) { SetHandle(p); }
+    protected override bool ReleaseHandle() { MtpNative.Destroy(handle); return true; }
+}
+
 internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
     public GraphHandle() : base(true) { }
@@ -209,6 +304,27 @@ internal static unsafe partial class GraphNative
     internal static partial int PreparePrefill(GraphHandle graph, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_prefill_scratch")]
     internal static partial int PreparePrefillScratch(GraphHandle graph, int tokens, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefill_hidden")]
+    internal static partial int PrefillHidden(GraphHandle graph, int rows, float* output);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prepare_verify")]
+    internal static partial int PrepareVerify(GraphHandle graph, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_verify_rows")]
+    internal static partial int VerifyRows(GraphHandle graph, int* tokens, int count, int* next, float* hidden, float* logits,
+        out int dispatches, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_create")]
+    internal static partial int SnapshotCreate(GraphHandle graph, out ulong handle, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_capture")]
+    internal static partial int SnapshotCapture(GraphHandle graph, ulong handle, ulong request, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_restore")]
+    internal static partial int SnapshotRestore(GraphHandle graph, ulong handle, ulong request, out double ms, byte* error, int capacity);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_snapshot_release")]
+    internal static partial int SnapshotRelease(GraphHandle graph, ulong handle);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_state_digest")]
+    internal static partial int StateDigest(GraphHandle graph, ulong* digests, int count);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_position")]
+    internal static partial int Position(GraphHandle graph, out int position);
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_poison_kv_suffix")]
+    internal static partial int PoisonKvSuffix(GraphHandle graph, int rows);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_destroy")]
     internal static partial void Destroy(nint graph);
 }
