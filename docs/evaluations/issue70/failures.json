@@ -1,0 +1,50 @@
+{
+  "initialNativeCompile": "Missing encodeStarted after an insertion matched a Q8-branch-only line; corrected before model evaluation.",
+  "initialManagedTest": "--no-restore in new checkout failed for missing assets; restored run passed131.",
+  "dispatchSampling": {
+    "dispatchSupported": false,
+    "encoderBoundarySupported": true,
+    "timestampBufferCreationPassed": true,
+    "decision": "Retain host-only on measurements; interrupt unsupported dispatch-counter arm and restore before encoder-boundary implementation. No stage shares available from this arm."
+  },
+  "analysisHelper": {
+    "type": "ZeroDivisionError",
+    "operation": "Exploratory console calculation divided stage times by a zero total before checking unavailable dispatch counters.",
+    "handling": "No stage shares from that arm were published; summary records null shares and failed coverage. Encoder fallback supplies later valid samples.",
+    "evidence": "Original tool output is in the conversation; exact stderr was not saved as a local log."
+  },
+  "interruption": {
+    "type": "KeyboardInterrupt",
+    "message": ""
+  },
+  "guardedPilot": "First pilot wrapper refused to start after interrupted phaseA, as designed. Final application pilot used encoder-mode build43c81fa.",
+  "buildTransition": {
+    "candidate": "bd3daa6db80d3230e8ccec9d974989a536dabec9",
+    "earlierBuild": "de7c332e4948e130dd68d3fc5f6a73efd6c06d97",
+    "change": "Clear diagnostic active state on reset and prefill; no arithmetic change. Earlier candidate had not started any model cohort.",
+    "controllerHeldDuringFinalPackaging": true,
+    "cpuBuildOverlap": "Final CPU build overlapped part of main 32768 trial3; retain and disclose as diagnostic, not an adoption comparison.",
+    "utc": "2026-10-25T22:35:36.554246+00:00"
+  },
+  "restoreAttempts": {
+    "phaseA": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "phaseB": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "application": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ]
+  },
+  "limits": "Controller stdout/traceback and capability-console output were not all saved as local logs; metadata records the observations. They are not presented as complete raw stderr."
+}

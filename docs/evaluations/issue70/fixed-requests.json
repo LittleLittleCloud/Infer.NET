@@ -4054,6 +4054,163 @@
     }
   },
   "encoder": {
+    "off-32768": {
+      "manifest": {
+        "label": "off-32768",
+        "health": {
+          "state": "Ready",
+          "ready": true,
+          "pid": 94115,
+          "build": "0.3.0+43c81faff69a5e503a0f04be9ca664c73d89cce8",
+          "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+          "weightBits": 8,
+          "kv": "fp32",
+          "maxContextTokens": 262144,
+          "maxOutputTokens": 262144,
+          "completedRequests": 8
+        },
+        "inputTokens": 32768,
+        "outputTokens": 128,
+        "inputSha256": "4f2dfa83eb5f48eda2c8106a775d42d346d9dc72fa210c179c4db285b486f7f8",
+        "driverSha256": "68720e8843f2677858e153e80f259dfce6745da531051eb0ffb281b977de8682",
+        "windowsParticipates": false,
+        "precision": "affine8 weights / FP32 KV and recurrence",
+        "cache": "none",
+        "speculation": "off",
+        "warmups": 1,
+        "formalTrials": 3
+      },
+      "trials": [
+        {
+          "trial": 0,
+          "warmup": true,
+          "timings": {
+            "prefillMs": 139907.5594,
+            "firstTokenMs": 139907.5807,
+            "decodeMs": 2757.721600000019,
+            "decodeTokens": 127,
+            "decodeTokensPerSecond": 46.05250943387437,
+            "contextCapacity": 34816,
+            "kvCacheBytes": 1426063360,
+            "metalAllocatedBytes": 38526271488,
+            "prefillStages": {
+              "cudaComputeMs": 0,
+              "cudaStateExportMs": 0,
+              "cudaSendMs": 0,
+              "cudaElapsedMs": 0,
+              "wirePayloadBytes": 0,
+              "macHiddenWaitMs": 0,
+              "macSuffixMs": 139907.547,
+              "macStateWaitMs": 0,
+              "macStateImportMs": 0,
+              "macOtherMs": 0.012400000006891787
+            }
+          },
+          "clientSeconds": 142.688319333,
+          "tokenHash": "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249",
+          "swapoutDeltaBytes": 0,
+          "metalAllocationBytes": 38526271488,
+          "resourcePass": true,
+          "profiles": []
+        },
+        {
+          "trial": 1,
+          "warmup": false,
+          "timings": {
+            "prefillMs": 139763.9108,
+            "firstTokenMs": 139763.936,
+            "decodeMs": 2758.1233000000066,
+            "decodeTokens": 127,
+            "decodeTokensPerSecond": 46.04580223081386,
+            "contextCapacity": 34816,
+            "kvCacheBytes": 1426063360,
+            "metalAllocatedBytes": 38526271488,
+            "prefillStages": {
+              "cudaComputeMs": 0,
+              "cudaStateExportMs": 0,
+              "cudaSendMs": 0,
+              "cudaElapsedMs": 0,
+              "wirePayloadBytes": 0,
+              "macHiddenWaitMs": 0,
+              "macSuffixMs": 139763.9,
+              "macStateWaitMs": 0,
+              "macStateImportMs": 0,
+              "macOtherMs": 0.010800000018207356
+            }
+          },
+          "clientSeconds": 142.55043579099998,
+          "tokenHash": "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249",
+          "swapoutDeltaBytes": 68009984,
+          "metalAllocationBytes": 38526271488,
+          "resourcePass": true,
+          "profiles": []
+        },
+        {
+          "trial": 2,
+          "warmup": false,
+          "timings": {
+            "prefillMs": 139748.7563,
+            "firstTokenMs": 139748.7847,
+            "decodeMs": 2762.981700000004,
+            "decodeTokens": 127,
+            "decodeTokensPerSecond": 45.96483574248784,
+            "contextCapacity": 34816,
+            "kvCacheBytes": 1426063360,
+            "metalAllocatedBytes": 38526271488,
+            "prefillStages": {
+              "cudaComputeMs": 0,
+              "cudaStateExportMs": 0,
+              "cudaSendMs": 0,
+              "cudaElapsedMs": 0,
+              "wirePayloadBytes": 0,
+              "macHiddenWaitMs": 0,
+              "macSuffixMs": 139748.7454,
+              "macStateWaitMs": 0,
+              "macStateImportMs": 0,
+              "macOtherMs": 0.010899999993853271
+            }
+          },
+          "clientSeconds": 142.57191395800004,
+          "tokenHash": "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249",
+          "swapoutDeltaBytes": 0,
+          "metalAllocationBytes": 38526271488,
+          "resourcePass": true,
+          "profiles": []
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "timings": {
+            "prefillMs": 139756.4615,
+            "firstTokenMs": 139756.481,
+            "decodeMs": 2760.580799999996,
+            "decodeTokens": 127,
+            "decodeTokensPerSecond": 46.004811741065566,
+            "contextCapacity": 34816,
+            "kvCacheBytes": 1426063360,
+            "metalAllocatedBytes": 38526271488,
+            "prefillStages": {
+              "cudaComputeMs": 0,
+              "cudaStateExportMs": 0,
+              "cudaSendMs": 0,
+              "cudaElapsedMs": 0,
+              "wirePayloadBytes": 0,
+              "macHiddenWaitMs": 0,
+              "macSuffixMs": 139756.4505,
+              "macStateWaitMs": 0,
+              "macStateImportMs": 0,
+              "macOtherMs": 0.010999999998603016
+            }
+          },
+          "clientSeconds": 142.55219241700001,
+          "tokenHash": "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249",
+          "swapoutDeltaBytes": 0,
+          "metalAllocationBytes": 38526271488,
+          "resourcePass": true,
+          "profiles": []
+        }
+      ]
+    },
     "off-8192": {
       "manifest": {
         "label": "off-8192",
@@ -4171,6 +4328,38 @@
             }
           },
           "clientSeconds": 32.086193292000004,
+          "tokenHash": "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b",
+          "swapoutDeltaBytes": 0,
+          "metalAllocationBytes": 37467340800,
+          "resourcePass": true,
+          "profiles": []
+        },
+        {
+          "trial": 3,
+          "warmup": false,
+          "timings": {
+            "prefillMs": 29990.1319,
+            "firstTokenMs": 29990.1363,
+            "decodeMs": 2083.0007000000005,
+            "decodeTokens": 127,
+            "decodeTokensPerSecond": 60.96973467171661,
+            "contextCapacity": 10240,
+            "kvCacheBytes": 419430400,
+            "metalAllocatedBytes": 37467340800,
+            "prefillStages": {
+              "cudaComputeMs": 0,
+              "cudaStateExportMs": 0,
+              "cudaSendMs": 0,
+              "cudaElapsedMs": 0,
+              "wirePayloadBytes": 0,
+              "macHiddenWaitMs": 0,
+              "macSuffixMs": 29990.1314,
+              "macStateWaitMs": 0,
+              "macStateImportMs": 0,
+              "macOtherMs": 0.0005000000019208528
+            }
+          },
+          "clientSeconds": 32.080953709,
           "tokenHash": "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b",
           "swapoutDeltaBytes": 0,
           "metalAllocationBytes": 37467340800,

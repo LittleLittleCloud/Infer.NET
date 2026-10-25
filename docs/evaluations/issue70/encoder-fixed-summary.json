@@ -76,6 +76,64 @@
       "regionSumOverCommandGpu": 0.9259611191202837,
       "meanSampleCommandGpuMs": 17.11408679166667
     },
+    "off-32768": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "468df8930f33ed25daef7eb63d34be75d3a9f443776430921f1e8fa560818249"
+      ],
+      "formalMedianPrefillMs": 139756.4615,
+      "formalDecodeAggregate": 46.00512615438751,
+      "formalMedianDecode": 46.004811741065566,
+      "formalMeanPrefillMs": 139756.3762,
+      "formalSlowestPrefillMs": 139763.9108,
+      "formalMeanClientSeconds": 142.558180722,
+      "formalMedianClientSeconds": 142.55219241700001,
+      "formalSlowestClientSeconds": 142.57191395800004,
+      "formalSlowestDecode": 45.96483574248784,
+      "maxAllocationBytes": 38526271488,
+      "maxFormalSwapoutBytes": 68009984,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
+    "off-8192": {
+      "trials": 4,
+      "formalTrials": 3,
+      "allTokenHashes": [
+        "cb1c4d9d899d2cfc5ec9c2578cb2bd89425a61bf73fd931774658c1f312feb6b"
+      ],
+      "formalMedianPrefillMs": 29993.7102,
+      "formalDecodeAggregate": 61.004581171847086,
+      "formalMedianDecode": 60.983073067661316,
+      "formalMeanPrefillMs": 29993.502533333332,
+      "formalSlowestPrefillMs": 29996.6655,
+      "formalMeanClientSeconds": 32.08240901433334,
+      "formalMedianClientSeconds": 32.080953709,
+      "formalSlowestClientSeconds": 32.086193292000004,
+      "formalSlowestDecode": 60.96973467171661,
+      "maxAllocationBytes": 37467340800,
+      "maxFormalSwapoutBytes": 0,
+      "sampledForwards": 0,
+      "regionCoveragePass": null,
+      "stageNs": {},
+      "groupShareOfMeasuredRegions": null,
+      "groupMsPerSample": null,
+      "medianSampleEncodeMs": null,
+      "medianSampleCommitMs": null,
+      "medianSampleWaitMs": null,
+      "medianSampleGpuMs": null,
+      "regionSumOverCommandGpu": null,
+      "meanSampleCommandGpuMs": null
+    },
     "on-short": {
       "trials": 4,
       "formalTrials": 3,
@@ -257,7 +315,17 @@
       "exactTokensBothArms": true,
       "onVsOffDecodePercent": -0.5903507787787032,
       "onVsOffPrefillLatencyPercent": -0.02612107888328996
+    },
+    "8192": {
+      "exactTokensBothArms": true,
+      "onVsOffDecodePercent": -0.7310520466726311,
+      "onVsOffPrefillLatencyPercent": 0.02121011357907321
+    },
+    "32768": {
+      "exactTokensBothArms": true,
+      "onVsOffDecodePercent": -1.1805647657883722,
+      "onVsOffPrefillLatencyPercent": 0.093564046053074
     }
   },
-  "collectionStatus": "Stage samples complete; final default-off controls and application pilot are still pending."
+  "collectionStatus": "Complete diagnostic record; original service restored. No optimization or adoption claim."
 }

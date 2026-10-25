@@ -1,0 +1,22 @@
+{
+  "managed": {
+    "passed": 131,
+    "failed": 0,
+    "log": "issue70-encoder-managed.log"
+  },
+  "nativeGraph": "60 hardware cases plus profile/KV guards passed in phaseB",
+  "decodeAttention": "Legacy/fused paths passed independent double oracle at17/2048/8192/32768",
+  "encoderSampling": "Independent two-encoder addition output equality, valid timestamp and coverage check passed",
+  "fixedCounterSamples": 75,
+  "counterRegionsPerSample": 273,
+  "coveredDispatchesPerSample": 675,
+  "fixedMatchedOutputs": true,
+  "applicationCounterSamples": 186,
+  "officialPassed": 5,
+  "officialTotal": 5,
+  "negativeControl": "failed",
+  "humanEval20": "Not Run: no adoption decision or formal main comparison",
+  "formal128K": "Not Run: failed FP32 capacity preflight",
+  "fullModelStateL2": "Not Obtained: no arithmetic change; fixed output parity and operator references checked",
+  "transientResidencyAcceptance": "Not Obtained"
+}

@@ -18,10 +18,10 @@
     "limitations": "Sampled whole-machine interval includes loading/warmup/formal work; first second and shutdown/restoration are not fully covered. No process attribution of swap. RSS does not replace footprint. Continuous allocation/transient/per-submission physical residency peaks not obtained."
   },
   "encoder": {
-    "monitorSamples": 885,
-    "sampledWholeIntervalSwapoutBytes": 12280889344,
+    "monitorSamples": 1468,
+    "sampledWholeIntervalSwapoutBytes": 12348899328,
     "sampledStartUtc": "2026-10-25T22:54:06.970134+00:00",
-    "sampledEndUtc": "2026-10-25T23:09:03.052741+00:00",
+    "sampledEndUtc": "2026-10-25T23:18:53.882480+00:00",
     "maximumObservedRssKiB": 17804736,
     "footprintSnapshots": [
       {
@@ -30,5 +30,15 @@
       }
     ],
     "limitations": "Sampled whole-machine interval includes loading/warmup/formal work; first second and shutdown/restoration are not fully covered. No process attribution of swap. RSS does not replace footprint. Continuous allocation/transient/per-submission physical residency peaks not obtained."
+  },
+  "application": {
+    "loadingWarmupWholeMachineNewSwapoutBytes": 4177199104,
+    "cohortWholeMachineNewSwapoutBytes": 0,
+    "maximumCompletedMetalAllocationBytes": 37202624512,
+    "memoryPressure": "The system has 51539607552 (3145728 pages with a page size of 16384).\nSystem-wide memory free percentage: 18%\n",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+    "continuousTransientAllocationPeak": "Not Obtained",
+    "perSubmissionPhysicalResidency": "Not Obtained",
+    "footprintSnapshotBytes": 37429440424
   }
 }

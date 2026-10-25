@@ -87,5 +87,46 @@
       "nativeSha256": "351a7a0b3f8d52228222bf045ab00c1fdf95c09917bca070776667ab8a0fb346",
       "version": "0.3.0+43c81faff69a5e503a0f04be9ca664c73d89cce8"
     }
+  },
+  "application": {
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 437,
+      "build": "0.3.0+43c81faff69a5e503a0f04be9ca664c73d89cce8",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "binarySha256": "d54bf54c6ef45c8ed32413f9f9aadf933ab03bf1b193c725443236b01194edd7",
+    "nativeSha256": "351a7a0b3f8d52228222bf045ab00c1fdf95c09917bca070776667ab8a0fb346",
+    "observerSource": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+    "workerProfile": "counter-on, local Metal, FP32 KV/recurrence, affine8 weights",
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=22872163)\t76%; charging; 1:21 remaining present: true\n",
+    "vmAtReady": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                     4025.\nPages active:                                 293011.\nPages inactive:                               291158.\nPages speculative:                               356.\nPages throttled:                                   0.\nPages wired down:                            2466815.\nPages purgeable:                                  58.\n\"Translation faults\":                     9413533201.\nPages copy-on-write:                       521358461.\nPages zero filled:                        9001289581.\nPages reactivated:                         735519755.\nPages purged:                              146880948.\nFile-backed pages:                            243655.\nAnonymous pages:                              340870.\nPages stored in compressor:                  1902424.\nPages occupied by compressor:                  10333.\nDecompressions:                           1583578060.\nCompressions:                             1717504432.\nPageins:                                  1221936154.\nPageouts:                                    1089696.\nSwapins:                                   126284078.\nSwapouts:                                  137366009.\nPages tagged:                                 135603.\nPages tagged resident:                         93671.\nPages tagged compressed:                       41932.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                 6230.\nPages tag-storage free:                        18015.\nPages tag-storage non-tag pageable:            74051.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    7622336.\nTagged compressions:                        23071511.\nTagged decompressions:                      21944521.\n"
+  },
+  "loadedNativeOff": {
+    "pid": 94115,
+    "loadedLibraries": [
+      {
+        "basename": "libdeepinfer_metal.dylib",
+        "sha256": "351a7a0b3f8d52228222bf045ab00c1fdf95c09917bca070776667ab8a0fb346",
+        "matchesExpected": true
+      }
+    ],
+    "method": "lsof mapped-library path, then SHA256 of that actual file"
+  },
+  "loadedNativeApplication": {
+    "pid": 437,
+    "loadedLibraries": [
+      {
+        "basename": "libdeepinfer_metal.dylib",
+        "sha256": "351a7a0b3f8d52228222bf045ab00c1fdf95c09917bca070776667ab8a0fb346",
+        "matchesExpected": true
+      }
+    ]
   }
 }

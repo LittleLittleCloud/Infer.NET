@@ -1,0 +1,20 @@
+{
+  "samples": 186,
+  "decodeIntervals": 4604,
+  "sampleSelection": "First eight classifier forwards after each reset and absolute token positions divisible by128; not every decode interval or a time-weighted whole-cohort profile. Startup samples excluded.",
+  "validCoverage": true,
+  "stageShareOfMeasuredRegions": {
+    "residual_norm": 0.012503980900066734,
+    "delta_prepare": 0.007399645371495491,
+    "delta_output_norm_gate": 0.005492182258679702,
+    "attention_qk_norm_rope_store": 0.0025225201383086327,
+    "gemv_dense8": 0.3552296307312071,
+    "lm_head": 0.1264419831162752,
+    "delta_recurrence": 0.020004502475268297,
+    "attention_fused": 0.0943257215185581,
+    "moe_block": 0.37436993645733674,
+    "embedding_initial_norm": 0.0006345933463465751,
+    "argmax": 0.0010753036864574366
+  },
+  "measuredRegionSumOverCommandGpu": 0.9178937463311846
+}
