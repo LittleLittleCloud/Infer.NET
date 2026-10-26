@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Channels;
+using DeepInfer.Backends.Dflash2;
 using DeepInfer.Backends.Split;
 using DeepInfer.Core;
 using DeepInfer.Runtime;
@@ -57,7 +58,8 @@ public static class SplitService
     }
     public static async Task RunAgent(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
+        Profile(o); if (Dflash2HostConfig.Parse(o) is not null) throw new ArgumentException("--dflash2 is supported only by the local Mac worker.");
+        var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "cuda-8bit");
         var peer = o.Get("tls-peer-sha256", ""); var uri = new Uri(o.Get("endpoint", "tcp://127.0.0.1:5210"));
         if (uri.Scheme != "tcp") throw new ArgumentException("Agent endpoint must use tcp:// (mandatory TLS inside).");
         var bundle = o.Get("weights", "artifacts/split/prefix.bin");
@@ -102,7 +104,10 @@ public static class SplitService
     }
     public static async Task RunMac(Options o, CancellationToken ct)
     {
-        Profile(o); var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
+        Profile(o); var dflash2Config = Dflash2HostConfig.Parse(o);
+        var advertisedContext = dflash2Config is null ? Protocol.Qwen36Context : Dflash2Limits.MaxContextTokens;
+        var advertisedOutput = dflash2Config is null ? Protocol.MaxTokens : Dflash2Limits.MaxOutputTokens;
+        var token = Token(o); using var certificate = Certificate(o); using var instance = Lock(o, "metal-8bit");
         var shortPrefillLimit = o.Number("short-prefill-tokens", 128, 0, Protocol.Qwen36Context);
         var incrementalKv = SplitInference.IncrementalKv(o);
         var suffixChunk = o.Number("suffix-chunk-tokens", 128, 32, 512);
@@ -127,7 +132,7 @@ public static class SplitService
             { context.Response.StatusCode = 401; return; }
             await next(context);
         });
-        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Interlocked.Read(ref completed));
+        ServiceStatus Status() => new(warmed && queue.Busy ? "Busy" : state, warmed && (shortPrefillLimit > 0 || (peers.Reader.TryPeek(out var peer) && peer.Connected)), Environment.ProcessId, Build, SplitWire.Revision, 8, "fp32", advertisedContext, advertisedOutput, Interlocked.Read(ref completed));
         app.MapGet("/health", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus));
         app.MapGet("/ready", () => Results.Json(Status(), ServiceJson.Default.ServiceStatus, statusCode: Status().Ready ? 200 : 503));
         var registration = new WorkerRegistration(Protocol.Version, o.Get("id", "split-metal-8bit"), endpoint,
@@ -143,7 +148,7 @@ public static class SplitService
             var currentState = !warmed ? state : queue.Busy ? "Busy" : connected ? "Ready" : shortPrefillLimit > 0 ? "ReadyLocal" : "WaitingForAgent";
             return registration with { Telemetry = new(DateTimeOffset.UtcNow, currentState, accepting,
                 queue.Busy, queue.WaitingCount, queue.WaitingCapacity, Interlocked.Read(ref completed), Environment.ProcessId,
-                Build, connected, 8, "fp32", Protocol.Qwen36Context, Protocol.MaxTokens, Volatile.Read(ref lastRequest)) };
+                Build, connected, 8, "fp32", advertisedContext, advertisedOutput, Volatile.Read(ref lastRequest)) };
         }
         app.MapGet("/v1/capabilities", () => Results.Json(Advertisement(), RpcJson.Default.WorkerRegistration));
         async Task Handle(InferenceRequest input, HttpContext context, bool streaming)
@@ -152,6 +157,8 @@ public static class SplitService
             if (error != null || input.Model != Protocol.Qwen36Model || input.Backend != "metal")
             { await Fail(context, 400, "invalid_request", error ?? "Only Qwen3.6 affine8 / metal, maxTokens within the model window is supported."); return; }
             if (!warmed) { await Fail(context, 503, "not_ready", "Model warming or CUDA peer unavailable."); return; }
+            if (dflash2Config is not null && Dflash2Limits.CheckOutput(input.MaxTokens, input.UseRemainingContext) is { } outputLimit)
+            { await Fail(context, 400, "dflash2_limit", outputLimit); return; }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, life.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(o.Number("deadline-seconds", 300, 1, 1800)));
             try
@@ -161,7 +168,9 @@ public static class SplitService
                 var ids = input.Messages is { } messages ? gpu!.Tokenize(messages, timeout.Token) : gpu!.Tokenize(input.Prompt, timeout.Token);
                 var maxTokens = input.UseRemainingContext ? Protocol.Qwen36Context - ids.Length : input.MaxTokens;
                 if (maxTokens < 1 || (long)ids.Length + maxTokens > Protocol.Qwen36Context) { await Fail(context, 400, "context_length", $"Prompt plus output exceeds the model's {Protocol.Qwen36Context}-token window; no silent truncation."); return; }
+                if (dflash2Config is not null && Dflash2Limits.Check(ids.Length, maxTokens) is { } limit) { await Fail(context, 400, "dflash2_limit", limit); return; }
                 var localPrefill = ids.Length <= shortPrefillLimit;
+                if (dflash2Config is not null && !localPrefill) { await Fail(context, 400, "dflash2_unsupported", "DFlash2 supports only fully local Metal prefill; no split fallback."); return; }
                 var executionPath = localPrefill ? "metal-local" : "cuda-metal-split";
                 Peer? peer = null;
                 var requestId = Guid.NewGuid();
@@ -185,11 +194,14 @@ public static class SplitService
                     PrefixAgentTiming? agentTiming = null;
                     long stateBytes = 0;
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
+                    using var metric = new WorkerMetricScope(new WorkerInferenceClock(requestId.ToString(), Build, ids.Length, executionPath, () => timer.Elapsed.TotalMilliseconds), timeout.Token);
                     var next = -1;
+                    using var dflash2Generation = dflash2Config is null ? null : gpu.StartDflash2(maxTokens, input.BenchmarkIgnoreEos, () => timer.Elapsed.TotalMilliseconds);
                     if (localPrefill)
                     {
                         var phase = Stopwatch.GetTimestamp();
-                        next = gpu.Prefill(ids, timeout.Token);
+                        if (dflash2Generation is not null) { dflash2Generation.Engine.Prefill(ids, timeout.Token); next = dflash2Generation.Engine.Anchor; }
+                        else next = gpu.Prefill(ids, timeout.Token);
                         suffixMs = Stopwatch.GetElapsedTime(phase).TotalMilliseconds;
                     }
                     else
@@ -247,7 +259,7 @@ public static class SplitService
                         agentTiming = PrefixAgentTiming.FromPayload(end.Data);
                         await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     }
-                    var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
+                    var prefillMs = timer.Elapsed.TotalMilliseconds; metric.Clock.PrefillDone(prefillMs); var first = 0d; var last = 0d; var output = new List<int>();
                     var otherMs = Math.Max(0, prefillMs - hiddenWaitMs - suffixMs - stateWaitMs - importMs);
                     PrefillStageMetrics? stages = localPrefill || agentTiming is not null
                         ? new(agentTiming?.ComputeMs ?? 0, agentTiming?.StateExportMs ?? 0,
@@ -256,11 +268,39 @@ public static class SplitService
                         : null;
                     var finish = "length"; var decoder = Encoding.UTF8.GetDecoder(); var windows = new List<DecodeWindow>();
                     if (streaming) { context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; }
+                    if (dflash2Generation is not null)
+                    {
+                        // Tokens in one validated block share a ready time; no intra-block spacing is invented.
+                        var engine = dflash2Generation.Engine;
+                        while (engine.TryNext(timeout.Token, out var block))
+                        {
+                            if (input.Profile && output.Count > 0 && block.Tokens.Length > 0)
+                            {
+                                var elapsed = block.ReadyMs - last;
+                                windows.Add(new(output.Count + 1, output.Count + block.Tokens.Length, engine.Committed, elapsed, elapsed > 0 ? block.Tokens.Length * 1000 / elapsed : 0));
+                            }
+                            last = block.ReadyMs; if (output.Count == 0) first = block.ReadyMs;
+                            if (block.Tokens.Length > 0) metric.Clock.Ready(block.Tokens.Length, block.ReadyMs);
+                            foreach (var emitted in block.Tokens)
+                            {
+                                output.Add(emitted);
+                                if (!streaming) continue;
+                                var bytes = gpu.Piece(emitted); var chars = new char[bytes.Length + 4];
+                                var length = decoder.GetChars(bytes, chars, false);
+                                await Event(context, "token", new ServiceEvent(new string(chars, 0, length), emitted, null, null, ids.Length), timeout.Token);
+                            }
+                        }
+                        finish = engine.Finish ?? "length";
+                        Console.Error.WriteLine($"DFLASH2_STATS request={requestId} " + engine.Stats.ToLogLine(engine.Block));
+                        Console.Error.WriteLine($"DFLASH2_EVIDENCE request={requestId} " + gpu.Dflash2Evidence().ToLogLine() + " " + MetalSplitSession.AllocatorTrace().ToLogLine());
+                    }
+                    else
                     for (var i = 0; i < maxTokens; i++)
                     {
                         timeout.Token.ThrowIfCancellationRequested();
                         if (gpu.IsEnd(next) && !input.BenchmarkIgnoreEos) { finish = "eos"; break; }
                         output.Add(next); last = timer.Elapsed.TotalMilliseconds; if (output.Count == 1) first = last;
+                        metric.Clock.Ready(1, last);
                         if (streaming)
                         {
                             var bytes = gpu.Piece(next); var chars = new char[bytes.Length + 4];
@@ -287,8 +327,10 @@ public static class SplitService
                     { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes, PrefillStages = stages };
                     var result = new InferenceResult(requestId.ToString(), registration.WorkerId, Protocol.Qwen36Model, "metal", gpu.Decode(output.ToArray()), [], false, timer.Elapsed.TotalMilliseconds,
                         output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart, executionPath);
+                    metric.FinishReason = finish;
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
+                    metric.Completed = true;
                     Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
                         timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
                     Interlocked.Increment(ref completed);
@@ -310,8 +352,17 @@ public static class SplitService
             {
                 var directory = o.Get("weights", "models/qwen3.6-35b-a3b-8bit-mlx");
                 await PinnedSplitModel.Verify(directory, life.Token);
+                if (dflash2Config is not null) MetalSplitSession.ConfigureAllocationTrace(true);
                 var scratchTokens = o.Number("metal-scratch-tokens", 512, 128, 512);
                 gpu = new MetalSplitSession(directory, 4, o.Get("metal-residency", "on") == "on", o.Number("residency-refresh-ms", 1000, 0, 60000), prefillScratchTokens: scratchTokens, fusedFp32Decode: SplitInference.FusedDecode(o));
+                if (dflash2Config is not null)
+                {
+                    gpu.EnableDflash2(dflash2Config.DraftDirectory, dflash2Config.Block, dflash2Config.Replay);
+                    // Stats().AllocatedBytes is the whole-device currentAllocatedSize and already includes the attached draft; the draft payload is a breakdown, never added again.
+                    var allocated = gpu.Stats().AllocatedBytes; var draftLogical = gpu.Dflash2State().AllocatedBytes;
+                    Console.WriteLine($"DFLASH2_LOADED block={dflash2Config.Block} allocatedBytes={allocated} draftLogicalBytes={draftLogical} budgetBytes={Dflash2HostConfig.AllocationBudgetBytes}");
+                    if (allocated > Dflash2HostConfig.AllocationBudgetBytes) throw new InvalidOperationException("DFlash2 allocation exceeds the 38.5 GiB budget.");
+                }
                 var nativeProfile = gpu.ExecutionProfile();
                 Console.WriteLine($"METAL_NATIVE_PROFILE {nativeProfile}");
                 if (nativeProfile.KvElementBytes != 4 || nativeProfile.Bf16Gemm || nativeProfile.ScratchTokens != scratchTokens)
@@ -319,6 +370,14 @@ public static class SplitService
                 state = "Warming"; var warm = gpu.Tokenize("用一句话介绍你自己。", life.Token); gpu.Reset(2048);
                 var next = gpu.Reference(warm, life.Token, new float[248320], null);
                 for (var i = 0; i < 32; i++) { life.Token.ThrowIfCancellationRequested(); next = gpu.Forward(next, warm.Length + i); }
+                if (dflash2Config is not null)
+                {
+                    // Real DFlash2 warmup: bootstrap, drafting, verification and rollback execute before readiness.
+                    gpu.Reset(2048);
+                    using var generation = gpu.StartDflash2(32, true, () => Stopwatch.GetTimestamp() * 1000.0 / Stopwatch.Frequency);
+                    generation.Engine.Prefill(warm, life.Token);
+                    while (generation.Engine.TryNext(life.Token, out _)) { }
+                }
                 gpu.Reset(2048); warmed = true; state = "Ready"; listener.Start(1);
                 Console.WriteLine($"MAC Ready pid={Environment.ProcessId} build={Build} kv=fp32 modelWindow={Protocol.Qwen36Context}");
                 while (!life.IsCancellationRequested)
@@ -364,6 +423,17 @@ public static class SplitService
     {
         await c.Response.WriteAsync("event: " + name + "\ndata: " + JsonSerializer.Serialize(data, ServiceJson.Default.ServiceEvent) + "\n\n", ct);
         await c.Response.Body.FlushAsync(ct);
+    }
+    private sealed class WorkerMetricScope(WorkerInferenceClock clock, CancellationToken cancellation) : IDisposable
+    {
+        public WorkerInferenceClock Clock => clock;
+        public bool Completed { get; set; }
+        public string? FinishReason { get; set; }
+        public void Dispose()
+        {
+            var outcome = Completed ? "completed" : cancellation.IsCancellationRequested ? "cancelled" : "failed";
+            Console.Error.WriteLine("INFERENCE_METRIC " + JsonSerializer.Serialize(clock.Snapshot(outcome, FinishReason), RpcJson.Default.WorkerInferenceMetric));
+        }
     }
     private static async Task Fail(HttpContext c, int status, string code, string message)
     {

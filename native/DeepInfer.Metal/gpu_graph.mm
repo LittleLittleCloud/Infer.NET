@@ -1,6 +1,7 @@
 // Original fixed-geometry Qwen3.6 GPU executor. One submitted command buffer per
 // token; tensors, convolution history, recurrent state and KV remain on device.
 #include <array>
+#include <atomic>
 static NSString *graph_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
@@ -223,8 +224,13 @@ struct GLayer {
     id<MTLBuffer> parameters,history,state,keys,values;
     bool linear=false,loaded=false;
 };
+struct GTargetBlock;
+static void g_block_destroy(GTargetBlock *b);
 struct GPrefill;
 static void g_prefill_destroy(GPrefill *p);
+struct GSnapshotStore;
+static void g_snapshot_destroy(GSnapshotStore *s);
+static uint64_t g_next_graph_identity(){static std::atomic<uint64_t> next{1};return next.fetch_add(1);}
 struct GModel {
     QContext compute;
     std::array<id<MTLComputePipelineState>,GPCount> ps;
@@ -251,8 +257,18 @@ struct GModel {
     id<MTLBuffer> argValues,argIds,nextToken;
     bool concurrent=true,kvBf16=false;
     GPrefill *prefill=nullptr;
-    ~GModel(){g_prefill_destroy(prefill);}
+    // Draft taps are allocated only when DFlash2 is explicitly enabled.
+    id<MTLBuffer> tapBuffer;id<MTLComputePipelineState> tapPipeline;uint32_t tapRows=0,tapValidRows=0,tapBasePosition=0;
+    bool tapsEnabled=false,scalarTapAppend=false;uint32_t scalarTapRow=0;
+    GSnapshotStore *snapshots=nullptr;
+    uint64_t instanceId=g_next_graph_identity(),epoch=1;
+    GTargetBlock *block=nullptr;
+    bool blockPending=false,blockFaulted=false;
+    ~GModel(){g_block_destroy(block);g_prefill_destroy(prefill);g_snapshot_destroy(snapshots);}
+
 };
+static int dflash_tap_slot(int layer);
+static void g_scalar_tap(GModel *g,id<MTLComputeCommandEncoder> e,int layer);
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer);
 static bool g_profiling(GModel *g){return g->counters&&g->position==32;}
 static void g_profile_begin(GModel *g,id<MTLComputeCommandEncoder> e,int tag){
@@ -261,8 +277,8 @@ static void g_profile_begin(GModel *g,id<MTLComputeCommandEncoder> e,int tag){
 static void g_profile_end(GModel *g,id<MTLComputeCommandEncoder> e){
     if(g_profiling(g)&&g->profileCount<g->profileTags.size()){[e sampleCountersInBuffer:g->counters atSampleIndex:g->profileCount*2+1 withBarrier:YES];g->profileCount++;}
 }
-static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){return [g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];}
-static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){return [g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];}
+static id<MTLBuffer> g_buffer(GModel *g,NSUInteger floats){auto b=[g->compute.device newBufferWithLength:floats*4 options:MTLResourceStorageModeShared];q_trace_alloc(g->compute.device);return b;}
+static id<MTLBuffer> g_kv_buffer(GModel *g,NSUInteger elements){auto b=[g->compute.device newBufferWithLength:elements*(g->kvBf16?2:4) options:MTLResourceStorageModeShared];q_trace_alloc(g->compute.device);return b;}
 static NSString *g_kv_source(GModel *g){return g->kvBf16?[@"#define DEEPINFER_KV_BF16\n" stringByAppendingString:graph_source]:graph_source;}
 static void g_bind(id<MTLComputeCommandEncoder> e,id<MTLBuffer> b,int index,NSUInteger offset=0){[e setBuffer:b offset:offset atIndex:index];}
 static void g_run(GModel *g,id<MTLComputeCommandEncoder> e,int pipeline,int groups,int threads){
@@ -272,6 +288,13 @@ static void g_run(GModel *g,id<MTLComputeCommandEncoder> e,int pipeline,int grou
     g_profile_end(g,e);
 }
 static void g_barrier(id<MTLComputeCommandEncoder> e){[e memoryBarrierWithScope:MTLBarrierScopeBuffers];}
+static void g_scalar_tap(GModel *g,id<MTLComputeCommandEncoder> e,int layer){
+    int slot=dflash_tap_slot(layer);if(slot<0)return;
+    uint32_t params[2]={1u,uint32_t(slot)};[e setComputePipelineState:g->tapPipeline];
+    g_bind(e,g->x,0);g_bind(e,g->tapBuffer,1,NSUInteger(g->scalarTapAppend?g->scalarTapRow:0)*16384*4);
+    [e setBytes:params length:sizeof(params) atIndex:2];
+    [e dispatchThreads:MTLSizeMake(2048,1,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];g->dispatches++;g_barrier(e);
+}
 static void g_long_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuffer> scores,id<MTLBuffer> values,
     id<MTLBuffer> raw,id<MTLBuffer> out,uint32_t count,uint32_t offset=0) {
     AttentionShape shape{g->position+offset,count,g->capacity,(g->position+offset+count+1023)/1024};
@@ -388,17 +411,20 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 }
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
+    g->blockPending=false;g->blockFaulted=false;
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
-    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
+    g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);g->tapValidRows=0;g->epoch++;return 0;
 }
 int di_graph_forward(void *graph,int token,int position,int classifier,float *logits,float *trace,int *nextToken,int *dispatches,double *ms,char *error,int capacity){
     @autoreleasepool {
         if(!graph||token<0||token>=248320||position<0||position>=262144||!nextToken) {error_text(error,capacity,@"Invalid graph input");return -1;}
         auto *g=static_cast<GModel*>(graph);
+        if(g->blockPending||g->blockFaulted){error_text(error,capacity,@"Commit/abort target block or reset faulted graph before decode");return -1;}
         if(g->splitMissing){error_text(error,capacity,@"Split prefix state is incomplete");return -1;}
         if((uint32_t)position>=g->capacity){error_text(error,capacity,@"Reserve graph context before execution");return -1;}
         if((uint32_t)position!=g->position){error_text(error,capacity,@"Graph token positions must be contiguous; reset between requests");return -1;}
         if(g->forcedRoutes&&(uint32_t)position>=g->forcedPositions){error_text(error,capacity,@"Diagnostic route sequence exhausted");return -1;}
+        if(g->tapsEnabled)g->tapValidRows=0;
         g->dispatches=0;g->profileCount=0;GStep s{(uint32_t)position,0,(uint32_t)(trace!=nullptr),g->epsilon,g->theta,g->capacity};
         auto command=[g->compute.queue commandBuffer];auto e=[command computeCommandEncoderWithDispatchType:g->concurrent?MTLDispatchTypeConcurrent:MTLDispatchTypeSerial];
         if(!command||!e){error_text(error,capacity,@"Cannot create graph encoder");return -1;}
@@ -442,6 +468,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
             g_run(g,e,GAddNorm,1,256);g_barrier(e);
             // The next input norm is at offset zero; final layer uses the final norm.
             g_router(g,e,l,s,index==39?g->finalNorm:g->layers[index+1].parameters);
+            if(g->tapsEnabled)g_scalar_tap(g,e,index);
         }
         if(classifier){g_gemv(g,e,g->classifier,g->norm,g->logits);g_barrier(e);
             g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);
@@ -461,6 +488,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
                 fprintf(stderr,"GPU_TIMESTAMP_PROFILE position=32 ");for(int i=0;i<GPCount+7;i++)fprintf(stderr,"%d:%llu ",i,(unsigned long long)totals[i]);fprintf(stderr,"\n");
             }
         }
+        if(g->tapsEnabled&&!g->scalarTapAppend){g->tapBasePosition=g->position;g->tapValidRows=1;}
         *dispatches=g->dispatches;g->position++;return 0;
     }
 }

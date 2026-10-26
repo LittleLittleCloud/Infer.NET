@@ -2,6 +2,25 @@
 // No MLX, ggml or other inference library is linked or invoked.
 #include <cstdlib>
 #include "residency.mm"
+#include <atomic>
+// Candidate-only allocator trace (DEEPINFER_METAL_ALLOC_TRACE=1). Samples MTLDevice.currentAllocatedSize
+// immediately after each tracked buffer allocation (so old+new buffers during KV/scratch growth are both
+// visible) and at every command-buffer submission. It is NOT a continuous sampler and is not comparable
+// with di_graph_stats allocatedBytes, which is a single point-in-time read. When disabled it is one
+// predictable branch per allocation and adds no GPU buffers.
+struct QAllocTrace {
+    bool on=false; bool read=false;
+    std::atomic<uint64_t> peak{0},current{0},samples{0},allocations{0},growthTransitions{0},submissions{0},overBudgetSubmissions{0},submissionPeak{0},residencyBytesMax{0},budget{0},residencyBudget{0};
+};
+static QAllocTrace &q_trace(){static QAllocTrace t;if(!t.read){const char *e=std::getenv("DEEPINFER_METAL_ALLOC_TRACE");t.on=e&&e[0]=='1'&&e[1]==0;t.read=true;}return t;}
+static void q_trace_alloc(id<MTLDevice> d){
+    QAllocTrace &t=q_trace();if(!t.on||!d)return;
+    uint64_t now=d.currentAllocatedSize,old=t.peak.load();
+    t.allocations++;t.samples++;t.current=now;
+    while(now>old&&!t.peak.compare_exchange_weak(old,now));
+    if(now>old)t.growthTransitions++;
+}
+extern "C" void di_alloc_trace_enable(int enabled){auto &t=q_trace();t.on=enabled!=0;t.read=true;}
 struct QContext {
     id<MTLDevice> device;
     id<MTLCommandQueue> queue;
@@ -214,6 +233,17 @@ kernel void delta_step(device float *state [[buffer(0)]],
 )metal";
 static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, int capacity) {
     auto started=std::chrono::steady_clock::now();
+    {
+        QAllocTrace &t=q_trace();
+        if(t.on){
+            id<MTLDevice> d=command.device;uint64_t now=d.currentAllocatedSize,limit=d.recommendedMaxWorkingSetSize;
+            t.submissions++;t.samples++;t.current=now;
+            uint64_t old=t.peak.load();while(now>old&&!t.peak.compare_exchange_weak(old,now));
+            old=t.submissionPeak.load();while(now>old&&!t.submissionPeak.compare_exchange_weak(old,now));
+            t.budget=limit;
+            if(now>limit)t.overBudgetSubmissions++;
+        }
+    }
     [command commit];auto committed=std::chrono::steady_clock::now();
     [command waitUntilCompleted];auto completed=std::chrono::steady_clock::now();
     double wall=std::chrono::duration<double,std::milli>(completed-started).count();
@@ -297,7 +327,7 @@ void *di_quant_matrix_create(void *ctx,int experts,int rows,int columns,int bits
             error_text(error,capacity,@"Unsupported quantized matrix shape");return nullptr;
         }
         auto *c=static_cast<QContext*>(ctx);
-        auto buffer=[&](NSUInteger bytes){return [c->device newBufferWithLength:bytes options:MTLResourceStorageModeShared];};
+        auto buffer=[&](NSUInteger bytes){auto b=[c->device newBufferWithLength:bytes options:MTLResourceStorageModeShared];q_trace_alloc(c->device);return b;};
         QMatrix *m=new QMatrix{buffer((NSUInteger)experts*rows*columns*bits/8),
             buffer((NSUInteger)experts*rows*(columns/group)*2),buffer((NSUInteger)experts*rows*(columns/group)*2),
             buffer((NSUInteger)columns*8*4),buffer((NSUInteger)rows*8*4),
@@ -423,3 +453,7 @@ int di_delta_step(void *ctx,void *state,const float *q,const float *k,const floa
 }
 #include "gpu_graph.mm"
 #include "gpu_prefill.mm"
+#include "gpu_verify.mm"
+#include "graph_snapshot.mm"
+#include "gpu_dflash.mm"
+#include "target_block.mm"
