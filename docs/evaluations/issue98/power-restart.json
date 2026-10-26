@@ -1,0 +1,15 @@
+{
+  "runId": "e2e-20261026T201255Z",
+  "status": "in-progress",
+  "utc": "2026-10-26T20:12Z",
+  "adapterWatts": 140,
+  "restartStateOfCharge": 14,
+  "systemSettingsEnergyModeControls": [
+    "High Power",
+    "High Power"
+  ],
+  "systemProfilerModeFieldsConflict": true,
+  "settingsChangedByAgent": false,
+  "allFiveShapesAndFourArmsRepeated": true,
+  "knownDraftNumericalFailureWaived": false
+}
