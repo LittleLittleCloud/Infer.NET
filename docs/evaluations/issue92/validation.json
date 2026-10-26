@@ -1,0 +1,47 @@
+{
+  "native": {
+    "initialAndConfirmKernelCohortsPassed": true,
+    "finalShaderValidationComparisons": 320,
+    "existingGraphHardwareCasesPerCohort": 60,
+    "finalCheckDriverCompilation": "passed",
+    "productKernelsIdenticalToMeasuredRevision": true
+  },
+  "managed": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "homepagePython": {
+    "passed": 26
+  },
+  "homepageOfflineDom": {
+    "passed": 27,
+    "layout": "Not tested by this offline DOM harness"
+  },
+  "piHarnessOffline": {
+    "tests": 14,
+    "skipped": 2,
+    "result": "OK"
+  },
+  "siteBuild": "passed",
+  "fixedEvidenceReconciliation": {
+    "requests": 24,
+    "formal": 18,
+    "result": "passed"
+  },
+  "pilotMetricReconciliation": {
+    "main": {
+      "requests": 15,
+      "coverageComplete": true,
+      "officialPass": 5
+    },
+    "candidate": {
+      "requests": 17,
+      "coverageComplete": true,
+      "officialPass": 5
+    }
+  },
+  "whitespace": "passed",
+  "productionRestorationAndRealSplitRequest": "passed",
+  "continuousPhysicalResidencyPeak": "Not Obtained"
+}

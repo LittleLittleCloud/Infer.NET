@@ -1,0 +1,2254 @@
+{
+  "status": {
+    "exitCode": 0,
+    "driverSha256": "2ae61588e18535404c84f2e8de38010086162cd5ca4f8bf2ad39c0c2d690f333",
+    "shaderValidation": true,
+    "graphOutputsResetBeforeDispatch": true,
+    "comparisons": 320,
+    "maxRelativeL2": 1.65173082294e-06,
+    "maxAbs": 0.000125885009766,
+    "comparisonsPass": true
+  },
+  "rows": [
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 1.24555444571e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 1.24555444571e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 4.46885612149e-08,
+      "maxAbs": 5.82076609135e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 4.46885612149e-08,
+      "maxAbs": 5.82076609135e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 5.83294768178e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 5.83294768178e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 1.61938244489e-07,
+      "maxAbs": 3.81469726562e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 1.61938244489e-07,
+      "maxAbs": 3.81469726562e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 1.22205928683e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 1.22205928683e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 5.63117012519e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 5.63117012519e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 5.09068967123e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 5.09068967123e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 1.73671590943e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 1.73671590943e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 3.60272845165e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 3.60272845165e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 5.07000094752e-08,
+      "maxAbs": 2.32830643654e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 5.07000094752e-08,
+      "maxAbs": 2.32830643654e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 4.34368338286e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 4.34368338286e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 2.55899263345e-07,
+      "maxAbs": 3.0517578125e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 2.55899263345e-07,
+      "maxAbs": 3.0517578125e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 3.30731714875e-07,
+      "maxAbs": 6.67572021484e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 3.30731714875e-07,
+      "maxAbs": 6.67572021484e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 6.44399269586e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 6.44399269586e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 4.66168218736e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 4.66168218736e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 2.65036592675e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 2.65036592675e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 6.34387709798e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 6.34387709798e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 4.07608828894e-08,
+      "maxAbs": 7.62939453125e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 4.07608828894e-08,
+      "maxAbs": 7.62939453125e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 0,
+      "relativeL2": 1.65173082294e-06,
+      "maxAbs": 0.000110626220703
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 0,
+      "relativeL2": 1.65173082294e-06,
+      "maxAbs": 0.000110626220703
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 7.43721513979e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 7.43721513979e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 0,
+      "relativeL2": 4.69354279044e-07,
+      "maxAbs": 1.04904174805e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 0,
+      "relativeL2": 4.69354279044e-07,
+      "maxAbs": 1.04904174805e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 1.29580936969e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 1.29580936969e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 1.77481656645e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 1.77481656645e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 1.23258902672e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 1.23258902672e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 1.84148082244e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 1.84148082244e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 3.7740709304e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 3.7740709304e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 4.14362319356e-08,
+      "maxAbs": 3.49245965481e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 4.14362319356e-08,
+      "maxAbs": 3.49245965481e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 2.68143444572e-07,
+      "maxAbs": 3.43322753906e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 2.68143444572e-07,
+      "maxAbs": 3.43322753906e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 3.44555248247e-07,
+      "maxAbs": 6.67572021484e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 3.44555248247e-07,
+      "maxAbs": 6.67572021484e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 4.92264803661e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 4.92264803661e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 2.75474709018e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 2.75474709018e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 6.45344866392e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 6.45344866392e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 4,
+      "relativeL2": 1.60131318302e-06,
+      "maxAbs": 0.000125885009766
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 4,
+      "relativeL2": 1.60131318302e-06,
+      "maxAbs": 0.000125885009766
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 7.54359931396e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 7.54359931396e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 4,
+      "relativeL2": 4.8440677561e-07,
+      "maxAbs": 1.14440917969e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 4,
+      "relativeL2": 4.8440677561e-07,
+      "maxAbs": 1.14440917969e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 1.25548416916e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 1.25548416916e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 1.63225018564e-07,
+      "maxAbs": 3.81469726562e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 1.63225018564e-07,
+      "maxAbs": 3.81469726562e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 1.21862868758e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 1.21862868758e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 1.78468060247e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 1.78468060247e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 3.56802954619e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 3.56802954619e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 4.14362319356e-08,
+      "maxAbs": 3.49245965481e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 4.14362319356e-08,
+      "maxAbs": 3.49245965481e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 2.52510229921e-07,
+      "maxAbs": 3.43322753906e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 2.52510229921e-07,
+      "maxAbs": 3.43322753906e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 1.15086293674e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 3.26206795204e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 3.26206795204e-07,
+      "maxAbs": 5.72204589844e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 4.92264803661e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 4.92264803661e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 2.62717456387e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 2.62717456387e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 6.33165772149e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 6.33165772149e-07,
+      "maxAbs": 6.70552253723e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 8,
+      "relativeL2": 1.54707131017e-06,
+      "maxAbs": 0.000118255615234
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 8,
+      "relativeL2": 1.54707131017e-06,
+      "maxAbs": 0.000118255615234
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 7.50360351295e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 7.50360351295e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 8,
+      "relativeL2": 4.64539531538e-07,
+      "maxAbs": 1.04904174805e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 8,
+      "relativeL2": 4.64539531538e-07,
+      "maxAbs": 1.04904174805e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 1.21178356337e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 1.21178356337e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 2.48326594034e-08,
+      "maxAbs": 4.36557456851e-11
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 4.92771391863e-08,
+      "maxAbs": 1.19209289551e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 1.58694932461e-07,
+      "maxAbs": 2.86102294922e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 1.58694932461e-07,
+      "maxAbs": 2.86102294922e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 1.19604150185e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 1.19604150185e-07,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 4.06348128948e-08,
+      "maxAbs": 1.16415321827e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 2.52050430242e-08,
+      "maxAbs": 5.96046447754e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 1.74261393256e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 1.74261393256e-07,
+      "maxAbs": 4.76837158203e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 1.78169689648e-08,
+      "maxAbs": 7.45058059692e-09
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 1.78169689648e-08,
+      "maxAbs": 7.45058059692e-09
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 3.55962396076e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 3.55962396076e-07,
+      "maxAbs": 9.05990600586e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 6.59056453897e-08,
+      "maxAbs": 4.65661287308e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 6.59056453897e-08,
+      "maxAbs": 4.65661287308e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 3.37147583548e-08,
+      "maxAbs": 4.76837158203e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 2.54312422303e-07,
+      "maxAbs": 3.0517578125e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 2.54312422303e-07,
+      "maxAbs": 3.0517578125e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 1.72629440511e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 1.72629440511e-08,
+      "maxAbs": 1.49011611938e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 3.26090427127e-07,
+      "maxAbs": 6.19888305664e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 3.26090427127e-07,
+      "maxAbs": 6.19888305664e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 5.8002544908e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 5.8002544908e-08,
+      "maxAbs": 6.98491930962e-10
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 3.5586662058e-08,
+      "maxAbs": 7.15255737305e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 2.64857468231e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 2.64857468231e-07,
+      "maxAbs": 4.19616699219e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 6.43097945465e-07,
+      "maxAbs": 6.14672899246e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 6.43097945465e-07,
+      "maxAbs": 6.14672899246e-08
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 1.25525728241e-08,
+      "maxAbs": 1.90734863281e-06
+    },
+    {
+      "kind": "oracle",
+      "label": "gate-up",
+      "lanes": 16,
+      "relativeL2": 1.52817586121e-06,
+      "maxAbs": 0.000118255615234
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-gate-up",
+      "lanes": 16,
+      "relativeL2": 1.52817586121e-06,
+      "maxAbs": 0.000118255615234
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 7.8555295903e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 7.8555295903e-08,
+      "maxAbs": 1.04308128357e-07
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 0,
+      "maxAbs": 0
+    },
+    {
+      "kind": "oracle",
+      "label": "down",
+      "lanes": 16,
+      "relativeL2": 4.59656101936e-07,
+      "maxAbs": 1.04904174805e-05
+    },
+    {
+      "kind": "oracle",
+      "label": "graph-down",
+      "lanes": 16,
+      "relativeL2": 4.59656101936e-07,
+      "maxAbs": 1.04904174805e-05
+    }
+  ]
+}

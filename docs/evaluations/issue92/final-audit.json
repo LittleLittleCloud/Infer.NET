@@ -1,0 +1,42 @@
+{
+  "health": {
+    "state": "Ready",
+    "ready": true,
+    "pid": 73963,
+    "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+    "weightBits": 8,
+    "kv": "fp32"
+  },
+  "samePidAcrossRealRequest": true,
+  "sameTokenIds": true,
+  "executionPath": "cuda-metal-split",
+  "productionHashesUnchanged": {
+    "plist": true,
+    "binary": true,
+    "native": true,
+    "configuration": true
+  },
+  "readySucceeded": true,
+  "registeredWorkers": 1,
+  "healthyRegisteredWorkers": 1,
+  "experimentalPortsListening": {
+    "5270": false,
+    "5280": false,
+    "5281": false,
+    "5282": false,
+    "5290": false,
+    "5291": false,
+    "5292": false
+  },
+  "exactlyOneModelWorker": true,
+  "wiredLimitMb": "0",
+  "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=22872163)\t75%; AC attached; not charging present: true\n",
+  "powerConfiguration": "Battery Power:\n Sleep On Power Button 1\n powermode            2\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n powermode            2\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         60\n womp                 1\n networkoversleep     0\n sleep                1\n tcpkeepalive         1\n disksleep            10\n",
+  "launchAgentState": "running",
+  "physicalMemoryBytes": 51539607552,
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83\n",
+  "sdk": "27.0",
+  "vmAfterAudit": "Mach Virtual Memory Statistics: (page size of 16384 bytes)\nPages free:                                    12634.\nPages active:                                 280489.\nPages inactive:                               279057.\nPages speculative:                               889.\nPages throttled:                                   0.\nPages wired down:                            2485688.\nPages purgeable:                                6477.\n\"Translation faults\":                     9512690815.\nPages copy-on-write:                       526100007.\nPages zero filled:                        9055827519.\nPages reactivated:                         753984160.\nPages purged:                              147602576.\nFile-backed pages:                            174058.\nAnonymous pages:                              386377.\nPages stored in compressor:                  1881347.\nPages occupied by compressor:                  13547.\nDecompressions:                           1620252549.\nCompressions:                             1755164377.\nPageins:                                  1265548488.\nPageouts:                                    1122371.\nSwapins:                                   129847375.\nSwapouts:                                  140985358.\nPages tagged:                                 137601.\nPages tagged resident:                         98729.\nPages tagged compressed:                       38872.\nPages tag-storage:                             98304.\nPages tag-storage holding tags:                 6190.\nPages tag-storage free:                        11701.\nPages tag-storage non-tag pageable:            80405.\nPages tag-storage non-tag wired:                   8.\nBytes of compressed tags:                    7011904.\nTagged compressions:                        23582389.\nTagged decompressions:                      22435459.\n",
+  "currentSwapUsage": "vm.swapusage: total = 16384.00M  used = 15276.00M  free = 1108.00M  (encrypted)\n"
+}

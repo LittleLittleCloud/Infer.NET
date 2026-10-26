@@ -1,5 +1,23 @@
 [
   {
+    "id": "metal-moe-small-row-20261025",
+    "title": "Metal routed expert small-row specialization",
+    "kind": "2026-10-25 · Negative result · Candidate unadopted",
+    "source": "docs/EXPERIMENT-92-METAL-MOE-RESULTS-20261025.md",
+    "question": "Can smaller lane groups improve single-token affine8 routed experts on M5?",
+    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; Mac-only, unchanged FP32 operands and affine8/group64 weights.",
+    "change": "Opt-in 4/8/16 lanes per output, inspired by Splash small-live-row specialization; original kernel remains default.",
+    "result": "Fixed short/8K/32K decode changes -8.54/-7.49/-8.08%. Fixed5 main/candidate 67.890/62.534 tok/s; official5/5 each, complete15/15 and17/17 request clocks.",
+    "validation": "Independent FP32 checks, final shader-validation graph checks, and fixed token identity pass. Loading/switching swap and missing physical peaks remain disclosed.",
+    "conclusion": "Retain original kernels. Smaller lane groups with the original weight layout do not provide a gain.",
+    "next": "Review independent results PR94 and unadopted code PR93; no merge, baseline/default change or formal20/128K acceptance.",
+    "commands": [
+      "bash scripts/check-metal-expert-decode.sh",
+      "bash scripts/check-metal-expert-decode.sh --timing"
+    ],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/92; code PR https://github.com/LittleLittleCloud/Infer.NET/pull/93."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",

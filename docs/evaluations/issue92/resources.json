@@ -1,0 +1,58 @@
+{
+  "fixed": {
+    "completedRequests": 24,
+    "formalRequests": 18,
+    "maxCompletedMetalAllocationBytes": 38526271488,
+    "maxFormalNewSwapoutBytes": 0,
+    "warmupSwapoutBytes": [
+      0,
+      0,
+      0,
+      0,
+      114884608,
+      222396416
+    ],
+    "allocationAndSteadySwapChecksPass": true
+  },
+  "monitors": {
+    "issue92-fixed-20261025": {
+      "samples": 1535,
+      "firstUtc": "2026-10-26T02:10:30.744924+00:00",
+      "lastUtc": "2026-10-26T02:36:24.359689+00:00",
+      "observedWholeMachineSwapoutBytes": 21056159744,
+      "maxObservedWorkerRssKiB": 16871888,
+      "sampling": "Approximately1Hz; first sample follows thread startup; stops before final restoration. Omits subsecond/transient peaks and cannot establish complete whole-experiment loading swap."
+    },
+    "issue92-pilot-20261025": {
+      "samples": 465,
+      "firstUtc": "2026-10-26T02:37:10.802715+00:00",
+      "lastUtc": "2026-10-26T02:45:01.186913+00:00",
+      "observedWholeMachineSwapoutBytes": 9992306688,
+      "maxObservedWorkerRssKiB": 17993056,
+      "sampling": "Approximately1Hz; first sample follows thread startup; stops before final restoration. Omits subsecond/transient peaks and cannot establish complete whole-experiment loading swap."
+    }
+  },
+  "pilot": {
+    "main": {
+      "loadingSwapoutBytes": 2591752192,
+      "excludedWarmupSwapoutBytes": 0,
+      "postWarmupThroughCohortSwapoutBytes": 0,
+      "boundNote": "Includes observer startup before the Pi cohort; bounds every steady request if below512MiB, and proves all are zero if this interval is zero.",
+      "maxCompletedMetalAllocationBytes": 37202608128,
+      "memoryPressureRaw": "The system has 51539607552 (3145728 pages with a page size of 16384).\nSystem-wide memory free percentage: 17%\n",
+      "thermalRaw": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+    },
+    "candidate": {
+      "loadingSwapoutBytes": 7400554496,
+      "excludedWarmupSwapoutBytes": 0,
+      "postWarmupThroughCohortSwapoutBytes": 0,
+      "boundNote": "Includes observer startup before the Pi cohort; bounds every steady request if below512MiB, and proves all are zero if this interval is zero.",
+      "maxCompletedMetalAllocationBytes": 37202608128,
+      "memoryPressureRaw": "The system has 51539607552 (3145728 pages with a page size of 16384).\nSystem-wide memory free percentage: 17%\n",
+      "thermalRaw": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+    }
+  },
+  "continuousMetalDriverPhysicalResidencyPeak": "Not Obtained",
+  "perSubmissionPhysicalResidencyPeak": "Not Obtained",
+  "interpretation": "Swap-out is cumulative whole-machine traffic, not current swap usage or a per-process attribution. Loading/switching intervals are separate from steady requests. RSS samples do not measure complete Metal physical residency or footprint."
+}

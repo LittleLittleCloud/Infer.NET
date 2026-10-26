@@ -1,0 +1,7572 @@
+{
+  "runs": [
+    {
+      "runId": "issue92-kernel-20261025",
+      "sourceSha": "3f248ef02da3906006ddaf6847233c2ba558ca73",
+      "order": [
+        0,
+        4,
+        8,
+        16
+      ],
+      "device": "Apple M5 Pro, 20-core GPU",
+      "oracleCases": 320,
+      "oracleMaxRelativeL2": 6.41737268521e-08,
+      "oracleMaxAbs": 3.81469726562e-06,
+      "oraclePass": true,
+      "oracleRows": [
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.99206610565e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.99206610565e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 3.49227160069e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 3.49227160069e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.73695410209e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.73695410209e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 6.1848942239e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 6.1848942239e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.48086117655e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.48086117655e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.40601596993e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.40601596993e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.63220168536e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.63220168536e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.46428316358e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.46428316358e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.05996085916e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.05996085916e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 6.41737268521e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 6.41737268521e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.85301495868e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.85301495868e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.98575438192e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.98575438192e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.87171939735e-08,
+          "maxAbs": 7.45058059692e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.87171939735e-08,
+          "maxAbs": 7.45058059692e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 3.69333625008e-08,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 3.69333625008e-08,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.29358219808e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.29358219808e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.34981849458e-08,
+          "maxAbs": 2.91038304567e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.98448036646e-08,
+          "maxAbs": 2.98023223877e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 4.48359480487e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 4.34739510108e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.57320519241e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.67236545231e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.47509804046e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.4739921136e-08,
+          "maxAbs": 2.38418579102e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.77344235455e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.905953341e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.99625669011e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.95306956852e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.10241595183e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.31936563481e-08,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.24527518168e-08,
+          "maxAbs": 3.72529029846e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        }
+      ],
+      "timingRows": [
+        {
+          "kind": "device",
+          "lanes": 0,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 7.21004186
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 3.64074996
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 3.35700018
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.35587498
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.34904187
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.49508349
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.34983303
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.34966679
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.35175015
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 3.97016667
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 4.01537493
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 4.01500007
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 3.98700032
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 4.00325004
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 4.00204165
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 4.00912529
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 3.98875028
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 3.98883363
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.26100006
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.26012508
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.45799993
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.26387505
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.25941634
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.32495817
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.25887524
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.35699986
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.26012508
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.07287539
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.12200033
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.06524972
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.14558374
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.11745827
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.10175011
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.14837492
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.0643333
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.15025013
+        },
+        {
+          "kind": "device",
+          "lanes": 4,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.73224991
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.57304171
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.56941654
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.64983345
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.56700022
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.58279173
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.70750001
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.57870834
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.57349992
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.27899992
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.30925021
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.33129182
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.33379195
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.33437496
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.37887495
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.32100024
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.32087497
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.38258348
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.28574995
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.34199997
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.28970854
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.33900018
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.41300028
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.33120827
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.45662529
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.41587481
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.33462483
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.78487522
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.46733334
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.60712486
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.47012498
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.46587489
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.48262472
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.74779182
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.46400014
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.46062502
+        },
+        {
+          "kind": "device",
+          "lanes": 8,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.77383346
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.80629192
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.6037083
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.61712493
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.76645832
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.60958308
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.6219585
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.66900007
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.59641651
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.33975009
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.33412537
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.33158332
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.37016662
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.40900044
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.39199961
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.35916677
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.35687525
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.34408307
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 4.71862499
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 3.63679137
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.06079148
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.03799969
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.78637542
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.59383332
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.73258362
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.66600011
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.25912484
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.33679172
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.30787508
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.30087526
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.31137499
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.30062474
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.30787508
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.29795836
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.29575019
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.29712483
+        },
+        {
+          "kind": "device",
+          "lanes": 16,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.79533304
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.86849961
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.83712475
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.91112484
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.8403746
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.7767499
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.74916645
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.7532503
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.72350013
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.35762543
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.45341661
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.42762503
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.34237502
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.35824988
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.25770849
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.29737491
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.3631668
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.27754147
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.40045863
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.44475
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.3956246
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.49687519
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.39900018
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.4660419
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.39662484
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.53537514
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.39708305
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.39387481
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.24783365
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.26891646
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.2512502
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.32545845
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.26916699
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.23191641
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.34204158
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.24412512
+        }
+      ],
+      "summary": [
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 36.74609609375,
+          "meanMicrosecondsPerDispatch": 39.304130558035716,
+          "minimumMicrosecondsPerDispatch": 36.70377921875,
+          "maximumMicrosecondsPerDispatch": 52.4531278125,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 62.531900781249995,
+          "meanMicrosecondsPerDispatch": 62.48661,
+          "minimumMicrosecondsPerDispatch": 62.29688,
+          "maximumMicrosecondsPerDispatch": 62.73437609375,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 19.74804765625,
+          "meanMicrosecondsPerDispatch": 20.496093013392855,
+          "minimumMicrosecondsPerDispatch": 19.669925625,
+          "maximumMicrosecondsPerDispatch": 22.78124890625,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 33.08528546875,
+          "meanMicrosecondsPerDispatch": 33.02008970982143,
+          "minimumMicrosecondsPerDispatch": 32.2552078125,
+          "maximumMicrosecondsPerDispatch": 33.59765828125,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 40.2923178125,
+          "meanMicrosecondsPerDispatch": 40.68917457589286,
+          "minimumMicrosecondsPerDispatch": 40.109378437500006,
+          "maximumMicrosecondsPerDispatch": 42.304687656249996,
+          "latencyChangePercent": 9.65060808011431,
+          "throughputChangePercent": -8.801235350252924
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.34049921875,
+          "meanMicrosecondsPerDispatch": 83.48837582589286,
+          "minimumMicrosecondsPerDispatch": 83.13867140625,
+          "maximumMicrosecondsPerDispatch": 84.102866875,
+          "latencyChangePercent": 33.27677261929547,
+          "throughputChangePercent": -24.968171096362322
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 20.9218778125,
+          "meanMicrosecondsPerDispatch": 21.384022767857143,
+          "minimumMicrosecondsPerDispatch": 20.151695937499998,
+          "maximumMicrosecondsPerDispatch": 22.759770156250003,
+          "latencyChangePercent": 5.944031413548356,
+          "throughputChangePercent": -5.610539200973063
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 38.5957028125,
+          "meanMicrosecondsPerDispatch": 39.50483578125,
+          "minimumMicrosecondsPerDispatch": 38.4472659375,
+          "maximumMicrosecondsPerDispatch": 42.934247187500006,
+          "latencyChangePercent": 16.655190564865308,
+          "throughputChangePercent": -14.277282034530902
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 40.89257703125,
+          "meanMicrosecondsPerDispatch": 41.259485959821426,
+          "minimumMicrosecondsPerDispatch": 40.56900796875,
+          "maximumMicrosecondsPerDispatch": 43.225911249999996,
+          "latencyChangePercent": 11.284140026524515,
+          "throughputChangePercent": -10.139935505486175
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.73698078125,
+          "meanMicrosecondsPerDispatch": 83.84570330357143,
+          "minimumMicrosecondsPerDispatch": 83.305989375,
+          "maximumMicrosecondsPerDispatch": 84.515631875,
+          "latencyChangePercent": 33.91081949384511,
+          "throughputChangePercent": -25.323435120493553
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 27.071619062499998,
+          "meanMicrosecondsPerDispatch": 27.090867142857142,
+          "minimumMicrosecondsPerDispatch": 19.673825625,
+          "maximumMicrosecondsPerDispatch": 32.199866875,
+          "latencyChangePercent": 37.08504017070355,
+          "throughputChangePercent": -27.052580007653525
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 35.947261562499996,
+          "meanMicrosecondsPerDispatch": 35.963355915178575,
+          "minimumMicrosecondsPerDispatch": 35.87109671875,
+          "maximumMicrosecondsPerDispatch": 36.11523421875,
+          "latencyChangePercent": 8.650298926552136,
+          "throughputChangePercent": -7.961596987781661
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 43.3867171875,
+          "meanMicrosecondsPerDispatch": 43.73056020089286,
+          "minimumMicrosecondsPerDispatch": 42.554689531250006,
+          "maximumMicrosecondsPerDispatch": 45.486325625,
+          "latencyChangePercent": 18.0716369891589,
+          "throughputChangePercent": -15.305654643221555
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.4746096875,
+          "meanMicrosecondsPerDispatch": 83.31259285714286,
+          "minimumMicrosecondsPerDispatch": 82.15169515625,
+          "maximumMicrosecondsPerDispatch": 84.80664109375,
+          "latencyChangePercent": 33.49123990251328,
+          "throughputChangePercent": -25.088717377238723
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 21.8593778125,
+          "meanMicrosecondsPerDispatch": 22.514787723214287,
+          "minimumMicrosecondsPerDispatch": 21.806634375,
+          "maximumMicrosecondsPerDispatch": 23.990236562499998,
+          "latencyChangePercent": 10.691336141179452,
+          "throughputChangePercent": -9.658692824471249
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 35.4518196875,
+          "meanMicrosecondsPerDispatch": 35.56445359375,
+          "minimumMicrosecondsPerDispatch": 34.873693906250004,
+          "maximumMicrosecondsPerDispatch": 36.5943996875,
+          "latencyChangePercent": 7.152829982335374,
+          "throughputChangePercent": -6.675353309394206
+        }
+      ],
+      "status": {
+        "oracle": {
+          "exitCode": 0,
+          "elapsedSinceStart": 2.336427208
+        },
+        "graph": {
+          "exitCode": 0,
+          "elapsedSinceStart": 3.661630625
+        },
+        "timing": {
+          "exitCode": 0,
+          "elapsedSinceStart": 6.365907750000001
+        }
+      },
+      "note": "GPU command duration includes 64 dispatches and buffer barriers; two excluded warmup batches, seven formal batches per cell. Rotating case cycles 256 experts twice. Separate source revisions and coefficient/input fixtures: do not pool trials across runs."
+    },
+    {
+      "runId": "issue92-kernel-confirm-20261025",
+      "sourceSha": "7f114e94661c3a39ca46d888322f438ecd3b0830",
+      "order": [
+        16,
+        8,
+        4,
+        0
+      ],
+      "device": "Apple M5 Pro, 20-core GPU",
+      "oracleCases": 320,
+      "oracleMaxRelativeL2": 1.65173082294e-06,
+      "oracleMaxAbs": 0.000125885009766,
+      "oraclePass": true,
+      "oracleRows": [
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 1.24555444571e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 1.24555444571e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.46885612149e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.46885612149e-08,
+          "maxAbs": 5.82076609135e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.83294768178e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.83294768178e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 1.61938244489e-07,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 1.61938244489e-07,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 1.22205928683e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 1.22205928683e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.63117012519e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.63117012519e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.09068967123e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.09068967123e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 1.73671590943e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 1.73671590943e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 3.60272845165e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 3.60272845165e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 5.07000094752e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 5.07000094752e-08,
+          "maxAbs": 2.32830643654e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.34368338286e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.34368338286e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 2.55899263345e-07,
+          "maxAbs": 3.0517578125e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 2.55899263345e-07,
+          "maxAbs": 3.0517578125e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 3.30731714875e-07,
+          "maxAbs": 6.67572021484e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 3.30731714875e-07,
+          "maxAbs": 6.67572021484e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 6.44399269586e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 6.44399269586e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.66168218736e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.66168218736e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 2.65036592675e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 2.65036592675e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 6.34387709798e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 6.34387709798e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 4.07608828894e-08,
+          "maxAbs": 7.62939453125e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 4.07608828894e-08,
+          "maxAbs": 7.62939453125e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 0,
+          "relativeL2": 1.65173082294e-06,
+          "maxAbs": 0.000110626220703
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 0,
+          "relativeL2": 1.65173082294e-06,
+          "maxAbs": 0.000110626220703
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 7.43721513979e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 7.43721513979e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 0,
+          "relativeL2": 4.69354279044e-07,
+          "maxAbs": 1.04904174805e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 0,
+          "relativeL2": 4.69354279044e-07,
+          "maxAbs": 1.04904174805e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 1.29580936969e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 1.29580936969e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.77481656645e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.77481656645e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 1.23258902672e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 1.23258902672e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.84148082244e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.84148082244e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 3.7740709304e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 3.7740709304e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.14362319356e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.14362319356e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.68143444572e-07,
+          "maxAbs": 3.43322753906e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.68143444572e-07,
+          "maxAbs": 3.43322753906e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 3.44555248247e-07,
+          "maxAbs": 6.67572021484e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 3.44555248247e-07,
+          "maxAbs": 6.67572021484e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 4.92264803661e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 4.92264803661e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 2.75474709018e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 2.75474709018e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 6.45344866392e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 6.45344866392e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 4,
+          "relativeL2": 1.60131318302e-06,
+          "maxAbs": 0.000125885009766
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 4,
+          "relativeL2": 1.60131318302e-06,
+          "maxAbs": 0.000125885009766
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 7.54359931396e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 7.54359931396e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 4,
+          "relativeL2": 4.8440677561e-07,
+          "maxAbs": 1.14440917969e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 4,
+          "relativeL2": 4.8440677561e-07,
+          "maxAbs": 1.14440917969e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 1.25548416916e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 1.25548416916e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.63225018564e-07,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.63225018564e-07,
+          "maxAbs": 3.81469726562e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 1.21862868758e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 1.21862868758e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.78468060247e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.78468060247e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 3.56802954619e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 3.56802954619e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.14362319356e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.14362319356e-08,
+          "maxAbs": 3.49245965481e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.52510229921e-07,
+          "maxAbs": 3.43322753906e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.52510229921e-07,
+          "maxAbs": 3.43322753906e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 1.15086293674e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 3.26206795204e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 3.26206795204e-07,
+          "maxAbs": 5.72204589844e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 4.92264803661e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 4.92264803661e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 2.62717456387e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 2.62717456387e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 6.33165772149e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 6.33165772149e-07,
+          "maxAbs": 6.70552253723e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 8,
+          "relativeL2": 1.54707131017e-06,
+          "maxAbs": 0.000118255615234
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 8,
+          "relativeL2": 1.54707131017e-06,
+          "maxAbs": 0.000118255615234
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 7.50360351295e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 7.50360351295e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 8,
+          "relativeL2": 4.64539531538e-07,
+          "maxAbs": 1.04904174805e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 8,
+          "relativeL2": 4.64539531538e-07,
+          "maxAbs": 1.04904174805e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 1.21178356337e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 1.21178356337e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.48326594034e-08,
+          "maxAbs": 4.36557456851e-11
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 4.92771391863e-08,
+          "maxAbs": 1.19209289551e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.58694932461e-07,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.58694932461e-07,
+          "maxAbs": 2.86102294922e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 1.19604150185e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 1.19604150185e-07,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 4.06348128948e-08,
+          "maxAbs": 1.16415321827e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.52050430242e-08,
+          "maxAbs": 5.96046447754e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.74261393256e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.74261393256e-07,
+          "maxAbs": 4.76837158203e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 1.78169689648e-08,
+          "maxAbs": 7.45058059692e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 1.78169689648e-08,
+          "maxAbs": 7.45058059692e-09
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 3.55962396076e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 3.55962396076e-07,
+          "maxAbs": 9.05990600586e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 6.59056453897e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 6.59056453897e-08,
+          "maxAbs": 4.65661287308e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.37147583548e-08,
+          "maxAbs": 4.76837158203e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.54312422303e-07,
+          "maxAbs": 3.0517578125e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.54312422303e-07,
+          "maxAbs": 3.0517578125e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 1.72629440511e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 1.72629440511e-08,
+          "maxAbs": 1.49011611938e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 3.26090427127e-07,
+          "maxAbs": 6.19888305664e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 3.26090427127e-07,
+          "maxAbs": 6.19888305664e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 5.8002544908e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 5.8002544908e-08,
+          "maxAbs": 6.98491930962e-10
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 3.5586662058e-08,
+          "maxAbs": 7.15255737305e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 2.64857468231e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 2.64857468231e-07,
+          "maxAbs": 4.19616699219e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 6.43097945465e-07,
+          "maxAbs": 6.14672899246e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 6.43097945465e-07,
+          "maxAbs": 6.14672899246e-08
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.25525728241e-08,
+          "maxAbs": 1.90734863281e-06
+        },
+        {
+          "kind": "oracle",
+          "label": "gate-up",
+          "lanes": 16,
+          "relativeL2": 1.52817586121e-06,
+          "maxAbs": 0.000118255615234
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-gate-up",
+          "lanes": 16,
+          "relativeL2": 1.52817586121e-06,
+          "maxAbs": 0.000118255615234
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 7.8555295903e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 7.8555295903e-08,
+          "maxAbs": 1.04308128357e-07
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 0,
+          "maxAbs": 0
+        },
+        {
+          "kind": "oracle",
+          "label": "down",
+          "lanes": 16,
+          "relativeL2": 4.59656101936e-07,
+          "maxAbs": 1.04904174805e-05
+        },
+        {
+          "kind": "oracle",
+          "label": "graph-down",
+          "lanes": 16,
+          "relativeL2": 4.59656101936e-07,
+          "maxAbs": 1.04904174805e-05
+        }
+      ],
+      "timingRows": [
+        {
+          "kind": "device",
+          "lanes": 16,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 9.19904141
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 4.62870859
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 3.1307498
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.7676248
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.63416674
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.62754178
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.64737522
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.63495836
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.64983345
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.28041692
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.27862459
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.3212503
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.35654183
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.31949988
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.29812509
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.32275019
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.32687502
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.29025029
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.38462521
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.3939999
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.47487503
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.52287493
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.50024984
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.3845833
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.38525013
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.38412509
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.49624981
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.50074966
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.50337506
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.51904177
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.53337482
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.55437475
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.50425003
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.52966676
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.5081248
+        },
+        {
+          "kind": "timing",
+          "lanes": 16,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.50883354
+        },
+        {
+          "kind": "device",
+          "lanes": 8,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.70966673
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.76400009
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.86583323
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.70674983
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.92774988
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.69316696
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.7738749
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.67424993
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.68483302
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.36300009
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.37425
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.35125006
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.41849993
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.40862512
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.36291627
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.37524978
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.40962536
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.37083345
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.36225019
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.43312523
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.326208
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.26641663
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.36308325
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.35812489
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.39795803
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.34050008
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.41795818
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.71691661
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.56458344
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.5232085
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.7445415
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.51200004
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.50854157
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.50433339
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.51520844
+        },
+        {
+          "kind": "timing",
+          "lanes": 8,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.51512509
+        },
+        {
+          "kind": "device",
+          "lanes": 4,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.56804191
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.74958322
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.66712531
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.7778754
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.68687494
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.74837483
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.66491668
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.57037533
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.57329177
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 5.31608332
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 5.32645872
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 5.3306669
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 5.34925004
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 5.32650016
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 5.31745842
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 5.3446251
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 5.32591669
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 5.32062491
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.32637471
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.36237498
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.40495878
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.32925017
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.32845854
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.32712489
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.38212508
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.32408319
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.33066671
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.55304156
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.60583311
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.52641644
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.53987499
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.56533315
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.52400013
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.57000001
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.55287485
+        },
+        {
+          "kind": "timing",
+          "lanes": 4,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.52987491
+        },
+        {
+          "kind": "device",
+          "lanes": 0,
+          "name": "Apple M5 Pro"
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.47925008
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.555958
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.55262526
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.41570873
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.51349993
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.54662475
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.51345802
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.36204173
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.51029152
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 3.97054153
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 3.98445828
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 3.99404159
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 4.06108331
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 4.13649995
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 4.06774972
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 4.07116674
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 4.00562491
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "gate-up",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 4.10012482
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 1.29245827
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 1.3089166
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 1.34895835
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 1.29829207
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 1.36708375
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 1.24975014
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 1.37487473
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 1.31837511
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": false,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 1.40983332
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": -2,
+          "iterations": 64,
+          "gpuMs": 2.3148749
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": -1,
+          "iterations": 64,
+          "gpuMs": 2.05675
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 0,
+          "iterations": 64,
+          "gpuMs": 2.26754136
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 1,
+          "iterations": 64,
+          "gpuMs": 2.14791624
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 2,
+          "iterations": 64,
+          "gpuMs": 2.14887504
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 3,
+          "iterations": 64,
+          "gpuMs": 2.13220809
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 4,
+          "iterations": 64,
+          "gpuMs": 2.0554997
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 5,
+          "iterations": 64,
+          "gpuMs": 2.05812464
+        },
+        {
+          "kind": "timing",
+          "lanes": 0,
+          "projection": "down",
+          "rotating": true,
+          "trial": 6,
+          "iterations": 64,
+          "gpuMs": 2.28029164
+        }
+      ],
+      "summary": [
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 41.3652378125,
+          "meanMicrosecondsPerDispatch": 42.616629799107145,
+          "minimumMicrosecondsPerDispatch": 41.0553403125,
+          "maximumMicrosecondsPerDispatch": 48.917965624999994,
+          "latencyChangePercent": 5.328006234215921,
+          "throughputChangePercent": -5.058489593326321
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.1445359375,
+          "meanMicrosecondsPerDispatch": 83.11449241071429,
+          "minimumMicrosecondsPerDispatch": 82.66016078125,
+          "maximumMicrosecondsPerDispatch": 83.69596609375,
+          "latencyChangePercent": 30.815577807967976,
+          "throughputChangePercent": -23.556504756034492
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 23.04492234375,
+          "meanMicrosecondsPerDispatch": 22.65225029017857,
+          "minimumMicrosecondsPerDispatch": 21.62695453125,
+          "maximumMicrosecondsPerDispatch": 23.79492078125,
+          "latencyChangePercent": 9.334363807451872,
+          "throughputChangePercent": -8.537447406645704
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 16,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 39.36002765625,
+          "meanMicrosecondsPerDispatch": 39.41443408482143,
+          "minimumMicrosecondsPerDispatch": 39.12890671875,
+          "maximumMicrosecondsPerDispatch": 39.91210546875,
+          "latencyChangePercent": 17.27839862135405,
+          "throughputChangePercent": -14.7328057208039
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 42.29296609375,
+          "meanMicrosecondsPerDispatch": 43.13941462053572,
+          "minimumMicrosecondsPerDispatch": 41.785155156250006,
+          "maximumMicrosecondsPerDispatch": 45.746091875,
+          "latencyChangePercent": 7.690274055183943,
+          "throughputChangePercent": -7.141103616509703
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.9882778125,
+          "meanMicrosecondsPerDispatch": 84.14508921875,
+          "minimumMicrosecondsPerDispatch": 83.6132821875,
+          "maximumMicrosecondsPerDispatch": 84.66406140625,
+          "latencyChangePercent": 32.14308032697743,
+          "throughputChangePercent": -24.324452137366535
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 21.22070140625,
+          "meanMicrosecondsPerDispatch": 21.138948794642857,
+          "minimumMicrosecondsPerDispatch": 19.78775984375,
+          "maximumMicrosecondsPerDispatch": 22.1555965625,
+          "latencyChangePercent": 0.6795272811795927,
+          "throughputChangePercent": -0.6749408738102258
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 8,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 39.29882953125,
+          "meanMicrosecondsPerDispatch": 39.78338957589286,
+          "minimumMicrosecondsPerDispatch": 39.130209218750004,
+          "maximumMicrosecondsPerDispatch": 42.8834609375,
+          "latencyChangePercent": 17.096050728682055,
+          "throughputChangePercent": -14.600023333233104
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 41.67383296875,
+          "meanMicrosecondsPerDispatch": 41.71614790178571,
+          "minimumMicrosecondsPerDispatch": 40.16211453125,
+          "maximumMicrosecondsPerDispatch": 43.404303125,
+          "latencyChangePercent": 6.113779851393741,
+          "throughputChangePercent": -5.761532441833406
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 83.22656500000001,
+          "meanMicrosecondsPerDispatch": 83.29250495535715,
+          "minimumMicrosecondsPerDispatch": 83.0852878125,
+          "maximumMicrosecondsPerDispatch": 83.582031875,
+          "latencyChangePercent": 30.94463835400376,
+          "throughputChangePercent": -23.631848346738813
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 20.769533906249997,
+          "meanMicrosecondsPerDispatch": 21.041668214285714,
+          "minimumMicrosecondsPerDispatch": 20.68879984375,
+          "maximumMicrosecondsPerDispatch": 21.952480937500003,
+          "latencyChangePercent": -1.4609924761576298,
+          "throughputChangePercent": 1.482653938648748
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 4,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 39.68554671875,
+          "meanMicrosecondsPerDispatch": 39.75083589285714,
+          "minimumMicrosecondsPerDispatch": 39.43750203125,
+          "maximumMicrosecondsPerDispatch": 40.156250156249996,
+          "latencyChangePercent": 18.248325642344398,
+          "throughputChangePercent": -15.432206370125323
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": false,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 39.2727815625,
+          "meanMicrosecondsPerDispatch": 38.87109361607143,
+          "minimumMicrosecondsPerDispatch": 36.90690203125,
+          "maximumMicrosecondsPerDispatch": 39.884769687500004,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "gate-up",
+          "rotatingExperts": true,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 63.558589375000004,
+          "meanMicrosecondsPerDispatch": 63.47386392857143,
+          "minimumMicrosecondsPerDispatch": 62.406899843750004,
+          "maximumMicrosecondsPerDispatch": 64.63281171875,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": false,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 21.077474218749998,
+          "meanMicrosecondsPerDispatch": 20.908855959821427,
+          "minimumMicrosecondsPerDispatch": 19.527345937499998,
+          "maximumMicrosecondsPerDispatch": 22.028645625,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        },
+        {
+          "projection": "down",
+          "rotatingExperts": true,
+          "lanes": 0,
+          "formalTrials": 7,
+          "medianMicrosecondsPerDispatch": 33.56119125,
+          "meanMicrosecondsPerDispatch": 33.68405515625,
+          "minimumMicrosecondsPerDispatch": 32.1171828125,
+          "maximumMicrosecondsPerDispatch": 35.629556875000006,
+          "latencyChangePercent": 0.0,
+          "throughputChangePercent": 0.0
+        }
+      ],
+      "status": {
+        "oracle": {
+          "exitCode": 0,
+          "elapsedSinceStart": 2.0843791250000003
+        },
+        "graph": {
+          "exitCode": 0,
+          "elapsedSinceStart": 3.210174
+        },
+        "timing": {
+          "exitCode": 0,
+          "elapsedSinceStart": 5.955776667
+        }
+      },
+      "note": "GPU command duration includes 64 dispatches and buffer barriers; two excluded warmup batches, seven formal batches per cell. Rotating case cycles 256 experts twice. Separate source revisions and coefficient/input fixtures: do not pool trials across runs."
+    }
+  ]
+}

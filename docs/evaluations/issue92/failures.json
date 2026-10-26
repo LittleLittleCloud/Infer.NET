@@ -1,0 +1,18 @@
+{
+  "runtimeCrashesObserved": 0,
+  "operatorNumericalFailuresObserved": 0,
+  "fixedDecodeRegressionGate": {
+    "passed": false,
+    "thresholdPercent": -5,
+    "observedPercent": {
+      "short": -8.544801432169713,
+      "8192": -7.4868762135626765,
+      "32768": -8.082600687901342
+    }
+  },
+  "formalHumanEval20": "Not run: no credible benefit at screening and fixed-tier regression boundary violated; no adoption claim.",
+  "independentWholeModelStateAndLogitsGate": "Not Obtained; matching fixed token sequences is not a substitute.",
+  "kernelFirstCohortExecutableHash": "Not Obtained: initial check binary was recompiled for the confirmation; do not fabricate an initial artifact hash.",
+  "harnessCorrections": "Initial graph-helper comparisons reused direct-kernel output. Final shader-validation retest clears output before graph helpers and checks sentinels; all320 comparisons pass. Initial coefficients/inputs also strengthened before confirmation.",
+  "preBenchmarkToolErrors": "One JavaScript orchestration call had a SyntaxError before executing any tool; corrected immediately. Exploratory reads of nonexistent script paths produced no benchmark data."
+}
