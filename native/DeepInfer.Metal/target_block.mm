@@ -56,7 +56,7 @@ static NSString *block_graph_source(){
  if(!s)return nil;[result appendString:s];
  // Head positions must be absolute within the block; the other kernels do not
  // use Step.position. Replace only in the derived head kernel above.
- return block_replace(result,@"float angle=float(s.position)/pow",@"float angle=float(s.position+token)/pow");
+ return block_replace(result,@"s.position",@"(s.position+token)");
 }
 static NSString *block_state_source=@R"metal(
 kernel void block_copy(device const float *input [[buffer(0)]],device float *output [[buffer(1)]],

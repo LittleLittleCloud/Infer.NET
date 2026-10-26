@@ -70,5 +70,26 @@ int main(int argc,char **argv){@autoreleasepool{
   if(!q_complete(command,nullptr,error,sizeof(error))||!close_values("convolution",(const float*)prepared.contents,expectedConv)||!close_values("decay",(const float*)a.contents,expectedA)||!close_values("beta",(const float*)b.contents,expectedB)||memcmp(hi.contents,history.data(),history.size()*4))return 1;
   printf("PASS seed=%d rows=%u history-prefixes=%u\n",seed,tokens,tokens+1);
  }
+ // Verify absolute-position KV writes across a 2K boundary. Distinct row values
+ // and poisoned neighboring rows catch all rows incorrectly sharing one slot.
+ {
+  constexpr uint32_t rows=8,start=2045,capacity=4096;
+  std::vector<float> raw(rows*8192),k(rows*512),v(rows*512),norm(256,1),empty(capacity*512,std::numeric_limits<float>::quiet_NaN());
+  for(size_t i=0;i<raw.size();i++)raw[i]=std::sin(float(i+23)*0.019f);
+  for(size_t i=0;i<k.size();i++){k[i]=std::cos(float(i+19)*0.031f);v[i]=float(i+1)*0.001f;}
+  auto rw=buffer(raw),ky=buffer(k),vl=buffer(v),n=buffer(norm),keys=buffer(empty),values=buffer(empty);
+  auto q=[device newBufferWithLength:rows*4096*4 options:MTLResourceStorageModeShared];
+  auto head=[device newComputePipelineStateWithFunction:[lib newFunctionWithName:@"block_graph_head_prepare"] error:&failure];
+  GStep shape{start,3,0,1e-6f,10000000.0f,capacity};auto command=[queue commandBuffer];auto e=[command computeCommandEncoder];[e setComputePipelineState:head];
+  id<MTLBuffer> bs[]={rw,ky,vl,n,n,q,keys,values};for(int i=0;i<8;i++)g_bind(e,bs[i],i);[e setBytes:&shape length:sizeof(shape) atIndex:8];
+  [e dispatchThreadgroups:MTLSizeMake(18,rows,1) threadsPerThreadgroup:MTLSizeMake(256,1,1)];[e endEncoding];char error[2048]{};
+  if(!q_complete(command,nullptr,error,sizeof(error)))return 1;
+  const auto *actual=(const float*)values.contents;const auto *actualK=(const float*)keys.contents;
+  for(uint32_t row=0;row<capacity;row++)for(uint32_t d=0;d<512;d++){
+   if(row>=start&&row<start+rows){if(actual[row*512+d]!=v[(row-start)*512+d]||!std::isfinite(actualK[row*512+d]))return 1;}
+   else if(!std::isnan(actual[row*512+d])||!std::isnan(actualK[row*512+d]))return 1;
+  }
+  printf("PASS absolute-position KV rows and poisoned neighbors\n");
+ }
  printf("PASS target-block independent state oracles\n");return 0;
 }}
