@@ -1,5 +1,20 @@
 [
   {
+    "id": "splash-target-block-commit-20261025",
+    "title": "Native target block verification and prefix commit",
+    "kind": "2026-10-26 · Evaluation in progress · Candidate unadopted",
+    "source": "docs/EXPERIMENT-95-TARGET-BLOCK-RESULTS-20261026.md",
+    "question": "Can a native multi-row target graph reduce verification and accepted-prefix commit costs without replay?",
+    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; M5 Pro20/48GiB; affine8 target, FP32 KV/operands/state; no draft or prefix cache.",
+    "change": "Opt-in1/4/8-row graph; capture recurrent prefix states during computation, then commit the selected prefix. Original scalar path remains default.",
+    "result": "Short numerical gates passed after a retained KV-address failure. Full21/8K/32K transaction controls and application evaluation are in progress; no decode-throughput point is claimed.",
+    "validation": "Independent recurrence/convolution/history and KV-address checks; all16 short accepted-prefix cases passed. Long-context/resource/application coverage pending.",
+    "conclusion": "No adoption decision yet. Target transaction milliseconds cannot substitute for emitted-token decode throughput.",
+    "next": "Finish held-out controls, long-context checks and conditional HumanEval; review independent results and code PRs separately.",
+    "commands": [],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/95; code PR https://github.com/LittleLittleCloud/Infer.NET/pull/96."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
