@@ -14,7 +14,7 @@ static void fill(QMatrix *m,uint32_t seed){
     auto *s=static_cast<uint16_t*>(m->scales.contents),*b=static_cast<uint16_t*>(m->biases.contents);
     for(size_t i=0;i<m->scales.length/2;i++){
         // Signed, exactly representable BF16 coefficients; no shared decoder.
-        s[i]=(i%3==0?0xbb80:0x3b80);b[i]=(i%2?0xbe80:0x3e80);
+        s[i]=uint16_t((i%3==0?0xbb80:0x3b80)+(i%7));b[i]=uint16_t((i%2?0xbe80:0x3e80)+(i%5));
     }
 }
 static std::vector<float> reference(QMatrix *m,const std::vector<float>& x,const uint32_t *ids,bool batched){
@@ -52,7 +52,8 @@ int main(int argc,char **argv){@autoreleasepool {
         setenv("DEEPINFER_METAL_EXPERT_LANES","4",1);setenv("DEEPINFER_METAL_GENERIC","1",1);
         require(!di_quant_create(error,sizeof(error)),"generic conflict accepted");unsetenv("DEEPINFER_METAL_GENERIC");
     }
-    for(int lanes:{0,4,8,16}){
+    std::vector<int> laneOrder=argc>2&&!strcmp(argv[2],"--reverse")?std::vector<int>{16,8,4,0}:std::vector<int>{0,4,8,16};
+    for(int lanes:laneOrder){
         std::string flag=std::to_string(lanes);setenv("DEEPINFER_METAL_EXPERT_LANES",flag.c_str(),1);
         auto *c=static_cast<QContext*>(di_quant_create(error,sizeof(error)));if(!c){fprintf(stderr,"%s\n",error);return 1;}
         require(di_quant_expert_lanes(c)==lanes,"native selector mismatch");
@@ -72,7 +73,7 @@ int main(int argc,char **argv){@autoreleasepool {
                 // down uses distinct per-slot inputs; gate/up shares one vector.
                 if((timing||mode>=4)&&fused==(mode%2))continue;
                 for(int pattern=0;pattern<(timing?1:4);pattern++){
-                    for(size_t i=0;i<x.size();i++)x[i]=pattern==1?0:pattern==2?(i%2?.25f:-.25f):float(int((i*37+pattern*19)%101)-50)/4096;
+                    for(size_t i=0;i<x.size();i++)x[i]=pattern==3?std::sin(float(i)*.017f)*.125f:pattern==1?0:pattern==2?(i%2?.25f:-.25f):float(int((i*37+pattern*19)%101)-50)/4096;
                     memcpy(input.contents,x.data(),x.size()*4);
                     auto *guard=static_cast<float*>(output.contents);std::fill(guard,guard+8*rows+32,123456.0f);
                     auto encode=[&](id<MTLComputeCommandEncoder> e){
