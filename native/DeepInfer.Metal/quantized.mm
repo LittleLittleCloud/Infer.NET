@@ -9,6 +9,8 @@ struct QContext {
     id<MTLComputePipelineState> tiled5, tiled8, small5, small8;
     id<MTLComputePipelineState> gateUp5, gateUp8;
     id<MTLComputePipelineState> wide5,wide8;
+    id<MTLComputePipelineState> expertDownSmall[3], expertGateSmall[3];
+    uint32_t expertLanes = 0;
     uint32_t rowTile;
     bool generic;
     std::shared_ptr<QResidency> residency;
@@ -187,6 +189,69 @@ kernel void NAME(device const uint *gw [[buffer(0)]],device const ushort *gs [[b
  uint sg [[simdgroup_index_in_threadgroup]]) {expert_gate_up<BITS>(gw,gs,gb,uw,us,ub,x,out,s,experts,group,lane,sg);}
 EXPERT_GATE_UP(expert_gate_up5,5)
 EXPERT_GATE_UP(expert_gate_up8,8)
+// Small-row decode specialization: several independent output rows share SIMD32.
+// Unlike the Splash column tile, this reads the original row-major affine8 bytes
+// and retains FP32 operands. Each lane group owns one complete output reduction.
+template<uint Lanes>
+inline float expert_reduce(float value) {
+    #pragma clang loop unroll(full)
+    for(uint distance=Lanes/2;distance;distance/=2)
+        value += simd_shuffle_xor(value,distance);
+    return value;
+}
+template<uint Lanes,bool GateUp>
+inline void expert_small(device const uint *gw,device const ushort *gs,device const ushort *gb,
+ device const uint *uw,device const ushort *us,device const ushort *ub,
+ device const float *x,device float *out,constant QShape &s,device const uint *experts,
+ uint2 group,uint tid,uint lane) {
+    uint row=group.x*(128/Lanes)+tid/Lanes, slot=group.y;
+    // Row tails skip whole lane groups, never a subset of a reduction group.
+    if(row>=s.rows)return;
+    uint groups=s.columns/64, local=lane%Lanes;
+    ulong params=(ulong(experts[slot])*s.rows+row)*groups;
+    device const float *input=x+(s.batched?slot*s.columns:0);
+    float gate=0,up=0;
+    for(uint g=0;g<groups;g++) {
+        float scale=as_type<float>(uint(gs[params+g])<<16);
+        float bias=as_type<float>(uint(gb[params+g])<<16);
+        float uscale=0,ubias=0;
+        if(GateUp){uscale=as_type<float>(uint(us[params+g])<<16);ubias=as_type<float>(uint(ub[params+g])<<16);}
+        #pragma clang loop unroll(full)
+        for(uint j=0;j<64/Lanes;j+=4) {
+            uint col=local*(64/Lanes)+j;
+            uint codes=gw[(params+g)*16+col/4],ucodes=0;
+            if(GateUp)ucodes=uw[(params+g)*16+col/4];
+            float4 values=*reinterpret_cast<device const float4 *>(input+g*64+col);
+            #pragma clang loop unroll(full)
+            for(uint k=0;k<4;k++) {
+                gate+=(float((codes>>(8*k))&255)*scale+bias)*values[k];
+                if(GateUp)up+=(float((ucodes>>(8*k))&255)*uscale+ubias)*values[k];
+            }
+        }
+    }
+    gate=expert_reduce<Lanes>(gate);
+    if(GateUp)up=expert_reduce<Lanes>(up);
+    if(local==0)out[slot*s.rows+row]=GateUp?(gate/(1.0f+exp(-gate)))*up:gate;
+}
+#define EXPERT_SMALL_DOWN(NAME,LANES) \
+kernel void NAME(device const uint *w [[buffer(0)]],device const ushort *scales [[buffer(1)]], \
+ device const ushort *biases [[buffer(2)]],device const float *x [[buffer(3)]],device float *out [[buffer(4)]], \
+ constant QShape &s [[buffer(5)]],device const uint *experts [[buffer(6)]], \
+ uint2 group [[threadgroup_position_in_grid]],uint tid [[thread_index_in_threadgroup]],uint lane [[thread_index_in_simdgroup]]) { \
+ expert_small<LANES,false>(w,scales,biases,w,scales,biases,x,out,s,experts,group,tid,lane); }
+#define EXPERT_SMALL_GATE(NAME,LANES) \
+kernel void NAME(device const uint *gw [[buffer(0)]],device const ushort *gs [[buffer(1)]],device const ushort *gb [[buffer(2)]], \
+ device const uint *uw [[buffer(3)]],device const ushort *us [[buffer(4)]],device const ushort *ub [[buffer(5)]], \
+ device const float *x [[buffer(6)]],device float *out [[buffer(7)]],constant QShape &s [[buffer(8)]], \
+ device const uint *experts [[buffer(9)]],uint2 group [[threadgroup_position_in_grid]], \
+ uint tid [[thread_index_in_threadgroup]],uint lane [[thread_index_in_simdgroup]]) { \
+ expert_small<LANES,true>(gw,gs,gb,uw,us,ub,x,out,s,experts,group,tid,lane); }
+EXPERT_SMALL_DOWN(expert_down_l4,4)
+EXPERT_SMALL_DOWN(expert_down_l8,8)
+EXPERT_SMALL_DOWN(expert_down_l16,16)
+EXPERT_SMALL_GATE(expert_gate_l4,4)
+EXPERT_SMALL_GATE(expert_gate_l8,8)
+EXPERT_SMALL_GATE(expert_gate_l16,16)
 // One SIMD group per (value head, value channel), four state elements per lane.
 kernel void delta_step(device float *state [[buffer(0)]],
  device const float *q [[buffer(1)]], device const float *k [[buffer(2)]],
@@ -228,19 +293,29 @@ static bool q_complete(id<MTLCommandBuffer> command, double *ms, char *error, in
     return true;
 }
 static void q_encode(QContext *c,id<MTLComputeCommandEncoder> e,QMatrix *m,
- id<MTLBuffer> input,const uint32_t *experts,int count,bool batched) {
+ id<MTLBuffer> input,const uint32_t *experts,int count,bool batched,bool selectedExpert=false) {
     struct {uint32_t experts,rows,columns,bits,group,count,batched;} shape{m->experts,m->rows,m->columns,m->bits,m->group,(uint32_t)count,(uint32_t)batched};
     bool small=m->rows<128;
-    [e setComputePipelineState:c->generic?c->gemv:(m->bits==5?(small?c->small5:c->rowTile==8?c->wide5:c->tiled5):(small?c->small8:c->rowTile==8?c->wide8:c->tiled8))];
+    bool specialized=selectedExpert&&c->expertLanes&&m->bits==8&&m->group==64&&!c->generic;
+    [e setComputePipelineState:specialized?c->expertDownSmall[c->expertLanes==4?0:c->expertLanes==8?1:2]:c->generic?c->gemv:(m->bits==5?(small?c->small5:c->rowTile==8?c->wide5:c->tiled5):(small?c->small8:c->rowTile==8?c->wide8:c->tiled8))];
     [e setBuffer:m->packed offset:0 atIndex:0];[e setBuffer:m->scales offset:0 atIndex:1];[e setBuffer:m->biases offset:0 atIndex:2];
     [e setBuffer:input offset:0 atIndex:3];[e setBuffer:m->output offset:0 atIndex:4];
     [e setBytes:&shape length:sizeof(shape) atIndex:5];[e setBytes:experts length:count*4 atIndex:6];
-    if(c->generic)[e dispatchThreadgroups:MTLSizeMake((NSUInteger)m->rows*count,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];
+    if(specialized)[e dispatchThreadgroups:MTLSizeMake((m->rows+128/c->expertLanes-1)/(128/c->expertLanes),count,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];
+    else if(c->generic)[e dispatchThreadgroups:MTLSizeMake((NSUInteger)m->rows*count,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];
     else [e dispatchThreadgroups:MTLSizeMake((m->rows+(small?0:c->rowTile-1))/(small?1:c->rowTile),count,1) threadsPerThreadgroup:MTLSizeMake(small?32:c->rowTile*32,1,1)];
 }
 extern "C" {
 void *di_quant_create_configured(int resident,int refresh,char *error,int capacity) {
     if((resident!=0&&resident!=1)||refresh<0||refresh>60000){error_text(error,capacity,@"Invalid residency configuration");return nullptr;}
+    const char *selection=std::getenv("DEEPINFER_METAL_EXPERT_LANES");
+    uint32_t expertLanes=0;
+    if(selection&&strcmp(selection,"0")) {
+        if(!strcmp(selection,"4"))expertLanes=4;
+        else if(!strcmp(selection,"8"))expertLanes=8;
+        else if(!strcmp(selection,"16"))expertLanes=16;
+        else {error_text(error,capacity,@"Expert lanes must be 0, 4, 8 or 16");return nullptr;}
+    }
     @autoreleasepool {
         id<MTLDevice> d=MTLCreateSystemDefaultDevice(); if(!d){error_text(error,capacity,@"No Metal device");return nullptr;}
         NSError *failure=nil; MTLCompileOptions *options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe;
@@ -275,7 +350,26 @@ void *di_quant_create_configured(int resident,int refresh,char *error,int capaci
             residency=std::make_shared<QResidency>(d,refresh,limit-reserve);
             if(!residency->valid()){error_text(error,capacity,residency->error());return nullptr;}
         }
-        return new QContext{d,queue,gemv,delta,tiled5,tiled8,small5,small8,gateUp5,gateUp8,wide5,wide8,rowTile,generic&&strcmp(generic,"1")==0,residency};
+        auto *context=new QContext{};
+        context->device=d;context->queue=queue;context->gemv=gemv;context->delta=delta;
+        context->tiled5=tiled5;context->tiled8=tiled8;context->small5=small5;context->small8=small8;
+        context->gateUp5=gateUp5;context->gateUp8=gateUp8;context->wide5=wide5;context->wide8=wide8;
+        context->rowTile=rowTile;context->generic=generic&&strcmp(generic,"1")==0;context->residency=residency;
+        context->expertLanes=expertLanes;
+        if(expertLanes&&context->generic){error_text(error,capacity,@"Expert lane specialization conflicts with generic kernels");delete context;return nullptr;}
+        if(expertLanes) {
+            NSArray<NSString*> *downNames=@[@"expert_down_l4",@"expert_down_l8",@"expert_down_l16"];
+            NSArray<NSString*> *gateNames=@[@"expert_gate_l4",@"expert_gate_l8",@"expert_gate_l16"];
+            for(int i=0;i<3;i++) {
+                context->expertDownSmall[i]=pipeline(downNames[i]);context->expertGateSmall[i]=pipeline(gateNames[i]);
+                for(auto ps:{context->expertDownSmall[i],context->expertGateSmall[i]})
+                    if(!ps||ps.threadExecutionWidth!=32||ps.maxTotalThreadsPerThreadgroup<128){
+                        error_text(error,capacity,failure.localizedDescription ?: @"Expert specialization requires SIMD32/128 threads");delete context;return nullptr;
+                    }
+            }
+        }
+        fprintf(stderr,"METAL_EXPERT_KERNEL lanes=%u scope=routed-affine8-group64 operands=fp32 unsupported=legacy\n",expertLanes);
+        return context;
     }
 }
 // Legacy experiments may still configure creation through inherited native environment.
@@ -290,6 +384,7 @@ uint64_t di_quant_residency_bytes(void *p) {
 void di_quant_residency_prepare(void *p) {
     if(p){auto *c=static_cast<QContext*>(p);if(c->residency)c->residency->start();}
 }
+int di_quant_expert_lanes(void *p){return p?static_cast<QContext*>(p)->expertLanes:-1;}
 void di_quant_destroy(void *p){delete static_cast<QContext*>(p);}
 void *di_quant_matrix_create(void *ctx,int experts,int rows,int columns,int bits,int group,char *error,int capacity) {
     @autoreleasepool {
@@ -364,15 +459,16 @@ int di_quant_experts(void *ctx,QMatrix *gate,QMatrix *up,QMatrix *down,QMatrix *
         memcpy(shared->input.contents,sharedInput,shared->columns*4);
         id<MTLCommandBuffer> command=[c->queue commandBuffer];id<MTLComputeCommandEncoder> e=[command computeCommandEncoder];
         if(!command||!e){error_text(error,capacity,@"Cannot create expert encoder");return -1;}
-        [e setComputePipelineState:gate->bits==5?c->gateUp5:c->gateUp8];
+        bool specialized=c->expertLanes&&gate->bits==8&&gate->group==64;
+        [e setComputePipelineState:specialized?c->expertGateSmall[c->expertLanes==4?0:c->expertLanes==8?1:2]:gate->bits==5?c->gateUp5:c->gateUp8];
         [e setBuffer:gate->packed offset:0 atIndex:0];[e setBuffer:gate->scales offset:0 atIndex:1];[e setBuffer:gate->biases offset:0 atIndex:2];
         [e setBuffer:up->packed offset:0 atIndex:3];[e setBuffer:up->scales offset:0 atIndex:4];[e setBuffer:up->biases offset:0 atIndex:5];
         [e setBuffer:gate->input offset:0 atIndex:6];[e setBuffer:gate->output offset:0 atIndex:7];
         struct {uint32_t experts,rows,columns,bits,group,count,batched;} shape{gate->experts,gate->rows,gate->columns,gate->bits,gate->group,(uint32_t)count,0};
         [e setBytes:&shape length:sizeof(shape) atIndex:8];[e setBytes:experts length:count*4 atIndex:9];
-        [e dispatchThreadgroups:MTLSizeMake((gate->rows+3)/4,count,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];
+        [e dispatchThreadgroups:MTLSizeMake((gate->rows+(specialized?128/c->expertLanes:4)-1)/(specialized?128/c->expertLanes:4),count,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];
         [e memoryBarrierWithScope:MTLBarrierScopeBuffers];
-        q_encode(c,e,down,gate->output,experts,count,true);
+        q_encode(c,e,down,gate->output,experts,count,true,true);
         const uint32_t zero=0;q_encode(c,e,shared,shared->input,&zero,1,false);
         [e endEncoding];
         if(!q_complete(command,ms,error,capacity))return -1;
