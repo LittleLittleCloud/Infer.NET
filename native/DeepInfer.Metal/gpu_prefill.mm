@@ -390,6 +390,7 @@ struct GPrefill {
  bool groupedExperts=false,chunkedDelta=false,deviceDelta=false,bf16Gemm=false,expandedGemm=false,expandedExperts=false,packedExperts=false;
  bool directExperts=false,expertActDirect=false,pipelineExperts=false,adaptiveExperts=false,fusedExpertGate=false;id<MTLComputePipelineState> packedGatePs,packedDownPs,packedGateDirectPs;
  int submissions=1;
+ bool blockEncoding=false;id<MTLComputePipelineState> blockShared,blockExperts5,blockExperts8;
  bool attentionBf16=false;uint32_t attentionQueryTokens=4,attentionKeyTokens=32,attentionThreads=128,attentionBatchTokens=128,attentionPartitionTokens=1024;id<MTLComputePipelineState> attentionBf16Ps,attentionWidePs,queryPackPs;id<MTLBuffer> packedQueries;
  std::array<id<MTLComputePipelineState>,4> bf16ps,expandedPs;
  id<MTLBuffer> expandedWeight,expandedUp,expandedInput;
@@ -609,7 +610,7 @@ static void p_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuf
  if(!experts&&g->prefill->bf16Gemm&&g->prefill->matrix&&m.rows>=32&&shape.tokens>=64){
   [e setComputePipelineState:g->prefill->bf16ps[m.bits==8?1:0]];
   [e dispatchThreadgroups:MTLSizeMake((m.rows+63)/64,(shape.tokens+63)/64,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;return;}
- if(!experts&&g->prefill->matrix&&m.rows>=128){uint32_t tile=g->prefill->matrixTokens?g->prefill->matrixTokens:std::min(32u,((shape.tokens+7)/8)*8);
+ if(!experts&&!g->prefill->blockEncoding&&g->prefill->matrix&&m.rows>=128){uint32_t tile=g->prefill->matrixTokens?g->prefill->matrixTokens:std::min(32u,((shape.tokens+7)/8)*8);
  int pipeline=PMatrix85+int((tile/8-1)*2)+(m.bits==8?1:0);
  p_run(g,e,pipeline,MTLSizeMake((m.rows+g->prefill->matrixRows-1)/g->prefill->matrixRows,(shape.tokens+tile-1)/tile,1),g->prefill->matrixRows*4);return;}
  if(experts&&g->prefill->groupedExperts&&shape.tokens>=64){auto *p=g->prefill;
@@ -629,13 +630,16 @@ static void p_gate(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatri
  if(experts&&g->prefill->groupedExperts&&shape.tokens>=64){auto *p=g->prefill;
   g_bind(e,p->groupedRoutes,9);g_bind(e,p->groupedCounts,10);g_bind(e,p->groupedTiles,11);[e setComputePipelineState:p->bf16Gemm?(p->packedExperts?(direct?p->packedGateDirectPs:p->packedGatePs):p->bf16ps[2]):p->ps[PGroupedGate]];
   [e dispatchThreadgroupsWithIndirectBuffer:p->groupedDispatch indirectBufferOffset:0 threadsPerThreadgroup:MTLSizeMake(p->bf16Gemm?(p->packedExperts?64:128):256,1,1)];g->dispatches++;return;}
+ if(g->prefill->blockEncoding){auto *p=g->prefill;[e setComputePipelineState:experts?(gate.bits==8?p->blockExperts8:p->blockExperts5):p->blockShared];
+  [e dispatchThreadgroups:MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;return;}
  p_run(g,e,experts?(gate.bits==8?PExperts8:PExperts):PShared,MTLSizeMake((gate.rows+3)/4,experts?8:(shape.tokens+3)/4,experts?shape.tokens:1),128);
 }
 extern "C" int di_graph_prefill_range(void *graph,const int32_t *tokens,int count,int classifier,int begin,int end,const float *hidden,float *output,float *logits,float *trace,
  int *nextToken,int *dispatches,double *ms,char *error,int capacity) {
  @autoreleasepool {
  if(!graph||!tokens||!((begin==0&&end==40)||(begin==20&&end==40&&hidden))||count<1||count>2048||!nextToken||!dispatches){error_text(error,capacity,@"Invalid prefill chunk");return -1;}
- auto *g=static_cast<GModel*>(graph);if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
+ auto *g=static_cast<GModel*>(graph);if(g->blockPending||g->blockFaulted){error_text(error,capacity,@"Pending/faulted target block blocks prefill");return -1;}
+ if(g->position+count>g->capacity||g->forcedRoutes){error_text(error,capacity,@"Invalid prefill context/diagnostic routing");return -1;}
  if(begin==0&&g->splitActive){error_text(error,capacity,@"Reset split graph before full prefill");return -1;}
  if(begin==20){
   if(g->splitTarget&&g->position+count>g->splitTarget){error_text(error,capacity,@"Split prefix target exceeded");return -1;}
@@ -748,6 +752,7 @@ static int g_reserve(void *graph,int tokens,char *error,int capacity,bool preser
  @autoreleasepool {
  if(!graph||tokens<1||tokens>262144){error_text(error,capacity,@"Context must be 1..262144 tokens; no RoPE scaling is implemented");return -1;}
  auto *g=static_cast<GModel*>(graph);
+ if(g->blockPending||g->blockFaulted){error_text(error,capacity,@"Pending/faulted target block blocks reserve/grow");return -1;}
  if(g->position&&!preserve){error_text(error,capacity,@"Reset graph before reserving context");return -1;}
  if((uint32_t)tokens<=g->capacity)return 0;
  // Reserve a bounded 2K page, not the next power of two: 128K + decode must not allocate 256K.
@@ -794,7 +799,8 @@ extern "C" int di_graph_prefill(void *graph,const int32_t *tokens,int count,int 
 // [position,kv-head,dimension] BF16, or [value-head,value-dim,key-dim] FP32.
 extern "C" int di_graph_prefix_state(void *graph,int layer,int kind,int position,void *data,int bytes,int importState){
  if(!graph||!data||layer<0||layer>=20||kind<0||kind>1||position<1)return -1;
- auto *g=static_cast<GModel*>(graph);if(g->position!=(uint32_t)position)return -1;
+ auto *g=static_cast<GModel*>(graph);if(g->blockPending||g->blockFaulted)return -1;
+ if(g->position!=(uint32_t)position)return -1;
  auto &l=g->layers[layer];int expected=l.linear?(kind?3*8192*4:32*128*128*4):position*512*(g->kvBf16?2:4);
  if(bytes!=expected)return -1;
  uint64_t bit=1ull<<(layer*2+kind);
@@ -811,7 +817,7 @@ extern "C" int di_graph_prefix_kv_range(void *graph,int layer,int kind,int posit
  if(!graph||!data||layer<0||layer>=20||(layer+1)%4!=0||kind<0||kind>1||position<0||count<1||count>512||
     total<1||total>262144||position>total-count)return -1;
  auto *g=static_cast<GModel*>(graph);auto &l=g->layers[layer];auto index=layer*2+kind;uint64_t bit=1ull<<index;
- if(!g->splitActive||!l.loaded||l.linear||!(g->splitMissing&bit)||(uint32_t)total>g->capacity||
+ if(g->blockPending||g->blockFaulted||!g->splitActive||!l.loaded||l.linear||!(g->splitMissing&bit)||(uint32_t)total>g->capacity||
     (uint32_t)(position+count)>g->position||g->splitKvWritten[index]!=(uint32_t)position||
     (g->splitTarget&&g->splitTarget!=(uint32_t)total)||bytes!=count*512*(g->kvBf16?2:4))return -1;
  auto buffer=kind?l.values:l.keys;if(!buffer)return -1;
@@ -826,6 +832,6 @@ extern "C" int di_graph_prefix_kv_range(void *graph,int layer,int kind,int posit
 extern "C" int di_graph_decode_fused_fp32(void *graph,int enabled){
  if(!graph||(enabled!=0&&enabled!=1))return -1;
  auto *g=static_cast<GModel*>(graph);
- if(g->position||g->splitActive||(enabled&&(!g->prefill||g->kvBf16||g->prefill->attentionBf16)))return -1;
+ if(g->blockPending||g->blockFaulted||g->position||g->splitActive||(enabled&&(!g->prefill||g->kvBf16||g->prefill->attentionBf16)))return -1;
  g->decodeFusedFp32=enabled!=0;return 0;
 }

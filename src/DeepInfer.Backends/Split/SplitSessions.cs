@@ -23,6 +23,13 @@ public sealed class MetalSplitSession : IDisposable
         }
         catch { device.Dispose(); throw; }
     }
+    // Experimental target-only verifier; no draft model or production selector.
+    public void PrepareTargetBlock(int rows = 8) => graph.PrepareTargetBlock(rows);
+    public int[] VerifyTargetBlock(int[] tokens, float[]? logits = null, float[]? trace = null) => graph.TargetBlock(tokens, logits, trace);
+    public void ScalarTargetTransaction(int[] tokens, int accepted) => graph.ScalarTargetTransaction(tokens, accepted);
+    public void CommitTargetBlock(int accepted) => graph.CommitTargetBlock(accepted);
+    public (long Bytes, int Position, bool Pending) TargetBlockStats() => graph.TargetBlockStats();
+    public byte[] TargetState(int layer, int kind, int prefix = -1) => graph.TargetState(layer, kind, prefix);
     public void ConfigureFusedFp32Decode(bool enabled) => graph.ConfigureFusedFp32Decode(enabled);
     public MetalExecutionProfile ExecutionProfile() => graph.ExecutionProfile();
     public int[] Tokenize(string prompt, CancellationToken ct) => tokenizer.EncodePrompt(prompt, ct);
@@ -37,7 +44,7 @@ public sealed class MetalSplitSession : IDisposable
     public void Reset(int capacity) { graph.Reset(); graph.Reserve(capacity); }
     public void EnsureCapacity(int tokens) { if (tokens > graph.Stats().Capacity) graph.Grow(tokens); }
     public int Suffix(int[] tokens, float[] hidden, bool final, float[]? logits = null, float[]? trace = null) => graph.Suffix(tokens, hidden, final, logits, trace);
-    public int Forward(int token, int position, float[]? logits = null) => graph.Forward(token, position, true, logits ?? [], null, logits is not null);
+    public int Forward(int token, int position, float[]? logits = null, Action<int, int, float[]>? trace = null) => graph.Forward(token, position, true, logits ?? [], trace, logits is not null);
     public void State(int layer, int tensor, int position, byte[] bytes, bool import) => graph.PrefixState(layer, tensor, position, bytes, import);
     public void KvRange(int layer, int tensor, int position, int count, int total, byte[] bytes) => graph.PrefixKvRange(layer, tensor, position, count, total, bytes);
     public int Prefill(int[] tokens, CancellationToken ct) => graph.Prefill(tokens, ct);
