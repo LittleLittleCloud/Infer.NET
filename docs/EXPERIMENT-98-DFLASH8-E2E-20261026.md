@@ -24,26 +24,36 @@ The first short-gate component added 1454.484375 MiB whole-system swap-out befor
 
 Release and Native AOT builds pass, with 171 CPU tests passed and 13 opt-in model facts skipped. The frozen AOT package passes 38 controlled protocol checks. A separate fake-worker regression reproduces malformed tool output causing an uncaught exception. A distinct fix returns an explicit API error, retaining malformed calls as failures. It does not prove that all historical stream failures had that cause.
 
-The first E2E attempt (`e2e-20261026T174029Z`) failed before any formal trial: the controller configured a 3600-second worker deadline, beyond the supported maximum1800, causing HTTP500 on A's excluded warmup before inference. This controller error and its raw evidence are retained. The corrected stress deadline is1800 seconds; Pi timeout remains300 seconds. A subsequent run (`e2e-20261026T174243Z`) was deliberately interrupted to move client t0 after fixture reading and JSON construction, before HTTP dispatch. Its completed short-input trials and interrupted 8K request remain superseded diagnostic evidence. A preflight-only port probe then encountered TCP TIME_WAIT with no listeners; SO_REUSEADDR corrected the probe before any service pause/model load. The complete corrected run is `e2e-20261026T174911Z`. Product code was not changed after freezing.
+The first E2E attempt (`e2e-20261026T174029Z`) failed before any formal trial: the controller configured a 3600-second worker deadline, beyond the supported maximum 1800, causing HTTP500 on A's excluded warmup before inference. This controller error and its raw evidence are retained. The corrected stress deadline is 1800 seconds; Pi timeout remains 300 seconds. A subsequent run (`e2e-20261026T174243Z`) was deliberately interrupted to move client t0 after fixture reading and JSON construction, before HTTP dispatch. Its completed short-input trials and interrupted 8K request remain superseded diagnostic evidence. A preflight-only port probe then encountered TCP TIME_WAIT with no listeners; SO_REUSEADDR corrected the probe before any service pause/model load. The complete corrected run is `e2e-20261026T174911Z`. Product code was not changed after freezing.
 
 ## Completed short-output controls (interim)
 
-The corrected run `e2e-20261026T174911Z` has completed all four arms for the first two shapes. Values below use all three formal trials; each preceding warmup is excluded. Worker throughput is sum(N−1)/sum(first-to-last readiness seconds), not the mean of per-request rates. Client wall is the median of complete request intervals with input preparation excluded. These are diagnostic measurements under the retained numerical failure, not HumanEval results.
+The corrected run `e2e-20261026T174911Z` has completed all four arms for all three 128-output shapes. Values below use all three formal trials; each preceding warmup is excluded. Worker throughput is sum(N−1)/sum(first-to-last readiness seconds). Client wall is the median of complete request intervals with input reading and JSON construction excluded. These diagnostic measurements retain the failed numerical gate; they are not HumanEval results.
 
-|Input/output|Arm|Worker prefill token/s|Worker decode token/s|Median client wall s|
-|---|---|---:|---:|---:|
-|21/128|Main|171.628|66.315|2.038|
-|21/128|Candidate off|172.931|65.987|2.049|
-|21/128|DFlash8 scalar/replay|165.011|20.762|6.248|
-|21/128|DFlash8 native/commit|157.659|46.052|2.899|
-|8192/128|Main|170.698|60.191|50.107|
-|8192/128|Candidate off|170.748|60.234|50.098|
-|8192/128|DFlash8 scalar/replay|166.355|13.783|59.027|
-|8192/128|DFlash8 native/commit|163.649|25.540|55.042|
+|Input/output|Arm|Worker prefill token/s|Worker decode token/s|Median client wall s|Maximum new swap-out MiB|
+|---|---|---:|---:|---:|---:|
+|21/128|Main|171.628|66.315|2.038|0.000|
+|21/128|Candidate off|172.931|65.987|2.049|0.000|
+|21/128|DFlash8 scalar/replay|165.011|20.762|6.248|0.000|
+|21/128|DFlash8 native/commit|157.659|46.052|2.899|0.000|
+|8192/128|Main|170.698|60.191|50.107|0.000|
+|8192/128|Candidate off|170.748|60.234|50.098|0.000|
+|8192/128|DFlash8 scalar/replay|166.355|13.783|59.027|0.000|
+|8192/128|DFlash8 native/commit|163.649|25.540|55.042|0.000|
+|32768/128|Main|155.758|45.922|213.159|2.812|
+|32768/128|Candidate off|155.750|45.941|213.169|0.000|
+|32768/128|DFlash8 scalar/replay|155.622|13.740|219.824|133.672|
+|32768/128|DFlash8 native/commit|155.581|22.008|216.415|0.000|
 
-All observed output token hashes match across arms/trials. Every formal request above added zero whole-system swap-out bytes. Sampled Metal allocation peaks are at most36.499 GiB for these groups; continuous driver peaks remain Not Obtained. Native DFlash eliminates rejection replay and improves decode over the scalar DFlash control, while these short-output fixtures remain slower than scalar main. Sustained4096-token generation and Pi application results are still pending; no conclusion about those unmeasured loads follows from this table.
+All observed output token hashes match across arms/trials. Every short-output formal request stays within the 512 MiB whole-system new swap-out gate; nonzero 32K observations are retained in the table. Native DFlash improves decode over scalar DFlash, while all three short-output fixtures remain slower than main. Sustained 4096-token generation and Pi application results are still pending; no conclusion about those unmeasured loads follows from this table.
 
-See [all retained corrected-run trials](evaluations/issue98/fixed-controls.json). Main scalar profiling windows time forwards; they do not reconstruct the same worker readiness tail clock as the candidate's joint-block windows. Client receipt tail ratios and worker readiness are kept separate.
+For 21/128, native decode is 121.81% faster than scalar DFlash but 30.56% slower than main. For 8192/128, it is 85.30% faster than scalar DFlash and 57.57% slower than main; median complete request wall increases by 9.85%. Native replay count is zero. The 8K fixture accepts 75/329 proposals across 47 cycles, or about 2.60 emitted outputs per cycle before scalar tails; target verification still takes about 4.0 seconds.
+
+The 32K native allocation sampling peak is 37.485 GiB, below the 38.5 GiB gate but slightly above Apple's recommended 37.440 GiB working set. Its submission-above-working-set counter is nonzero, with zero observed new swap-out in these native formal requests. These counters do not measure continuous physical driver residency or establish the cause of the throughput gap. They are disclosed separately from endpoint allocation and the unchanged system setting. Continuous driver peak remains Not Obtained.
+
+GPU submission counts reconcile with the allocator's per-request submission increments for every traced C/D formal request. GPU milliseconds/submissions include native draft and ingest calls; their dispatch counts are not exported, so the dispatch field is incomplete. Main A/B endpoint counts are retained without claiming equivalent allocation-trace coverage. Per-component wall times are not independently additive: replayMs is contained in commitMs for the legacy control.
+
+See [all retained corrected-run trials](evaluations/issue98/fixed-controls.json). Main scalar profiling windows time forwards; they do not reconstruct the same worker readiness tail clock as the candidate's joint-block windows. Client receipt tail ratios and worker readiness remain separate.
 
 ## Pending measurements and recovery
 

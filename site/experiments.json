@@ -7,7 +7,7 @@
     "question": "Does actual draft generation plus native prefix commit improve emitted-token E2E performance?",
     "setup": "M5 Pro20GPU/48GiB, AC/High Power, local Metal; main4f51f24 vs candidate9c073ff; affine8 target, BF16 draft, FP32 KV/arithmetic; chunk32/matrix0.",
     "change": "Same-width DFlash8 scalar snapshot/replay versus native block verification/direct commit, with candidate-off and fresh main controls. Code PR #99.",
-    "result": "Completed short controls: 21/128 decode main66.315/off65.987/scalar-DFlash20.762/native-DFlash46.052; 8192/128 main60.191/off60.234/scalar13.783/native25.540 token/s. Exact output tokens match and formal swap-out is zero. Long controls/HumanEval pending.",
+    "result": "All three128-output controls complete with exact matching outputs. Main/native decode token/s:21/12866.315/46.052;8192/12860.191/25.540;32768/12845.922/22.008. Native beats scalar DFlash but remains slower than main here. Formal request swap stays below512MiB;4096-output/HumanEval pending.",
     "validation": "171 CPU tests and 38 controlled protocol checks pass. Actual growth/ring poisoning/cancellation/natural EOS and 32K final-state tests pass. Known draft failure retained.",
     "conclusion": "Diagnostic continuation explicitly approved by #98 revision1. No code adoption or baseline change.",
     "next": "Complete serial fixed controls, pilot5 and diagnostic20 unless a new target/state/resource failure stops evaluation.",
