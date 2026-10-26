@@ -24,7 +24,26 @@ The first short-gate component added 1454.484375 MiB whole-system swap-out befor
 
 Release and Native AOT builds pass, with 171 CPU tests passed and 13 opt-in model facts skipped. The frozen AOT package passes 38 controlled protocol checks. A separate fake-worker regression reproduces malformed tool output causing an uncaught exception. A distinct fix returns an explicit API error, retaining malformed calls as failures. It does not prove that all historical stream failures had that cause.
 
-The first E2E attempt (`e2e-20261026T174029Z`) failed before any formal trial: the controller configured a 3600-second worker deadline, beyond the supported maximum1800, causing HTTP500 on A's excluded warmup before inference. This controller error and its raw evidence are retained. The corrected complete run uses1800 seconds for stress controls; Pi timeout remains300 seconds. Product code was not changed after freezing.
+The first E2E attempt (`e2e-20261026T174029Z`) failed before any formal trial: the controller configured a 3600-second worker deadline, beyond the supported maximum1800, causing HTTP500 on A's excluded warmup before inference. This controller error and its raw evidence are retained. The corrected stress deadline is1800 seconds; Pi timeout remains300 seconds. A subsequent run (`e2e-20261026T174243Z`) was deliberately interrupted to move client t0 after fixture reading and JSON construction, before HTTP dispatch. Its completed short-input trials and interrupted 8K request remain superseded diagnostic evidence. A preflight-only port probe then encountered TCP TIME_WAIT with no listeners; SO_REUSEADDR corrected the probe before any service pause/model load. The complete corrected run is `e2e-20261026T174911Z`. Product code was not changed after freezing.
+
+## Completed short-output controls (interim)
+
+The corrected run `e2e-20261026T174911Z` has completed all four arms for the first two shapes. Values below use all three formal trials; each preceding warmup is excluded. Worker throughput is sum(N−1)/sum(first-to-last readiness seconds), not the mean of per-request rates. Client wall is the median of complete request intervals with input preparation excluded. These are diagnostic measurements under the retained numerical failure, not HumanEval results.
+
+|Input/output|Arm|Worker prefill token/s|Worker decode token/s|Median client wall s|
+|---|---|---:|---:|---:|
+|21/128|Main|171.628|66.315|2.038|
+|21/128|Candidate off|172.931|65.987|2.049|
+|21/128|DFlash8 scalar/replay|165.011|20.762|6.248|
+|21/128|DFlash8 native/commit|157.659|46.052|2.899|
+|8192/128|Main|170.698|60.191|50.107|
+|8192/128|Candidate off|170.748|60.234|50.098|
+|8192/128|DFlash8 scalar/replay|166.355|13.783|59.027|
+|8192/128|DFlash8 native/commit|163.649|25.540|55.042|
+
+All observed output token hashes match across arms/trials. Every formal request above added zero whole-system swap-out bytes. Sampled Metal allocation peaks are at most36.499 GiB for these groups; continuous driver peaks remain Not Obtained. Native DFlash eliminates rejection replay and improves decode over the scalar DFlash control, while these short-output fixtures remain slower than scalar main. Sustained4096-token generation and Pi application results are still pending; no conclusion about those unmeasured loads follows from this table.
+
+See [all retained corrected-run trials](evaluations/issue98/fixed-controls.json). Main scalar profiling windows time forwards; they do not reconstruct the same worker readiness tail clock as the candidate's joint-block windows. Client receipt tail ratios and worker readiness are kept separate.
 
 ## Pending measurements and recovery
 
