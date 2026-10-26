@@ -1,0 +1,149 @@
+{
+  "runId": "cohort-20261026T091036Z",
+  "state": "manually_interrupted",
+  "reason": "Paused after reviewing a prior diagnostic startup-isolation failure. No application request resource failure was established for this interrupted cohort. A complete new main/candidate cohort is run under stricter pre-load admission; no individual answer retry replaces this run.",
+  "plannedTasks": [
+    "HumanEval/156",
+    "HumanEval/94",
+    "HumanEval/72",
+    "HumanEval/80",
+    "HumanEval/149",
+    "HumanEval/2",
+    "HumanEval/35",
+    "HumanEval/32",
+    "HumanEval/146",
+    "HumanEval/137",
+    "HumanEval/97",
+    "HumanEval/154",
+    "HumanEval/6",
+    "HumanEval/161",
+    "HumanEval/115",
+    "HumanEval/131",
+    "HumanEval/162",
+    "HumanEval/50",
+    "HumanEval/47",
+    "HumanEval/148"
+  ],
+  "completedTaskRecords": [
+    {
+      "task_id": "HumanEval/156",
+      "completed": true,
+      "timeout": false,
+      "error": null,
+      "returncode": 0,
+      "wall_seconds": 44.741460875
+    },
+    {
+      "task_id": "HumanEval/94",
+      "completed": true,
+      "timeout": false,
+      "error": null,
+      "returncode": 0,
+      "wall_seconds": 58.503108499999996
+    }
+  ],
+  "observedRequests": 8,
+  "knownTerminalWorkerClocks": 8,
+  "wholeCohortPrefill": "Not Obtained",
+  "wholeCohortDecode": "Not Obtained",
+  "official": {
+    "method": "Official HumanEval test field against complete solution.py files; one offline restricted Docker container per task",
+    "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "image": "python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd",
+    "negative_control": "failed",
+    "count": 20,
+    "passed": 2,
+    "rows": [
+      {
+        "task_id": "HumanEval/156",
+        "status": "passed",
+        "exit_code": 0,
+        "stderr": ""
+      },
+      {
+        "task_id": "HumanEval/94",
+        "status": "passed",
+        "exit_code": 0,
+        "stderr": ""
+      },
+      {
+        "task_id": "HumanEval/72",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/80",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/149",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/2",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/35",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/32",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/146",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/137",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/97",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/154",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/6",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/161",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/115",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/131",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/162",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/50",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/47",
+        "status": "missing_solution"
+      },
+      {
+        "task_id": "HumanEval/148",
+        "status": "missing_solution"
+      }
+    ]
+  },
+  "invalidAssertionAttemptRetained": {
+    "artifact": "official-invalid-relative-path.json",
+    "failure": "Docker125: relative bind path rejected before Python execution; not a model result."
+  },
+  "mainSource": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "candidateAttempted": false
+}

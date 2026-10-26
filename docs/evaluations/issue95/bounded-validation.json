@@ -1,0 +1,755 @@
+{
+  "runId": "long-bounded-20261026T085543Z",
+  "source": "54a6ac3e9428fe15978e1ad6991c4a692487ef13",
+  "configuredGcHeapLimitBytes": 1073741824,
+  "short": {
+    "exitCode": 0,
+    "elapsedSeconds": 154.984670334,
+    "wholeComponentNewSystemSwapoutBytes": 69182128128,
+    "runtime": {
+      "ManagedHeap": {
+        "liveBytes": 174704504,
+        "HeapSizeBytes": 147927880,
+        "TotalCommittedBytes": 148062208,
+        "TotalAvailableMemoryBytes": 1073741824
+      },
+      "Profile": {
+        "KvElementBytes": 4,
+        "Bf16Gemm": false,
+        "Matrix": false,
+        "ChunkedDelta": false,
+        "GroupedExperts": true,
+        "PackedExperts": false,
+        "ExpandedGemm": false,
+        "DeviceDelta": false,
+        "ScratchTokens": 128,
+        "FusedAttention": true,
+        "FusedAllAttention": true,
+        "AttentionFeatures": 256,
+        "AttentionBatchTokens": 128,
+        "MatrixRows": 64
+      },
+      "Stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 37628739584
+      },
+      "Block": {
+        "Bytes": 519127072,
+        "Position": 0,
+        "Pending": false
+      },
+      "NativeSha256": "7F3953B8F9B7428A3DE78982F9DE738742CB2785DA77A696A5CCBF1218598A70",
+      "AssemblySha256": "5560F674E28FB5D373283E875324CDDC4BF160409CC18866A6C5B52033B96116"
+    },
+    "cases": [
+      {
+        "rows": 1,
+        "accepted": 0,
+        "passed": true
+      },
+      {
+        "rows": 1,
+        "accepted": 1,
+        "passed": true
+      },
+      {
+        "rows": 4,
+        "accepted": 0,
+        "passed": true
+      },
+      {
+        "rows": 4,
+        "accepted": 1,
+        "passed": true
+      },
+      {
+        "rows": 4,
+        "accepted": 2,
+        "passed": true
+      },
+      {
+        "rows": 4,
+        "accepted": 3,
+        "passed": true
+      },
+      {
+        "rows": 4,
+        "accepted": 4,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 0,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 1,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 2,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 3,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 4,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 5,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 6,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 7,
+        "passed": true
+      },
+      {
+        "rows": 8,
+        "accepted": 8,
+        "passed": true
+      },
+      {
+        "growth": true,
+        "reset": true,
+        "passed": true
+      }
+    ],
+    "resourceDisposition": "Startup resource isolation failed; all large swap increments predate runtime.json and numerical execution. Retain as failed startup isolation, not a successful resource gate."
+  },
+  "long": {
+    "exitCode": 0,
+    "elapsedSeconds": 726.915379208,
+    "wholeComponentNewSystemSwapoutBytes": 517210112,
+    "runtime": {
+      "ManagedHeap": {
+        "liveBytes": 168073176,
+        "HeapSizeBytes": 143327576,
+        "TotalCommittedBytes": 155467776,
+        "TotalAvailableMemoryBytes": 1073741824
+      },
+      "Profile": {
+        "KvElementBytes": 4,
+        "Bf16Gemm": false,
+        "Matrix": true,
+        "ChunkedDelta": true,
+        "GroupedExperts": true,
+        "PackedExperts": false,
+        "ExpandedGemm": false,
+        "DeviceDelta": false,
+        "ScratchTokens": 2048,
+        "FusedAttention": true,
+        "FusedAllAttention": true,
+        "AttentionFeatures": 256,
+        "AttentionBatchTokens": 128,
+        "MatrixRows": 64
+      },
+      "Stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "Block": {
+        "Bytes": 519127072,
+        "Position": 0,
+        "Pending": false
+      },
+      "NativeSha256": "7F3953B8F9B7428A3DE78982F9DE738742CB2785DA77A696A5CCBF1218598A70",
+      "AssemblySha256": "5560F674E28FB5D373283E875324CDDC4BF160409CC18866A6C5B52033B96116"
+    },
+    "cases": [
+      {
+        "length": 2047,
+        "accepted": 1,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2051,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 839037368,
+          "HeapSizeBytes": 413277328,
+          "TotalCommittedBytes": 422854656,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2048,
+        "continuationSteps": 3
+      },
+      {
+        "length": 2047,
+        "accepted": 1,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2051,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 348913880,
+          "HeapSizeBytes": 304419544,
+          "TotalCommittedBytes": 319258624,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2048,
+        "continuationSteps": 3
+      },
+      {
+        "length": 2047,
+        "accepted": 4,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2054,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 516740896,
+          "HeapSizeBytes": 607970024,
+          "TotalCommittedBytes": 622084096,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2051,
+        "continuationSteps": 3
+      },
+      {
+        "length": 2047,
+        "accepted": 4,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2054,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 427494192,
+          "HeapSizeBytes": 664816472,
+          "TotalCommittedBytes": 678772736,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2051,
+        "continuationSteps": 3
+      },
+      {
+        "length": 2047,
+        "accepted": 8,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2058,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 350891576,
+          "HeapSizeBytes": 563281616,
+          "TotalCommittedBytes": 577241088,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2055,
+        "continuationSteps": 3
+      },
+      {
+        "length": 2047,
+        "accepted": 8,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 4096,
+          "KvBytes": 167772160,
+          "AllocatedBytes": 38252511232
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 2058,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 349022136,
+          "HeapSizeBytes": 550584944,
+          "TotalCommittedBytes": 565133312,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 2055,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 1,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4097,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 434916104,
+          "HeapSizeBytes": 498394352,
+          "TotalCommittedBytes": 512868352,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4094,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 1,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4097,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 836375032,
+          "HeapSizeBytes": 498394352,
+          "TotalCommittedBytes": 512868352,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4094,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 4,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4100,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 707683336,
+          "HeapSizeBytes": 316903960,
+          "TotalCommittedBytes": 331776000,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4097,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 4,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4100,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 475215848,
+          "HeapSizeBytes": 500946200,
+          "TotalCommittedBytes": 515637248,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4097,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 8,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4104,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 1076555552,
+          "HeapSizeBytes": 500946200,
+          "TotalCommittedBytes": 515637248,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4101,
+        "continuationSteps": 3
+      },
+      {
+        "length": 4093,
+        "accepted": 8,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 6144,
+          "KvBytes": 251658240,
+          "AllocatedBytes": 38508527616
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 4104,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 748178496,
+          "HeapSizeBytes": 316921552,
+          "TotalCommittedBytes": 331464704,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 4101,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 1,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8196,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 666365328,
+          "HeapSizeBytes": 596728496,
+          "TotalCommittedBytes": 610402304,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8193,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 1,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8196,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 411673696,
+          "HeapSizeBytes": 670513776,
+          "TotalCommittedBytes": 683884544,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8193,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 4,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8199,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 630677384,
+          "HeapSizeBytes": 838609456,
+          "TotalCommittedBytes": 851738624,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8196,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 4,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8199,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 630677152,
+          "HeapSizeBytes": 802408200,
+          "TotalCommittedBytes": 815497216,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8196,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 8,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8203,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 961749416,
+          "HeapSizeBytes": 684379904,
+          "TotalCommittedBytes": 697450496,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8200,
+        "continuationSteps": 3
+      },
+      {
+        "length": 8192,
+        "accepted": 8,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 10240,
+          "KvBytes": 419430400,
+          "AllocatedBytes": 38936674304
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 8203,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 961754416,
+          "HeapSizeBytes": 563453048,
+          "TotalCommittedBytes": 576503808,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 8200,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 1,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32772,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 938346600,
+          "HeapSizeBytes": 493140592,
+          "TotalCommittedBytes": 502480896,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32769,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 1,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32772,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 663325208,
+          "HeapSizeBytes": 902403584,
+          "TotalCommittedBytes": 911212544,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32769,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 4,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32775,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 797575016,
+          "HeapSizeBytes": 493152848,
+          "TotalCommittedBytes": 502497280,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32772,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 4,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32775,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 938405352,
+          "HeapSizeBytes": 902453040,
+          "TotalCommittedBytes": 911261696,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32772,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 8,
+        "arm": "block",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32779,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 938463112,
+          "HeapSizeBytes": 493170176,
+          "TotalCommittedBytes": 502513664,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32776,
+        "continuationSteps": 3
+      },
+      {
+        "length": 32768,
+        "accepted": 8,
+        "arm": "scalar-transaction",
+        "passed": true,
+        "stats": {
+          "Capacity": 34816,
+          "KvBytes": 1426063360,
+          "AllocatedBytes": 40415035392
+        },
+        "block": {
+          "Bytes": 519127072,
+          "Position": 32779,
+          "Pending": false
+        },
+        "managedHeap": {
+          "liveBytes": 663385176,
+          "HeapSizeBytes": 902519584,
+          "TotalCommittedBytes": 911327232,
+          "TotalAvailableMemoryBytes": 1073741824
+        },
+        "committedPositionBeforeContinuation": 32776,
+        "continuationSteps": 3
+      }
+    ]
+  },
+  "nativeSourceChangedSinceMeasurements": false,
+  "comparison": "Each logits row and each layer trace separately require relativeL2<1e-4 and maxAbs<0.01; every committed state and continuation is compared with scalar. No numerical thresholds changed."
+}

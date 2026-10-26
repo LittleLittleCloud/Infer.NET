@@ -1,0 +1,96 @@
+{
+  "model": "mlx-community/Qwen3.6-35B-A3B-8bit",
+  "declaredRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "shards": [
+    {
+      "name": "model-00001-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "ae1ced7360792820cfc12f2e0c8e1ca4d95c712c122e08ebb474b197dee3edaf",
+      "bytes": 5329915945,
+      "mtimeNs": 1792694497451539993,
+      "observedSha256": "ae1ced7360792820cfc12f2e0c8e1ca4d95c712c122e08ebb474b197dee3edaf",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00002-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "b8fdc3700f7339dc29d0e8504d15bc61e9beda7dc69eea037084cfa4067f1b26",
+      "bytes": 5365574072,
+      "mtimeNs": 1792694404583081864,
+      "observedSha256": "b8fdc3700f7339dc29d0e8504d15bc61e9beda7dc69eea037084cfa4067f1b26",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00003-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "8a7851d9152dd39369026ab0ac7c369e4e62ce67ea1e3836862ff0c651176675",
+      "bytes": 5358684778,
+      "mtimeNs": 1792694475305550744,
+      "observedSha256": "8a7851d9152dd39369026ab0ac7c369e4e62ce67ea1e3836862ff0c651176675",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00004-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "3ad6623bb7ff4ddf39ee3854d473d66543ea8fdffc48f03ae4a1dc866da34b36",
+      "bytes": 5365574256,
+      "mtimeNs": 1792694548079998190,
+      "observedSha256": "3ad6623bb7ff4ddf39ee3854d473d66543ea8fdffc48f03ae4a1dc866da34b36",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00005-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "ec9d987a3c499146e6e8edd92afb3943dfd35c908a3de0685346c1ea6901e383",
+      "bytes": 5358684632,
+      "mtimeNs": 1792694773771815268,
+      "observedSha256": "ec9d987a3c499146e6e8edd92afb3943dfd35c908a3de0685346c1ea6901e383",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00006-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "9a843214e1e72bfbae1d2c61283e25ee5930b5ccdbe15dccc7d72fba3a5812c4",
+      "bytes": 5365574102,
+      "mtimeNs": 1792694914979091634,
+      "observedSha256": "9a843214e1e72bfbae1d2c61283e25ee5930b5ccdbe15dccc7d72fba3a5812c4",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00007-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "0a1ed4b82de64955eefb212b2eda57acfa1c2330a4258448e5c7f0f8aaf3649a",
+      "bytes": 5037050550,
+      "mtimeNs": 1792694858860389474,
+      "observedSha256": "0a1ed4b82de64955eefb212b2eda57acfa1c2330a4258448e5c7f0f8aaf3649a",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    },
+    {
+      "name": "model-00008-of-00008.safetensors",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "downloadEtag": "41a1d955de1a9a97de3abebc40b5519b02d542adf266fefbd33b24dc674aef39",
+      "bytes": 540344667,
+      "mtimeNs": 1792694857989405125,
+      "observedSha256": "41a1d955de1a9a97de3abebc40b5519b02d542adf266fefbd33b24dc674aef39",
+      "unchangedSincePreflight": true,
+      "matchesDownloadEtag": true
+    }
+  ],
+  "configurationSha256": {
+    "config.json": "5da49c3a84c5a4a751b720b62b9f8703bdb8a0796b5fc55df3278f8b9d6ce296",
+    "model.safetensors.index.json": "3db12edeebeb65cab9a6eeb63cd74be4e0c74139a75f672701290b98230501cf",
+    "tokenizer.json": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+    "tokenizer_config.json": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182",
+    "chat_template.jinja": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259"
+  },
+  "shardRehashThisRound": true,
+  "rehashTiming": "After all formal GPU timing; streaming hash with 8 MiB buffers",
+  "verifiedUtc": "2026-10-26T10:34:35.678305+00:00"
+}

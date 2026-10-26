@@ -1,0 +1,4754 @@
+{
+  "experiment": 95,
+  "measuredSource": "cda86c0dfc16b5e98484b74e4b72d5345132dd98",
+  "baselineSource": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "scalarControl": "Unchanged scalar forward in the candidate binary, with selected-prefix snapshot/restore in the transaction harness. This is not a separate main executable measurement.",
+  "runId": "bench-20261026T071253Z",
+  "timingBoundary": "Complete target-only transaction wall/GPU time; all candidate rows executed, selected prefix committed. No draft network and no emitted-token decode rate.",
+  "prefillProfile": "scratch2048, managed chunk2048, FP32 matrix/grouped experts/chunked DeltaNet, fused-all prefill and fused-FP32 decode attention in both arms; state rebuilt for every request.",
+  "trialCount": 144,
+  "expectedTrialCount": 144,
+  "complete": true,
+  "resourceBoundary": "New whole-system swapout per request including its zero-cache prefill. Metal is currentAllocatedSize sampled after the request, not a continuous driver/submission residency peak.",
+  "runtime": {
+    "Profile": {
+      "KvElementBytes": 4,
+      "Bf16Gemm": false,
+      "Matrix": true,
+      "ChunkedDelta": true,
+      "GroupedExperts": true,
+      "PackedExperts": false,
+      "ExpandedGemm": false,
+      "DeviceDelta": false,
+      "ScratchTokens": 2048,
+      "FusedAttention": true,
+      "FusedAllAttention": true,
+      "AttentionFeatures": 256,
+      "AttentionBatchTokens": 128,
+      "MatrixRows": 64
+    },
+    "Stats": {
+      "Capacity": 2048,
+      "KvBytes": 83886080,
+      "AllocatedBytes": 38161645568
+    },
+    "Block": {
+      "Bytes": 519127072,
+      "Position": 0,
+      "Pending": false
+    },
+    "NativeSha256": "7F3953B8F9B7428A3DE78982F9DE738742CB2785DA77A696A5CCBF1218598A70",
+    "AssemblySha256": "57B93698C27AE2648A155D1E402411C754D23526FA033572DB6E4A7D0F3AB309"
+  },
+  "fixture": {
+    "mode": "bench",
+    "tokensSha256": "BE1F0B958741F68EC0B8DD68B39B01AA4D0D73473A02C3E5BDD579247AD905B4",
+    "lengths": [
+      21,
+      8192,
+      32768
+    ]
+  },
+  "summary": [
+    {
+      "contextTokens": 21,
+      "rows": 1,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5455.527899999999,
+        "medianMsPerTransaction": 14.199659375,
+        "minMsPerTransaction": 14.194410156249997,
+        "maxMsPerTransaction": 14.227242187499996,
+        "medianGpuMsPerTransaction": 13.4295136718805,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 6671.600700000001,
+        "medianMsPerTransaction": 17.376017187499993,
+        "minMsPerTransaction": 17.35256953125,
+        "maxMsPerTransaction": 17.39329375000001,
+        "medianGpuMsPerTransaction": 16.073464192778886,
+        "medianCommitWallMsPerTransaction": 0.7385000000000002,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": -22.290653119013506
+    },
+    {
+      "contextTokens": 21,
+      "rows": 4,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5468.597100000001,
+        "medianMsPerTransaction": 56.93605625000002,
+        "minMsPerTransaction": 56.90695624999999,
+        "maxMsPerTransaction": 57.050646875000005,
+        "medianGpuMsPerTransaction": 53.0878216146391,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 3320.417300000001,
+        "medianMsPerTransaction": 34.5830125,
+        "minMsPerTransaction": 34.57811562500001,
+        "maxMsPerTransaction": 34.60191250000001,
+        "medianGpuMsPerTransaction": 33.25283984358407,
+        "medianCommitWallMsPerTransaction": 0.742071875,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": 39.282100339774516
+    },
+    {
+      "contextTokens": 21,
+      "rows": 4,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5460.729800000001,
+        "medianMsPerTransaction": 56.89119375000001,
+        "minMsPerTransaction": 56.857168750000014,
+        "maxMsPerTransaction": 56.899443749999996,
+        "medianGpuMsPerTransaction": 53.61255338542037,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 3353.2878,
+        "medianMsPerTransaction": 34.9059375,
+        "minMsPerTransaction": 34.90334687499999,
+        "maxMsPerTransaction": 34.980959375000005,
+        "medianGpuMsPerTransaction": 33.58283072913082,
+        "medianCommitWallMsPerTransaction": 0.7417437499999999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": 38.59268041425526
+    },
+    {
+      "contextTokens": 21,
+      "rows": 8,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5359.7084,
+        "medianMsPerTransaction": 111.67819375,
+        "minMsPerTransaction": 111.60773750000001,
+        "maxMsPerTransaction": 111.69584375,
+        "medianGpuMsPerTransaction": 104.52900520829189,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 2897.4644,
+        "medianMsPerTransaction": 60.393474999999995,
+        "minMsPerTransaction": 60.30173124999999,
+        "maxMsPerTransaction": 60.39631874999999,
+        "medianGpuMsPerTransaction": 58.94735937494033,
+        "medianCommitWallMsPerTransaction": 0.7514000000000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": 45.939887326706064
+    },
+    {
+      "contextTokens": 21,
+      "rows": 8,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5440.5234,
+        "medianMsPerTransaction": 113.36241874999999,
+        "minMsPerTransaction": 113.2825875,
+        "maxMsPerTransaction": 113.38770625000001,
+        "medianGpuMsPerTransaction": 106.06251822872537,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 2919.3548999999994,
+        "medianMsPerTransaction": 60.82223124999999,
+        "minMsPerTransaction": 60.79362499999999,
+        "maxMsPerTransaction": 60.843824999999995,
+        "medianGpuMsPerTransaction": 59.39318489578227,
+        "medianCommitWallMsPerTransaction": 0.7424125000000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": 46.34055061687632
+    },
+    {
+      "contextTokens": 21,
+      "rows": 8,
+      "accepted": 8,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 5460.1549,
+        "medianMsPerTransaction": 113.73644375000002,
+        "minMsPerTransaction": 113.73403749999999,
+        "maxMsPerTransaction": 113.7892,
+        "medianGpuMsPerTransaction": 107.05366666672671,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "block": {
+        "totalFormalWallMs": 2979.4476999999997,
+        "medianMsPerTransaction": 62.009187499999996,
+        "minMsPerTransaction": 61.98561875,
+        "maxMsPerTransaction": 62.220674999999986,
+        "medianGpuMsPerTransaction": 60.60569010417839,
+        "medianCommitWallMsPerTransaction": 0.7508437499999999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38161645568
+      },
+      "aggregateWallReductionPercent": 45.43290887223732
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6278.977299999999,
+        "medianMsPerTransaction": 16.354047656249996,
+        "minMsPerTransaction": 16.340685937499998,
+        "maxMsPerTransaction": 16.3597765625,
+        "medianGpuMsPerTransaction": 15.515025716126047,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 7534.385,
+        "medianMsPerTransaction": 19.62107734375,
+        "minMsPerTransaction": 19.619834375,
+        "maxMsPerTransaction": 19.62147109375,
+        "medianGpuMsPerTransaction": 18.22340332030649,
+        "medianCommitWallMsPerTransaction": 0.7432210937499999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": -19.99382447202034
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6438.376100000001,
+        "medianMsPerTransaction": 67.06268125000001,
+        "minMsPerTransaction": 67.05806249999999,
+        "maxMsPerTransaction": 67.07850937500001,
+        "medianGpuMsPerTransaction": 62.97507031274654,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 4320.5349,
+        "medianMsPerTransaction": 44.99700312499999,
+        "minMsPerTransaction": 44.98890624999999,
+        "maxMsPerTransaction": 45.03080625000001,
+        "medianGpuMsPerTransaction": 43.47773437518572,
+        "medianCommitWallMsPerTransaction": 0.7462125000000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": 32.894027424089145
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6279.1428000000005,
+        "medianMsPerTransaction": 65.420309375,
+        "minMsPerTransaction": 65.373509375,
+        "maxMsPerTransaction": 65.42939375,
+        "medianGpuMsPerTransaction": 62.02709244820835,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 4226.3969,
+        "medianMsPerTransaction": 44.01828437499998,
+        "minMsPerTransaction": 44.00811562500001,
+        "maxMsPerTransaction": 44.04850312500002,
+        "medianGpuMsPerTransaction": 42.52235546897282,
+        "medianCommitWallMsPerTransaction": 0.7443781250000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": 32.69149890969195
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6362.5792,
+        "medianMsPerTransaction": 132.55278125,
+        "minMsPerTransaction": 132.53565625,
+        "maxMsPerTransaction": 132.57276250000004,
+        "medianGpuMsPerTransaction": 124.97657031349081,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 3907.6477,
+        "medianMsPerTransaction": 81.40300624999999,
+        "minMsPerTransaction": 81.39850000000001,
+        "maxMsPerTransaction": 81.426475,
+        "medianGpuMsPerTransaction": 79.68567968725256,
+        "medianCommitWallMsPerTransaction": 0.746725,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": 38.58390477874131
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6372.1937,
+        "medianMsPerTransaction": 132.83426249999997,
+        "minMsPerTransaction": 132.567825,
+        "maxMsPerTransaction": 132.86001875,
+        "medianGpuMsPerTransaction": 125.24517187465244,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 3872.1236,
+        "medianMsPerTransaction": 80.68611874999999,
+        "minMsPerTransaction": 80.63062499999998,
+        "maxMsPerTransaction": 80.69098125000002,
+        "medianGpuMsPerTransaction": 78.92962239636108,
+        "medianCommitWallMsPerTransaction": 0.7654562500000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": 39.2340568680453
+    },
+    {
+      "contextTokens": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 6275.853099999999,
+        "medianMsPerTransaction": 130.77189374999998,
+        "minMsPerTransaction": 130.67844374999999,
+        "maxMsPerTransaction": 130.79048125000003,
+        "medianGpuMsPerTransaction": 124.0207265620993,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "block": {
+        "totalFormalWallMs": 3876.9427000000005,
+        "medianMsPerTransaction": 80.76818750000001,
+        "minMsPerTransaction": 80.76435000000001,
+        "maxMsPerTransaction": 80.77638125,
+        "medianGpuMsPerTransaction": 79.04361197902472,
+        "medianCommitWallMsPerTransaction": 0.7513375000000001,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 38514622464
+      },
+      "aggregateWallReductionPercent": 38.224451110877645
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8340.5241,
+        "medianMsPerTransaction": 21.682956250000004,
+        "minMsPerTransaction": 21.67457187499999,
+        "maxMsPerTransaction": 21.802816406250006,
+        "medianGpuMsPerTransaction": 20.84080273442487,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 9653.692300000002,
+        "medianMsPerTransaction": 25.033645312500003,
+        "minMsPerTransaction": 25.025977343750018,
+        "maxMsPerTransaction": 25.359848437500002,
+        "medianGpuMsPerTransaction": 23.56502181030919,
+        "medianCommitWallMsPerTransaction": 0.7422445312499999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": -15.744432655017459
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8499.586800000001,
+        "medianMsPerTransaction": 88.55490625000002,
+        "minMsPerTransaction": 88.48599375000002,
+        "maxMsPerTransaction": 88.57118750000001,
+        "medianGpuMsPerTransaction": 84.30513932279428,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 6392.0985,
+        "medianMsPerTransaction": 66.5861875,
+        "minMsPerTransaction": 66.51585625,
+        "maxMsPerTransaction": 66.651034375,
+        "medianGpuMsPerTransaction": 64.89323437518033,
+        "medianCommitWallMsPerTransaction": 0.7423749999999999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": 24.795185337715488
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8327.0401,
+        "medianMsPerTransaction": 86.72129687499998,
+        "minMsPerTransaction": 86.69745,
+        "maxMsPerTransaction": 86.80125625000002,
+        "medianGpuMsPerTransaction": 83.35483203163312,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 6364.1686,
+        "medianMsPerTransaction": 65.93563750000001,
+        "minMsPerTransaction": 65.805253125,
+        "maxMsPerTransaction": 67.13937812500001,
+        "medianGpuMsPerTransaction": 64.1549570314819,
+        "medianCommitWallMsPerTransaction": 0.7561343749999999,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": 23.57225948749785
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8487.439600000002,
+        "medianMsPerTransaction": 175.52808125,
+        "minMsPerTransaction": 175.519775,
+        "maxMsPerTransaction": 179.41711875000001,
+        "medianGpuMsPerTransaction": 167.7141822920821,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 6058.588099999999,
+        "medianMsPerTransaction": 125.21969999999999,
+        "minMsPerTransaction": 125.065425,
+        "maxMsPerTransaction": 128.37663124999997,
+        "medianGpuMsPerTransaction": 122.87467187517905,
+        "medianCommitWallMsPerTransaction": 0.75158125,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": 28.61701071781415
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8444.897099999998,
+        "medianMsPerTransaction": 175.879325,
+        "minMsPerTransaction": 175.83261249999995,
+        "maxMsPerTransaction": 176.09413124999998,
+        "medianGpuMsPerTransaction": 167.84768489582348,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 5994.5883,
+        "medianMsPerTransaction": 124.34295,
+        "minMsPerTransaction": 124.2212875,
+        "maxMsPerTransaction": 126.09753125000002,
+        "medianGpuMsPerTransaction": 122.38940104196081,
+        "medianCommitWallMsPerTransaction": 0.756975,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": 29.01525940440409
+    },
+    {
+      "contextTokens": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "scalarTrials": 3,
+      "blockTrials": 3,
+      "complete": true,
+      "scalar": {
+        "totalFormalWallMs": 8327.313999999998,
+        "medianMsPerTransaction": 173.46643124999997,
+        "minMsPerTransaction": 173.4548125,
+        "maxMsPerTransaction": 173.53588125,
+        "medianGpuMsPerTransaction": 166.71337499946821,
+        "medianCommitWallMsPerTransaction": 0.0,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "block": {
+        "totalFormalWallMs": 5985.640200000001,
+        "medianMsPerTransaction": 124.65348750000001,
+        "minMsPerTransaction": 124.5888125,
+        "maxMsPerTransaction": 124.8602125,
+        "medianGpuMsPerTransaction": 122.44003645813791,
+        "medianCommitWallMsPerTransaction": 0.74866875,
+        "maxNewSwapoutBytes": 0,
+        "maxSampledMetalAllocatedBytes": 39573553152
+      },
+      "aggregateWallReductionPercent": 28.120397525540632
+    }
+  ],
+  "trials": [
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:05.442541+00:00",
+      "finishedUtc": "2026-10-26T07:13:07.403207+00:00",
+      "totalWallMs": 1814.1892,
+      "commitWallMs": 0,
+      "gpuMs": 1710.4715833293085,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:07.418447+00:00",
+      "finishedUtc": "2026-10-26T07:13:09.749825+00:00",
+      "totalWallMs": 2237.148399999999,
+      "commitWallMs": 94.1455,
+      "gpuMs": 2057.6830833251734,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:09.762468+00:00",
+      "finishedUtc": "2026-10-26T07:13:12.078864+00:00",
+      "totalWallMs": 2224.130199999999,
+      "commitWallMs": 94.52800000000002,
+      "gpuMs": 2055.5945000050997,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:12.088359+00:00",
+      "finishedUtc": "2026-10-26T07:13:13.997523+00:00",
+      "totalWallMs": 1816.8844999999997,
+      "commitWallMs": 0,
+      "gpuMs": 1713.0871666659004,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:14.004523+00:00",
+      "finishedUtc": "2026-10-26T07:13:15.919734+00:00",
+      "totalWallMs": 1821.0869999999995,
+      "commitWallMs": 0,
+      "gpuMs": 1718.977750000704,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:15.926314+00:00",
+      "finishedUtc": "2026-10-26T07:13:18.241314+00:00",
+      "totalWallMs": 2221.1289,
+      "commitWallMs": 91.9688,
+      "gpuMs": 2059.088708327181,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:18.249732+00:00",
+      "finishedUtc": "2026-10-26T07:13:20.568009+00:00",
+      "totalWallMs": 2226.341600000001,
+      "commitWallMs": 94.88240000000005,
+      "gpuMs": 2057.4034166756974,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:20.574419+00:00",
+      "finishedUtc": "2026-10-26T07:13:22.483807+00:00",
+      "totalWallMs": 1817.5564,
+      "commitWallMs": 0,
+      "gpuMs": 1724.8669583250376,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:22.492155+00:00",
+      "finishedUtc": "2026-10-26T07:13:24.409995+00:00",
+      "totalWallMs": 1823.3758,
+      "commitWallMs": 0,
+      "gpuMs": 1698.3292499980962,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:24.418491+00:00",
+      "finishedUtc": "2026-10-26T07:13:25.619643+00:00",
+      "totalWallMs": 1106.1685,
+      "commitWallMs": 24.148600000000002,
+      "gpuMs": 1063.811374998295,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:25.626715+00:00",
+      "finishedUtc": "2026-10-26T07:13:26.825699+00:00",
+      "totalWallMs": 1106.6564,
+      "commitWallMs": 23.7463,
+      "gpuMs": 1063.649625006292,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:26.832869+00:00",
+      "finishedUtc": "2026-10-26T07:13:28.747013+00:00",
+      "totalWallMs": 1821.9538000000007,
+      "commitWallMs": 0,
+      "gpuMs": 1698.690041662303,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:28.754654+00:00",
+      "finishedUtc": "2026-10-26T07:13:30.674371+00:00",
+      "totalWallMs": 1825.6207000000002,
+      "commitWallMs": 0,
+      "gpuMs": 1701.1817916691143,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:30.682673+00:00",
+      "finishedUtc": "2026-10-26T07:13:31.884497+00:00",
+      "totalWallMs": 1107.2612000000004,
+      "commitWallMs": 23.850199999999997,
+      "gpuMs": 1064.3206666618426,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:31.891696+00:00",
+      "finishedUtc": "2026-10-26T07:13:33.09065+00:00",
+      "totalWallMs": 1106.4997000000003,
+      "commitWallMs": 23.7135,
+      "gpuMs": 1064.0908749946902,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:33.097504+00:00",
+      "finishedUtc": "2026-10-26T07:13:35.010983+00:00",
+      "totalWallMs": 1821.0225999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1698.810291668451,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 53,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:35.018766+00:00",
+      "finishedUtc": "2026-10-26T07:13:36.934766+00:00",
+      "totalWallMs": 1821.7972,
+      "commitWallMs": 0,
+      "gpuMs": 1717.464625001412,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:36.942399+00:00",
+      "finishedUtc": "2026-10-26T07:13:38.156719+00:00",
+      "totalWallMs": 1120.2478999999998,
+      "commitWallMs": 23.9676,
+      "gpuMs": 1074.413249999452,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:38.16408+00:00",
+      "finishedUtc": "2026-10-26T07:13:39.373279+00:00",
+      "totalWallMs": 1116.9070999999997,
+      "commitWallMs": 23.733999999999998,
+      "gpuMs": 1074.6505833321862,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:39.379806+00:00",
+      "finishedUtc": "2026-10-26T07:13:41.292982+00:00",
+      "totalWallMs": 1820.7821999999999,
+      "commitWallMs": 0,
+      "gpuMs": 1716.9174583341373,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:41.305393+00:00",
+      "finishedUtc": "2026-10-26T07:13:43.219359+00:00",
+      "totalWallMs": 1819.4294000000004,
+      "commitWallMs": 0,
+      "gpuMs": 1715.1607916621288,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:43.227587+00:00",
+      "finishedUtc": "2026-10-26T07:13:44.441491+00:00",
+      "totalWallMs": 1119.3907000000002,
+      "commitWallMs": 23.739700000000006,
+      "gpuMs": 1074.4881666678339,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:44.449897+00:00",
+      "finishedUtc": "2026-10-26T07:13:45.659425+00:00",
+      "totalWallMs": 1116.99,
+      "commitWallMs": 23.735799999999998,
+      "gpuMs": 1074.833708332335,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:45.666601+00:00",
+      "finishedUtc": "2026-10-26T07:13:47.579489+00:00",
+      "totalWallMs": 1820.5182000000004,
+      "commitWallMs": 0,
+      "gpuMs": 1715.6017083334518,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:47.588805+00:00",
+      "finishedUtc": "2026-10-26T07:13:49.474953+00:00",
+      "totalWallMs": 1791.149,
+      "commitWallMs": 0,
+      "gpuMs": 1673.3159583327506,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:49.48363+00:00",
+      "finishedUtc": "2026-10-26T07:13:50.543459+00:00",
+      "totalWallMs": 965.8339999999998,
+      "commitWallMs": 12.2,
+      "gpuMs": 943.1452916660419,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:50.551889+00:00",
+      "finishedUtc": "2026-10-26T07:13:51.611542+00:00",
+      "totalWallMs": 966.3410999999999,
+      "commitWallMs": 12.022400000000001,
+      "gpuMs": 943.1577499990453,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:51.619702+00:00",
+      "finishedUtc": "2026-10-26T07:13:53.499337+00:00",
+      "totalWallMs": 1787.1335,
+      "commitWallMs": 0,
+      "gpuMs": 1672.5479166625519,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:53.50664+00:00",
+      "finishedUtc": "2026-10-26T07:13:55.386844+00:00",
+      "totalWallMs": 1785.7238000000002,
+      "commitWallMs": 0,
+      "gpuMs": 1672.0614583382485,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:55.394294+00:00",
+      "finishedUtc": "2026-10-26T07:13:56.454949+00:00",
+      "totalWallMs": 966.2955999999999,
+      "commitWallMs": 12.480100000000002,
+      "gpuMs": 943.1100000010701,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:13:56.469257+00:00",
+      "finishedUtc": "2026-10-26T07:13:57.527433+00:00",
+      "totalWallMs": 964.8276999999998,
+      "commitWallMs": 11.6638,
+      "gpuMs": 943.2263333337687,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:57.534149+00:00",
+      "finishedUtc": "2026-10-26T07:13:59.413599+00:00",
+      "totalWallMs": 1786.8511,
+      "commitWallMs": 0,
+      "gpuMs": 1672.4640833326703,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 37,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:13:59.421048+00:00",
+      "finishedUtc": "2026-10-26T07:14:01.333453+00:00",
+      "totalWallMs": 1817.7115,
+      "commitWallMs": 0,
+      "gpuMs": 1704.0829583329469,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:01.342642+00:00",
+      "finishedUtc": "2026-10-26T07:14:02.411665+00:00",
+      "totalWallMs": 973.3515,
+      "commitWallMs": 11.986800000000002,
+      "gpuMs": 950.3896249962054,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:02.422291+00:00",
+      "finishedUtc": "2026-10-26T07:14:03.487222+00:00",
+      "totalWallMs": 972.6979999999999,
+      "commitWallMs": 11.758700000000001,
+      "gpuMs": 950.6551250005941,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:03.500078+00:00",
+      "finishedUtc": "2026-10-26T07:14:05.406645+00:00",
+      "totalWallMs": 1814.2033000000001,
+      "commitWallMs": 0,
+      "gpuMs": 1698.0471249989932,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:05.413704+00:00",
+      "finishedUtc": "2026-10-26T07:14:07.322108+00:00",
+      "totalWallMs": 1813.7986999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1697.0002916596059,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:07.330247+00:00",
+      "finishedUtc": "2026-10-26T07:14:08.397733+00:00",
+      "totalWallMs": 973.1556999999998,
+      "commitWallMs": 11.9065,
+      "gpuMs": 950.121583328837,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:08.405745+00:00",
+      "finishedUtc": "2026-10-26T07:14:09.471707+00:00",
+      "totalWallMs": 973.5011999999999,
+      "commitWallMs": 11.878600000000002,
+      "gpuMs": 950.2909583325163,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:09.480184+00:00",
+      "finishedUtc": "2026-10-26T07:14:11.385538+00:00",
+      "totalWallMs": 1812.5214,
+      "commitWallMs": 0,
+      "gpuMs": 1696.6680000005,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 85,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:11.395223+00:00",
+      "finishedUtc": "2026-10-26T07:14:13.309176+00:00",
+      "totalWallMs": 1819.1808999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1711.880166658375,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:13.31819+00:00",
+      "finishedUtc": "2026-10-26T07:14:14.408158+00:00",
+      "totalWallMs": 995.7283000000001,
+      "commitWallMs": 11.861400000000001,
+      "gpuMs": 970.6753333293818,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:14.415429+00:00",
+      "finishedUtc": "2026-10-26T07:14:15.499706+00:00",
+      "totalWallMs": 991.7699,
+      "commitWallMs": 12.0068,
+      "gpuMs": 969.9013333365656,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:15.50816+00:00",
+      "finishedUtc": "2026-10-26T07:14:17.421323+00:00",
+      "totalWallMs": 1820.6272,
+      "commitWallMs": 0,
+      "gpuMs": 1713.420125002769,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:17.429259+00:00",
+      "finishedUtc": "2026-10-26T07:14:19.343745+00:00",
+      "totalWallMs": 1819.7445999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1712.8586666676274,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:19.353338+00:00",
+      "finishedUtc": "2026-10-26T07:14:20.443384+00:00",
+      "totalWallMs": 995.5307999999998,
+      "commitWallMs": 12.1883,
+      "gpuMs": 969.6910416668543,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:20.452306+00:00",
+      "finishedUtc": "2026-10-26T07:14:21.537015+00:00",
+      "totalWallMs": 992.1469999999999,
+      "commitWallMs": 12.013499999999999,
+      "gpuMs": 969.4448750023876,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 21,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:21.544045+00:00",
+      "finishedUtc": "2026-10-26T07:14:23.456446+00:00",
+      "totalWallMs": 1819.7831000000003,
+      "commitWallMs": 0,
+      "gpuMs": 1712.312999991831,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 2048,
+        "KvBytes": 83886080,
+        "AllocatedBytes": 38161645568
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 149,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:14:23.466068+00:00",
+      "finishedUtc": "2026-10-26T07:14:39.958687+00:00",
+      "totalWallMs": 2197.392299999999,
+      "commitWallMs": 0,
+      "gpuMs": 2067.240458331129,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:39.966724+00:00",
+      "finishedUtc": "2026-10-26T07:14:56.772059+00:00",
+      "totalWallMs": 2559.927499999998,
+      "commitWallMs": 95.37510000000003,
+      "gpuMs": 2332.037499991071,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:14:56.780849+00:00",
+      "finishedUtc": "2026-10-26T07:15:13.532604+00:00",
+      "totalWallMs": 2511.5483,
+      "commitWallMs": 93.75829999999999,
+      "gpuMs": 2332.9380416689382,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:15:13.541703+00:00",
+      "finishedUtc": "2026-10-26T07:15:29.862605+00:00",
+      "totalWallMs": 2091.6077999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1984.2444583337638,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:15:29.869988+00:00",
+      "finishedUtc": "2026-10-26T07:15:46.200379+00:00",
+      "totalWallMs": 2093.3180999999995,
+      "commitWallMs": 0,
+      "gpuMs": 1986.3542083258217,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:15:46.208039+00:00",
+      "finishedUtc": "2026-10-26T07:16:02.955633+00:00",
+      "totalWallMs": 2511.3388,
+      "commitWallMs": 95.13229999999999,
+      "gpuMs": 2332.5956249992305,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:16:02.963887+00:00",
+      "finishedUtc": "2026-10-26T07:16:19.704828+00:00",
+      "totalWallMs": 2511.4979,
+      "commitWallMs": 95.33880000000005,
+      "gpuMs": 2331.731291668024,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:16:19.713678+00:00",
+      "finishedUtc": "2026-10-26T07:16:36.038357+00:00",
+      "totalWallMs": 2094.0514,
+      "commitWallMs": 0,
+      "gpuMs": 1985.923291664134,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:16:36.050371+00:00",
+      "finishedUtc": "2026-10-26T07:16:52.432998+00:00",
+      "totalWallMs": 2147.4554,
+      "commitWallMs": 0,
+      "gpuMs": 2017.17945832666,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:16:52.441471+00:00",
+      "finishedUtc": "2026-10-26T07:17:08.116986+00:00",
+      "totalWallMs": 1439.8095999999998,
+      "commitWallMs": 23.764200000000002,
+      "gpuMs": 1391.2646250019607,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:17:08.126539+00:00",
+      "finishedUtc": "2026-10-26T07:17:23.802038+00:00",
+      "totalWallMs": 1439.9040999999997,
+      "commitWallMs": 24.028800000000004,
+      "gpuMs": 1391.287500005943,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:17:23.810446+00:00",
+      "finishedUtc": "2026-10-26T07:17:40.187911+00:00",
+      "totalWallMs": 2146.5123000000003,
+      "commitWallMs": 0,
+      "gpuMs": 2015.7515833351645,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:17:40.196563+00:00",
+      "finishedUtc": "2026-10-26T07:17:56.574779+00:00",
+      "totalWallMs": 2145.8579999999997,
+      "commitWallMs": 0,
+      "gpuMs": 2015.027249995852,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:17:56.583559+00:00",
+      "finishedUtc": "2026-10-26T07:18:12.254713+00:00",
+      "totalWallMs": 1439.6449999999998,
+      "commitWallMs": 23.807799999999997,
+      "gpuMs": 1390.912083335803,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:18:12.262142+00:00",
+      "finishedUtc": "2026-10-26T07:18:27.935889+00:00",
+      "totalWallMs": 1440.9858000000004,
+      "commitWallMs": 23.878800000000002,
+      "gpuMs": 1391.8492499997374,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:18:27.944215+00:00",
+      "finishedUtc": "2026-10-26T07:18:44.323849+00:00",
+      "totalWallMs": 2146.0058000000004,
+      "commitWallMs": 0,
+      "gpuMs": 2015.2022500078892,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8224,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:18:44.3325+00:00",
+      "finishedUtc": "2026-10-26T07:19:00.660802+00:00",
+      "totalWallMs": 2094.6834000000003,
+      "commitWallMs": 0,
+      "gpuMs": 1986.905000001716,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:19:00.66847+00:00",
+      "finishedUtc": "2026-10-26T07:19:16.310162+00:00",
+      "totalWallMs": 1409.4775000000002,
+      "commitWallMs": 24.090700000000005,
+      "gpuMs": 1361.2062916671857,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:19:16.318479+00:00",
+      "finishedUtc": "2026-10-26T07:19:31.959459+00:00",
+      "totalWallMs": 1408.2597000000003,
+      "commitWallMs": 23.5501,
+      "gpuMs": 1361.4912916591857,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:19:31.968345+00:00",
+      "finishedUtc": "2026-10-26T07:19:48.295821+00:00",
+      "totalWallMs": 2093.4499,
+      "commitWallMs": 0,
+      "gpuMs": 1984.8669583426672,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:19:48.304082+00:00",
+      "finishedUtc": "2026-10-26T07:20:04.635767+00:00",
+      "totalWallMs": 2093.7406,
+      "commitWallMs": 0,
+      "gpuMs": 1985.655625010666,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:20:04.64409+00:00",
+      "finishedUtc": "2026-10-26T07:20:20.291102+00:00",
+      "totalWallMs": 1409.5521000000006,
+      "commitWallMs": 24.238299999999995,
+      "gpuMs": 1360.7153750071302,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:20:20.298852+00:00",
+      "finishedUtc": "2026-10-26T07:20:35.93793+00:00",
+      "totalWallMs": 1408.5850999999993,
+      "commitWallMs": 23.820100000000004,
+      "gpuMs": 1360.1773749981076,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:20:35.946324+00:00",
+      "finishedUtc": "2026-10-26T07:20:52.270824+00:00",
+      "totalWallMs": 2091.9523,
+      "commitWallMs": 0,
+      "gpuMs": 1984.1159999958472,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:20:52.28036+00:00",
+      "finishedUtc": "2026-10-26T07:21:08.639853+00:00",
+      "totalWallMs": 2122.4478,
+      "commitWallMs": 0,
+      "gpuMs": 2000.5292500008945,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:21:08.647581+00:00",
+      "finishedUtc": "2026-10-26T07:21:24.186382+00:00",
+      "totalWallMs": 1302.767,
+      "commitWallMs": 11.9935,
+      "gpuMs": 1275.1437499991735,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:21:24.193655+00:00",
+      "finishedUtc": "2026-10-26T07:21:39.72569+00:00",
+      "totalWallMs": 1302.4480999999998,
+      "commitWallMs": 11.9342,
+      "gpuMs": 1274.970874996041,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:21:39.732677+00:00",
+      "finishedUtc": "2026-10-26T07:21:56.082109+00:00",
+      "totalWallMs": 2120.5705,
+      "commitWallMs": 0,
+      "gpuMs": 1999.6362500041723,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:21:56.091701+00:00",
+      "finishedUtc": "2026-10-26T07:22:12.449519+00:00",
+      "totalWallMs": 2120.8445,
+      "commitWallMs": 0,
+      "gpuMs": 1999.3957083208952,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:22:12.459085+00:00",
+      "finishedUtc": "2026-10-26T07:22:27.997634+00:00",
+      "totalWallMs": 1302.8236,
+      "commitWallMs": 12.080899999999998,
+      "gpuMs": 1275.2926666743588,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:22:28.006055+00:00",
+      "finishedUtc": "2026-10-26T07:22:43.540755+00:00",
+      "totalWallMs": 1302.3760000000002,
+      "commitWallMs": 11.9476,
+      "gpuMs": 1274.7245416629594,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:22:43.549841+00:00",
+      "finishedUtc": "2026-10-26T07:22:59.904053+00:00",
+      "totalWallMs": 2121.1642000000006,
+      "commitWallMs": 0,
+      "gpuMs": 1999.625125015853,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8208,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:22:59.912311+00:00",
+      "finishedUtc": "2026-10-26T07:23:16.269736+00:00",
+      "totalWallMs": 2122.6896,
+      "commitWallMs": 0,
+      "gpuMs": 2001.6494999983115,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:23:16.278492+00:00",
+      "finishedUtc": "2026-10-26T07:23:31.804725+00:00",
+      "totalWallMs": 1290.7726,
+      "commitWallMs": 12.289,
+      "gpuMs": 1262.9342083361698,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:23:31.813521+00:00",
+      "finishedUtc": "2026-10-26T07:23:47.334579+00:00",
+      "totalWallMs": 1290.0899999999997,
+      "commitWallMs": 12.108,
+      "gpuMs": 1262.5752083365805,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:23:47.342365+00:00",
+      "finishedUtc": "2026-10-26T07:24:03.702786+00:00",
+      "totalWallMs": 2125.3481999999995,
+      "commitWallMs": 0,
+      "gpuMs": 2003.922749994439,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:24:03.710804+00:00",
+      "finishedUtc": "2026-10-26T07:24:20.063095+00:00",
+      "totalWallMs": 2121.0852,
+      "commitWallMs": 0,
+      "gpuMs": 1999.5544166540494,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:24:20.071903+00:00",
+      "finishedUtc": "2026-10-26T07:24:35.598126+00:00",
+      "totalWallMs": 1290.9778999999999,
+      "commitWallMs": 12.339699999999999,
+      "gpuMs": 1262.8828333311249,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:24:35.606723+00:00",
+      "finishedUtc": "2026-10-26T07:24:51.126313+00:00",
+      "totalWallMs": 1291.0557000000003,
+      "commitWallMs": 12.247300000000001,
+      "gpuMs": 1262.8739583417773,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:24:51.134123+00:00",
+      "finishedUtc": "2026-10-26T07:25:07.491253+00:00",
+      "totalWallMs": 2125.7603,
+      "commitWallMs": 0,
+      "gpuMs": 2006.239083339111,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8256,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:25:07.499732+00:00",
+      "finishedUtc": "2026-10-26T07:25:23.830457+00:00",
+      "totalWallMs": 2096.4815000000003,
+      "commitWallMs": 0,
+      "gpuMs": 1988.809666676214,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:25:23.837831+00:00",
+      "finishedUtc": "2026-10-26T07:25:39.361394+00:00",
+      "totalWallMs": 1293.6143,
+      "commitWallMs": 12.2245,
+      "gpuMs": 1264.759791663615,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:25:39.370314+00:00",
+      "finishedUtc": "2026-10-26T07:25:54.891214+00:00",
+      "totalWallMs": 1292.2296000000001,
+      "commitWallMs": 11.839899999999998,
+      "gpuMs": 1264.5453333422774,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:25:54.900667+00:00",
+      "finishedUtc": "2026-10-26T07:26:11.224571+00:00",
+      "totalWallMs": 2092.3502999999996,
+      "commitWallMs": 0,
+      "gpuMs": 1984.3316249935888,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:26:11.232168+00:00",
+      "finishedUtc": "2026-10-26T07:26:27.563643+00:00",
+      "totalWallMs": 2092.6477000000004,
+      "commitWallMs": 0,
+      "gpuMs": 1984.6227499947418,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:26:27.572209+00:00",
+      "finishedUtc": "2026-10-26T07:26:43.09677+00:00",
+      "totalWallMs": 1292.2910000000002,
+      "commitWallMs": 12.021400000000002,
+      "gpuMs": 1264.9882916607894,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:26:43.105477+00:00",
+      "finishedUtc": "2026-10-26T07:26:58.628627+00:00",
+      "totalWallMs": 1292.4221,
+      "commitWallMs": 12.094,
+      "gpuMs": 1264.6977916643955,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 8192,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:26:58.636287+00:00",
+      "finishedUtc": "2026-10-26T07:27:14.956427+00:00",
+      "totalWallMs": 2090.8550999999998,
+      "commitWallMs": 0,
+      "gpuMs": 1983.276999995811,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38514622464
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8320,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:27:14.967986+00:00",
+      "finishedUtc": "2026-10-26T07:28:34.27871+00:00",
+      "totalWallMs": 2773.7937999999995,
+      "commitWallMs": 0,
+      "gpuMs": 2666.5740000135265,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:28:34.288747+00:00",
+      "finishedUtc": "2026-10-26T07:29:54.009878+00:00",
+      "totalWallMs": 3246.667699999999,
+      "commitWallMs": 94.55819999999996,
+      "gpuMs": 3016.8823750013253,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:29:54.018779+00:00",
+      "finishedUtc": "2026-10-26T07:31:13.706749+00:00",
+      "totalWallMs": 3204.3066000000003,
+      "commitWallMs": 95.00729999999999,
+      "gpuMs": 3016.4543333537877,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:31:13.715298+00:00",
+      "finishedUtc": "2026-10-26T07:32:32.966417+00:00",
+      "totalWallMs": 2774.345199999999,
+      "commitWallMs": 0,
+      "gpuMs": 2666.8119583467487,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:32:32.975548+00:00",
+      "finishedUtc": "2026-10-26T07:33:52.244542+00:00",
+      "totalWallMs": 2790.760500000001,
+      "commitWallMs": 0,
+      "gpuMs": 2683.988666665042,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:33:52.252981+00:00",
+      "finishedUtc": "2026-10-26T07:35:11.999979+00:00",
+      "totalWallMs": 3246.0606000000002,
+      "commitWallMs": 95.0125,
+      "gpuMs": 3016.3227917195763,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:35:12.009869+00:00",
+      "finishedUtc": "2026-10-26T07:36:31.686764+00:00",
+      "totalWallMs": 3203.3251000000023,
+      "commitWallMs": 94.97510000000003,
+      "gpuMs": 3016.2774999728426,
+      "dispatches": 94080,
+      "submissions": 384,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 1,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:36:31.695437+00:00",
+      "finishedUtc": "2026-10-26T07:37:50.937606+00:00",
+      "totalWallMs": 2775.4184000000005,
+      "commitWallMs": 0,
+      "gpuMs": 2667.6227500063833,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 128,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:37:50.945636+00:00",
+      "finishedUtc": "2026-10-26T07:39:10.253259+00:00",
+      "totalWallMs": 2838.5254000000004,
+      "commitWallMs": 0,
+      "gpuMs": 2699.2434583341237,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 426377216,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:39:10.261841+00:00",
+      "finishedUtc": "2026-10-26T07:40:28.876906+00:00",
+      "totalWallMs": 2132.4728999999998,
+      "commitWallMs": 24.1707,
+      "gpuMs": 2075.808041680837,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:40:28.886293+00:00",
+      "finishedUtc": "2026-10-26T07:41:47.487772+00:00",
+      "totalWallMs": 2128.5074,
+      "commitWallMs": 23.755999999999997,
+      "gpuMs": 2076.5835000057705,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:41:47.495278+00:00",
+      "finishedUtc": "2026-10-26T07:43:06.808665+00:00",
+      "totalWallMs": 2833.7570000000005,
+      "commitWallMs": 0,
+      "gpuMs": 2698.0891249857377,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:43:06.817549+00:00",
+      "finishedUtc": "2026-10-26T07:44:26.125596+00:00",
+      "totalWallMs": 2834.2780000000002,
+      "commitWallMs": 0,
+      "gpuMs": 2697.342583331745,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:44:26.13438+00:00",
+      "finishedUtc": "2026-10-26T07:45:44.752926+00:00",
+      "totalWallMs": 2130.758,
+      "commitWallMs": 23.507499999999997,
+      "gpuMs": 2076.4255000017583,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:45:44.76195+00:00",
+      "finishedUtc": "2026-10-26T07:47:03.363727+00:00",
+      "totalWallMs": 2132.8331,
+      "commitWallMs": 23.942599999999995,
+      "gpuMs": 2077.2270833258517,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:47:03.376804+00:00",
+      "finishedUtc": "2026-10-26T07:48:22.692682+00:00",
+      "totalWallMs": 2831.5518000000006,
+      "commitWallMs": 0,
+      "gpuMs": 2697.764458329417,
+      "dispatches": 86400,
+      "submissions": 192,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32800,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 32,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:48:22.70048+00:00",
+      "finishedUtc": "2026-10-26T07:49:41.951968+00:00",
+      "totalWallMs": 2774.8314,
+      "commitWallMs": 0,
+      "gpuMs": 2667.8664999934845,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:49:41.961167+00:00",
+      "finishedUtc": "2026-10-26T07:51:00.582372+00:00",
+      "totalWallMs": 2123.1019,
+      "commitWallMs": 24.191699999999994,
+      "gpuMs": 2052.9416666799225,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:51:00.59541+00:00",
+      "finishedUtc": "2026-10-26T07:52:19.180048+00:00",
+      "totalWallMs": 2105.7681,
+      "commitWallMs": 24.196299999999997,
+      "gpuMs": 2051.5895416624844,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:52:19.189891+00:00",
+      "finishedUtc": "2026-10-26T07:53:38.444625+00:00",
+      "totalWallMs": 2777.6402000000007,
+      "commitWallMs": 0,
+      "gpuMs": 2669.2674999949522,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:53:38.456288+00:00",
+      "finishedUtc": "2026-10-26T07:54:57.718772+00:00",
+      "totalWallMs": 2774.3184,
+      "commitWallMs": 0,
+      "gpuMs": 2666.432333327364,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:54:57.730225+00:00",
+      "finishedUtc": "2026-10-26T07:56:16.388727+00:00",
+      "totalWallMs": 2148.4601000000002,
+      "commitWallMs": 23.2357,
+      "gpuMs": 2056.0167083339766,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T07:56:16.399311+00:00",
+      "finishedUtc": "2026-10-26T07:57:34.983087+00:00",
+      "totalWallMs": 2109.9404000000004,
+      "commitWallMs": 24.3512,
+      "gpuMs": 2052.958625007421,
+      "dispatches": 25632,
+      "submissions": 96,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 4,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:57:34.992007+00:00",
+      "finishedUtc": "2026-10-26T07:58:54.245007+00:00",
+      "totalWallMs": 2775.0814999999993,
+      "commitWallMs": 0,
+      "gpuMs": 2667.35462501226,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 32,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T07:58:54.254833+00:00",
+      "finishedUtc": "2026-10-26T08:00:13.55415+00:00",
+      "totalWallMs": 2810.8419999999996,
+      "commitWallMs": 0,
+      "gpuMs": 2683.15754166618,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:00:13.563364+00:00",
+      "finishedUtc": "2026-10-26T08:01:32.067066+00:00",
+      "totalWallMs": 1998.5553000000002,
+      "commitWallMs": 12.447399999999998,
+      "gpuMs": 1966.4489583284594,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:01:32.077328+00:00",
+      "finishedUtc": "2026-10-26T08:02:50.560575+00:00",
+      "totalWallMs": 2003.5151999999998,
+      "commitWallMs": 12.249200000000002,
+      "gpuMs": 1965.9947500028647,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:02:50.569197+00:00",
+      "finishedUtc": "2026-10-26T08:04:09.866025+00:00",
+      "totalWallMs": 2808.3164,
+      "commitWallMs": 0,
+      "gpuMs": 2683.426916673314,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:04:09.87571+00:00",
+      "finishedUtc": "2026-10-26T08:05:29.282142+00:00",
+      "totalWallMs": 2870.6739000000002,
+      "commitWallMs": 0,
+      "gpuMs": 2702.1864999844693,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:05:29.294466+00:00",
+      "finishedUtc": "2026-10-26T08:06:47.872732+00:00",
+      "totalWallMs": 2054.0260999999996,
+      "commitWallMs": 12.0253,
+      "gpuMs": 1978.589458342176,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:06:47.883869+00:00",
+      "finishedUtc": "2026-10-26T08:08:06.379392+00:00",
+      "totalWallMs": 2001.0468,
+      "commitWallMs": 11.9145,
+      "gpuMs": 1965.9403749965131,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 1,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:08:06.388699+00:00",
+      "finishedUtc": "2026-10-26T08:09:25.69058+00:00",
+      "totalWallMs": 2808.4493,
+      "commitWallMs": 0,
+      "gpuMs": 2682.4700000034645,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32784,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 16,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:09:25.699452+00:00",
+      "finishedUtc": "2026-10-26T08:10:45.005117+00:00",
+      "totalWallMs": 2820.2001999999993,
+      "commitWallMs": 0,
+      "gpuMs": 2689.054124986753,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:10:45.013435+00:00",
+      "finishedUtc": "2026-10-26T08:12:03.507544+00:00",
+      "totalWallMs": 2008.1989999999998,
+      "commitWallMs": 12.294,
+      "gpuMs": 1959.3749999962747,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:12:03.522141+00:00",
+      "finishedUtc": "2026-10-26T08:13:21.986675+00:00",
+      "totalWallMs": 1987.5406,
+      "commitWallMs": 12.1704,
+      "gpuMs": 1957.449333328288,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:13:21.995147+00:00",
+      "finishedUtc": "2026-10-26T08:14:41.297225+00:00",
+      "totalWallMs": 2813.3217999999993,
+      "commitWallMs": 0,
+      "gpuMs": 2687.0706250071526,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:14:41.306555+00:00",
+      "finishedUtc": "2026-10-26T08:16:00.604495+00:00",
+      "totalWallMs": 2814.0692,
+      "commitWallMs": 0,
+      "gpuMs": 2685.5629583331756,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:16:00.612526+00:00",
+      "finishedUtc": "2026-10-26T08:17:19.094876+00:00",
+      "totalWallMs": 1989.4872,
+      "commitWallMs": 12.097800000000001,
+      "gpuMs": 1958.230416671373,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:17:19.102587+00:00",
+      "finishedUtc": "2026-10-26T08:18:37.614082+00:00",
+      "totalWallMs": 2017.5605000000003,
+      "commitWallMs": 12.1116,
+      "gpuMs": 1958.3547500050627,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 4,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:18:37.635397+00:00",
+      "finishedUtc": "2026-10-26T08:19:56.931142+00:00",
+      "totalWallMs": 2817.5060999999996,
+      "commitWallMs": 0,
+      "gpuMs": 2685.511208334472,
+      "dispatches": 86400,
+      "submissions": 160,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32832,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 64,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:19:56.94317+00:00",
+      "finishedUtc": "2026-10-26T08:21:16.230587+00:00",
+      "totalWallMs": 2778.0027000000005,
+      "commitWallMs": 0,
+      "gpuMs": 2670.0129166627303,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": -1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:21:16.241598+00:00",
+      "finishedUtc": "2026-10-26T08:22:34.776837+00:00",
+      "totalWallMs": 2039.2643,
+      "commitWallMs": 12.0352,
+      "gpuMs": 1958.9829583298415,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": true
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:22:34.786279+00:00",
+      "finishedUtc": "2026-10-26T08:23:53.271094+00:00",
+      "totalWallMs": 1994.4558000000002,
+      "commitWallMs": 11.9787,
+      "gpuMs": 1959.534208331257,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 0,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:23:53.280743+00:00",
+      "finishedUtc": "2026-10-26T08:25:12.547744+00:00",
+      "totalWallMs": 2775.4628999999995,
+      "commitWallMs": 0,
+      "gpuMs": 2667.4139999914914,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:25:12.555769+00:00",
+      "finishedUtc": "2026-10-26T08:26:31.811759+00:00",
+      "totalWallMs": 2776.5741,
+      "commitWallMs": 0,
+      "gpuMs": 2668.0803333362564,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 1,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:26:31.821374+00:00",
+      "finishedUtc": "2026-10-26T08:27:50.308842+00:00",
+      "totalWallMs": 1997.7634,
+      "commitWallMs": 11.9384,
+      "gpuMs": 1959.0405833302066,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "block",
+      "startedUtc": "2026-10-26T08:27:50.31831+00:00",
+      "finishedUtc": "2026-10-26T08:29:08.805135+00:00",
+      "totalWallMs": 1993.421,
+      "commitWallMs": 12.1832,
+      "gpuMs": 1958.7114583412185,
+      "dispatches": 14224,
+      "submissions": 48,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    },
+    {
+      "length": 32768,
+      "rows": 8,
+      "accepted": 8,
+      "trial": 2,
+      "arm": "scalar",
+      "startedUtc": "2026-10-26T08:29:08.814623+00:00",
+      "finishedUtc": "2026-10-26T08:30:28.059925+00:00",
+      "totalWallMs": 2775.277,
+      "commitWallMs": 0,
+      "gpuMs": 2666.6358749857172,
+      "dispatches": 86400,
+      "submissions": 128,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 39573553152
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32896,
+        "Pending": false
+      },
+      "transactionCount": 16,
+      "candidateInputRows": 128,
+      "committedInputRows": 128,
+      "newSystemSwapoutBytes": 0,
+      "excludedWarmup": false
+    }
+  ]
+}

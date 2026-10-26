@@ -1,5 +1,20 @@
 [
   {
+    "id": "splash-target-block-commit-20261025",
+    "title": "Native target block verification and prefix commit",
+    "kind": "2026-10-26 · Evaluation complete · Adoption gates failed",
+    "source": "docs/EXPERIMENT-95-TARGET-BLOCK-RESULTS-20261026.md",
+    "question": "Can a native multi-row target graph reduce verification and accepted-prefix commit costs without replay?",
+    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; M5 Pro 20-core GPU / 48 GiB; affine8 target, FP32 KV/operands/state; no draft or prefix cache.",
+    "change": "Opt-in 1/4/8-row graph captures recurrent prefix states during computation and commits without replay. Original scalar path remains default.",
+    "result": "144 target-only trials: eight-row costs decrease 45–46% / 38–39% / 28–29% at short / 8K / 32K. Formal official main 20/20, candidate 19/20; candidate has 2 incomplete Pi run(s) and unqualified whole-cohort throughput.",
+    "validation": "Independent state oracles, all 16 short-prefix and 24 long-context cases passed after correcting the retained KV-address bug. Startup swap failures and the interrupted control remain recorded; fresh formal requests satisfy sampled resource limits.",
+    "conclusion": "Do not recommend candidate adoption: the no-new-error and qualified default-path regression gates are not satisfied. Target transaction milliseconds are not emitted-token throughput.",
+    "next": "Manual review of results PR #97 and disposition of draft code PR #96; baseline unchanged. No merge or publication performed.",
+    "commands": [],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/95; code PR https://github.com/LittleLittleCloud/Infer.NET/pull/96; results PR https://github.com/LittleLittleCloud/Infer.NET/pull/97."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
