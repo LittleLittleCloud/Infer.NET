@@ -1,0 +1,40 @@
+{
+  "main": {
+    "sourceSha": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+    "binarySha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+    "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+    "observerSource": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+    "observerSha256": "ad507a7f3cc40c87029ea96fc85c46c3b2cf77360de08ea6cbb753780e9e365d",
+    "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+    "expertLanes": 0,
+    "workerProfile": "counter-off, local Metal, FP32 KV/recurrence, affine8 weights",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 70241,
+      "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "candidate": {
+    "sourceSha": "7f114e94661c3a39ca46d888322f438ecd3b0830",
+    "binarySha256": "0467770fb961ead59baf3efd1a6e4cbaf56bbe1131aa888275780d35c78d7db7",
+    "nativeSha256": "5063821ad9eccd20f0b519ada2b5d4d5f27def386fd6ef9199d02606e11482f1",
+    "observerSource": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+    "observerSha256": "ad507a7f3cc40c87029ea96fc85c46c3b2cf77360de08ea6cbb753780e9e365d",
+    "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+    "expertLanes": 4,
+    "workerProfile": "counter-off, local Metal, FP32 KV/recurrence, affine8 weights",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 71946,
+      "build": "0.3.0+7f114e94661c3a39ca46d888322f438ecd3b0830",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  }
+}

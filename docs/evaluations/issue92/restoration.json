@@ -1,0 +1,89 @@
+{
+  "issue92-kernel-20261025": {
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "plistUnchanged": true,
+    "binaryUnchanged": true,
+    "configUnchanged": true,
+    "wiredLimit": "0",
+    "restoredUtc": "2026-10-26T02:05:24.337280+00:00",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 55198,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "issue92-kernel-confirm-20261025": {
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "plistUnchanged": true,
+    "binaryUnchanged": true,
+    "nativeUnchanged": true,
+    "configUnchanged": true,
+    "wiredLimit": "0",
+    "restoredUtc": "2026-10-26T02:07:54.486120+00:00",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 56290,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "issue92-fixed-20261025": {
+    "sameTokenIds": true,
+    "attempts": [
+      {
+        "type": "HTTPError",
+        "message": "HTTP Error 503: Service Unavailable"
+      }
+    ],
+    "plistUnchanged": true,
+    "binaryUnchanged": true,
+    "nativeUnchanged": true,
+    "configUnchanged": true,
+    "wiredLimit": "0",
+    "restoredUtc": "2026-10-26T02:37:07.301526+00:00",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 69949,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "issue92-pilot-20261025": {
+    "sameTokenIds": true,
+    "hashesUnchanged": true,
+    "attempts": [],
+    "restoredUtc": "2026-10-26T02:45:49.190172+00:00",
+    "wiredLimit": "0",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 73963,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  }
+}

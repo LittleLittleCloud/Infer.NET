@@ -1,0 +1,53 @@
+{
+  "main-pre": {
+    "sourceSha": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+    "expertLanes": 0,
+    "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+    "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+    "driverSha256": "68720e8843f2677858e153e80f259dfce6745da531051eb0ffb281b977de8682",
+    "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 57675,
+      "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "candidate": {
+    "sourceSha": "7f114e94661c3a39ca46d888322f438ecd3b0830",
+    "expertLanes": 4,
+    "executableSha256": "0467770fb961ead59baf3efd1a6e4cbaf56bbe1131aa888275780d35c78d7db7",
+    "nativeSha256": "5063821ad9eccd20f0b519ada2b5d4d5f27def386fd6ef9199d02606e11482f1",
+    "driverSha256": "68720e8843f2677858e153e80f259dfce6745da531051eb0ffb281b977de8682",
+    "version": "0.3.0+7f114e94661c3a39ca46d888322f438ecd3b0830",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 59112,
+      "build": "0.3.0+7f114e94661c3a39ca46d888322f438ecd3b0830",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  },
+  "main-post": {
+    "sourceSha": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+    "expertLanes": 0,
+    "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+    "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+    "driverSha256": "68720e8843f2677858e153e80f259dfce6745da531051eb0ffb281b977de8682",
+    "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 65159,
+      "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32"
+    }
+  }
+}

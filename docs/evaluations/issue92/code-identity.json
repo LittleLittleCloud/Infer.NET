@@ -1,0 +1,12 @@
+{
+  "measuredRuntimeSha": "7f114e94661c3a39ca46d888322f438ecd3b0830",
+  "finalCodePrSha": "86f300d736e8c879f6c80621680dec14552f1e4f",
+  "postMeasurementChanges": "Graph-check output reset/sentinels and plan disposition only; product runtime sources unchanged.",
+  "runtimeSources": {
+    "native/DeepInfer.Metal/quantized.mm": "af6e7f3ecff3af5bdf766377721fbf3386eb84417b49f185f0b7684115df2f98",
+    "native/DeepInfer.Metal/gpu_graph.mm": "e2200def2fd763aeda65a5d247837e09ed41d66b0f03aa480630111ee2434cf6"
+  },
+  "finalDriverEquivalentToValidatedTemporaryDriverAfterIncludePathNormalization": true,
+  "confirmationRetainedCheckBinarySha256": "464bd6bf6a92d500a50f6a849575296c49a4939fde0cc91796db1fc608e5483c",
+  "finalCheckBinarySha256": "74e342bd0dfd83afb88c5c6edef27336087279d4dcc680b6a5ae50cf14f9c380"
+}
