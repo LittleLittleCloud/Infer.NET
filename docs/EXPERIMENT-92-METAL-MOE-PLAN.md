@@ -53,3 +53,10 @@ After approval: branch `codex/experiment-<issue>-metal-moe-small-row` from audit
 Homepage entry: existing [decode trend dashboard](https://littlelittlecloud.github.io/Infer.NET/#decode-trend), planned stable run prefix `metal-moe-small-row-20261025`; record actual per-run links in this Issue and results PR once data exists. No expected number is plotted as measured. Add the planned experiment entry through the normal project/site PR process after approval; no publishing or merge is authorized.
 
 Approved scope: plan revision 1, including Mac-only scope, bounded 4/8/16-lane variants, unchanged arithmetic, HumanEval5/20 protocol, and the proposed 5% adoption threshold. Code PR and independent results PR will be linked from Issue #92. Results: Not Obtained.
+
+
+## Evaluation disposition
+
+The measured runtime candidate is `7f114e94661c3a39ca46d888322f438ecd3b0830`. Same-round fixed short/8K/32K decode regresses8.54/7.49/8.08%, with identical128-token outputs. Diagnostic pilot5 official assertions pass5/5 on both arms; main/candidate worker decode is67.8897/62.5338tok/s with15/15 and17/17 complete request clocks. No credible benefit was obtained; formal20 is not run and the candidate is not recommended for adoption. The original kernel remains default. Independent evidence and limitations are in [results PR #94](https://github.com/LittleLittleCloud/Infer.NET/pull/94).
+
+A final test-harness correction resets output before graph-helper dispatch and checks graph output sentinels. The equivalent driver passed320 comparisons with Metal shader validation. This post-measurement change affects tests/documentation only; it does not relabel the measured runtime SHA or change the product kernels.

@@ -96,10 +96,12 @@ int main(int argc,char **argv){@autoreleasepool {
                         for(size_t i=8*rows;i<8*rows+32;i++)require(guard[i]==123456.0f,"output sentinel changed");
                         // Exercise the graph dispatch helpers, including shared norm binding and per-slot inputs.
                         GModel graph{};graph.compute=*c;graph.ids=idBuffer;graph.norm=input;
+                        std::fill(guard,guard+8*rows+32,123456.0f);
                         auto check=[c->queue commandBuffer];auto ce=[check computeCommandEncoder];
                         if(fused)g_gate_up(&graph,ce,*gate,*up,output,true);else g_gemv(&graph,ce,*gate,input,output,true);
                         [ce endEncoding];require(q_complete(check,nullptr,error,sizeof(error)),error);
                         compare(want,guard,fused?"graph-gate-up":"graph-down",lanes);
+                        for(size_t i=8*rows;i<8*rows+32;i++)require(guard[i]==123456.0f,"graph output sentinel changed");
                     }else{
                         for(int rotate=0;rotate<2;rotate++)for(int trial=-2;trial<7;trial++){
                             auto cb=[c->queue commandBuffer];auto enc=[cb computeCommandEncoder];
