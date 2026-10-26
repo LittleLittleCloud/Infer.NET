@@ -284,23 +284,26 @@ static void g_long_attention(GModel *g,id<MTLComputeCommandEncoder> e,id<MTLBuff
 }
 static void g_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuffer> x,id<MTLBuffer> out,bool experts=false){
     auto *c=&g->compute;bool small=m.rows<128;
+    bool specialized=experts&&c->expertLanes&&m.bits==8&&m.group==64;
     struct {uint32_t experts,rows,columns,bits,group,count,batched;} shape{m.experts,m.rows,m.columns,m.bits,m.group,experts?8u:1u,experts?1u:0u};
-    [e setComputePipelineState:m.bits==5?(small?c->small5:c->rowTile==8?c->wide5:c->tiled5):(small?c->small8:c->rowTile==8?c->wide8:c->tiled8)];
+    [e setComputePipelineState:specialized?c->expertDownSmall[c->expertLanes==4?0:c->expertLanes==8?1:2]:m.bits==5?(small?c->small5:c->rowTile==8?c->wide5:c->tiled5):(small?c->small8:c->rowTile==8?c->wide8:c->tiled8)];
     g_bind(e,m.packed,0);g_bind(e,m.scales,1);g_bind(e,m.biases,2);g_bind(e,x,3);g_bind(e,out,4);
     [e setBytes:&shape length:sizeof(shape) atIndex:5];g_bind(e,experts?g->ids:g->zero,6);
     g_profile_begin(g,e,m.rows==248320?GPCount+2:experts?GPCount+3:m.bits==8?GPCount+1:GPCount);
-    [e dispatchThreadgroups:MTLSizeMake((m.rows+(small?0:c->rowTile-1))/(small?1:c->rowTile),experts?8:1,1) threadsPerThreadgroup:MTLSizeMake(small?32:c->rowTile*32,1,1)];g->dispatches++;
+    if(specialized)[e dispatchThreadgroups:MTLSizeMake((m.rows+128/c->expertLanes-1)/(128/c->expertLanes),8,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];
+    else [e dispatchThreadgroups:MTLSizeMake((m.rows+(small?0:c->rowTile-1))/(small?1:c->rowTile),experts?8:1,1) threadsPerThreadgroup:MTLSizeMake(small?32:c->rowTile*32,1,1)];g->dispatches++;
     g_profile_end(g,e);
 }
 // Expert gate/up consumes one shared layer input, even with eight selected slots.
 static void g_gate_up(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatrix &up,id<MTLBuffer> out,bool selected){
     struct {uint32_t experts,rows,columns,bits,group,count,batched;} shape{gate.experts,gate.rows,gate.columns,gate.bits,gate.group,selected?8u:1u,0};
-    [e setComputePipelineState:gate.bits==5?g->compute.gateUp5:g->compute.gateUp8];
+    auto *c=&g->compute;bool specialized=selected&&c->expertLanes&&gate.bits==8&&gate.group==64;
+    [e setComputePipelineState:specialized?c->expertGateSmall[c->expertLanes==4?0:c->expertLanes==8?1:2]:gate.bits==5?g->compute.gateUp5:g->compute.gateUp8];
     g_bind(e,gate.packed,0);g_bind(e,gate.scales,1);g_bind(e,gate.biases,2);
     g_bind(e,up.packed,3);g_bind(e,up.scales,4);g_bind(e,up.biases,5);g_bind(e,g->norm,6);g_bind(e,out,7);
     [e setBytes:&shape length:sizeof(shape) atIndex:8];g_bind(e,selected?g->ids:g->zero,9);
     g_profile_begin(g,e,selected?GPCount+5:GPCount+4);
-    [e dispatchThreadgroups:MTLSizeMake((gate.rows+3)/4,selected?8:1,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;
+    [e dispatchThreadgroups:MTLSizeMake((gate.rows+(specialized?128/c->expertLanes:4)-1)/(specialized?128/c->expertLanes:4),selected?8:1,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];g->dispatches++;
     g_profile_end(g,e);
 }
 // Gate/up reads a shared vector; the GEMV flag selects per-slot inputs only for down.
