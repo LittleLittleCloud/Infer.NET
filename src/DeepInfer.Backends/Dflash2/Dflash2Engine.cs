@@ -43,7 +43,7 @@ public sealed record Dflash2Options(int Block, bool IgnoreEos = false, bool Full
     }
 }
 
-// Experimental envelope (context 32768, output cap 4096). Larger requests are rejected, never truncated or sent down another path.
+// Experimental envelope (32768 input + 4096 output; Pi context remains 32768). Larger requests are rejected, never truncated or sent down another path.
 public static class Dflash2Limits
 {
     public const int MaxContextTokens = 32768 + 4096;

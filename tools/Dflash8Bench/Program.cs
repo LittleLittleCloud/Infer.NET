@@ -17,7 +17,7 @@ if (mode != "off") session.EnableDflash2(args[2], 8, replay, true, args[0] == "g
 var native = Path.Combine(AppContext.BaseDirectory, "libdeepinfer_metal.dylib");
 Save("runtime.json", new { mode, profile = session.ExecutionProfile(), stats = Stats(), nativeSha256 = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(native))), source = typeof(MetalSplitSession).Assembly.GetCustomAttributes(false).OfType<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion });
 object Stats() { var v = session.Stats(); return new { v.Capacity, v.KvBytes, v.AllocatedBytes }; }
-void Budget() { if (session.Stats().AllocatedBytes > Dflash2HostBudget) throw new Exception("Metal allocation exceeds experiment budget"); }
+void Budget() { if (session.Stats().AllocatedBytes > Dflash2HostBudget || MetalSplitSession.AllocatorTrace().PeakBytes > Dflash2HostBudget) throw new Exception("Metal allocation exceeds experiment budget"); }
 int[] Prompt(int count)
 {
     var source = session.Tokenize(string.Concat(Enumerable.Repeat("A graph traversal records each visited vertex and checks its neighbors in a queue. ", 64)), default);
@@ -94,4 +94,3 @@ static void Near(ReadOnlySpan<float> actual, ReadOnlySpan<float> expected)
     for (var i = 0; i < actual.Length; i++) { if (!float.IsFinite(actual[i]) || !float.IsFinite(expected[i])) throw new Exception("Non-finite state"); var d = (double)actual[i] - expected[i]; sum += d*d; norm += (double)expected[i]*expected[i]; max = Math.Max(max, Math.Abs(d)); }
     if (Math.Sqrt(sum / Math.Max(norm, 1e-30)) >= 1e-4 || max >= 0.01) throw new Exception($"State mismatch rel={Math.Sqrt(sum / Math.Max(norm, 1e-30))} abs={max}");
 }
-
