@@ -31,7 +31,8 @@ using var s = new MetalSplitSession(args[1], 4, true, 1000, args[0] == "gate" ? 
 s.PrepareTargetBlock(8);
 object Stats() { var v = s.Stats(); return new { v.Capacity, v.KvBytes, v.AllocatedBytes }; }
 object BlockStats() { var v = s.TargetBlockStats(); return new { v.Bytes, v.Position, v.Pending }; }
-Save("runtime.json", new { Profile = s.ExecutionProfile(), Stats = Stats(), Block = BlockStats(), NativeSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "libdeepinfer_metal.dylib")))), AssemblySha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(MetalSplitSession).Assembly.Location))) });
+object ManagedHeap() { var v = GC.GetGCMemoryInfo(); return new { liveBytes = GC.GetTotalMemory(false), v.HeapSizeBytes, v.TotalCommittedBytes, v.TotalAvailableMemoryBytes }; }
+Save("runtime.json", new { ManagedHeap = ManagedHeap(), Profile = s.ExecutionProfile(), Stats = Stats(), Block = BlockStats(), NativeSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "libdeepinfer_metal.dylib")))), AssemblySha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(MetalSplitSession).Assembly.Location))) });
 var fixtureText = args[0] == "gate" ? "Explain how a Python iterator keeps its state and advances through a sequence. " : "A sparse graph algorithm visits neighboring vertices and records each shortest path in a queue. ";
 var fixture = s.Tokenize(string.Concat(Enumerable.Repeat(fixtureText, 20)), CancellationToken.None);
 Save("fixture.json", new { mode = args[0], tokensSha256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(fixture.AsSpan()))), lengths = args[0] == "gate" ? new[] { 21, 2047 } : new[] { 21, 8192, 32768 } });
@@ -63,7 +64,11 @@ if (args[0] == "gate")
             for (var layer = 0; layer < 40; layer++) for (var kind = 0; kind < 2; kind++) before[layer * 2 + kind] = Convert.ToHexString(SHA256.HashData(s.TargetState(layer, kind)));
             var actualLogits = new float[rows * 248320]; var actualTrace = new float[rows * 40 * 2048];
             SameTokens("verify", expectedNext, s.VerifyTargetBlock(inputs, actualLogits, actualTrace));
-            Near("block logits", expectedLogits, actualLogits); Near("block layer traces", expectedTrace, actualTrace);
+            for (var row = 0; row < rows; row++)
+            {
+                Near($"block logits row={row}", expectedLogits.AsSpan(row * 248320, 248320), actualLogits.AsSpan(row * 248320, 248320));
+                for (var layer = 0; layer < 40; layer++) Near($"block trace row={row} layer={layer}", expectedTrace.AsSpan((row * 40 + layer) * 2048, 2048), actualTrace.AsSpan((row * 40 + layer) * 2048, 2048));
+            }
             for (var layer = 0; layer < 40; layer++) for (var kind = 0; kind < 2; kind++)
                 if (before[layer * 2 + kind] != Convert.ToHexString(SHA256.HashData(s.TargetState(layer, kind)))) throw new Exception("Verification mutated live state");
             try { s.Forward(first, prompt.Length); throw new Exception("Pending decode was accepted"); } catch (InvalidOperationException) { }
@@ -148,7 +153,7 @@ else if (args[0] == "long-gate")
             for (var i = 0; i < 3; i++) { nextInput = s.Forward(nextInput, length + accepted + i); continuation[i] = nextInput; }
             if (arm == "block") continuations[accepted] = continuation;
             else SameTokens("long continuation", continuations[accepted], continuation);
-            completed.Add(new { length, accepted, arm, passed = true, stats = Stats(), block = BlockStats() }); Save("long-gate.json", completed);
+            completed.Add(new { length, accepted, arm, passed = true, stats = Stats(), block = BlockStats(), managedHeap = ManagedHeap() }); Save("long-gate.json", completed);
             Console.WriteLine($"PASS long context={length} prefix={accepted} arm={arm}");
         }
     }
