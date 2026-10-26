@@ -1,0 +1,16 @@
+{
+  "4f51f241e87999c8cc3f79d733cd95ade9c711cd": {
+    "native/DeepInfer.Metal/quantized.mm": "03c018092189495d50cecd940fca09d8038f2f036d8f376b88e955ed87c61c22",
+    "native/DeepInfer.Metal/gpu_graph.mm": "1fa0df3ab09373f825dfdc960a146c915a13fed6034e58ecea15000cdf4d8df0"
+  },
+  "3f248ef02da3906006ddaf6847233c2ba558ca73": {
+    "native/DeepInfer.Metal/quantized.mm": "af6e7f3ecff3af5bdf766377721fbf3386eb84417b49f185f0b7684115df2f98",
+    "native/DeepInfer.Metal/gpu_graph.mm": "e2200def2fd763aeda65a5d247837e09ed41d66b0f03aa480630111ee2434cf6",
+    "native/DeepInfer.Metal/expert_decode_checks.mm": "d8806d7324f1acc59f087938e92f52b711d90507ad0fcde78ae3b190c8ac68c7"
+  },
+  "7f114e94661c3a39ca46d888322f438ecd3b0830": {
+    "native/DeepInfer.Metal/quantized.mm": "af6e7f3ecff3af5bdf766377721fbf3386eb84417b49f185f0b7684115df2f98",
+    "native/DeepInfer.Metal/gpu_graph.mm": "e2200def2fd763aeda65a5d247837e09ed41d66b0f03aa480630111ee2434cf6",
+    "native/DeepInfer.Metal/expert_decode_checks.mm": "b6d0d50fbf3c8abfe59677883836f04ea56330819ecf90bc2f7941e70833a03f"
+  }
+}

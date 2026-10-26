@@ -1,5 +1,23 @@
 [
   {
+    "id": "metal-moe-small-row-20261025",
+    "title": "Metal routed expert small-row specialization",
+    "kind": "2026-10-25 · Evaluation in progress · Candidate unadopted",
+    "source": "docs/EXPERIMENT-92-METAL-MOE-RESULTS-20261025.md",
+    "question": "Can smaller lane groups improve single-token affine8 routed experts on M5?",
+    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; Mac-only, unchanged FP32 operands and affine8/group64 weights.",
+    "change": "Opt-in 4/8/16 lanes per output, inspired by Splash small-live-row specialization; original kernel remains default.",
+    "result": "Two kernel cohorts completed; all three variants regress in rotating-expert timing. Full-model and fixed5 evidence is being reconciled.",
+    "validation": "Strengthened FP32 oracle comparisons and existing graph checks pass. No HumanEval20 adoption decision or128K acceptance.",
+    "conclusion": "Unadopted candidate; no deployment default or baseline change.",
+    "next": "Complete same-round fixed-request controls, fixed5 diagnostics, restoration and independent result review.",
+    "commands": [
+      "bash scripts/check-metal-expert-decode.sh",
+      "bash scripts/check-metal-expert-decode.sh --timing"
+    ],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/92; code PR https://github.com/LittleLittleCloud/Infer.NET/pull/93."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
