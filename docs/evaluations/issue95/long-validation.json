@@ -1,0 +1,480 @@
+{
+  "runId": "long-20261026T083043Z",
+  "source": "8f3aceb331831136e022ddd4c1a69520f9630535",
+  "runtime": {
+    "Profile": {
+      "KvElementBytes": 4,
+      "Bf16Gemm": false,
+      "Matrix": true,
+      "ChunkedDelta": true,
+      "GroupedExperts": true,
+      "PackedExperts": false,
+      "ExpandedGemm": false,
+      "DeviceDelta": false,
+      "ScratchTokens": 2048,
+      "FusedAttention": true,
+      "FusedAllAttention": true,
+      "AttentionFeatures": 256,
+      "AttentionBatchTokens": 128,
+      "MatrixRows": 64
+    },
+    "Stats": {
+      "Capacity": 2048,
+      "KvBytes": 83886080,
+      "AllocatedBytes": 38161645568
+    },
+    "Block": {
+      "Bytes": 519127072,
+      "Position": 0,
+      "Pending": false
+    },
+    "NativeSha256": "7F3953B8F9B7428A3DE78982F9DE738742CB2785DA77A696A5CCBF1218598A70",
+    "AssemblySha256": "20F60C5F69391D362A02A783AC916DDD41B63A8C2EFC47CF1AED600F80082861"
+  },
+  "completed": true,
+  "exitCode": 0,
+  "elapsedSeconds": 729.996435667,
+  "cases": [
+    {
+      "length": 2047,
+      "accepted": 1,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2051,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2048,
+      "continuationSteps": 3
+    },
+    {
+      "length": 2047,
+      "accepted": 1,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2051,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2048,
+      "continuationSteps": 3
+    },
+    {
+      "length": 2047,
+      "accepted": 4,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2054,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2051,
+      "continuationSteps": 3
+    },
+    {
+      "length": 2047,
+      "accepted": 4,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2054,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2051,
+      "continuationSteps": 3
+    },
+    {
+      "length": 2047,
+      "accepted": 8,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2058,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2055,
+      "continuationSteps": 3
+    },
+    {
+      "length": 2047,
+      "accepted": 8,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 4096,
+        "KvBytes": 167772160,
+        "AllocatedBytes": 38252511232
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 2058,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 2055,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 1,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4097,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4094,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 1,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4097,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4094,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 4,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4100,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4097,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 4,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4100,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4097,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 8,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4104,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4101,
+      "continuationSteps": 3
+    },
+    {
+      "length": 4093,
+      "accepted": 8,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 6144,
+        "KvBytes": 251658240,
+        "AllocatedBytes": 38508527616
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 4104,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 4101,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 1,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8196,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8193,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 1,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8196,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8193,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 4,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8199,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8196,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 4,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8199,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8196,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 8,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8203,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8200,
+      "continuationSteps": 3
+    },
+    {
+      "length": 8192,
+      "accepted": 8,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 10240,
+        "KvBytes": 419430400,
+        "AllocatedBytes": 38936674304
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 8203,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 8200,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 1,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32772,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32769,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 1,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32772,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32769,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 4,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32775,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32772,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 4,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32775,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32772,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 8,
+      "arm": "block",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32779,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32776,
+      "continuationSteps": 3
+    },
+    {
+      "length": 32768,
+      "accepted": 8,
+      "arm": "scalar-transaction",
+      "passed": true,
+      "stats": {
+        "Capacity": 34816,
+        "KvBytes": 1426063360,
+        "AllocatedBytes": 40415035392
+      },
+      "block": {
+        "Bytes": 519127072,
+        "Position": 32779,
+        "Pending": false
+      },
+      "committedPositionBeforeContinuation": 32776,
+      "continuationSteps": 3
+    }
+  ],
+  "comparison": "Each row logits and each layer trace independently use relative L2<1e-4 and maxAbs<0.01. Every committed KV/Delta/convolution state and three continuation tokens are compared with scalar execution. Pending recurrent prefix1/4/8 slots are also compared.",
+  "resourceNote": "Diagnostic process captures large CPU state arrays and writes reference state fixtures. Whole-component swap includes loading and all diagnostic requests; not a single steady-state request metric. Continuous driver peaks not obtained.",
+  "wholeComponentNewSwapoutBytes": 3822780416,
+  "shaderValidationOracle": {
+    "exitCode": 0,
+    "metalApiValidation": true,
+    "metalGpuValidation": true,
+    "sourceSha256": "481dbdc2e95e004aa459bbc90513251aa3a3a6d3f1e715df5dfc908d848af78e"
+  }
+}
