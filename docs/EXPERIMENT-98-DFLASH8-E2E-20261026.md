@@ -20,6 +20,23 @@ The user requested continued verification after the physical power adjustment. R
 
 Run `e2e-20261026T201255Z` repeats the entire preregistered five-shape/four-arm matrix, with one excluded warmup and three formal trials per arm/shape, using the same frozen packages and precision. Earlier trials remain separate, including the slow and interrupted requests. Request boundaries and a separate periodic watcher verify AC, the 140W adapter, and charge not below the 14% restart level; the watcher also checks the unchanged numeric AC mode setting. Existing allocation and swap stop conditions remain unchanged. Fixed controls precede the approved pilot5 A/B/C/D and diagnostic20 A/B/D cohorts. This continuation does not waive the failed numerical gate; rerun and HumanEval summaries are pending.
 
+## Interim power-profile rerun observations
+
+The following snapshot contains 52 complete requests: 39 formal and 13 excluded warmups. All three 128-output shapes and the scalar 8K/4096 group have three formal trials. Native/main/candidate-off long-output comparisons and HumanEval are pending. The known draft numerical gate remains failed; these are diagnostic observations, not an adoption result.
+
+|Input/output|Main decode token/s|Candidate-off decode token/s|Scalar DFlash8 decode token/s|Native DFlash8 decode token/s|
+|---|---:|---:|---:|---:|
+|21/128|48.171|48.337|15.157|34.290|
+|8192/128|52.105|52.254|9.869|18.873|
+|32768/128|41.264|34.770|13.757|19.451|
+|8192/4096|Not Obtained|Not Obtained|15.524|Not Obtained|
+
+Rates use total emitted decode intervals divided by total worker decode seconds. Loading and excluded warmups do not contribute. Scalar 8K/4096 median client wall is 311.647 seconds. The maximum completed formal request swap-out is 257.516 MiB (32K main trial 2), below 512 MiB; no new target-output mismatch, OOM, or worker crash was observed in this snapshot. This does not establish continuous driver peak coverage. The independent completed-output check also verifies common greedy prefixes across requested output lengths.
+
+The 32K main formal client walls are 272.804, 257.166, and 215.480 seconds; decode rates are 35.178, 45.141, and 45.202 token/s. This time-ordered variation prevents attributing apparent prefill or short-request wall improvements solely to code. AC supply, the 140W adapter, and the numeric power setting remained unchanged; no thermal warning was reported at request boundaries. The cause remains unresolved. The user reported no obvious competing graphics workload; CPU snapshots do not establish per-process GPU contention. Raw slow rounds are retained.
+
+Per-request values, minimum/maximum/mean/median times, artifact hashes, speculation counters, and the incomplete-run flag are in [the rerun summary](evaluations/issue98/power-rerun/fixed-controls.json). [Prefix verification](evaluations/issue98/power-rerun/target-prefix-check.json) is a separate timestamped snapshot. The complete restricted raw inventory will be refreshed after the active run stops. Earlier observations below remain separate.
+
 ## Frozen implementation and workload
 
 One M5 Pro 20-core GPU / 48 GiB, full-local Metal, concurrency one, no prefix cache, `iogpu.wired_limit_mb=0`; no Windows/CUDA work. Target `mlx-community/Qwen3.6-35B-A3B-8bit@e06a74e6236a60c8367e1a3214e83d8b61b637b0`, affine8/group64, FP32 operands/KV/recurrence. Draft `incoai/Qwen3.6-35B-A3B-DFlash2@51ef7b6923ad6c14cb1bb41c37a9041446496ab6`, BF16 checkpoint matrices with FP32 arithmetic/context. All target shards/configuration/tokenizer and draft hashes were reverified after GPU timing; [model provenance](evaluations/issue98/model-provenance.json) retains the exact checksums.

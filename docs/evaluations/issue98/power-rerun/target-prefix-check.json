@@ -1,0 +1,7 @@
+{
+  "utc": "2026-10-26T22:08:32.685468+00:00",
+  "checkedCompletedRequests": 52,
+  "exactPrefixesAcrossArmsRepetitionsAndOutputLengths": true,
+  "checkerSha256": "0f7d7a29df5ad66b25a3969fd3fce9b19356ebe5a96a32a9735c60495a593389",
+  "scope": "Completed returned target tokens; this is not a draft numerical-gate waiver."
+}
