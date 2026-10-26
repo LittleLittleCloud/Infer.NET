@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Protocol tests using a controlled text worker, no GPU or cloud credentials required."""
-import argparse,concurrent.futures,http.server,json,os,pathlib,socket,subprocess,threading,time,urllib.request,urllib.error
+import argparse,concurrent.futures,http.client,http.server,json,os,pathlib,socket,subprocess,threading,time,urllib.request,urllib.error
 p=argparse.ArgumentParser();p.add_argument('--executable');p.add_argument('--sdk',action='store_true');p.add_argument('--tui',action='store_true');a=p.parse_args();root=pathlib.Path(__file__).resolve().parents[1]
 def port():
  with socket.socket() as s:s.bind(('127.0.0.1',0));return s.getsockname()[1]
@@ -23,6 +23,7 @@ class Worker(http.server.BaseHTTPRequestHandler):
   assert self.headers['X-DeepInfer-Token']==token
   last=q['messages'][-1]['content']
   text='<tool_call>\n<function=bash>\n<parameter=command>\nls -la\n</parameter>\n</function>\n</tool_call>' if last=='call-tool' else '<bash>\n<parameter=command>\nls -la\n</parameter>\n</function>\n</tool_call>' if last=='call-tool-shorthand' else '你好 [world]'
+  if last=='malformed-tool':text='<tool_call><function=bash><parameter=command>unfinished'
   r=dict(requestId='test',workerId='test',model=q['model'],backend='metal',text=text,tokens=[],isSimulation=True,computeMs=1,tokenIds=[1,2],promptTokens=23,finishReason='eos')
   if last=='busy':self.send_response(429);self.end_headers();self.wfile.write(b'{"error":"busy"}');return
   self.send_response(200);self.send_header('Content-Type','text/event-stream' if self.path.endswith('/stream') else 'application/json');self.end_headers()
@@ -117,6 +118,10 @@ try:
  events=[json.loads(x[6:]) for x in s.splitlines() if x.startswith('data: ') and x!='data: [DONE]']
  deltas=[x['choices'][0]['delta'] for x in events if x['choices']]
  check(code==200 and any('tool_calls' in x for x in deltas) and events[-2]['choices'][0]['finish_reason']=='tool_calls' and s.endswith('data: [DONE]\n\n'),'stream function call is structured')
+ tool_body['messages']=[{'role':'user','content':'malformed-tool'}]
+ try:code,s,_=call('/v1/chat/completions',tool_body)
+ except http.client.IncompleteRead as truncated:code,s=200,truncated.partial.decode()
+ check('Malformed model tool call' in s and '"error"' in s and '[DONE]' not in s,'malformed generated tool call is an explicit API error, not an abruptly truncated stream')
  tool_body['messages']=[{'role':'user','content':'call-tool'},tool_response['message'],{'role':'tool','tool_call_id':tool_response['message']['tool_calls'][0]['id'],'content':'file.txt'}]
  code,s,_=call('/v1/chat/completions',tool_body)
  check(code==200 and '<tool_response>' in seen[-1]['messages'][-1]['content'] and seen[-1]['messages'][-1]['role']=='user','tool result round trips into Qwen history')

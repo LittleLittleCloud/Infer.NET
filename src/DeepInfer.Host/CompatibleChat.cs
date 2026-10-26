@@ -77,6 +77,8 @@ internal static class CompatibleChat
         catch (OperationCanceledException) when (c.RequestAborted.IsCancellationRequested) { }
         catch (Exception ex) when (ex is ArgumentException or JsonException or InvalidOperationException or BadHttpRequestException)
         { await Error(c, format, ex is BadHttpRequestException b ? b.StatusCode : 400, ex.Message); }
+        catch (InvalidDataException ex)
+        { await Error(c, format, 502, "Invalid model output: " + ex.Message); }
         catch (Exception ex) when (ex is HttpRequestException or IOException or OperationCanceledException)
         { await Error(c, format, 502, "Worker request failed: " + ex.Message); }
     }
