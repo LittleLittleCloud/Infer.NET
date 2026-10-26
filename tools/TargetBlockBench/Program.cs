@@ -27,12 +27,14 @@ void SameTokens(string label, int[] expected, int[] actual)
 {
     if (!expected.SequenceEqual(actual)) throw new Exception(label + ": token mismatch at " + Enumerable.Range(0, Math.Min(expected.Length, actual.Length)).FirstOrDefault(i => expected[i] != actual[i], -1));
 }
-using var s = new MetalSplitSession(args[1], 4, true, 1000, 128, true);
+using var s = new MetalSplitSession(args[1], 4, true, 1000, args[0] == "bench" ? 2048 : 128, true);
 s.PrepareTargetBlock(8);
 object Stats() { var v = s.Stats(); return new { v.Capacity, v.KvBytes, v.AllocatedBytes }; }
 object BlockStats() { var v = s.TargetBlockStats(); return new { v.Bytes, v.Position, v.Pending }; }
 Save("runtime.json", new { Profile = s.ExecutionProfile(), Stats = Stats(), Block = BlockStats(), NativeSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "libdeepinfer_metal.dylib")))), AssemblySha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(MetalSplitSession).Assembly.Location))) });
-var fixture = s.Tokenize(string.Concat(Enumerable.Repeat("Explain how a Python iterator keeps its state and advances through a sequence. ", 20)), CancellationToken.None);
+var fixtureText = args[0] == "gate" ? "Explain how a Python iterator keeps its state and advances through a sequence. " : "A sparse graph algorithm visits neighboring vertices and records each shortest path in a queue. ";
+var fixture = s.Tokenize(string.Concat(Enumerable.Repeat(fixtureText, 20)), CancellationToken.None);
+Save("fixture.json", new { mode = args[0], tokensSha256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(fixture.AsSpan()))), lengths = args[0] == "gate" ? new[] { 21, 2047 } : new[] { 21, 8192, 32768 } });
 int[] Prompt(int length) => Enumerable.Range(0, length).Select(i => fixture[i % fixture.Length]).ToArray();
 var completed = new List<object>();
 if (args[0] == "gate")
@@ -94,6 +96,9 @@ else
         var prompt = Prompt(length);
         foreach (var trial in Enumerable.Range(-1, 4)) foreach (var arm in trial % 2 == 0 ? new[] { "block", "scalar" } : new[] { "scalar", "block" })
         {
+            var startedUtc = DateTimeOffset.UtcNow;
+            string VmStat() { using var p = Process.Start(new ProcessStartInfo("/usr/bin/vm_stat") { RedirectStandardOutput = true })!; var text = p.StandardOutput.ReadToEnd(); p.WaitForExit(); return text; }
+            var vmBefore = VmStat();
             s.Reset(length + 256); var first = s.Prefill(prompt, CancellationToken.None); var position = length;
             var totalWall = 0d; var commitWall = 0d; var gpuStart = s.GpuMilliseconds; var dispatchStart = s.Dispatches; var submissionStart = s.Submissions;
             for (var step = 0; step < 128 / rows; step++)
@@ -109,7 +114,7 @@ else
                     var clock = Stopwatch.StartNew(); s.ScalarTargetTransaction(input, accepted); clock.Stop(); totalWall += clock.Elapsed.TotalMilliseconds; position += accepted;
                 }
             }
-            completed.Add(new { length, rows, accepted, trial, arm, totalWallMs = totalWall, commitWallMs = commitWall, gpuMs = s.GpuMilliseconds - gpuStart, dispatches = s.Dispatches - dispatchStart, submissions = s.Submissions - submissionStart, stats = Stats(), block = BlockStats() });
+            completed.Add(new { length, rows, accepted, trial, arm, startedUtc, finishedUtc = DateTimeOffset.UtcNow, vmBefore, vmAfter = VmStat(), totalWallMs = totalWall, commitWallMs = commitWall, gpuMs = s.GpuMilliseconds - gpuStart, dispatches = s.Dispatches - dispatchStart, submissions = s.Submissions - submissionStart, stats = Stats(), block = BlockStats() });
             Save("transactions.json", completed); Console.WriteLine($"{arm} context={length} rows={rows} accepted={accepted} trial={trial} ms={totalWall:F3}");
         }
     }
