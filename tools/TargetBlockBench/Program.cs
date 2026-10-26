@@ -6,8 +6,8 @@ using DeepInfer.Backends.Split;
 
 // Target transactions are measured in milliseconds, never advertised as emitted
 // autoregressive tokens/s. GPU time, CPU wall and commit overhead stay separate.
-if (args.Length != 3 || args[0] is not ("gate" or "bench"))
-    throw new ArgumentException("Usage: TargetBlockBench gate|bench MODEL_DIRECTORY OUTPUT_DIRECTORY");
+if (args.Length != 3 || args[0] is not ("gate" or "bench" or "long-gate"))
+    throw new ArgumentException("Usage: TargetBlockBench gate|long-gate|bench MODEL_DIRECTORY OUTPUT_DIRECTORY");
 var output = Path.GetFullPath(args[2]); Directory.CreateDirectory(output);
 void Save(string name, object value) => File.WriteAllText(Path.Combine(output, name), JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true }));
 void Near(string label, ReadOnlySpan<float> expected, ReadOnlySpan<float> actual)
@@ -27,7 +27,7 @@ void SameTokens(string label, int[] expected, int[] actual)
 {
     if (!expected.SequenceEqual(actual)) throw new Exception(label + ": token mismatch at " + Enumerable.Range(0, Math.Min(expected.Length, actual.Length)).FirstOrDefault(i => expected[i] != actual[i], -1));
 }
-using var s = new MetalSplitSession(args[1], 4, true, 1000, args[0] == "bench" ? 2048 : 128, true);
+using var s = new MetalSplitSession(args[1], 4, true, 1000, args[0] == "gate" ? 128 : 2048, true);
 s.PrepareTargetBlock(8);
 object Stats() { var v = s.Stats(); return new { v.Capacity, v.KvBytes, v.AllocatedBytes }; }
 object BlockStats() { var v = s.TargetBlockStats(); return new { v.Bytes, v.Position, v.Pending }; }
@@ -87,6 +87,73 @@ if (args[0] == "gate")
     if (s.TargetBlockStats().Pending || s.TargetBlockStats().Position != 0) throw new Exception("Pending reset failed");
     completed.Add(new { growth = true, reset = true, passed = true }); Save("gate.json", completed);
 }
+else if (args[0] == "long-gate")
+{
+    Save("fixture.json", new { mode = args[0], tokensSha256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(fixture.AsSpan()))), lengths = new[] { 2047, 4093, 8192, 32768 } });
+    foreach (var length in new[] { 2047, 4093, 8192, 32768 })
+    {
+        var prompt = Prompt(length); s.Reset(length + 64); var first = s.Prefill(prompt, CancellationToken.None);
+        var inputs = Enumerable.Range(0, 8).Select(i => fixture[(i * 11 + 3) % fixture.Length]).ToArray(); inputs[0] = first;
+        var expectedNext = new int[8]; var expectedLogits = new float[8 * 248320]; var expectedTrace = new float[8 * 40 * 2048];
+        var continuations = new Dictionary<int, int[]>();
+        var states = new Dictionary<int, byte[][]>(); var kvFiles = new Dictionary<int, string[]>();
+        for (var row = 0; row < 8; row++)
+        {
+            var current = row; var logits = new float[248320];
+            expectedNext[row] = s.Forward(inputs[row], length + row, logits, (_, layer, values) => values.CopyTo(expectedTrace, (current * 40 + layer) * 2048));
+            logits.CopyTo(expectedLogits, row * 248320);
+            if (row is 0 or 3 or 7)
+            {
+                var snapshot = new byte[80][]; var files = new string[80];
+                for (var layer = 0; layer < 40; layer++) for (var kind = 0; kind < 2; kind++)
+                {
+                    var bytes = s.TargetState(layer, kind);
+                    if ((layer + 1) % 4 == 0)
+                    {
+                        var file = Path.Combine(output, $"state-{length}-{row + 1}-{layer}-{kind}.bin"); File.WriteAllBytes(file, bytes); files[layer * 2 + kind] = file;
+                    }
+                    else snapshot[layer * 2 + kind] = bytes;
+                }
+                states[row + 1] = snapshot; kvFiles[row + 1] = files;
+            }
+        }
+        foreach (var accepted in new[] { 1, 4, 8 }) foreach (var arm in new[] { "block", "scalar-transaction" })
+        {
+            s.Reset(length + 64); s.Prefill(prompt, CancellationToken.None);
+            if (arm == "block")
+            {
+                var logits = new float[8 * 248320]; var trace = new float[8 * 40 * 2048];
+                SameTokens("long verify", expectedNext, s.VerifyTargetBlock(inputs, logits, trace));
+                for (var row = 0; row < 8; row++)
+                {
+                    Near($"long logits row={row}", expectedLogits.AsSpan(row * 248320, 248320), logits.AsSpan(row * 248320, 248320));
+                    for (var layer = 0; layer < 40; layer++) Near($"long trace row={row} layer={layer}", expectedTrace.AsSpan((row * 40 + layer) * 2048, 2048), trace.AsSpan((row * 40 + layer) * 2048, 2048));
+                }
+                foreach (var prefix in new[] { 1, 4, 8 }) for (var layer = 0; layer < 40; layer++) if ((layer + 1) % 4 != 0)
+                    Near($"pending prefix={prefix} layer={layer}", MemoryMarshal.Cast<byte, float>(states[prefix][layer * 2]), MemoryMarshal.Cast<byte, float>(s.TargetState(layer, 0, prefix)));
+                s.CommitTargetBlock(accepted);
+            }
+            else s.ScalarTargetTransaction(inputs, accepted);
+            for (var layer = 0; layer < 40; layer++) for (var kind = 0; kind < 2; kind++)
+            {
+                var actual = s.TargetState(layer, kind);
+                if ((layer + 1) % 4 == 0)
+                {
+                    Near($"long KV context={length} prefix={accepted} layer={layer} kind={kind}", MemoryMarshal.Cast<byte, float>(File.ReadAllBytes(kvFiles[accepted][layer * 2 + kind])), MemoryMarshal.Cast<byte, float>(actual));
+                }
+                else Near($"long committed prefix={accepted} layer={layer} kind={kind}", MemoryMarshal.Cast<byte, float>(states[accepted][layer * 2 + kind]), MemoryMarshal.Cast<byte, float>(actual));
+            }
+            if (s.TargetBlockStats().Position != length + accepted) throw new Exception("Long committed position mismatch");
+            var nextInput = expectedNext[accepted - 1]; var continuation = new int[3];
+            for (var i = 0; i < 3; i++) { nextInput = s.Forward(nextInput, length + accepted + i); continuation[i] = nextInput; }
+            if (arm == "block") continuations[accepted] = continuation;
+            else SameTokens("long continuation", continuations[accepted], continuation);
+            completed.Add(new { length, accepted, arm, passed = true, stats = Stats(), block = BlockStats() }); Save("long-gate.json", completed);
+            Console.WriteLine($"PASS long context={length} prefix={accepted} arm={arm}");
+        }
+    }
+}
+
 else
 {
     // Fixed candidate inputs are independent of per-arm execution. The same
