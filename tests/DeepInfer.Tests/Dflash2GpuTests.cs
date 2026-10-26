@@ -33,6 +33,7 @@ internal static class Dflash2Gate
         Assert.Equal("fp32", Environment.GetEnvironmentVariable("DEEPINFER_METAL_KV"));
         Assert.Equal("32", Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK"));
         MetalSplitSession.ConfigureAllocationTrace(true);
+        if (block == 8 && replay == Dflash2ReplayMode.Batched && Environment.GetEnvironmentVariable("DEEPINFER_DFLASH2_TARGET") == "native") replay = Dflash2ReplayMode.Native;
         var session = new MetalSplitSession(Target, 4, true, 1000, prefillScratchTokens: 128, fusedFp32Decode: true);
         try { session.EnableDflash2(Draft, block, replay, true, debug); } catch { session.Dispose(); throw; }
         return session;

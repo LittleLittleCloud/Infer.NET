@@ -5,7 +5,7 @@ using DeepInfer.Backends.Dflash2;
 using DeepInfer.Backends.Split;
 
 const long Dflash2HostBudget = (long)(38.5 * 1024 * 1024 * 1024);
-if (args.Length < 4 || args[0] is not ("gate" or "request"))
+if (args.Length < 4 || args[0] is not ("gate" or "long-gate" or "request"))
     throw new ArgumentException("Usage: gate|request TARGET DRAFT OUTPUT [off|scalar|native] [inputTokens] [outputTokens]");
 var mode = args.Length > 4 ? args[4] : "native";
 var folder = Path.GetFullPath(args[3]); Directory.CreateDirectory(folder);
@@ -13,7 +13,7 @@ void Save(string name, object value) => File.WriteAllText(Path.Combine(folder, n
 MetalSplitSession.ConfigureAllocationTrace(true);
 using var session = new MetalSplitSession(args[1], 4, true, 1000, 128, true);
 var replay = mode switch { "scalar" => Dflash2ReplayMode.Scalar, "native" => Dflash2ReplayMode.Native, "off" => Dflash2ReplayMode.Batched, _ => throw new ArgumentException("Unknown mode") };
-if (mode != "off") session.EnableDflash2(args[2], 8, replay, true, args[0] == "gate");
+if (mode != "off") session.EnableDflash2(args[2], 8, replay, true, args[0] is "gate" or "long-gate");
 var native = Path.Combine(AppContext.BaseDirectory, "libdeepinfer_metal.dylib");
 Save("runtime.json", new { mode, profile = session.ExecutionProfile(), stats = Stats(), nativeSha256 = Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(native))), source = typeof(MetalSplitSession).Assembly.GetCustomAttributes(false).OfType<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion });
 object Stats() { var v = session.Stats(); return new { v.Capacity, v.KvBytes, v.AllocatedBytes }; }
@@ -45,6 +45,68 @@ if (args[0] == "request")
     if (tokens.Count != max) throw new Exception("Output length mismatch");
     var decode = times[^1] - times[0]; var quarter = Math.Max(1, max / 4); var quarterMs = times[^1] - times[^quarter];
     Save("request.json", new { mode, inputTokens = length, outputTokens = tokens.Count, prefillMs = prefill, decodeMs = decode, decodeIntervals = max - 1, decodeTokensPerSecond = (max - 1) * 1000 / decode, totalMs = timer.Elapsed.TotalMilliseconds, lastQuarterTokensPerSecond = (quarter - 1) * 1000 / quarterMs, tokenIds = tokens, readyMs = times, speculation, stats = Stats(), allocation = MetalSplitSession.AllocatorTrace() });
+}
+else if (args[0] == "long-gate")
+{
+    if (mode != "native") throw new ArgumentException("Long state gate requires native mode");
+    var passed = new List<object>();
+    void SaveStates(string label)
+    {
+        for (var l = 0; l < 40; l++) for (var k = 0; k < 2; k++)
+            File.WriteAllBytes(Path.Combine(folder, $"{label}-{l}-{k}.bin"), session.TargetState(l, k));
+    }
+    void CompareStates(string label)
+    {
+        for (var l = 0; l < 40; l++) for (var k = 0; k < 2; k++)
+            Near(System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(File.ReadAllBytes(Path.Combine(folder, $"{label}-{l}-{k}.bin"))), System.Runtime.InteropServices.MemoryMarshal.Cast<byte, float>(session.TargetState(l, k)));
+    }
+    List<int> Scalar(int[] input, int max, bool ignore)
+    {
+        session.Reset(input.Length + Math.Min(max, 8)); var next = session.Prefill(input, default); var output = new List<int>();
+        while (true)
+        {
+            if (!ignore && session.IsEnd(next)) break;
+            output.Add(next); if (output.Count == max) break;
+            session.EnsureCapacity(input.Length + output.Count); next = session.Forward(next, input.Length + output.Count - 1);
+        }
+        return output;
+    }
+    List<int> Spec(int[] input, int max, bool ignore, bool growth = false)
+    {
+        if (growth && session.Stats().Capacity != 2048) throw new Exception("Growth fixture must start at actual 2048 capacity");
+        session.Reset(growth ? 2048 : input.Length + max + 8); var clock = Stopwatch.StartNew();
+        using var run = session.StartDflash2(max, ignore, () => clock.Elapsed.TotalMilliseconds);
+        run.Engine.Prefill(input, default); var output = new List<int>(); var inspected = false;
+        while (run.Engine.TryNext(default, out var b))
+        {
+            output.AddRange(b.Tokens);
+            if (growth && !inspected && output.Count >= 96)
+            {
+                if (session.Stats().Capacity <= 2048 || session.Dflash2State().ContextBegin <= 0) throw new Exception("Capacity/ring did not actually grow and evict");
+                var block = new int[8]; block[0] = run.Engine.Anchor; Array.Fill(block, 248077, 1, 7);
+                var first = session.Dflash2Propose(block); session.Dflash2PoisonRing(); var second = session.Dflash2Propose(block);
+                if (!first.Tokens.SequenceEqual(second.Tokens) || !first.Candidates.SequenceEqual(second.Candidates) || !first.Scores.SequenceEqual(second.Scores)) throw new Exception("Invisible draft ring slots affected proposals");
+                using var cancelled = new CancellationTokenSource(); cancelled.Cancel();
+                try { run.Engine.TryNext(cancelled.Token, out _); throw new Exception("Cancellation ignored"); } catch (OperationCanceledException) { }
+                inspected = true;
+            }
+        }
+        if (!ignore && run.Engine.Finish != "eos") throw new Exception("Natural EOS fixture did not finish naturally");
+        if (run.Engine.Stats.Replays != 0 || session.TargetBlockStats().Pending) throw new Exception("Native path replayed or left pending state");
+        Budget(); return output;
+    }
+    var growPrompt = Prompt(2016); var grown = Spec(growPrompt, 256, true, true); SaveStates("growth-native"); var scalar = Scalar(growPrompt, 256, true);
+    if (!grown.SequenceEqual(scalar)) throw new Exception("Growth/cancellation continuation tokens differ"); CompareStates("growth-native");
+    passed.Add(new { name = "growth-ring-poison-cancellation", passed = true }); Save("long-gate.json", passed);
+    foreach (var length in new[] { 2047, 4093, 8192, 32768 })
+    {
+        var input = Prompt(length); var expected = Scalar(input, 64, true); SaveStates("scalar-" + length); var actual = Spec(input, 64, true);
+        if (!actual.SequenceEqual(expected)) throw new Exception("Long-context native tokens differ at " + length); CompareStates("scalar-" + length);
+        passed.Add(new { length, passed = true }); Save("long-gate.json", passed);
+    }
+    var natural = session.Tokenize("Reply with exactly one word: OK.", default); var baseline = Scalar(natural, 512, false); SaveStates("scalar-eos"); var result = Spec(natural, 512, false);
+    if (!baseline.SequenceEqual(result)) throw new Exception("Natural EOS output differs"); CompareStates("scalar-eos");
+    passed.Add(new { name = "natural-eos", passed = true }); Save("long-gate.json", passed);
 }
 else
 {
