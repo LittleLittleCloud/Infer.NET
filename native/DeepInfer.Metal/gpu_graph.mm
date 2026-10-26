@@ -223,6 +223,8 @@ struct GLayer {
     id<MTLBuffer> parameters,history,state,keys,values;
     bool linear=false,loaded=false;
 };
+struct GTargetBlock;
+static void g_block_destroy(GTargetBlock *b);
 struct GPrefill;
 static void g_prefill_destroy(GPrefill *p);
 struct GModel {
@@ -251,7 +253,9 @@ struct GModel {
     id<MTLBuffer> argValues,argIds,nextToken;
     bool concurrent=true,kvBf16=false;
     GPrefill *prefill=nullptr;
-    ~GModel(){g_prefill_destroy(prefill);}
+    GTargetBlock *block=nullptr;
+    bool blockPending=false,blockFaulted=false;
+    ~GModel(){g_block_destroy(block);g_prefill_destroy(prefill);}
 };
 static bool g_try_fused_attention(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &layer);
 static bool g_profiling(GModel *g){return g->counters&&g->position==32;}
@@ -388,6 +392,7 @@ int di_graph_layer(void *graph,int index,QMatrix **matrices,const float *paramet
 }
 int di_graph_reset(void *graph){
     if(!graph)return -1;auto *g=static_cast<GModel*>(graph);
+    g->blockPending=false;g->blockFaulted=false;
     for(auto &l:g->layers){if(!l.loaded)return -1;if(l.linear){memset(l.history.contents,0,3*8192*4);memset(l.state.contents,0,32*128*128*4);}}
     g->position=0;g->splitMissing=0;g->splitActive=false;g->splitTarget=0;g->splitKvWritten.fill(0);return 0;
 }
@@ -395,6 +400,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
     @autoreleasepool {
         if(!graph||token<0||token>=248320||position<0||position>=262144||!nextToken) {error_text(error,capacity,@"Invalid graph input");return -1;}
         auto *g=static_cast<GModel*>(graph);
+        if(g->blockPending||g->blockFaulted){error_text(error,capacity,@"Commit/abort target block or reset faulted graph before decode");return -1;}
         if(g->splitMissing){error_text(error,capacity,@"Split prefix state is incomplete");return -1;}
         if((uint32_t)position>=g->capacity){error_text(error,capacity,@"Reserve graph context before execution");return -1;}
         if((uint32_t)position!=g->position){error_text(error,capacity,@"Graph token positions must be contiguous; reset between requests");return -1;}

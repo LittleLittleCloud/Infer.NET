@@ -8,7 +8,7 @@ public sealed record MetalExecutionProfile(int KvElementBytes, bool Bf16Gemm, bo
     bool FusedAttention, bool FusedAllAttention, int AttentionFeatures, int AttentionBatchTokens, int MatrixRows);
 
 // Own Metal executor; the native graph retains references to all weight buffers.
-internal sealed unsafe class Qwen36Gpu : IDisposable
+internal sealed unsafe partial class Qwen36Gpu : IDisposable
 {
     private readonly GraphHandle handle;
     private readonly QuantizedMetal device;
