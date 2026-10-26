@@ -194,6 +194,7 @@ public static class SplitService
                     PrefixAgentTiming? agentTiming = null;
                     long stateBytes = 0;
                     var timer = Stopwatch.StartNew(); var gpuStart = gpu.GpuMilliseconds; var dispatchStart = gpu.Dispatches; var submissionStart = gpu.Submissions;
+                    using var metric = new WorkerMetricScope(new WorkerInferenceClock(requestId.ToString(), Build, ids.Length, executionPath, () => timer.Elapsed.TotalMilliseconds), timeout.Token);
                     var next = -1;
                     using var dflash2Generation = dflash2Config is null ? null : gpu.StartDflash2(maxTokens, input.BenchmarkIgnoreEos, () => timer.Elapsed.TotalMilliseconds);
                     if (localPrefill)
@@ -258,7 +259,7 @@ public static class SplitService
                         agentTiming = PrefixAgentTiming.FromPayload(end.Data);
                         await peer.Wire.SendAsync(new(SplitWire.End, 20, 0, ids.Length, 0, []), timeout.Token);
                     }
-                    var prefillMs = timer.Elapsed.TotalMilliseconds; var first = 0d; var last = 0d; var output = new List<int>();
+                    var prefillMs = timer.Elapsed.TotalMilliseconds; metric.Clock.PrefillDone(prefillMs); var first = 0d; var last = 0d; var output = new List<int>();
                     var otherMs = Math.Max(0, prefillMs - hiddenWaitMs - suffixMs - stateWaitMs - importMs);
                     PrefillStageMetrics? stages = localPrefill || agentTiming is not null
                         ? new(agentTiming?.ComputeMs ?? 0, agentTiming?.StateExportMs ?? 0,
@@ -273,7 +274,13 @@ public static class SplitService
                         var engine = dflash2Generation.Engine;
                         while (engine.TryNext(timeout.Token, out var block))
                         {
+                            if (input.Profile && output.Count > 0 && block.Tokens.Length > 0)
+                            {
+                                var elapsed = block.ReadyMs - last;
+                                windows.Add(new(output.Count + 1, output.Count + block.Tokens.Length, engine.Committed, elapsed, elapsed > 0 ? block.Tokens.Length * 1000 / elapsed : 0));
+                            }
                             last = block.ReadyMs; if (output.Count == 0) first = block.ReadyMs;
+                            if (block.Tokens.Length > 0) metric.Clock.Ready(block.Tokens.Length, block.ReadyMs);
                             foreach (var emitted in block.Tokens)
                             {
                                 output.Add(emitted);
@@ -293,6 +300,7 @@ public static class SplitService
                         timeout.Token.ThrowIfCancellationRequested();
                         if (gpu.IsEnd(next) && !input.BenchmarkIgnoreEos) { finish = "eos"; break; }
                         output.Add(next); last = timer.Elapsed.TotalMilliseconds; if (output.Count == 1) first = last;
+                        metric.Clock.Ready(1, last);
                         if (streaming)
                         {
                             var bytes = gpu.Piece(next); var chars = new char[bytes.Length + 4];
@@ -319,8 +327,10 @@ public static class SplitService
                     { DecodeWindows = input.Profile ? windows.ToArray() : null, ContextCapacity = stats.Capacity, KvCacheBytes = stats.KvBytes, MetalAllocatedBytes = stats.AllocatedBytes, PrefillStages = stages };
                     var result = new InferenceResult(requestId.ToString(), registration.WorkerId, Protocol.Qwen36Model, "metal", gpu.Decode(output.ToArray()), [], false, timer.Elapsed.TotalMilliseconds,
                         output.ToArray(), ids.Length, finish, gpu.Dispatches - dispatchStart, gpu.GpuMilliseconds - gpuStart, timing, gpu.Submissions - submissionStart, executionPath);
+                    metric.FinishReason = finish;
                     if (streaming) await Event(context, "done", new ServiceEvent(null, null, result, null), timeout.Token);
                     else await context.Response.WriteAsJsonAsync(result, RpcJson.Default.InferenceResult, cancellationToken: timeout.Token);
+                    metric.Completed = true;
                     Volatile.Write(ref lastRequest, new WorkerRequestMetrics(DateTimeOffset.UtcNow, ids.Length, output.Count,
                         timing.PrefillMs, timing.DecodeTokensPerSecond, result.ComputeMs, stats.AllocatedBytes, stats.KvBytes, executionPath, stages));
                     Interlocked.Increment(ref completed);
@@ -413,6 +423,17 @@ public static class SplitService
     {
         await c.Response.WriteAsync("event: " + name + "\ndata: " + JsonSerializer.Serialize(data, ServiceJson.Default.ServiceEvent) + "\n\n", ct);
         await c.Response.Body.FlushAsync(ct);
+    }
+    private sealed class WorkerMetricScope(WorkerInferenceClock clock, CancellationToken cancellation) : IDisposable
+    {
+        public WorkerInferenceClock Clock => clock;
+        public bool Completed { get; set; }
+        public string? FinishReason { get; set; }
+        public void Dispose()
+        {
+            var outcome = Completed ? "completed" : cancellation.IsCancellationRequested ? "cancelled" : "failed";
+            Console.Error.WriteLine("INFERENCE_METRIC " + JsonSerializer.Serialize(clock.Snapshot(outcome, FinishReason), RpcJson.Default.WorkerInferenceMetric));
+        }
     }
     private static async Task Fail(HttpContext c, int status, string code, string message)
     {

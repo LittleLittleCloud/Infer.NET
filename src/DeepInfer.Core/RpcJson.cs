@@ -5,6 +5,7 @@ namespace DeepInfer.Core;
 [JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(InferenceRequest))]
 [JsonSerializable(typeof(InferenceResult))]
+[JsonSerializable(typeof(WorkerInferenceMetric))]
 [JsonSerializable(typeof(WorkerRegistration))]
 [JsonSerializable(typeof(ClusterSnapshot))]
 [JsonSerializable(typeof(DeviceInfo[]))]

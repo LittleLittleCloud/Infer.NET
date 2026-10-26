@@ -3,13 +3,20 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using DeepInfer.Backends.Dflash2;
 using DeepInfer.Backends.Split;
+using DeepInfer.Backends.Models;
 
 const long Dflash2HostBudget = (long)(38.5 * 1024 * 1024 * 1024);
-if (args.Length < 4 || args[0] is not ("gate" or "long-gate" or "request"))
+if (args.Length < 4 || args[0] is not ("gate" or "long-gate" or "request" or "fixture"))
     throw new ArgumentException("Usage: gate|request TARGET DRAFT OUTPUT [off|scalar|native] [inputTokens] [outputTokens]");
 var mode = args.Length > 4 ? args[4] : "native";
 var folder = Path.GetFullPath(args[3]); Directory.CreateDirectory(folder);
 void Save(string name, object value) => File.WriteAllText(Path.Combine(folder, name), JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }) + "\n");
+if (args[0] == "fixture")
+{
+    var tokenizer = new QwenTokenizer(Path.Combine(args[1], "tokenizer.json")); var text = File.ReadAllText(args[2]); var tokens = tokenizer.EncodePrompt(text, default);
+    Save("fixture.json", new { inputTokens = tokens.Length, textSha256 = Convert.ToHexStringLower(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(text))), tokenIdsSha256 = Convert.ToHexStringLower(SHA256.HashData(System.Runtime.InteropServices.MemoryMarshal.AsBytes(tokens.AsSpan()))) });
+    return;
+}
 MetalSplitSession.ConfigureAllocationTrace(true);
 using var session = new MetalSplitSession(args[1], 4, true, 1000, 128, true);
 var replay = mode switch { "scalar" => Dflash2ReplayMode.Scalar, "native" => Dflash2ReplayMode.Native, "off" => Dflash2ReplayMode.Batched, _ => throw new ArgumentException("Unknown mode") };
