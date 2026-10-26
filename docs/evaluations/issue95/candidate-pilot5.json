@@ -261,6 +261,11 @@
         ]
       }
     ],
+    "worker_timing_coverage": {
+      "observed": 15,
+      "requests": 15,
+      "pi_terminal_messages": 15
+    },
     "client_ttft_coverage": {
       "observed": 15,
       "requests": 15
@@ -336,6 +341,13 @@
     "observerSha256": "ad507a7f3cc40c87029ea96fc85c46c3b2cf77360de08ea6cbb753780e9e365d",
     "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
     "targetBlockEnabled": false,
+    "configuredNativeEnvironment": {
+      "DEEPINFER_METAL_KV": "fp32",
+      "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+      "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+      "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+      "DEEPINFER_METAL_PREFILL_DELTA": "sequential"
+    },
     "workerProfile": "counter-off, local Metal, FP32 KV/recurrence, affine8 weights",
     "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=22806627)\t21%; charging; (no estimate) present: true\n"
   },
@@ -1362,6 +1374,8 @@
     },
     "maxBracketedSystemSwapoutBytes": 0,
     "maxSampledMetalBytes": 37197856768,
+    "maxSampledWorkerRssBytes": 16878174208,
+    "processFootprintPeak": "Not Obtained; sampled RSS is not process footprint",
     "continuousDriverPeak": "Not Obtained"
   }
 }

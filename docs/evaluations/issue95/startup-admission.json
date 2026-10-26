@@ -1,0 +1,165 @@
+{
+  "runId": "startup-admission-20261026T092419Z",
+  "exitCode": 0,
+  "elapsedSeconds": 28.750023167,
+  "wholeComponentNewSystemSwapoutBytes": 390660096,
+  "resourceAdmission": {
+    "thresholds": {
+      "availableBytesAtLeast": 37580963840,
+      "wiredBytesAtMost": 6442450944,
+      "compressorBytesAtMost": 4294967296,
+      "stableSamples": 3,
+      "noModelProcess": true
+    },
+    "samples": [
+      {
+        "utc": "2026-10-26T09:24:19.255633+00:00",
+        "availableBytes": 42388340736,
+        "wiredBytes": 2606874624,
+        "compressorBytes": 252002304,
+        "models": [],
+        "eligible": true
+      },
+      {
+        "utc": "2026-10-26T09:24:20.291961+00:00",
+        "availableBytes": 42399809536,
+        "wiredBytes": 2606841856,
+        "compressorBytes": 253100032,
+        "models": [],
+        "eligible": true
+      },
+      {
+        "utc": "2026-10-26T09:24:21.352749+00:00",
+        "availableBytes": 42421141504,
+        "wiredBytes": 2606841856,
+        "compressorBytes": 253329408,
+        "models": [],
+        "eligible": true
+      }
+    ]
+  },
+  "runtime": {
+    "ManagedHeap": {
+      "liveBytes": 167612600,
+      "HeapSizeBytes": 142714184,
+      "TotalCommittedBytes": 154943488,
+      "TotalAvailableMemoryBytes": 1073741824
+    },
+    "Profile": {
+      "KvElementBytes": 4,
+      "Bf16Gemm": false,
+      "Matrix": false,
+      "ChunkedDelta": false,
+      "GroupedExperts": true,
+      "PackedExperts": false,
+      "ExpandedGemm": false,
+      "DeviceDelta": false,
+      "ScratchTokens": 128,
+      "FusedAttention": true,
+      "FusedAllAttention": true,
+      "AttentionFeatures": 256,
+      "AttentionBatchTokens": 128,
+      "MatrixRows": 64
+    },
+    "Stats": {
+      "Capacity": 2048,
+      "KvBytes": 83886080,
+      "AllocatedBytes": 37628739584
+    },
+    "Block": {
+      "Bytes": 519127072,
+      "Position": 0,
+      "Pending": false
+    },
+    "NativeSha256": "7F3953B8F9B7428A3DE78982F9DE738742CB2785DA77A696A5CCBF1218598A70",
+    "AssemblySha256": "5560F674E28FB5D373283E875324CDDC4BF160409CC18866A6C5B52033B96116"
+  },
+  "cases": [
+    {
+      "rows": 1,
+      "accepted": 0,
+      "passed": true
+    },
+    {
+      "rows": 1,
+      "accepted": 1,
+      "passed": true
+    },
+    {
+      "rows": 4,
+      "accepted": 0,
+      "passed": true
+    },
+    {
+      "rows": 4,
+      "accepted": 1,
+      "passed": true
+    },
+    {
+      "rows": 4,
+      "accepted": 2,
+      "passed": true
+    },
+    {
+      "rows": 4,
+      "accepted": 3,
+      "passed": true
+    },
+    {
+      "rows": 4,
+      "accepted": 4,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 0,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 1,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 2,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 3,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 4,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 5,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 6,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 7,
+      "passed": true
+    },
+    {
+      "rows": 8,
+      "accepted": 8,
+      "passed": true
+    },
+    {
+      "growth": true,
+      "reset": true,
+      "passed": true
+    }
+  ],
+  "scope": "Same native binary/precision and1GiB diagnostic managed-heap setting; corrected pre-load admission only. Whole-component swap includes loading; this is not a benchmark-speedup result."
+}
