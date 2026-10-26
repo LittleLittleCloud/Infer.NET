@@ -22,20 +22,32 @@ Run `e2e-20261026T201255Z` repeats the entire preregistered five-shape/four-arm 
 
 ## Interim power-profile rerun observations
 
-The following snapshot contains 52 complete requests: 39 formal and 13 excluded warmups. All three 128-output shapes and the scalar 8K/4096 group have three formal trials. Native/main/candidate-off long-output comparisons and HumanEval are pending. The known draft numerical gate remains failed; these are diagnostic observations, not an adoption result.
+This snapshot contains 64 complete requests: 48 formal and 16 excluded warmups. All three 128-output shapes and all four 8K/4096 arms have three formal trials. The 32K/4096 matrix and HumanEval are still pending. The known draft numerical gate remains failed; these are diagnostic observations, not an adoption result.
 
 |Input/output|Main decode token/s|Candidate-off decode token/s|Scalar DFlash8 decode token/s|Native DFlash8 decode token/s|
 |---|---:|---:|---:|---:|
 |21/128|48.171|48.337|15.157|34.290|
 |8192/128|52.105|52.254|9.869|18.873|
 |32768/128|41.264|34.770|13.757|19.451|
-|8192/4096|Not Obtained|Not Obtained|15.524|Not Obtained|
+|8192/4096|60.363|60.349|15.524|28.702|
+|32768/4096|Not Obtained|Not Obtained|Not Obtained|Not Obtained|
 
-Rates use total emitted decode intervals divided by total worker decode seconds. Loading and excluded warmups do not contribute. Scalar 8K/4096 median client wall is 311.647 seconds. The maximum completed formal request swap-out is 257.516 MiB (32K main trial 2), below 512 MiB; no new target-output mismatch, OOM, or worker crash was observed in this snapshot. This does not establish continuous driver peak coverage. The independent completed-output check also verifies common greedy prefixes across requested output lengths.
+Rates use total emitted decode intervals divided by total worker decode seconds. Loading and excluded warmups do not contribute. All completed returned target tokens and common cross-length prefixes agree. The maximum completed formal request swap-out is 257.516 MiB (32K main trial 2), below 512 MiB; no new target-output mismatch, OOM, or worker crash was observed in this snapshot. This does not establish continuous driver peak coverage.
 
-The 32K main formal client walls are 272.804, 257.166, and 215.480 seconds; decode rates are 35.178, 45.141, and 45.202 token/s. This time-ordered variation prevents attributing apparent prefill or short-request wall improvements solely to code. AC supply, the 140W adapter, and the numeric power setting remained unchanged; no thermal warning was reported at request boundaries. The cause remains unresolved. The user reported no obvious competing graphics workload; CPU snapshots do not establish per-process GPU contention. Raw slow rounds are retained.
+The complete 8K/4096 comparison is:
 
-Per-request values, minimum/maximum/mean/median times, artifact hashes, speculation counters, and the incomplete-run flag are in [the rerun summary](evaluations/issue98/power-rerun/fixed-controls.json). [Prefix verification](evaluations/issue98/power-rerun/target-prefix-check.json) is a separate timestamped snapshot. The complete restricted raw inventory will be refreshed after the active run stops. Earlier observations below remain separate.
+|Arm|Median client wall s|Worker decode token/s|Formal trials|Max request swap-out MiB|
+|---|---:|---:|---:|---:|
+|Main|115.518|60.363|3|0.000|
+|Candidate off|115.504|60.349|3|0.000|
+|Scalar DFlash8|311.647|15.524|3|0.000|
+|Native DFlash8|190.568|28.702|3|0.000|
+
+Native versus scalar DFlash improves decode by 84.88% and reduces median full-request wall by 38.85%. Relative to main, native decode is 52.45% lower and median full-request wall is 64.97% higher. Thus this completed long-output tier fails the positive main-versus-native E2E criterion, despite the native improvement over scalar DFlash. Candidate-off closely matches main in this tier.
+
+The 32K/128 main formal client walls are 272.804, 257.166, and 215.480 seconds; decode rates are 35.178, 45.141, and 45.202 token/s. This time-ordered variation prevents attributing apparent prefill or short-request wall improvements solely to code. AC supply, the 140W adapter, and the numeric power setting remained unchanged; no thermal warning was reported at request boundaries. The cause remains unresolved. The user reported no obvious competing graphics workload during the queried earlier period; CPU snapshots do not establish per-process GPU contention. Raw slow rounds are retained.
+
+Per-request values, minimum/maximum/mean/median times, separate loading/warmup swap counters, artifact hashes, speculation counters, and the incomplete-run flag are in [the rerun summary](evaluations/issue98/power-rerun/fixed-controls.json). [Prefix verification](evaluations/issue98/power-rerun/target-prefix-check.json) is a separate timestamped snapshot. The complete restricted raw inventory will be refreshed after the active run stops. Earlier observations below remain separate.
 
 ## Frozen implementation and workload
 
