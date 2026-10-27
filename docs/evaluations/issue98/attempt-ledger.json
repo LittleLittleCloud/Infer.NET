@@ -176,6 +176,196 @@
           "confirmedFacts": "35W adapter connected, battery fell to6%, late GPU execution slowed; all retained"
         }
       }
+    },
+    {
+      "runId": "e2e-20261026T201255Z",
+      "completed": true,
+      "stages": [
+        {
+          "stage": "21-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        }
+      ],
+      "controller-exit.json": {
+        "recordedUtc": "2026-10-27T00:29:53.069245+00:00",
+        "execSession": 76406,
+        "exitCode": 0,
+        "source": "Observed completed exec result after controller finally restored the original LaunchAgent."
+      }
+    },
+    {
+      "runId": "human-20261027T003048Z",
+      "completed": true,
+      "stages": [
+        {
+          "stage": "cohort-A",
+          "trialRecords": 1,
+          "observerAttempts": 101,
+          "piTasks": 20,
+          "piCompleted": 18,
+          "officialPassed": 18,
+          "officialCount": 20
+        },
+        {
+          "stage": "cohort-B",
+          "trialRecords": 1,
+          "observerAttempts": 92,
+          "piTasks": 20,
+          "piCompleted": 20,
+          "officialPassed": 20,
+          "officialCount": 20
+        },
+        {
+          "stage": "cohort-D",
+          "trialRecords": 1,
+          "observerAttempts": 90,
+          "piTasks": 20,
+          "piCompleted": 19,
+          "officialPassed": 20,
+          "officialCount": 20
+        },
+        {
+          "stage": "official-health-staging",
+          "trialRecords": 0,
+          "observerAttempts": null
+        },
+        {
+          "stage": "pilot-A",
+          "trialRecords": 1,
+          "observerAttempts": 24,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-B",
+          "trialRecords": 1,
+          "observerAttempts": 20,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-C",
+          "trialRecords": 1,
+          "observerAttempts": 17,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-D",
+          "trialRecords": 1,
+          "observerAttempts": 17,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        }
+      ],
+      "controller-exit.json": {
+        "exitCode": 0,
+        "source": "Owned exec session 89789 completed successfully; controller completed.json and restoration.json retained"
+      }
     }
   ],
   "note": "Superseded and preflight failures are retained. Missing trial JSON from an interrupted request is not a completed trial; observer/terminal worker evidence is separate. No selective performance retry."

@@ -1,6 +1,6 @@
 {
   "experiment": 98,
-  "generatedUtc": "2026-10-26T20:03:10.408606+00:00",
+  "generatedUtc": "2026-10-27T02:20:59.130417+00:00",
   "location": "Ignored local artifacts/dual-host/issue98-dflash8-e2e/; not a public download",
   "privacy": "Raw prompts, outputs, complete states and logs remain local. Credentials/private configuration and key files are excluded from this inventory; no weights or solutions are uploaded. Only relative evidence names, sizes and hashes are public.",
   "files": [
@@ -89,9 +89,21 @@
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/check-fixed-prefix.py",
+      "bytes": 2041,
+      "sha256": "0f7d7a29df5ad66b25a3969fd3fce9b19356ebe5a96a32a9735c60495a593389",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/code-pr.md",
       "bytes": 2025,
       "sha256": "c7782f2d742ad75e7255e20e2026711539f7579edc88b83a1b0c3802c6f51fe0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/current-state-rerun.json",
+      "bytes": 2039,
+      "sha256": "341984bbd2daa9cfb657b7f8bb379c98e6d86dc9b5ee89ae151901c96f5fd282",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -101,21 +113,33 @@
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/enrich-power-rerun.py",
+      "bytes": 3920,
+      "sha256": "5e2f81f103f11c1fce1d36ad61f915f67adf96ca181731ca9f1f3f16dbc6fb30",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/export-fixed.py",
       "bytes": 8105,
       "sha256": "1da42a92273059a2d8782b8f578d596aacf3658762190ba7edb2ce1b0890f3ff",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
-      "path": "control/export-human.py",
+      "path": "control/export-human-v1.py",
       "bytes": 8970,
       "sha256": "5186719163b246de7291ae1292747703ebb708e89ca4ac5728bc910551155908",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/export-human.py",
+      "bytes": 11379,
+      "sha256": "0e8e31b7ff69f36cdf3607e64b974c6cbc7f621c7e52549342403d30b5bd6737",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/finalize-evidence.py",
-      "bytes": 6357,
-      "sha256": "a273b04ab9f3068626f91f1b904495ae0c5458be12ee6113f0b7998343f1293a",
+      "bytes": 6858,
+      "sha256": "cbad08d30b1d765a3231c45ca0587902747e5047c4f3d602c46a68c586dd96a8",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -125,15 +149,57 @@
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/human-collector-cpu-checks.json",
+      "bytes": 581,
+      "sha256": "ac09dc724ca549b4b2fe588e984566808fe40c6e48d28d72ff664e819cf76405",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/human-progress.py",
+      "bytes": 1083,
+      "sha256": "25721531d719293516108da49457d70fcea4731b84082c4524040d5cbecf3516",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/issue98-8k-complete-body.md",
+      "bytes": 19837,
+      "sha256": "c3575e54e2742fe7bcd7f9feeb1ba23c8ea839c0747203079e2f950d7839bbb1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/issue98-current-body.md",
       "bytes": 14041,
       "sha256": "ca36c233a0af95d79866b42a303d1de804e4fb80efd48b02ce4211a39b4e2259",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/issue98-fixed-complete-body.md",
+      "bytes": 21280,
+      "sha256": "60dc856cab9b8595814fbbda060610184021cdf66a824be7a7bce4d4eb442bd7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/issue98-interim-rerun-body.md",
+      "bytes": 18970,
+      "sha256": "05379b8232bcdeefc8452946ba3dced2814414728229e2e0c4a75ea46822711f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/issue98-power-restart-body.md",
+      "bytes": 17860,
+      "sha256": "38789f129daa58ab1f83389bbcb2a86a7c8b8942607f5a4d9e5aa99b634468fd",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/issue98-progress.md",
       "bytes": 1530,
       "sha256": "e8239064a773b285aeb7c9b59f5a694c1b66ed15c5ed97f285bd3463add7d443",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/issue98-stop-body.md",
+      "bytes": 16567,
+      "sha256": "f316c35257be6696e4b843fdf5edae2b0c93952f1639f23629cc4acb06d14f6e",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -155,9 +221,57 @@
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
+      "path": "control/pr100-8k-complete-body.md",
+      "bytes": 1826,
+      "sha256": "a1aad22b9e8a5c16dfbff9e9d72debdca4ce9419e38caa2e59889a46da0fb298",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr100-final-body.md",
+      "bytes": 2127,
+      "sha256": "893880024bbdf72cd9df7792df18413b0097a7d0ebb286592fa8e29f6e040155",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr100-fixed-complete-body.md",
+      "bytes": 2355,
+      "sha256": "1b298f8b2c7d4a9591734125ae6840796bf853b3ec4f30be16c6e2e27a8ab3f6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr100-linked-report-body.md",
+      "bytes": 1906,
+      "sha256": "3c89f96433ea104d6c77a1ae10a34965667d9f67500fa798906d44c5ab638350",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr100-rerun-body.md",
+      "bytes": 1513,
+      "sha256": "9c21c27f207f53ea07a40d8515230d1cb94e0a35c34ee31b4096b9efb8c1a368",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
       "path": "control/pr99-body.md",
       "bytes": 2773,
       "sha256": "1e7373ea9b275347318c993ebd5413e2dc9140589c143db40fe548348a1df8b5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr99-final-body.md",
+      "bytes": 2626,
+      "sha256": "449bdf19b617066c0047a868efa74c857b3b8f76c0324fef66f671d4986b6b8c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr99-fixed-complete-body.md",
+      "bytes": 3129,
+      "sha256": "cbf598a1fae98164642ed58682d371cde265e3037f0b6bd4ab3bc570f3b41d8f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/pr99-rerun-current-body.md",
+      "bytes": 3072,
+      "sha256": "202f8cf2cc86d1d0551da060d106ed2603b42d4e9294b36fde8db3b1a7ceb128",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -168,8 +282,8 @@
     },
     {
       "path": "control/run-e2e.py",
-      "bytes": 11762,
-      "sha256": "a6f8c64983a49149f0a4a8e8c2494092cd8746a40e2d4fa47e6582b15d1ba201",
+      "bytes": 13010,
+      "sha256": "d7b428bfc0af292eb1d97aab365552e1247b16f6ce2f530736b6f08029b0f7ce",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -186,14 +300,32 @@
     },
     {
       "path": "control/run-human.py",
-      "bytes": 15468,
-      "sha256": "ace0d7a52e160fe4376594fb4344245447dc42bf02a3aa2655acc08b3b7ca0d4",
+      "bytes": 19881,
+      "sha256": "b6553a79009d0fd819308fd73e1973dff8494b16cff9b8d9bb2afcff0c26ef69",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/summarize-human-final.py",
+      "bytes": 11059,
+      "sha256": "f4780f3a71a5bd685fd596c05a9412b5bd9225556be22b969f09db5b9a0a2de2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/update-final-report.py",
+      "bytes": 10856,
+      "sha256": "7a1d01330cfd2a129a2fadd9969d71c6a325c573a62ae1ce868968e0307b5bf7",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
       "path": "control/watch-allocation-budget.py",
       "bytes": 1240,
       "sha256": "d7770ad0da53cbd507f79d4af3b0b1ec84542110c2c1494b6b5e50fd1dd4d065",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "control/watch-power.py",
+      "bytes": 1573,
+      "sha256": "05e5ed28e4c55fbdc437064b1b5c724b3e65f32af04fbdff1d656f5efccb1670",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -1862,6 +1994,1572 @@
       "path": "e2e-20261026T174911Z/restoration.json",
       "bytes": 544,
       "sha256": "af908df45865b62e3bcf704cc8ac11aff096129c8671f01c1406160f80248237",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "4a34dce4ca3cdc3fbb5824f8cfbef6294ba21c4d71a3a203e0b1fe741be5d60c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "b8dbb795f6d572b664f0cb62ab0858015f6b29a6548e87ed1d1798efd4d7f285",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/observer/requests.jsonl",
+      "bytes": 87032,
+      "sha256": "42e9ce4e2ad84c320112f695f20c8a036e897f3979238d56ec74ec6d5df02a54",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/runtime.json",
+      "bytes": 6090,
+      "sha256": "c2e859736d5dcb99460610639ff1f2df766355fbb3ad3fda0a4755124cab6be9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/trial-0.json",
+      "bytes": 40052,
+      "sha256": "3629167e96660ec90131389c6aa9c245131912ce7a1540c275af512f1621b892",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/trial-1.json",
+      "bytes": 40006,
+      "sha256": "0c0aeaa0a1f89006434961030c417ddd348254629a79a4e732c231771a8c65bc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/trial-2.json",
+      "bytes": 40028,
+      "sha256": "22822411f272f024ad85a1d996b013256f42b9898b1557dc98d9612322136e96",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/trial-3.json",
+      "bytes": 40049,
+      "sha256": "6e8e7aa9dd333f888bd613a34a457918e62cb116d1620ae06f3852ea9894c130",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-A/worker.log",
+      "bytes": 45606,
+      "sha256": "f93156d0f21324eadce56c6737988d7cd70fc2384089fdb5bbcf6ef187067c2c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "aa26e3d6e7dcbe71168e7827a63cabf2b4ee2d988948160d07c558350ac7a82a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "e73c3c72922ada98e3ceab57a6adb3e09d0a302ef68cfb4fbab7057fb7749486",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/observer/requests.jsonl",
+      "bytes": 87034,
+      "sha256": "58cd317a4d1d82c28e29543e6217b8b718d2721e4b4285589a49325682b6e83c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/runtime.json",
+      "bytes": 6090,
+      "sha256": "134ad90be5cb160d80c96f6d96d3b2557afb85450bcf399521bd8111ce6c1f6e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/trial-0.json",
+      "bytes": 40051,
+      "sha256": "9ca0b4e026d274608bdb9986c327bc7592eddb21899ee45125ca77e1f35f3f95",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/trial-1.json",
+      "bytes": 40004,
+      "sha256": "df15071f89ea39834c56b8332b983cb7ca0e2ddece9e85b04327fececea8cb25",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/trial-2.json",
+      "bytes": 40040,
+      "sha256": "a078659c9617970ff9942cc28ab8e4ba081f09f96db3b95142a20065addb2ef4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/trial-3.json",
+      "bytes": 40017,
+      "sha256": "2543f1dfba7ec7d61ca332064169cc113cc1e34b3a146d4f0926a292a0811645",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-B/worker.log",
+      "bytes": 47444,
+      "sha256": "c3229a679a7482eff3b438df86ce03d28f16d3e5375cfc0c9d5a3c2427b8c048",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "22cfb6722d587251a7d88dc4fd81106f8d1399bbbe27dbc7c604e59e450e17f0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "a6003f59b6abfdef67289a8a2c910ff4545035763eb6ba68246986d54bec5d0d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/observer/requests.jsonl",
+      "bytes": 34890,
+      "sha256": "3d7dec19610b22b3098f51adf01c1a48fb348801e32706db915fba339d13ad9d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/runtime.json",
+      "bytes": 6087,
+      "sha256": "3497bc7ddea177d2d6153e52f02d6b58df0e3e5a5f5ebae2e2701a1110958893",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/trial-0.json",
+      "bytes": 20904,
+      "sha256": "6541acea7dd547c514b77a7651782f200476bc4c1693e0baa1725d8af7e2ca3d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/trial-1.json",
+      "bytes": 20983,
+      "sha256": "5a70b0d8ce734d6f59a3e354b50c0cf9f1d0f34bb0f126f10c71b66e672c74cc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/trial-2.json",
+      "bytes": 20953,
+      "sha256": "d39d164c574c46f6fa25eda6352f1ece800691be088b79323fec466f50a83730",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/trial-3.json",
+      "bytes": 20962,
+      "sha256": "79c4d4faf791b7bf464e7e039de0880ddc95203372c611310810da7e3d7bb965",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-C/worker.log",
+      "bytes": 5962,
+      "sha256": "6bea392162d285c0c2992468cb0e6a82550946944064ce91612b4e6af8bdb829",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "13263dbe58e4bd55dd3bbbc796ac63c7b1b251476337ca48baec204cbcd3cc12",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "f1246759992784b7d6560787cefbbd584da603fbcd7a154a85eecbe805d59034",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/observer/requests.jsonl",
+      "bytes": 35372,
+      "sha256": "ea6397e7ed99831ebc437c74379c3dd5a5f1d28881a1d0fc05a5d12435e70fd7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/runtime.json",
+      "bytes": 6085,
+      "sha256": "8646532d34679bee69ede09cb6734aeb4565219a6e381fa01efe2809c2ccdb9d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/trial-0.json",
+      "bytes": 21032,
+      "sha256": "a386c8f1f8d1f22c10dff8e8d83af5f229b8ec3246b2e9022123adacaf49c5f3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/trial-1.json",
+      "bytes": 21033,
+      "sha256": "cc6129d407733408a95d58215eae20caf8803e55e7ac70d4cd94785e0ec9daad",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/trial-2.json",
+      "bytes": 21031,
+      "sha256": "11a9f2fbe68bf5dec4c7b8102c18cd7a9c51004238cec4858c7fc94ae1f84d41",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/trial-3.json",
+      "bytes": 21024,
+      "sha256": "6ef8e4f4c616024e6f3e9fdef2148293c42102ab53e0efa9c01af6074f323a40",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/21-128-D/worker.log",
+      "bytes": 5969,
+      "sha256": "1e760069316a5f01c45414c7cec84db695a4da89cbf04492a66fd29a8b5aaf45",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "67c6e95f848a4b58bdf71976cb1a865504e8c10c47e09789d33c460f84ee98cc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "ea8928235b61f187a782bf7f8b8de7664fb099b0ec60d787df8db6a3eccb385a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/observer/requests.jsonl",
+      "bytes": 88395,
+      "sha256": "40d7c4dc491fa959af0cd48d6c7bc3f3cbc6e3c56e915da4ebdc9bffb4b704be",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/runtime.json",
+      "bytes": 6090,
+      "sha256": "b13c5e90e288d880e7136a043abd19986cacf50b145aaf643628dd86d282678e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/trial-0.json",
+      "bytes": 40519,
+      "sha256": "4a19f8822b12909d8ed55ac9171dee6f449072bbe496244d5270cae00047ffd5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/trial-1.json",
+      "bytes": 40498,
+      "sha256": "fe3882de49fb465edd592d3a5c9ae0f18a324422e148b0873b829943b7ca8124",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/trial-2.json",
+      "bytes": 40553,
+      "sha256": "913e9979adb9cdd1d4e5288ae83423224ef598ff8eacde6b87ab72c19d5ec021",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/trial-3.json",
+      "bytes": 40601,
+      "sha256": "2a70a6885a7935126e930cf5bf15798bb2cb397aef6d12a3ed6904707290a45b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-A/worker.log",
+      "bytes": 270666,
+      "sha256": "722f10db5cb494a8b2956063f98142d8f9b0ebdc9b74ef8be1540f6ab1f7ea34",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "d86be5a1c26a5d6bb32ac7cd1fb95a7e1c214295c9f702efbeb2ec75ca5e46a5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "160f57f9742ea9b8bea6147a6f57ccca0775ebda4ba4e8b5d91ee94e06f12cd1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/observer/requests.jsonl",
+      "bytes": 88040,
+      "sha256": "cf1c730f3bf10054a7e4177d2655a6853213d8bc830cc8cdc8442f2736be9180",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/runtime.json",
+      "bytes": 6090,
+      "sha256": "1e35be9b18a152b2093000f13764f67dd7c1c6f55b305b6d8afc06326e1d622e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/trial-0.json",
+      "bytes": 40532,
+      "sha256": "ba125be926e5632ab061021c7f8c780659a557fc65adae046ff5ac58062d14d3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/trial-1.json",
+      "bytes": 40520,
+      "sha256": "79577d455fd700ac1c8e99acfab1ef996d6279dede26845e3c2e9a64c9dc8122",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/trial-2.json",
+      "bytes": 40545,
+      "sha256": "f298ab9578341cf278477bca8ff0df39944332fb9d15fcf806502a6ac3fb2602",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/trial-3.json",
+      "bytes": 40497,
+      "sha256": "6cef7c7fd149e17e244e7ec13165f46f9389521d3442a69410858ea1ba645693",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-B/worker.log",
+      "bytes": 272568,
+      "sha256": "8b17165adacac2c177b18fd78bd744b8dce43ad846ccd7b7d67e6345b4bf39b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "aa06e344d771b09f4e75f377f11abd2c401d59221eedce8782aaf2c5edfbb82b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "eedc9b5392c39d7ae267dbb5bd11cd8e325ba5778220cb396100d71cf3dda6ca",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/observer/requests.jsonl",
+      "bytes": 39872,
+      "sha256": "8c3d6396243d85dd4582e2d00d4de90010012402afcd501d4c26fb397273ffd1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/runtime.json",
+      "bytes": 6089,
+      "sha256": "f59428b8f8cc4b85b707c7c2c1895d7662db9c5b2f21c0b80b279a2208633988",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/trial-0.json",
+      "bytes": 22823,
+      "sha256": "03b98326aeee3ba1ab0bb48d38cf7263b370aac549f62c501e8f32ead6c27740",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/trial-1.json",
+      "bytes": 22829,
+      "sha256": "54dbd7600707e3c82a9b45b5e70ade21beb2e770a6469a0b8435019ddcee971b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/trial-2.json",
+      "bytes": 22828,
+      "sha256": "ffa30558a824e2958136d0e73701c5041d03b400ac2d783eeb707d439847767f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/trial-3.json",
+      "bytes": 22830,
+      "sha256": "2e98944b7cc2273774161dde68226a84c24460aa248de4631444f14233340e5f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-C/worker.log",
+      "bytes": 231041,
+      "sha256": "941178392dcbb23e94874434ec2e08377b9eff1cec286099a47d13c181347919",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "5b1758b00d71cebefe3d878bda1ee907b68dd34a0de069330f516810d7580695",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "21b10ada27184c65aa54b85106f77d52cbd5fa00f9328784ff2ab9eca64d0ce1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/observer/requests.jsonl",
+      "bytes": 39826,
+      "sha256": "acd33b4451c6a971a73e9a2eb5059a10e9ad5f2b68559bd181e9e5b2372b22d6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/runtime.json",
+      "bytes": 6087,
+      "sha256": "70764eda98ab1cc4d33607ca3f01b106bb15c80e974fc73f9e7bfc7fa904fb3d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/trial-0.json",
+      "bytes": 22800,
+      "sha256": "bcbb408d6695aaafcbe9990113e8a400670fa214c2069036078a54af854d8f86",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/trial-1.json",
+      "bytes": 22842,
+      "sha256": "bde3ee6fee5d29e3895ca102a19a61fd5d7463b0811161acf0c4079496ee748a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/trial-2.json",
+      "bytes": 22826,
+      "sha256": "2e24aeb62c23eda68ebd44b31482c941918998825de3b9d4df0cdcf7b41dbb69",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/trial-3.json",
+      "bytes": 22811,
+      "sha256": "27966ca125416c08481e2303ee749030b4765aa19fbb6b14562eed81472a9df9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-128-D/worker.log",
+      "bytes": 239168,
+      "sha256": "5e3e46bc4b5993f34185f4df67769cd75ba141d53cd98899fed6828ac475a935",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "1e7f04d0fc87d7971450db592e66ecad86526d0e4a5cecf99e4ffac83335d5ee",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "f74f0e6a80a3386a3157922af8d5087a5a3d114c52f2ad48c4bfae4baadc34de",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/observer/requests.jsonl",
+      "bytes": 2741642,
+      "sha256": "96341a871fb4e4d1dbf442bf9c1453b6d7f4d86963c0b26f4b4a265043554a73",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/runtime.json",
+      "bytes": 6090,
+      "sha256": "2c3c7f53e4882b6ff12e98fc5a99ba79dd47c328d04299253f6b4d033a5b4473",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/trial-0.json",
+      "bytes": 1069380,
+      "sha256": "a201a3d7f8a941002df068850eeebe56ecd430392a2b3e25231cdec9ca972e21",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/trial-1.json",
+      "bytes": 1069350,
+      "sha256": "5e99b113d3d168ac7eb54a4b674b8c77c73199fa512c2993eff7c73f47b12d1f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/trial-2.json",
+      "bytes": 1069446,
+      "sha256": "3767bf4cf6693768b1d58fafb3235a76f19a22e18d4e4e5fce1b488d25214f72",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/trial-3.json",
+      "bytes": 1069306,
+      "sha256": "191bb9602c271265a07ca5cce9cad455c3c3cea6e613f1544f91fd2a094d4f92",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-A/worker.log",
+      "bytes": 1695663,
+      "sha256": "2480e74c0ddeae5b69752b7e58de0fc34b23adb90da71bd642f05882b0dcd9b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "e803d81e92f856c8c86479a024667c6dca7df4e297097bf14dd4cc4874055c13",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "0ed2d2a5cf6ed7ff6c7280e41748dae72253eb1e02649cf63962748edcf523d2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/observer/requests.jsonl",
+      "bytes": 2743810,
+      "sha256": "b2f0d413b9d2f9ee29b30866cddcb8d24b5f92e64be6bd0c210682bbc2a1e92e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/runtime.json",
+      "bytes": 6089,
+      "sha256": "71ddb9969461a14a0f68d2898979301dcbee7f2e75fac58fbc5270e1802b26c1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/trial-0.json",
+      "bytes": 1069458,
+      "sha256": "06bc672f90b7a116d85e22ad398d03257f0f473abcb2497b2cea5ee3de531bd5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/trial-1.json",
+      "bytes": 1069195,
+      "sha256": "cc1c7e0068c8fff3482757adb78af6d57324fc37f42d220e3acd14cad612fa7a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/trial-2.json",
+      "bytes": 1069476,
+      "sha256": "01b8059fb67d1d7ff0f007c5460fa4cfa2241258c0bd367f98cf8574b1e772db",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/trial-3.json",
+      "bytes": 1069444,
+      "sha256": "869a2be154ad63688d94db04e778bdc2f02933d2d4f332489eaf157a03c34b69",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-B/worker.log",
+      "bytes": 1697573,
+      "sha256": "2d86dca2cdf7ced4b24ca1a9fd9db0dbc4e498b23a52996ded9a33891b3cd611",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "d6325aa8c089752c06e3eda5b296d1091fc424307921d0ec20c71a46819de4cf",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "d24389c977443c029890204da8c03342e17e650c8db3033fb8c3050e816438df",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/observer/requests.jsonl",
+      "bytes": 1209116,
+      "sha256": "ff3dbb5e05a859713d02fb55acb8d4902f1f3429b6f2402d387512c20a9de220",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/runtime.json",
+      "bytes": 6097,
+      "sha256": "806eeed03ff863ce72bf69747aff38a3aeef4ca9177368a8782bcaf7b0bc5146",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/trial-0.json",
+      "bytes": 510955,
+      "sha256": "2e94298aef25697f8a894f330d02fec5ecc2e0cac5918212ffd1de3e88747103",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/trial-1.json",
+      "bytes": 510910,
+      "sha256": "1f8f345a33e373d76bdc5c1b6e920f2451361ca36cb891291f4048c3c0c36c21",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/trial-2.json",
+      "bytes": 510852,
+      "sha256": "43b934508292ca68a531063fffad471230d0d634c6c20ee0e2e7fe627b703232",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/trial-3.json",
+      "bytes": 510959,
+      "sha256": "aa1c6f120f8340ed2c9841592904fe60788b29aea0368d0b13ab168369857f6a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-C/worker.log",
+      "bytes": 231227,
+      "sha256": "9faf059ccdd9c44392263695dc05c07d37ed089598b8013eb47e376ee9ec89b2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "e5ec1cb0b92ea76a54d8bde9ad67fc700a24c888e2884f5e1d953747c469ef36",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "be5c6b0f2b21f8b36e8547a58fb8d59b14638c4480e0a08a5112dc7f3a7a5b62",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/observer/requests.jsonl",
+      "bytes": 1211353,
+      "sha256": "0d0ca205b08691e8a7d4a2b26e97c48c82596bac8ed84ded68e12102386aeb8b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/runtime.json",
+      "bytes": 6089,
+      "sha256": "0b8187799903b6d2a3867f37a7099d4f791523230c2d30fd8a4a39fcc8f24c58",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/trial-0.json",
+      "bytes": 511675,
+      "sha256": "93a6dcfc3270c9b0aee009482052f79f084cded2d1a6f00a48b230c28a77769b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/trial-1.json",
+      "bytes": 511888,
+      "sha256": "dc5e36e13c2997c8e6d362b3205f1649bca1d0de229b4081ca11f839f599b973",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/trial-2.json",
+      "bytes": 511751,
+      "sha256": "e1fdc7eda23b2d2d44d91d9ca9dc2b48d3e7f35ab282dd51a9ca7e01bf3f89cc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/trial-3.json",
+      "bytes": 511763,
+      "sha256": "99c943f3b644d77d088684998ff4ad6fe141c637176de4fb9cbc270b4d9742d3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/32768-4096-D/worker.log",
+      "bytes": 566650,
+      "sha256": "deff816938926e1114f0033a868f2326eda91c2bc2455aa307f33b8a0d0beda7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "208957ba419443d6e2b0cbfa6c4b3c9c4b5df777ae9c9b15d8e9908e60bc64fb",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "8d9440cbd995fcc516712bc0c169b2efb908f3b50d2f4d01748985318884e60c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/observer/requests.jsonl",
+      "bytes": 87307,
+      "sha256": "ef19a7fb1b46d42cca5efe8433deb9e05083564ae1f2dd6055498ce9368cbda2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/runtime.json",
+      "bytes": 6090,
+      "sha256": "2ea8cf0be6d8cd0e075cab54f165bcbe03ac2ad06f5e443b8cc7a594ae356aa1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/trial-0.json",
+      "bytes": 40633,
+      "sha256": "69d1d66686010a0d07183a6f7f6e29c38ebbe562604725df5a5aba572e05d6c5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/trial-1.json",
+      "bytes": 40639,
+      "sha256": "917488b584b175d5bf5f076c1f187fc68772605c70ba45ca2be398b9a8f11936",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/trial-2.json",
+      "bytes": 40632,
+      "sha256": "063744a770e58ccaf1b9814dd8f673ed5d4166ce1e9363201e0aa200e1d5b5a4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/trial-3.json",
+      "bytes": 40620,
+      "sha256": "827f73639897f65b52008a093010dc13a678d7973c70032f21c38f390f1ae04c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-A/worker.log",
+      "bytes": 101706,
+      "sha256": "0e430e93af52fa7727f7337bfbf0b7d92196b6f0cb54ba1a3c2fba82761a6936",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "bd747f94dc1028371e7cb37671d0d2f4e203f661abbb319061dbcaebf85dd36f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "b6c6a0f7660e43140d5770949a6f6806cde90f7106844d33d452e6211f4bbc7c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/observer/requests.jsonl",
+      "bytes": 87657,
+      "sha256": "c264f1e05259d4f24a30b5fbf33ade5b5792f7de186385ae88df0bf9cf836214",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/runtime.json",
+      "bytes": 6089,
+      "sha256": "68fa86ee8ae19c16b9ac00078abf01f8046b4539deaca5bd56c2c3915549800e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/trial-0.json",
+      "bytes": 40658,
+      "sha256": "b51b9e786f3619c3d975019ef7dc6b61abfeb3a9866d9ed41b1f7e8e04038557",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/trial-1.json",
+      "bytes": 40650,
+      "sha256": "9097a84cb4f47cab367c7db2f7c6d4fe283330c0296312b05345c60c9d47cace",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/trial-2.json",
+      "bytes": 40653,
+      "sha256": "37f9e6f36a0222bc9c8ce96995b46ffa6bda27081cacd4bcff09b5e90777e533",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/trial-3.json",
+      "bytes": 40674,
+      "sha256": "b7006b98f7ffcd01de914c39620b2156afe8d5890a3ee369477704c9ebd33112",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-B/worker.log",
+      "bytes": 103598,
+      "sha256": "7ffcf497681871952bf719935c35c6c346bcafca6b3ccf2e27b84be595ef0e34",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "5cef699611c1eb7d1990a71c89a786b6ac57314ff15fcc4251554f84b412ee46",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "483aa5f0f63882b4f2f01de119446f3e6a33c9d58536c701b832dfb9a3803546",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/observer/requests.jsonl",
+      "bytes": 43559,
+      "sha256": "e2d78875055200690f7bb073433327a42e8e2b0a1d903839d00a1640acb6b623",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/runtime.json",
+      "bytes": 6086,
+      "sha256": "f9c921c973152b8478284a46677740916bbe49d93e2ed69e8e94e3bedf2ff801",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/trial-0.json",
+      "bytes": 24561,
+      "sha256": "99769a105204af9626d5581b700017e02ce3e92de9774d631f93d21817a4eaac",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/trial-1.json",
+      "bytes": 24539,
+      "sha256": "71ca0e0196e342bbddeb9b909eaf95bb677085482fa5122ac5605f7afd89e63e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/trial-2.json",
+      "bytes": 24571,
+      "sha256": "156feff93aab63a31d1c8d6a6496a8d2964bb7cf7c8ceb1c94d63d86f06008b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/trial-3.json",
+      "bytes": 24575,
+      "sha256": "ffe18a7f9e470cef814afc596102071c75a3ed5021ae0e1e16bffa10616c7b63",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-C/worker.log",
+      "bytes": 62129,
+      "sha256": "3e69071f6441fcf742ccf7b298b8f7f6dc75bfd875ee36da99113767e3a5e8e5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "bc07fa8da9e5214c18ea33506350a0dd15881b991d04447ede82d1ef3e8b4676",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "3f67a59ac3fc4d196cfae418d0eab53aee1701376e982b1157c7623a11dd97aa",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/observer/requests.jsonl",
+      "bytes": 43660,
+      "sha256": "c04c199d41b74645bac6cc394063e652686f7e99e971cb0a5fcea84e7f6223f6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/runtime.json",
+      "bytes": 6086,
+      "sha256": "5b610832a1315837fb652918f4b8e29941095f5ae89dafe8f40a90beaff7d508",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/trial-0.json",
+      "bytes": 24446,
+      "sha256": "f8cdabd85c0225207be024acf83d0393d94e23d0c873e3ca0b67a510487c0c53",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/trial-1.json",
+      "bytes": 24529,
+      "sha256": "e976e6f47a236bb8e9a3a0cf308b7e6498ae62a1e9f7ec5f6b7208569f9fd4b6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/trial-2.json",
+      "bytes": 24570,
+      "sha256": "0d7e663a81c047e160a60fb45de90e285e453862abbc9884d48b5f12df0e9c64",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/trial-3.json",
+      "bytes": 24565,
+      "sha256": "440543b5acb75e2410ba9768bf7ce1a9ec84a3bca2cb2fb7fa39305e5d2fcc1f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-128-D/worker.log",
+      "bytes": 64550,
+      "sha256": "d58e044cbb87662e6cf31b15a7ba321f36b9a3d0e127d9b93995ccf9aace26bd",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "e6973541182f4dcbc4f73445b98b245096a80b2edc418d6ba9085e3437cf0204",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "4b7814afbd97e4f1013684b0bb9bc895ba442337577c25bad0f78073663128cf",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/observer/requests.jsonl",
+      "bytes": 2725401,
+      "sha256": "e6176b1035cb12fd8fad8b17c29114b454bc1cb6afabae9e8a00cff558b11961",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/runtime.json",
+      "bytes": 6092,
+      "sha256": "056412a36b1a4b190905a29700b311b27e70e2659d2c39b890d0664621d7daba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/trial-0.json",
+      "bytes": 1065975,
+      "sha256": "97098e12a345d2e186f5aef0f042e3ce22fe5999209d9d8c0a53bc8c8f9397c7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/trial-1.json",
+      "bytes": 1066065,
+      "sha256": "6648cae3584799f32ddaaf602294cd1633eb5cd275c1b9e7e5d7a4d0bbb13d62",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/trial-2.json",
+      "bytes": 1065976,
+      "sha256": "674c6d7b09dad40ffd191ca43c9a4d1e0365db2ff789163cf8f5000b829402ee",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/trial-3.json",
+      "bytes": 1066134,
+      "sha256": "16e370b5c49139c0f0b1cc59733cc55a970884d588627c7d3e75afddc71b6bc9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-A/worker.log",
+      "bytes": 1526702,
+      "sha256": "a5c52ce62a4316e383741581e1bf998ac45f6a31b422d074d7554a3bbd0abb65",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "649583d1ae8c4baaef0c2a08ca29ad567df95cf27140e119ff922d6b8bcaf316",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "cbef6b5866bff46d4ffe1cc7867641eeba81b67cbbe23ec1c181e1adef9231e7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/observer/requests.jsonl",
+      "bytes": 2728373,
+      "sha256": "9695f3013f4679f493661a682a5ac6fda9a971e9aa14e278e89af9a296138014",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/runtime.json",
+      "bytes": 6092,
+      "sha256": "0aa4402227d5861ba56cc86893a7483e0df5469bd430a5cde7efcd9ba64df7f6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/trial-0.json",
+      "bytes": 1066245,
+      "sha256": "7205bfc97e9acc7533feea258df0a93b38b5ab56e2621ec071734100a69c0b13",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/trial-1.json",
+      "bytes": 1065993,
+      "sha256": "0b7fa62a921879ee16e092e7edba0127c5c33ae7c9dd5cec7c7d90bbd65f7742",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/trial-2.json",
+      "bytes": 1066130,
+      "sha256": "a8a0dbad79a12800a6fc9289de6dc8d2d72e0c4207b7c3552a417723720aef00",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/trial-3.json",
+      "bytes": 1066185,
+      "sha256": "816cec3a2e0a995c3c237ab5286a41c92a89b245d2efd86f9a3b7420f9ec0e85",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-B/worker.log",
+      "bytes": 1528582,
+      "sha256": "98ef6c417f8bc56590c7ed119b18615c3637d07f3980d6c03c51f5c1a820b530",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "8f30ca62e72d9c8a20b098dafad3d237263685b6bc4580dbbd637cf56df0a348",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "b759f005ded95b8f2a54acce4fb0bc0e7ccfdaef8e13a8646edf5d90fe55215b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/observer/requests.jsonl",
+      "bytes": 1135463,
+      "sha256": "1d9ae63a5f6991698de72323a88828de6067636c4246675147f5991eccf39a8f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/runtime.json",
+      "bytes": 6089,
+      "sha256": "de1d057c9b93e512acd1d5310b57f0ac463d3bcdb9a86ac632f15ea803d7a1e5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/trial-0.json",
+      "bytes": 483359,
+      "sha256": "e372be07f738e8e6cbb9f01f975f465672f6697c27adaf4e0f40965954cb9b39",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/trial-1.json",
+      "bytes": 483320,
+      "sha256": "ffa7f969e7bccdb48c97a10af1f36f80abcbfc316cd8555f84742b00e5e793a4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/trial-2.json",
+      "bytes": 483274,
+      "sha256": "ab2817a9c0238ad47d80c48c6b7fb882ce71a03b9a8de02df05254f8747b6408",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/trial-3.json",
+      "bytes": 483359,
+      "sha256": "929ced9c35a558effb94f3be1154716644e95d9916df0eefc8fe3d7fdd7390fb",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-C/worker.log",
+      "bytes": 62200,
+      "sha256": "fffdc824dd1a377fb33e4f8f14aaa9aad1e2fddd7ef01de351f81e905e7bcbf2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/admission.jsonl",
+      "bytes": 6165,
+      "sha256": "bfb851825e6567833016430c1852c3ea99bdb3ab2091e4d970e7d8b5adaa1862",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "cbf42ee5d84994c38e5d3a057c8d89ff7d3bccf089ff83bc971726b67fb72f0d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/observer/requests.jsonl",
+      "bytes": 1131626,
+      "sha256": "03b4ba32d100364f9889a99ae2b9dd3d83b31c8ff557a162d1d2fe09b1cb6d47",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/runtime.json",
+      "bytes": 6089,
+      "sha256": "99ab5b61d89f245e31a6ccc2013576228dd549282055cfb159d3c5e8027bdac3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/trial-0.json",
+      "bytes": 483197,
+      "sha256": "8438c1609748311e4223d37bc8f49a5185be1c91705db58ac3a4ed6220e0c408",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/trial-1.json",
+      "bytes": 483065,
+      "sha256": "43a404be335e14a3ec962ba55cbe335df5c564258ee12ac6ad9897072bfe73d3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/trial-2.json",
+      "bytes": 483165,
+      "sha256": "d70ea2ebbd11a3228e1dfa019b7e83425ada49ae080c1aa09eb536fc5a0bac5d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/trial-3.json",
+      "bytes": 483162,
+      "sha256": "8da1f5ec5321feeebd47a77e533cc8f78eb8378771d5b640d7f84af24a117436",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/8192-4096-D/worker.log",
+      "bytes": 62223,
+      "sha256": "ddc36a0a911c8ff45636650b57f03dedf9f0ed660873f5b3b7fefaab0097cb90",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/allocation-watch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/background-process-snapshot-2116.json",
+      "bytes": 2392,
+      "sha256": "3318f32523f17c8e742fe505c217eae6321255bfa3dbe76a0ae7c77ae5075ab6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/background-process-snapshot.json",
+      "bytes": 2398,
+      "sha256": "664944580f2d78a89d893de9f54e6f319f3047a90270abcd0755e1d8b23d40d6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/battery-registry-diagnostic.json",
+      "bytes": 612,
+      "sha256": "10d8851ddbd3f0e475645a4f8f474eb528181c9bfd3bf8ecd61b7f054114e979",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/completed.json",
+      "bytes": 90,
+      "sha256": "5eab5d12d9d01a3fa5041da8608053de46cb283dfc228a6ea5a0d84a5cfeb4a6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/controller-exit.json",
+      "bytes": 203,
+      "sha256": "218a76b1f9e9e7b39101836812bc4054841fd28932acc753db46b316dfc46e2f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/controller.py",
+      "bytes": 13010,
+      "sha256": "d7b428bfc0af292eb1d97aab365552e1247b16f6ce2f530736b6f08029b0f7ce",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/fixtures.json",
+      "bytes": 652,
+      "sha256": "768e44be6da3ba4400b2e9a56f6042e84c65814745b131073b3723a3ef0e6a07",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/original.json",
+      "bytes": 681,
+      "sha256": "b8e8fff6f784afcac477a0729ba78c3303ee732486b02cc2a532321cb60f577f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/plan.json",
+      "bytes": 2894,
+      "sha256": "89ae63e13d9dfc0433a6684239bfc37d399617bea50427a04989437832364521",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/power-monitor.jsonl",
+      "bytes": 143653,
+      "sha256": "272a7a71e20d36b5af437579e908ca1bfa5036483f3b34f1d051993dc0aa74e6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/power-ui-verification.json",
+      "bytes": 786,
+      "sha256": "72a2339dca971eb90d9e0aab6e6b1f940d27c7229c294d13f305c56814eb1238",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/resource_admission.py",
+      "bytes": 2331,
+      "sha256": "7ea52aff64943013c4a84ddeb6f9e30b752c97fe719d83d0ff47d8a7b1a1fd0d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/resources.jsonl",
+      "bytes": 60060816,
+      "sha256": "0de9f40b054a4ede9ae50b40150ab224797f32d10d9455b53ad34e8b528767ef",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/restoration.json",
+      "bytes": 544,
+      "sha256": "2cac0a698cbac051591dcdb41f91da89d4e18504e289d642e98f92e2cbe59d2a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/supervision.json",
+      "bytes": 344,
+      "sha256": "f1dcc8eb0117c10ad369549ecc29e335d16e29fca6377c2aa088a0c65e5ed263",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/target-prefix-check.json",
+      "bytes": 322,
+      "sha256": "093fe9be7d0173c769df848210e4587b0194c6b16f47996dfd64b0af5d6000b2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/target-prefix-checker-history.json",
+      "bytes": 247,
+      "sha256": "b7d21b95e35bff29161b5c73dcfe9475ac8af34c7f5a1e322a59f7e4afae869e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/target-prefix-checker-v1.py",
+      "bytes": 2037,
+      "sha256": "d2ad76e445f8c16d715c86835ebe3084c3edd6d5007c23b4c3be57f6352997b6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/target-prefix-checker-v2.py",
+      "bytes": 2041,
+      "sha256": "0f7d7a29df5ad66b25a3969fd3fce9b19356ebe5a96a32a9735c60495a593389",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "e2e-20261026T201255Z/user-background-report.json",
+      "bytes": 352,
+      "sha256": "75deaee447d43150834645b70bdd10dfbffd95e12b35ceec63547e956a00d405",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {
@@ -5222,6 +6920,2004 @@
       "path": "gates-20261026T171153Z/state-oracle.stdout.log",
       "bytes": 1869,
       "sha256": "211a6da61d8c5ed744d5f1cec2b5c24fbee483ebf364e1be659c7f1adf886e6d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "5f0e392746b4e3dd5d53bd8c4d8c86fac243e31e30160ebbead1b65d9c9fb252",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/driver.log",
+      "bytes": 1404,
+      "sha256": "a354cdb784dcf8417e81e149c21f710e41b2237f6da3b1071d184df1d4c67edf",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/normalized-duration-clocks.log",
+      "bytes": 47606,
+      "sha256": "823d672f85a766b242d9f9dd39845d7b0bd0a8e11012363126f6859419f70a31",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/observer/coordinator.log",
+      "bytes": 867,
+      "sha256": "0e2960d6f5c8623101f3bcc874324be3c3d0e480ccf3c844a81bd5c1d0c716c4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "50c2932b2bfd73631a1b596e0c60308a3cb753fbb5d08a44cc7d2c0197fdb853",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/observer/requests.jsonl",
+      "bytes": 145167,
+      "sha256": "92046511875e3f0dc07a66535baa00393fe3ca557ed9acfce2ced07558fe7ad9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/official-driver.log",
+      "bytes": 383,
+      "sha256": "d0ff0c838b9023d633e17f36801727209a5b948da6efeb4e05c1ebd4f40cfc64",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/official-health.json",
+      "bytes": 572,
+      "sha256": "cc2127c2b295ddf42ec37a763199c2149d8fccac5fcbe3453f6f3d604c0c37b0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-115/events.jsonl",
+      "bytes": 53105,
+      "sha256": "33db23f0b92ab473574b45c4aba72f6fe68ac14eff0b3f341eb68854fe545e23",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-115/solution.py",
+      "bytes": 1234,
+      "sha256": "3135f6ab7c903349e853f261e99182e6cdb1622689427dc3f622cd7f0958580a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-131/events.jsonl",
+      "bytes": 56261,
+      "sha256": "178220561372544c7780ca53f305542bdafb28259a2b0cb45bea3306a4702633",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-131/solution.py",
+      "bytes": 413,
+      "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-137/events.jsonl",
+      "bytes": 102367,
+      "sha256": "0fc205aea22509d540f9a7687f59802762219286d8546540f97aa95b62631005",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-137/solution.py",
+      "bytes": 936,
+      "sha256": "b145306cbd7d8b4e7caa77a85821169391d085ea4fbd7f36f8d4cfff4bd77383",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-146/events.jsonl",
+      "bytes": 99856,
+      "sha256": "f9f0edc3be6e112fd99b764e82fdf0d34c48603b5d9c5b9f555f9b606e678fc8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-146/solution.py",
+      "bytes": 760,
+      "sha256": "c1dd0aa6122f3a4f8f2328031b3365acb99bd8ac57cd9999a720af77b1a398fc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-148/events.jsonl",
+      "bytes": 94661,
+      "sha256": "3360714b2284827af5be6283d12a7da87922f66dd8b2a94178782b51b09ec223",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-148/solution.py",
+      "bytes": 1155,
+      "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-149/events.jsonl",
+      "bytes": 25171,
+      "sha256": "b3b4cb8229190487f6b42566895992325a7a24a3a56b43be2b9258d0cccedab4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-154/events.jsonl",
+      "bytes": 111000,
+      "sha256": "2276ff31e1facc2e4c52eac67bd8ada41f6f86e7821c527edab7b074c8af8713",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-154/solution.py",
+      "bytes": 685,
+      "sha256": "b4088d4896a21dfd8eb2f823c3d643e8fd50859583cce734c6df2d6c9bc6459f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-156/events.jsonl",
+      "bytes": 59754,
+      "sha256": "38721288066b8daa19eb85b8bea8773b029d975df67457ab2a07143230cd857d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-161/events.jsonl",
+      "bytes": 65993,
+      "sha256": "0d9d9793682782a4bcc612fb299094ff5fcec70bfc13072b4fcb5cd01415eb24",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-161/solution.py",
+      "bytes": 836,
+      "sha256": "788241e207ecc80cab31dc00a99c5dc524e89e1f52ed9d6adc3862c1c3ac6b8b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-162/events.jsonl",
+      "bytes": 50353,
+      "sha256": "8214c34799c83b34c5c94fe29e34be02720f7bc91b6a77c9d9bee19cef047f19",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-162/solution.py",
+      "bytes": 342,
+      "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-2/events.jsonl",
+      "bytes": 50543,
+      "sha256": "c89cd21e6105bd2fd10dd232728e207393a510c72211e1ef24eddfd07901d103",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-2/solution.py",
+      "bytes": 360,
+      "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-32/events.jsonl",
+      "bytes": 68768,
+      "sha256": "192a59d0749573bbd58f66e8147d6fdd78cae87750dff68c243408f3aeb980a6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-32/solution.py",
+      "bytes": 1772,
+      "sha256": "964d900f34113f123b9a2e1eac8ca2d047c06cb246060ab4ff523e455245c38d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-35/events.jsonl",
+      "bytes": 48889,
+      "sha256": "82c705dedf83b339ff1ab824377f66361338814036f8d52abed9f799645252e9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-47/events.jsonl",
+      "bytes": 115628,
+      "sha256": "349898ba3eac346658bf9ce7eda97e9722ffd06be37ab974d849c205abc5a6a9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-47/solution.py",
+      "bytes": 345,
+      "sha256": "b10e33c48f487936da5f7ac8bebba29149687db9dcfbeedfa0cb345185ee9251",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-50/events.jsonl",
+      "bytes": 64408,
+      "sha256": "07ca4c440ca8b6c11926912dce5ba8b215381b289310e54f7c9af5f524f616e5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-50/solution.py",
+      "bytes": 412,
+      "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-6/events.jsonl",
+      "bytes": 54225,
+      "sha256": "5951c9e7b5bdd971b0936ece9da3628cd5d59692a648d8f9a2d9618920da79af",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-6/solution.py",
+      "bytes": 856,
+      "sha256": "8070deaabf301e8946b034d6cb278dd859d42e7ec0c386c6a80830ab732209b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-72/events.jsonl",
+      "bytes": 49169,
+      "sha256": "d1b94ee11abbfbc870b580e12b213eca9ff2233b640da9d70759aa042275e752",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-80/events.jsonl",
+      "bytes": 48497,
+      "sha256": "9da9e8fecba3ecc23e2649b97018f712c94385678a8d306caaad0bed60905814",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-94/events.jsonl",
+      "bytes": 55284,
+      "sha256": "073d06b6f338d94573a0fcbc4bbde7c32a4d5e681610e0bfc3bc1d21c4866923",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-94/solution.py",
+      "bytes": 1249,
+      "sha256": "4175178e89aff6fbce069753a75f2cf41d8cf643397babd447d25a7f45d185af",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-97/events.jsonl",
+      "bytes": 58176,
+      "sha256": "a7ee9ea6aa40237984cfe404a545870d36d7b938ba2f5d1e2210022ee4196ea2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/HumanEval-97/solution.py",
+      "bytes": 421,
+      "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/manifest.json",
+      "bytes": 1226,
+      "sha256": "e0f41e39978c084c8c092cd6837ab602da026c4d85bb9ea2a401373847d7a024",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/normalization-attempt1.log",
+      "bytes": 206,
+      "sha256": "4fb5d423ca06c16b3c8af217152b64a40813c80c35bfffa3c49d71d25f1df8f0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/normalization.log",
+      "bytes": 206,
+      "sha256": "4fb5d423ca06c16b3c8af217152b64a40813c80c35bfffa3c49d71d25f1df8f0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/official-validation.json",
+      "bytes": 2597,
+      "sha256": "5fed323fab830315fae67818d3801d7fa4f30a655d1c4b68cf671d9c3c6b1405",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/performance-standard.json",
+      "bytes": 63321,
+      "sha256": "5976637771e5d6b3e70206afeeac55cf7315ba3c1202341f60178b3f971b0e8d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/performance.json",
+      "bytes": 63706,
+      "sha256": "5af706dc6cc645dbf1a7ef0d69cb7fdc94ea8f30bad2a47b2928a7211f2af837",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/summary.json",
+      "bytes": 533,
+      "sha256": "4aaa0aa00f826bb8d9778bd8e38935efe5782648a47d5b503aa988d4592693b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi/tasks.jsonl",
+      "bytes": 175160,
+      "sha256": "7ea621d4a019ac591ea51f97780100cd94ada8b30ec3d4ee27a92075d6e6be69",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/pi-status.json",
+      "bytes": 5315,
+      "sha256": "22b358ff0868412535166213eb69ec92181794c2525394faa4f5bab4f6bf20db",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/power-monitor.jsonl",
+      "bytes": 146880,
+      "sha256": "0cbb523d9436d79d00c597832d93698479e13251b788e17fe5265159ba7ef6c6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/runtime.json",
+      "bytes": 6092,
+      "sha256": "59a0cc40fc1cdede6d46359fde0e696b671fc7fcfc93adf455b09460f656b8ae",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/trial-0.json",
+      "bytes": 40047,
+      "sha256": "25198b0784fdca287649c464b19eada51344bf6ac3f2405c75c5763d6dd22146",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-A/worker.log",
+      "bytes": 2122704,
+      "sha256": "8c78d573d454773f6838b6287e5424015f624caf0a6c8f650063df60db1c991e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "61efbfeb361a2d9bcd6756e9f5968ef2595418b5a394b35de79d6d3430d6acd0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/driver.log",
+      "bytes": 1400,
+      "sha256": "b31a2a117c56bc683e1d5dfe27497a089a4fce0129aacb02910933f7ef073d1d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/normalized-duration-clocks.log",
+      "bytes": 44691,
+      "sha256": "918dbd47ddb36389030a67eeeae12208289be4134d0371dcb58fabe5d66250ac",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "b85e7639a3742b02e38fb2f2c2ae81f3486043a9832167dbbed68a17c38cd771",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/observer/requests.jsonl",
+      "bytes": 133855,
+      "sha256": "b31dd5142970786866571b97e2926ccb550a82d7fb6cb5283f9cd4be0883aea4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/official-driver.log",
+      "bytes": 424,
+      "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/official-health.json",
+      "bytes": 572,
+      "sha256": "5240108c0e4808884444147d68f01dffae30c2962d1a9049d4e5aa52b9cd97fb",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-115/events.jsonl",
+      "bytes": 52550,
+      "sha256": "d2bfdc4513edfa75f7e372e92fee991eeb5b47fe135082d775a12d73f0890a5e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-115/solution.py",
+      "bytes": 1277,
+      "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-131/events.jsonl",
+      "bytes": 42188,
+      "sha256": "1d4931bce212cecfc1efaa6e4b5c8096d0b90cd82d6940d2948eb77e2508b7b5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-131/solution.py",
+      "bytes": 413,
+      "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-137/events.jsonl",
+      "bytes": 69006,
+      "sha256": "d6da1155ba40a675b904d652c76c484913eed18eed8ae3e8cee704eaae63d552",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-137/solution.py",
+      "bytes": 923,
+      "sha256": "9e0383ea4a265c159f86f0b6b0925d1c0298070d7458566219ca99daa119f6ce",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-146/events.jsonl",
+      "bytes": 100637,
+      "sha256": "0334f27d3783f48c8e49c3629c3efd69eb0ab5dc2a5b23d5eea3339753229e7f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-146/solution.py",
+      "bytes": 760,
+      "sha256": "c1dd0aa6122f3a4f8f2328031b3365acb99bd8ac57cd9999a720af77b1a398fc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-148/events.jsonl",
+      "bytes": 72524,
+      "sha256": "7214297c80d62338ffbf63f4054ae6666c345a468522420ec10c2e96d5f986b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-148/solution.py",
+      "bytes": 1155,
+      "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-149/events.jsonl",
+      "bytes": 77800,
+      "sha256": "feb0fe96519e4b6cf29fb7bd0961a617a17a7510c10ff518031f233ba0671d19",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-149/solution.py",
+      "bytes": 1183,
+      "sha256": "37a3b9daf6a2b573feaa1be81b21509ee166eda1b9db76750ac9dee1e17263fb",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-154/events.jsonl",
+      "bytes": 81720,
+      "sha256": "ace8686b1a0fb7a08b070eeee80bbdb2344831f644d1c5c6a6f463d2338c7284",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-154/solution.py",
+      "bytes": 692,
+      "sha256": "3ca59eec624fc797c61e8f5493fb42e6b4b837a404db633b02d7c2f53982673a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-156/events.jsonl",
+      "bytes": 82919,
+      "sha256": "5545e783aa87d0868fe57bae48099428c90bd688bb824e6023418b96ab023ec8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-156/solution.py",
+      "bytes": 774,
+      "sha256": "37f76457c42f9453d034d12f8b046b66073b22b963535f918e6fb9a6b8435824",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-161/events.jsonl",
+      "bytes": 80147,
+      "sha256": "15c73612de88ba3ecc224536ccb35ed162ab7a79c351c76201f9784f1765aea7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-161/solution.py",
+      "bytes": 832,
+      "sha256": "fb3312522e5fc72292bad3ba90a2980c21f187734a8442afc2cba263bb378ca1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-162/events.jsonl",
+      "bytes": 55138,
+      "sha256": "3cb66a7d8dbad1ca1ceb812fb09c2404b41914a0ea777d75d98a2463a9f64de6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-162/solution.py",
+      "bytes": 342,
+      "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-2/events.jsonl",
+      "bytes": 67428,
+      "sha256": "b0c5a0a48c56192c63a04eef73042ec0391918388472f12c53651d04b0d20ade",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-2/solution.py",
+      "bytes": 360,
+      "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-32/events.jsonl",
+      "bytes": 69247,
+      "sha256": "6a463dcd389d4088cd40a6b24ce7e49b0aa927c4aa2ccdd87edd58e7f6ea0ea3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-32/solution.py",
+      "bytes": 3333,
+      "sha256": "c2303e75ed2e0513249be466a5b3f16afdd1506150e32d67234ce08becfaedb7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-35/events.jsonl",
+      "bytes": 48714,
+      "sha256": "a6919fd302f55d1571c6641d50890cbb0747c87aac7e8a3e5df529844e16f83b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-35/solution.py",
+      "bytes": 200,
+      "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-47/events.jsonl",
+      "bytes": 85713,
+      "sha256": "77061c9676f8ff938fed5e05ba1de980b95acedb8df3120ee10feedd9fb4df84",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-47/solution.py",
+      "bytes": 342,
+      "sha256": "a3c43fc0a003e5eca465c601a847daa7e7510a78e6730875d5d3d2cea19d6fad",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-50/events.jsonl",
+      "bytes": 47824,
+      "sha256": "5f7e84bf042645efe3fd1f4720f2dfcee4824331938115fc540fcbe306887bba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-50/solution.py",
+      "bytes": 412,
+      "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-6/events.jsonl",
+      "bytes": 54203,
+      "sha256": "c03d8abcbe093f7ce629be579a2d1174c9909694bb2799bc9f95109db747affc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-6/solution.py",
+      "bytes": 856,
+      "sha256": "8070deaabf301e8946b034d6cb278dd859d42e7ec0c386c6a80830ab732209b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-72/events.jsonl",
+      "bytes": 48973,
+      "sha256": "75bd668df2af221da4adf76f9b0f6295b20e1e39deedb391fb3a50a1ca83ab64",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-80/events.jsonl",
+      "bytes": 48722,
+      "sha256": "a62d488d95753e8af59a687fd801729fb7e70c72ea05d2bcb38ed773eb60b9b4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-94/events.jsonl",
+      "bytes": 53864,
+      "sha256": "52dabb778107b3b628836f0d02573cd89e98734ff1aeb54d5d621618b2b39dba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-94/solution.py",
+      "bytes": 1249,
+      "sha256": "4175178e89aff6fbce069753a75f2cf41d8cf643397babd447d25a7f45d185af",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-97/events.jsonl",
+      "bytes": 58272,
+      "sha256": "10e32d906646427a421bd05dfd3f96f0882e55960264ba1a9f61dd45369310ad",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/HumanEval-97/solution.py",
+      "bytes": 421,
+      "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/manifest.json",
+      "bytes": 1226,
+      "sha256": "053d12fbe25023191472822955b260461e8804a253a3b777ab839b83cf87d28a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/normalization-attempt1.log",
+      "bytes": 1193,
+      "sha256": "ddd7fb51f501a9e5123e53786595541fa86545dc2b9bd50963f5de4ddc0a8175",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/normalization.log",
+      "bytes": 186,
+      "sha256": "77be9da0567c91ed8b1a802b4471d0f9e93b7af0df57985c89d69073111eaf98",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/official-validation.json",
+      "bytes": 2661,
+      "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/performance-standard.json",
+      "bytes": 63003,
+      "sha256": "c998443aa004a5203cf47c2a56477ec6c4349def715b9add0895c89132085ac7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/performance.json",
+      "bytes": 63383,
+      "sha256": "272bb12ab40ec8800ad8f667979891476ac41bedbb7a368235ea47b77984038b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/summary.json",
+      "bytes": 531,
+      "sha256": "81a1bd6d1f72471a876a2d2cb4c20d807ddd96dc42a4d3c13999b8399a0641c4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi/tasks.jsonl",
+      "bytes": 169181,
+      "sha256": "829eb89c17c2579fbc3abddf41457610af342d1804db586929f811750705b4ea",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/pi-status.json",
+      "bytes": 5315,
+      "sha256": "2d9815a3518141e5eb59bd2ee3b6731b59c0d02d89e034dddbc342e50f6ef41e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/power-monitor.jsonl",
+      "bytes": 134640,
+      "sha256": "097f021951f6bb1c15dab4941e2865c773dd99aa889f87ff740cc0865240d508",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/runtime.json",
+      "bytes": 6092,
+      "sha256": "3c104416fb9f53e7e40ddcd779346b7412c219ff8e5dbde1aa702ef1973bcc66",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/trial-0.json",
+      "bytes": 40052,
+      "sha256": "a85f5e2bcf8db3f5cac57147daaee54ff173cb2bb463e3d35e8abac7378ca207",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-B/worker.log",
+      "bytes": 2195813,
+      "sha256": "824d8340191b873407479ac1ee95bbc1ffbb6199f9bda15c03920d78df6623ec",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "1bbef0bcc12d6e15d89aca739ab7c8313014feccb169b3a4d3e1e81490fc6ebc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/driver.log",
+      "bytes": 1396,
+      "sha256": "fc4935b173a8377b5639ab88fa66d75b71851995e1337ddd0dc50311106525e5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/normalized-duration-clocks.log",
+      "bytes": 43787,
+      "sha256": "29f6be71f670ad39ed6655897e145269eae6b698b6530aafb433a117f03bcb62",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "ab832295b1a241008bdbd0721292a546ae5a077478e1939e3ce6f1476f56a1c9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/observer/requests.jsonl",
+      "bytes": 118785,
+      "sha256": "a17334a25d38584cbd6db9b9b8c631cdd3bf409cd565f3a4487ef3e899e54701",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/official-driver.log",
+      "bytes": 424,
+      "sha256": "686280ca347d6dc126426e22acb9aa4c9fb1759750cd65dd69acd149f7813c26",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/official-health.json",
+      "bytes": 572,
+      "sha256": "314fa01f75d4caf2c79d7c3ac12ad78d3cd5bc90a5b1686d24ed343e0c0cf98f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-115/events.jsonl",
+      "bytes": 53258,
+      "sha256": "198a65161f8b76477377f59bb96068ccc3b58e53c2dbbad21c6989c376917bf3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-115/solution.py",
+      "bytes": 1277,
+      "sha256": "7d3a15fa917192aacdc2c6f3de68fe1d8d393c2f6935b681736caa94727fc480",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-131/events.jsonl",
+      "bytes": 56222,
+      "sha256": "9a73f0e87a17ca968785584f8f33d6edbab6d6e1d21c4de9b510715eeac53758",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-131/solution.py",
+      "bytes": 413,
+      "sha256": "e4d831805c15a0dc6fa037c7349631555a2d4b3fd56e58eff26adef326ddd9c1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-137/events.jsonl",
+      "bytes": 51209,
+      "sha256": "1475f705a319bb45ee7b9b5470293b7e82e1464dcc3e24298a309c2825142455",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-137/solution.py",
+      "bytes": 935,
+      "sha256": "df081a0145615e33c2580814840e2ec48004190ade5ad2705c15a808455f63e3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-146/events.jsonl",
+      "bytes": 86070,
+      "sha256": "e39c8711cd00a62669982cdea7e9e63d2477e6c58a507a08a661fb5600342e8c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-146/solution.py",
+      "bytes": 923,
+      "sha256": "dc2461f31f86f23bb47484f1fd8c80e4caaa605eed292524b8af44e59b594b88",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-148/events.jsonl",
+      "bytes": 56900,
+      "sha256": "d2ffcb70ac24e993769b499f39aec9f5e8e5db59d16a78b0c4a10db4e9e1a3da",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-148/solution.py",
+      "bytes": 1155,
+      "sha256": "1dc370ccfd604247b7b77e70576d74602a1a39a5f686d634139a9bc269b7b11e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-149/events.jsonl",
+      "bytes": 106465,
+      "sha256": "0a4a02bec8b3aaf3022c07175349f01e86c7330d11df55b9f2d72e0c023520b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-149/solution.py",
+      "bytes": 1195,
+      "sha256": "f5b30cf3f741ca918b99a6970b23524c34135be31f99fe36b36bae2faf320138",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-154/events.jsonl",
+      "bytes": 98599,
+      "sha256": "d76879e298de63cbd3dd1d81635c73479dbc3817082b10484904197e559ccfb6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-154/solution.py",
+      "bytes": 692,
+      "sha256": "3ca59eec624fc797c61e8f5493fb42e6b4b837a404db633b02d7c2f53982673a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-156/events.jsonl",
+      "bytes": 59146,
+      "sha256": "72176023ed50793997e30deb2437cbce2cf5f47368f4a2e62e653a1366b9258b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-161/events.jsonl",
+      "bytes": 49531,
+      "sha256": "0d9aed1b62e0298455ee58c6b6aa357fb344b07ffed7e10ba53d1ada6d9d6176",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-161/solution.py",
+      "bytes": 832,
+      "sha256": "fb3312522e5fc72292bad3ba90a2980c21f187734a8442afc2cba263bb378ca1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-162/events.jsonl",
+      "bytes": 54661,
+      "sha256": "1177e2a40efe90714faa72046b374857a608271d8ea77be27526c85bdb58788a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-162/solution.py",
+      "bytes": 342,
+      "sha256": "465602238c6021d540d2650b83ea818aba740f1509fbbbb38a8babadec100747",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-2/events.jsonl",
+      "bytes": 49333,
+      "sha256": "3df4e518bd9369408262713cf74ad55efbcf4e809d81d1ddced3dab679c50fc8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-2/solution.py",
+      "bytes": 360,
+      "sha256": "36561e96371c0d1d161c418029a5f862f8b52af0eb5a5ad06734b85bfeeb4144",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-32/events.jsonl",
+      "bytes": 80377,
+      "sha256": "05e8ebeaf74ffb86919dfb5902ed2c145be2c13f51f6f180c95a83f57fc7757e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-32/solution.py",
+      "bytes": 1616,
+      "sha256": "f07eac2d216afc34b2f92ae2adaa3948980ccd4e03d45d5c03fc1a9741853bcd",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-35/events.jsonl",
+      "bytes": 48934,
+      "sha256": "4e29aaa7accf957583b2258e537d869270e072784fbe0c56c3d96f54d35825e8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-35/solution.py",
+      "bytes": 200,
+      "sha256": "0a4e9d243342be6386d6e342cdb208ad5435625c052a73620a8025cdf81570df",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-47/events.jsonl",
+      "bytes": 92651,
+      "sha256": "f69d34d1794764dca7fed2fb957d3879bd4e18332181d9045524120aac6e51e6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-47/solution.py",
+      "bytes": 344,
+      "sha256": "ef748e09d8a11301058dcb7fe8648e1dbe1c9bdbd99638c76e9f44de200fd018",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-50/events.jsonl",
+      "bytes": 47472,
+      "sha256": "9bc0daa8df2408df7cc3889f109c24347e293a6b8374b557a3b8999fe72f987a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-50/solution.py",
+      "bytes": 412,
+      "sha256": "d5b4b4d2b2befde961fa4f860dc7679164006a2a93d163284a450eb0dfe47e4c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-6/events.jsonl",
+      "bytes": 54242,
+      "sha256": "cce6c2da3c46f1e3d7a527689f663e9d3cf417b2821bc6e949b0cb50f7c35433",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-6/solution.py",
+      "bytes": 856,
+      "sha256": "8070deaabf301e8946b034d6cb278dd859d42e7ec0c386c6a80830ab732209b7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-72/events.jsonl",
+      "bytes": 48923,
+      "sha256": "33fb96639fbc65d46e914ba60c7e097b1e521a85b6b69443b1a8e8d6cc985228",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-80/events.jsonl",
+      "bytes": 49206,
+      "sha256": "4e9fd0dc3f2c2afcbf8b982b146d204f905848b3f4ad7f541a75323ff5cfa519",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-94/events.jsonl",
+      "bytes": 53003,
+      "sha256": "ea574be217831900a9cd29362b98a036dfa939787b02683d72e29207bda138f4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-94/solution.py",
+      "bytes": 1135,
+      "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-97/events.jsonl",
+      "bytes": 58150,
+      "sha256": "dd9f682f894fe4b1464e2e69642e8c8a6db3231d770d75d0b00b10c0e6094384",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/HumanEval-97/solution.py",
+      "bytes": 421,
+      "sha256": "b961c704ec7a69d408a49a92faf9bf4b388f81bec17ebc6f8b9cf8250f9770ba",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/manifest.json",
+      "bytes": 1226,
+      "sha256": "52c4229554f66ee82b6f46d6677559ed4ebaeb010792e1bb795ce66d9e85c389",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/normalization.log",
+      "bytes": 204,
+      "sha256": "e6af2fa2cb73434d38b2a9449e850146415d178a0533806adb32188131ad63c9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/official-validation.json",
+      "bytes": 2661,
+      "sha256": "781fd39b02eaa4e68ad6a429e6573a08cc7b75941e3a9ae91925a1472b38bd13",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/performance-standard.json",
+      "bytes": 61823,
+      "sha256": "9fca01dd8bbc80dc135f9418d812a0265d1ad15f44a5c18735884724dc75dd7e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/performance.json",
+      "bytes": 62203,
+      "sha256": "e5a0f0f9d2c9d6bddf563d34f2cc482abf4dd60f78c5e30504b76ba79b8fa270",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/summary.json",
+      "bytes": 526,
+      "sha256": "be7aac7ba2d5996141f23ea14614bc31ea8b6322a3a2b12f4d535adc1b5c6b24",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi/tasks.jsonl",
+      "bytes": 161192,
+      "sha256": "a9afd5cd13d697706922b41a51c1ff0c43951d27a929bfad968c639e414e52a6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/pi-status.json",
+      "bytes": 5315,
+      "sha256": "e2734c8bf8dbad701ee715fcbf691000dff9ccccce4bd99fe9dfeb738e53fca6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/power-monitor.jsonl",
+      "bytes": 134640,
+      "sha256": "2de64f50e12e21a1d06b6056a0bf577e426a49cd469a45dc8b342b8a66da7a53",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/runtime.json",
+      "bytes": 6089,
+      "sha256": "b762bbf879b79006c9665e56f7a80c727e08032af974da3dc966228ad60a7344",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/trial-0.json",
+      "bytes": 21019,
+      "sha256": "ef25c40af427ac0cf3448f079e1a9fcb6057e160248d651cf6fb6242f2d5ebe4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/cohort-D/worker.log",
+      "bytes": 457610,
+      "sha256": "d6bfb2cb7079586b458e8405595030e8097aad8c227f05f0d518f0a81d7495ac",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/completed.json",
+      "bytes": 98,
+      "sha256": "b0a003d052dc2f76461a82c965eb06c4179c040eb8b815bbbc376e2f594a47bf",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/controller-exit.json",
+      "bytes": 140,
+      "sha256": "ff19c645ce2c8b204db31ac6d769b8e12fd1c6688cdc8993ef0039cace2bceb1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/controller.py",
+      "bytes": 19881,
+      "sha256": "b6553a79009d0fd819308fd73e1973dff8494b16cff9b8d9bb2afcff0c26ef69",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/fixtures.json",
+      "bytes": 652,
+      "sha256": "768e44be6da3ba4400b2e9a56f6042e84c65814745b131073b3723a3ef0e6a07",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/official-health.json",
+      "bytes": 572,
+      "sha256": "691bdf7d971e6f4e82fa4e1f027ae0319083a236466c30288e04be860e3e2a6d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/original.json",
+      "bytes": 681,
+      "sha256": "4b977f69e50b01612fb58df86df7b9ea409c343fe47c7851c21f59a2f228f73a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "fac4b2f4a23bde0018b8f70ee45a70312d76a6a501f1c62fef415ff080e7c28b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/driver.log",
+      "bytes": 740,
+      "sha256": "6e28614d642fdd2fa82052d99016fe4f149330807cb5cdaa7d2292fead84b5a8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/normalized-duration-clocks.log",
+      "bytes": 10938,
+      "sha256": "3bcb70663a36cccac3e603667dec6c00910a204b3e0d00127887baebda5476e6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "8113e5a11cffea8902b06adcd2a3c07be1059e4c8ecb40ad3ecca3c032888471",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/observer/requests.jsonl",
+      "bytes": 49992,
+      "sha256": "bf0b5f6549ff90aefc86667ba6a915c9a970dfe7988a4ef4d223a2cfb2ef69ca",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/official-driver.log",
+      "bytes": 116,
+      "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/official-health.json",
+      "bytes": 572,
+      "sha256": "45014a719b14d235d5f8ba686ae92419b9d22fc3d0e20845438eee12a88852b8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-149/events.jsonl",
+      "bytes": 108766,
+      "sha256": "05e616778d7e5bbe773d21b2e63914777fce0d9695eb66aaf2eb7f102e74fbd9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-149/solution.py",
+      "bytes": 1001,
+      "sha256": "7d9aaf9141cc73fbbc609002ec26cdeb8bd851bd09ffafa05f01a3aebb94d6bb",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-156/events.jsonl",
+      "bytes": 64880,
+      "sha256": "fae18be431be219310d84e14d6cfc152fcdc6ac80563cb3d4891a31516a78961",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-72/events.jsonl",
+      "bytes": 49040,
+      "sha256": "93cdf395fd051e12aef00a93508f1b69acfadce61edcaa5e80dda63628e54da1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-80/events.jsonl",
+      "bytes": 45425,
+      "sha256": "666e6b1a66c8f3bf397153329aebe2992286e12dbc76bd1d32686545fc81eb91",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-94/events.jsonl",
+      "bytes": 52123,
+      "sha256": "7429c9ec4bb863718dacf357c71eccb0d7a855451eec827ebbb927c13a27d731",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/HumanEval-94/solution.py",
+      "bytes": 1213,
+      "sha256": "1e95c2f22113226d5a15e73209a76eff2d8f4bc1746a03bb134de56de71df163",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/manifest.json",
+      "bytes": 919,
+      "sha256": "357c3c0d6baeafb18d90d8087dbfea316465d2109a7317cda346c4cc8e9f8ac0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/normalization.log",
+      "bytes": 188,
+      "sha256": "f15fb2014a1e8a61ea1908b7d205e7a4437fd91091dd11c2f939baf8e164b62f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/official-validation.json",
+      "bytes": 958,
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/performance-standard.json",
+      "bytes": 15167,
+      "sha256": "64a1b5a058a4783722c4e37235805d8fbfa6916825331661530b3d81f2a7f35e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/performance.json",
+      "bytes": 15547,
+      "sha256": "353547463520c90166fb5e4a7529dcf477c342d0bc035b23c79a990d9c254f20",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/summary.json",
+      "bytes": 522,
+      "sha256": "eacc7088c298e6637abf44bcbf9266c98bf3101345bf48fc7d24b8f18a2d11fd",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi/tasks.jsonl",
+      "bytes": 43162,
+      "sha256": "891079d0977509ec4bee39db0ec3bf2dbad2e64d0837e90138dec10b1ea110f4",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/pi-status.json",
+      "bytes": 5315,
+      "sha256": "5cfc89e6234328cca708968bb331d6b4d08de0aea8168d69630fe5189140826a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/power-monitor.jsonl",
+      "bytes": 35360,
+      "sha256": "3841276a85a6642859d885fef99c8c0ffa004b9ef8faa4fffae0901ee853b715",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/runtime.json",
+      "bytes": 6092,
+      "sha256": "c2641887caf95574207e2c318406828a51a30847ae840c3db2e5b499e690b314",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/trial-0.json",
+      "bytes": 40016,
+      "sha256": "736c78a5ea8a8af1d858299a2ef56c5c0ff51b7e84b040b6f2574f295febf699",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-A/worker.log",
+      "bytes": 516940,
+      "sha256": "694d0f2e80a3594d421b1433ebc7ede72daf8196f32ab88dc730af72f2d352de",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "2d31c744f78bb9245e93efd8c6eedc786585c1b135290da1fd4c59439a237e37",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/driver.log",
+      "bytes": 725,
+      "sha256": "5ede66facf32d8b78d8d9600905671d10aaa25e66452ae9ecf7a744e49b1ce29",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/normalized-duration-clocks.log",
+      "bytes": 9362,
+      "sha256": "ad28ea5c8878208f42bc4038b68416eaecb104e7a9b9d7b3fdbcdcfdee4aaed6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "64aec7d8ee79c9ea0df87de957536943e84817f98c4834e052a591b2c89bbb66",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/observer/requests.jsonl",
+      "bytes": 45118,
+      "sha256": "54e358e66830fab7d8e7fcc0641d2736e5193563b76dd375580614249a5e7262",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/official-driver.log",
+      "bytes": 116,
+      "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/official-health.json",
+      "bytes": 572,
+      "sha256": "bcbc58f3b565511f0f32f2309d9a5b23d8cee322c2751f15132e69ce3b404418",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-149/events.jsonl",
+      "bytes": 105745,
+      "sha256": "b3406b0d4d74f078d20b143e1f3cb2cc856cfe0e107b80e58b59f10d1f134dd3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-149/solution.py",
+      "bytes": 1195,
+      "sha256": "f5b30cf3f741ca918b99a6970b23524c34135be31f99fe36b36bae2faf320138",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-156/events.jsonl",
+      "bytes": 58260,
+      "sha256": "6dddc1709ac2b5c9ea35e582aed4e92402af1c792bd4ee1f91fc310f396ffbdc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-72/events.jsonl",
+      "bytes": 48946,
+      "sha256": "4c23be4d32a8ff4c1852620058755c5467bc25edf17e5715420db74e34b673ab",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-80/events.jsonl",
+      "bytes": 45417,
+      "sha256": "6dec4341909cabc18b2665bfc366077763c39bb206ec95ca0e80bf9fe44f24fc",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-94/events.jsonl",
+      "bytes": 56412,
+      "sha256": "aac44bbbd27090b8acb5c88352d9eec4a7f7accd4b623f15d5e2c9f8d1e18e2c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/HumanEval-94/solution.py",
+      "bytes": 1205,
+      "sha256": "58d66f90e8341182ecfebe4ef6a5e8728457ed2852b86eb292c092f0be02ca2f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/manifest.json",
+      "bytes": 919,
+      "sha256": "984a9e43c28d21a7e868d590afb12a494de540eb43bf31bbbdf7c860c062b8f5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/normalization.log",
+      "bytes": 188,
+      "sha256": "b8c9a908bfd0900b000570197636ced5ab71602f1c61ff08e7fd8b100980042f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/official-validation.json",
+      "bytes": 958,
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/performance-standard.json",
+      "bytes": 13902,
+      "sha256": "f682b6996625200fba23a7de814d95ebfb855999cde2e49b9574070f81028147",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/performance.json",
+      "bytes": 14276,
+      "sha256": "dc4739e9e4100582194781fa55da34ee767c91c4fbaba1a9682ef2de0b6e14ce",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/summary.json",
+      "bytes": 507,
+      "sha256": "9a33200bb43a2d2b7c7639daa423d0a0112421ac61fd09f608fbe1d7db21b184",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi/tasks.jsonl",
+      "bytes": 39340,
+      "sha256": "a1f0c06c29fee487229a2fffddc64b0e05d2987d6c56945dc464f77d9a40b2d3",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/pi-status.json",
+      "bytes": 5315,
+      "sha256": "0a586f3142453370d19131e0ddfc6db11d8bb940c5f98b3c730580ab65f1690e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/power-monitor.jsonl",
+      "bytes": 31280,
+      "sha256": "0887a9131f7c55c742b3691ae221840dc5e28f15212458d2a6c2ed1bdd1af7b2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/runtime.json",
+      "bytes": 6092,
+      "sha256": "a15fd13b28f601bf99173df31136fa027075152d89449ee204d71070930736f9",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/trial-0.json",
+      "bytes": 40029,
+      "sha256": "741a7e669516b4f5183ebc17a9cf77f8b5a599ef2e3f75ee311cf2f6ce829f7d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-B/worker.log",
+      "bytes": 550961,
+      "sha256": "7f7464cf576c13b1c7dbf6379f44e2855db3396f0623d0642bec82f59c4b20bf",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "895d35fd368cdb0a686db89df28cc8d366b2dcbc69b05952d9600e29bac8d142",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/driver.log",
+      "bytes": 741,
+      "sha256": "4b713639621270b3364ce29b3955a44995391f9dc4e7d478f44a467dd3d8b163",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/normalized-duration-clocks.log",
+      "bytes": 7832,
+      "sha256": "5a346bdf23d1a7cbbb8a0dab94c6131d5099437e2cdb0e4d463ef26e46bce3e2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "07008247f844c01ef10b1c857730bcf63a5742035fb4c70b543b7f7fba8c71f0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/observer/requests.jsonl",
+      "bytes": 28269,
+      "sha256": "2d51fdd95fcb44f543b5139495046690bdb41a2ba086363db95c52c31f58cf43",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/official-driver.log",
+      "bytes": 116,
+      "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/official-health.json",
+      "bytes": 572,
+      "sha256": "d7226ed158814e084dff551e86ddf497be5d5c3fa49c1343f314c38ee74ec53c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-149/events.jsonl",
+      "bytes": 78091,
+      "sha256": "910418b2a437fddf4c59825fea6ed9fde369566c21bcd87ea10377e27040ba40",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-149/solution.py",
+      "bytes": 1195,
+      "sha256": "f5b30cf3f741ca918b99a6970b23524c34135be31f99fe36b36bae2faf320138",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-156/events.jsonl",
+      "bytes": 47931,
+      "sha256": "454fe02faba7c38700ae62cf87b026afb2d1fd00043e03ebe35376482dc4040a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-72/events.jsonl",
+      "bytes": 49022,
+      "sha256": "8115654d5663a622de5fb02b2e6a5a445892e6bf2618b5e17486425b470c472a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-80/events.jsonl",
+      "bytes": 43673,
+      "sha256": "e5d2785a1b5615e3195bd9e59e65342c0ebb9c427c5e40e5f77c6fc4c67a18d6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-94/events.jsonl",
+      "bytes": 53246,
+      "sha256": "d98862ba8592594de57e6d90dd9c2a80e40553c2a0a3b64fb736b5f480558d51",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/HumanEval-94/solution.py",
+      "bytes": 1135,
+      "sha256": "e0c857551ac7c59296aaa5995d5425663b023be00d94d1fd41d52c031b697392",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/manifest.json",
+      "bytes": 919,
+      "sha256": "88683faadb13f0d05b4e5d9efcc11ff494feefdaf83dfb00585d856326673c28",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/normalization.log",
+      "bytes": 189,
+      "sha256": "b15a7ff0f5397b59908de87123f38c4815a956018e9ac03fe6cc3821f624e558",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/official-validation.json",
+      "bytes": 958,
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/performance-standard.json",
+      "bytes": 11919,
+      "sha256": "b60c2b4453b3328c15020c21288ee6048c2581d0c41ea8aa4a50f4f6f3f33029",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/performance.json",
+      "bytes": 12299,
+      "sha256": "9e0f71d078e2044a14d78596d8568bc0a08f0c9101abab899b07bee6dd673d54",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/summary.json",
+      "bytes": 523,
+      "sha256": "57b74c8b4e1d9692b2b6cc11464af9bff309220f8b490427d0034d6a18425b01",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi/tasks.jsonl",
+      "bytes": 33795,
+      "sha256": "e35b96e9900b588b253244afe0a89491cd5f34b5afbe326d1fce7e9b731108c2",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/pi-status.json",
+      "bytes": 5315,
+      "sha256": "fd64d05bc05e3784e509968ad8e6076ef27be1556ac9d3ef04a76f3becf429b6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/power-monitor.jsonl",
+      "bytes": 29920,
+      "sha256": "f22a83cfd5c1a3fdc5107aa3602fcafce977a950ebff6194a6c80c0a093d6374",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/runtime.json",
+      "bytes": 6089,
+      "sha256": "fddf07c1b839baf0e985a83375417a5855613edc57784f5c865f69b60ea71424",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/trial-0.json",
+      "bytes": 20992,
+      "sha256": "e4dbe5bf1483f8a0777a51470090987d3ed7c68cb7a1e4edc3ef2cc038385459",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-C/worker.log",
+      "bytes": 81733,
+      "sha256": "b5e354fc5351c4c0989f743f67565365ae3cfb0bce9ac02ecac4023a70c5d3e6",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/admission.jsonl",
+      "bytes": 6162,
+      "sha256": "2eb5a97473e6635e29d66e61783e749b27962243ef54f20ab0734a9e8a360b24",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/coordinator.log",
+      "bytes": 70,
+      "sha256": "a41107121ca0076e08b3737eb2b7712dff5f102f3caf40c5d6627431d117b4b1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/driver.log",
+      "bytes": 735,
+      "sha256": "2aca27bb7ac4dcaa04fa4c3fa8b824da175e133538116478b85ff36881563a1d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/normalized-duration-clocks.log",
+      "bytes": 7859,
+      "sha256": "0057147e28a97e82e3392cd76cfa5e0bdebeefbf542e6a319d024c912d440e76",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/observer/coordinator.log",
+      "bytes": 70,
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/observer/manifest.json",
+      "bytes": 902,
+      "sha256": "62c455db43e8f2c8178dbd841206af60d934d2472f272645551f8ca7a9c40f30",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/observer/requests.jsonl",
+      "bytes": 28467,
+      "sha256": "a4af0c63e2e15d0bdd915a208f89c4f31ffcde6e53198c7972339974a52f0a4a",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/observer-control.log",
+      "bytes": 61,
+      "sha256": "d71513cf0b46549b7e3b8797f47cb734c0d2b3f42e963169b5a635d14609df0f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/official-driver.log",
+      "bytes": 116,
+      "sha256": "3c1c360cfa1be173b91dbce73341ef1061f3a7692360fcfddffc5335eb167bea",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/official-health.json",
+      "bytes": 572,
+      "sha256": "0383c3990cf2608c3c0f1c0f2762dc521edbde7e53ada2eba954edfd47ce4677",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/official-status.json",
+      "bytes": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-149/events.jsonl",
+      "bytes": 76387,
+      "sha256": "bf2c31bec3817a53840500aff60ad2efcb76a10934c0996fedae76bda4c0cd5e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-149/solution.py",
+      "bytes": 1170,
+      "sha256": "7ef6ebb5506f4ce2f2f73400902c1d7120376e9067a1561245802a31f4e2472b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-156/events.jsonl",
+      "bytes": 47991,
+      "sha256": "f253a802b5dbaf2981b2690af39e31104355a67878dfdd309a3bdd8341341f95",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-156/solution.py",
+      "bytes": 773,
+      "sha256": "cd2ee53154432918473d4501edc82b2c0decfa9d900589400fecb49cb29efe50",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-72/events.jsonl",
+      "bytes": 49018,
+      "sha256": "2baf2c8c0caba6369580f0aa1a6240157ea1cf9ef92ad517066a93cf42b3f5e8",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-72/solution.py",
+      "bytes": 911,
+      "sha256": "2853dfd440c93e08ce8915e9f1b43b0c78d04bc4327e32ecac878b63ba7acb87",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-80/events.jsonl",
+      "bytes": 48343,
+      "sha256": "6a4e697310ebfd5bb581caaa97b419c66e6e990733f75353bf7bc7e5dcdbff30",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-80/solution.py",
+      "bytes": 571,
+      "sha256": "5055c1439834f839b0f5471fb3ad14882b9fafb9140bbb9a8f94df8f92fb3f1e",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-94/events.jsonl",
+      "bytes": 54038,
+      "sha256": "7cddaad03069374dbf1117c5ff3516ef5fd7f088781c7709f733a542eec5ecf0",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/HumanEval-94/solution.py",
+      "bytes": 1295,
+      "sha256": "94e365c2f7db0a0f6f4969984db6717ca5b269aafe28761ac7622497e6365d9b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/manifest.json",
+      "bytes": 919,
+      "sha256": "2bb5ae3d95d2a66d77820a12e8f3e0112da1aaa7ee08136099891c26a7df136b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/normalization.log",
+      "bytes": 188,
+      "sha256": "8f735cb7a34fd49acc4c52d84767f4d3183b991acbebbd237b873c9d0a095471",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/official-validation.json",
+      "bytes": 958,
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/performance-standard.json",
+      "bytes": 11944,
+      "sha256": "b4ca01abe744faf40708f87458e91ffdaf423c46822169ba81ed1de1d3989225",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/performance.json",
+      "bytes": 12324,
+      "sha256": "de6a38c50b2873d58cd98e644908367eb8c6fdbdf874d3059cbab458580b8e0b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/summary.json",
+      "bytes": 517,
+      "sha256": "3a2d8386096b5cbdbafc6efd78af3e2e05f37e689ea4c800e0136829ce735564",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi/tasks.jsonl",
+      "bytes": 34365,
+      "sha256": "0d9aab6e9813348a8af867eb076c36cee1d20e125c96622ee68ddeb42d4cde9f",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/pi-status.json",
+      "bytes": 5315,
+      "sha256": "a4e57b5717becc3f7788c545b101c2b4c9768d470445d9e7c78dda4535af0c1c",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/power-monitor.jsonl",
+      "bytes": 25840,
+      "sha256": "c2d774fec4a4af5ccc9e0db18d36829b419a4659f2a474cc6d23ecf8d15865c7",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/runtime.json",
+      "bytes": 6089,
+      "sha256": "aae3bef10814e00457a08bba898c2668905be713f482ebd11226e9056abc2529",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/trial-0.json",
+      "bytes": 21029,
+      "sha256": "e61f1dd7106a1b2aba9df8372d9cae1b6027a805cda0a231814e672f8b888428",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/pilot-D/worker.log",
+      "bytes": 82138,
+      "sha256": "44fad0f08077a9e8d8053c0f3dca148e69e03a652af82d033434ff424ccaadc5",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/plan.json",
+      "bytes": 2724,
+      "sha256": "0a2725311516d0ef239ffddb9a2789ec3582e24a4a485b4bb7d5b37c322b9c2b",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/power-monitor.jsonl",
+      "bytes": 59472,
+      "sha256": "14d91501c04976a66a1f48c7222415b77682e8d04adf4697b079d482278784a1",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/resource_admission.py",
+      "bytes": 2331,
+      "sha256": "7ea52aff64943013c4a84ddeb6f9e30b752c97fe719d83d0ff47d8a7b1a1fd0d",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/resources.jsonl",
+      "bytes": 24679894,
+      "sha256": "16a349cf4577838172fc4fd7602136f8bd0c1d90d7f1dbdb51de4fa8c3c78263",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/restoration.json",
+      "bytes": 544,
+      "sha256": "5fe1be19467a5e361bdf7ff12030c137da47d708fa2a6fa365f3984748ba9b54",
+      "availability": "Restricted local-only evidence; file contents not published"
+    },
+    {
+      "path": "human-20261027T003048Z/supervision.json",
+      "bytes": 401,
+      "sha256": "32ac13b634cbbba1de7529a6c9fe3487d62b0110fbd41164c9cb8a0c0f1c57ac",
       "availability": "Restricted local-only evidence; file contents not published"
     },
     {

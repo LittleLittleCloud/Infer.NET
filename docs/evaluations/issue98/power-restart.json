@@ -1,6 +1,6 @@
 {
   "runId": "e2e-20261026T201255Z",
-  "status": "in-progress",
+  "status": "completed-diagnostic-unadopted",
   "utc": "2026-10-26T20:12Z",
   "adapterWatts": 140,
   "restartStateOfCharge": 14,
@@ -11,5 +11,20 @@
   "systemProfilerModeFieldsConflict": true,
   "settingsChangedByAgent": false,
   "allFiveShapesAndFourArmsRepeated": true,
-  "knownDraftNumericalFailureWaived": false
+  "knownDraftNumericalFailureWaived": false,
+  "fixedCompletedRequests": 80,
+  "fixedFormalRequests": 60,
+  "fixedExcludedWarmups": 20,
+  "humanRunId": "human-20261027T003048Z",
+  "humanGroupsCompleted": 7,
+  "humanTasksAttempted": 80,
+  "humanApplicationRequests": 354,
+  "humanExcludedWarmups": 7,
+  "positiveMainE2ECriterionPassed": false,
+  "numericalQualificationPassed": false,
+  "wholeCohortThroughput": {
+    "cohort-A": "Not Obtained: Pi/worker token mismatch",
+    "cohort-B": "Complete",
+    "cohort-D": "Not Obtained: Pi/worker token mismatch"
+  }
 }

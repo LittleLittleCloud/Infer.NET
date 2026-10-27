@@ -87,6 +87,6 @@
     }
   ],
   "hashTiming": "Streaming8MiB rehash after all experiment GPU timings; target host also verifies pinned files before Ready on every load",
-  "verifiedUtc": "2026-10-26T19:57:57.830263+00:00",
+  "verifiedUtc": "2026-10-27T02:20:57.374503+00:00",
   "precision": "Target affine8/group64 with FP32 operands/KV/recurrence; draft BF16 matrices and FP32 arithmetic/context"
 }
