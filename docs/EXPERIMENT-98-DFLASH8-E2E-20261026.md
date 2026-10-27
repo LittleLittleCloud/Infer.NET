@@ -1,6 +1,6 @@
-# Experiment 98: real DFlash8 E2E, power-profile rerun in progress
+# Experiment 98: native DFlash8 E2E, fixed controls complete
 
-Status: a complete diagnostic rerun is in progress after verifying a 140W adapter and High Power in System Settings. The earlier run stopped after 57 complete fixed-control requests (42 formal and 15 excluded warmups), with one additional main request interrupted. The known independent draft numerical gate failed. The declared High Power condition was not adequately verified, and the battery fell from 72% to 6% while connected to a reported 35W adapter. **No qualified main-versus-native E2E conclusion or positive code-adoption recommendation is available.** HumanEval was not run. Existing timing observations, slow trials and incomplete attempts are retained.
+Status: the verified-power fixed rerun completed 80 requests (60 formal and 20 excluded warmups), with exact target output agreement and no new target/state/resource stop. Both long-output tiers are slower than frozen main. The independent draft numerical gate remains failed. HumanEval run `human-20261027T003048Z` is in progress; complete application metrics are pending. The candidate remains unadopted, and all earlier interrupted/slow/failed observations are retained separately.
 
 Approved [Issue #98](https://github.com/LittleLittleCloud/Infer.NET/issues/98), [candidate code PR #99](https://github.com/LittleLittleCloud/Infer.NET/pull/99), independent [results PR #100](https://github.com/LittleLittleCloud/Infer.NET/pull/100). Main is `4f51f241e87999c8cc3f79d733cd95ade9c711cd`; frozen E2E candidate is `9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa`. The baseline and production defaults remain unchanged. Neither PR is merged.
 
@@ -20,9 +20,9 @@ The user requested continued verification after the physical power adjustment. R
 
 Run `e2e-20261026T201255Z` repeats the entire preregistered five-shape/four-arm matrix, with one excluded warmup and three formal trials per arm/shape, using the same frozen packages and precision. Earlier trials remain separate, including the slow and interrupted requests. Request boundaries and a separate periodic watcher verify AC, the 140W adapter, and charge not below the 14% restart level; the watcher also checks the unchanged numeric AC mode setting. Existing allocation and swap stop conditions remain unchanged. Fixed controls precede the approved pilot5 A/B/C/D and diagnostic20 A/B/D cohorts. This continuation does not waive the failed numerical gate; rerun and HumanEval summaries are pending.
 
-## Interim power-profile rerun observations
+## Completed fixed rerun with verified power conditions
 
-This snapshot contains 64 complete requests: 48 formal and 16 excluded warmups. All three 128-output shapes and all four 8K/4096 arms have three formal trials. The 32K/4096 matrix and HumanEval are still pending. The known draft numerical gate remains failed; these are diagnostic observations, not an adoption result.
+Run `e2e-20261026T201255Z` completed all 80 requests: 60 formal and 20 excluded warmups. Every arm/shape has three formal trials. All returned target tokens and common prefixes across output lengths agree. These are FP32 diagnostic observations; the known draft numerical gate is not waived.
 
 |Input/output|Main decode token/s|Candidate-off decode token/s|Scalar DFlash8 decode token/s|Native DFlash8 decode token/s|
 |---|---:|---:|---:|---:|
@@ -30,24 +30,32 @@ This snapshot contains 64 complete requests: 48 formal and 16 excluded warmups. 
 |8192/128|52.105|52.254|9.869|18.873|
 |32768/128|41.264|34.770|13.757|19.451|
 |8192/4096|60.363|60.349|15.524|28.702|
-|32768/4096|Not Obtained|Not Obtained|Not Obtained|Not Obtained|
+|32768/4096|45.577|45.614|10.952|17.263|
 
-Rates use total emitted decode intervals divided by total worker decode seconds. Loading and excluded warmups do not contribute. All completed returned target tokens and common cross-length prefixes agree. The maximum completed formal request swap-out is 257.516 MiB (32K main trial 2), below 512 MiB; no new target-output mismatch, OOM, or worker crash was observed in this snapshot. This does not establish continuous driver peak coverage.
+Rates use total emitted decode intervals divided by total worker decode seconds. Loading and excluded warmups do not contribute. The full-request long-output comparison is:
 
-The complete 8K/4096 comparison is:
+|Input/output|Arm|Median client wall s|Worker decode token/s|Formal trials|Max request swap-out MiB|
+|---|---|---:|---:|---:|---:|
+|8192/4096|Main|115.518|60.363|3|0.000|
+|8192/4096|Candidate off|115.504|60.349|3|0.000|
+|8192/4096|Scalar DFlash8|311.647|15.524|3|0.000|
+|8192/4096|Native DFlash8|190.568|28.702|3|0.000|
+|32768/4096|Main|300.119|45.577|3|0.000|
+|32768/4096|Candidate off|300.122|45.614|3|0.000|
+|32768/4096|Scalar DFlash8|584.542|10.952|3|0.000|
+|32768/4096|Native DFlash8|447.618|17.263|3|0.000|
 
-|Arm|Median client wall s|Worker decode token/s|Formal trials|Max request swap-out MiB|
-|---|---:|---:|---:|---:|
-|Main|115.518|60.363|3|0.000|
-|Candidate off|115.504|60.349|3|0.000|
-|Scalar DFlash8|311.647|15.524|3|0.000|
-|Native DFlash8|190.568|28.702|3|0.000|
+At 8192/4096, native versus scalar DFlash improves decode by 84.88% and reduces median client wall by 38.85%. Relative to main, native decode is 52.45% lower and median client wall is 64.97% higher.
 
-Native versus scalar DFlash improves decode by 84.88% and reduces median full-request wall by 38.85%. Relative to main, native decode is 52.45% lower and median full-request wall is 64.97% higher. Thus this completed long-output tier fails the positive main-versus-native E2E criterion, despite the native improvement over scalar DFlash. Candidate-off closely matches main in this tier.
+At 32768/4096, native versus scalar DFlash improves decode by 57.63% and reduces median client wall by 23.42%. Relative to main, native decode is 62.12% lower and median client wall is 49.15% higher.
 
-The 32K/128 main formal client walls are 272.804, 257.166, and 215.480 seconds; decode rates are 35.178, 45.141, and 45.202 token/s. This time-ordered variation prevents attributing apparent prefill or short-request wall improvements solely to code. AC supply, the 140W adapter, and the numeric power setting remained unchanged; no thermal warning was reported at request boundaries. The cause remains unresolved. The user reported no obvious competing graphics workload during the queried earlier period; CPU snapshots do not establish per-process GPU contention. Raw slow rounds are retained.
+Both long tiers therefore fail the positive main-versus-native E2E criterion. Candidate-off closely matches main in the completed long tiers. C/D final-quarter worker-readiness ratios all exceed 0.9; equivalent baseline worker-tail clocks are Not Obtained because legacy scalar windows time only forwards. Client-receipt tail ratios remain separate.
 
-Per-request values, minimum/maximum/mean/median times, separate loading/warmup swap counters, artifact hashes, speculation counters, and the incomplete-run flag are in [the rerun summary](evaluations/issue98/power-rerun/fixed-controls.json). [Prefix verification](evaluations/issue98/power-rerun/target-prefix-check.json) is a separate timestamped snapshot. The complete restricted raw inventory will be refreshed after the active run stops. Earlier observations below remain separate.
+At 8K/4096, C and D have identical acceptance histograms in every formal trial: 1395 cycles, 9765 proposals, 2694 accepted proposals, and six AR tail steps. Each cycle emits an average of 2.931 new tokens. Native verifies 11160 target rows plus six AR rows to produce 4095 post-anchor outputs, about 2.73 times the target row evaluations of AR; batching does not remove rejected speculative work. Native replay count is zero versus 1275 scalar replay cycles. Across native formal decode time, verification accounts for 82.71%, draft 15.50%, ingest 0.95%, and commit 0.73%. This explains why native can improve scalar DFlash while still losing to AR. Scalar replayMs is included in its legacy commitMs, so these fields must not be added as disjoint components.
+
+The 32K/128 main formal client walls are 272.804, 257.166, and 215.480 seconds; decode rates are 35.178, 45.141, and 45.202 token/s. This time-ordered variation prevents attributing apparent prefill or short-request wall improvements solely to code. AC supply, the 140W adapter, and the numeric power setting remained unchanged; no thermal warning was reported at request boundaries. The cause remains unresolved. The user reported no obvious competing graphics workload during the queried earlier period; CPU snapshots do not establish per-process GPU contention. Raw slow rounds are retained. Shape-wise arm order is counterbalanced, with consecutive trials per arm; it is not randomized per-trial interleaving.
+
+Per-request values, minimum/maximum/mean/median times, loading/warmup swap counters, artifact hashes, speculation counters, and sampled memory are in [the fixed rerun summary](evaluations/issue98/power-rerun/fixed-controls.json). [Prefix verification](evaluations/issue98/power-rerun/target-prefix-check.json) covers all 80 completed requests. The full restricted raw inventory will be refreshed after HumanEval stops. Earlier observations below remain separate.
 
 ## Frozen implementation and workload
 
@@ -102,20 +110,22 @@ The independent draft oracle fails at `HOut layer 1`: relative L2 `8.29116798130
 
 The actual native library SHA-256 `a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b` matches short gates, long gates and the frozen AOT package. Managed backend/native product sources have no diff from the SHA-identified short-gate backend through frozen E2E. The long tool's informational version lacks an embedded commit (`0.3.0`); its clean-controller SHA is separate evidence and is not represented as an embedded runtime version.
 
-No OOM or target-token mismatch was observed. All completed formal request swap-out brackets stay below 512 MiB; the maximum is 133.672 MiB. The 32K native sampled allocation peak is 37.485 GiB, under 38.5 GiB but above the device's recommended 37.440 GiB working set, with a nonzero submission-above-working-set counter. Those counters do not prove physical paging, residency loss or the cause of slow throughput. In the first short-gate component, 1454.484375 MiB system swap-out occurred before readiness; post-load checks added none. Load/warmup and steady request records remain separate.
+In the fresh fixed run, no OOM, worker crash, or target-token mismatch was observed. The maximum steady formal request swap-out is 257.515625 MiB (32K/128 main trial 2), below 512 MiB; all formal 4096-output requests added zero. Loading is materially different: the 20 loading/readiness intervals added 63830.109375 MiB cumulative whole-machine swap-out, with a maximum of 5497.6875 MiB per interval. All 20 excluded benchmark warmups added zero. These loaded-state timings are not a cold-start or no-swap claim. The complete per-load counters are published separately.
 
-Traced C/D formal GPU submission increments match interface submission counts. GPU milliseconds/submissions include draft and ingest native calls, while their dispatch counts are not exported. Allocator sampling is not continuous driver peak coverage. Process footprint peak, continuous driver residency/peak and numeric temperature measurements are Not Obtained. Native draft active-finiteness checks cover selected small final outputs, not every intermediate throughout all requests. Snapshot/replay wall timers overlap: replayMs is included in legacy commitMs and must not be added twice.
+The maximum traced C/D allocation sample is 37.69146728515625 GiB (32K/4096 native), below 38.5 GiB. Native 32K allocations exceed the device's recommended 37.440 GiB working set and have nonzero submission-above-working-set counters; these do not prove paging or explain the observed throughput. Earlier 35W completed formal requests had a maximum of 133.672 MiB swap-out and a native sampled peak of 37.485 GiB; the first short-gate load added 1454.484375 MiB before readiness. These intervals remain distinct.
 
-## Transport, missing application evaluation and retained interruptions
+Traced C/D formal GPU submission increments match interface submission counts. GPU milliseconds/submissions include draft and ingest calls, while their dispatch counts are not exported. The fixed-run resource stream contains 29786 worker RSS samples; RSS is not the kernel physical-footprint metric or continuous Metal-driver peak. System wired/compressor maxima include loading and occur at different times. Numeric chip temperature, physical-footprint peak, continuous driver residency/peak, and memory-pressure color are Not Obtained. Active draft finite checks cover selected small final outputs, not every intermediate tensor throughout every request.
+
+## Transport, application evaluation and retained interruptions
 
 A separately committed fake-worker regression reproduces an uncaught malformed-tool-call exception. The compatibility layer now returns an explicit model-output error; malformed calls remain failures. This does not prove that all historical truncated streams had that cause. Terminal candidate worker clocks retain generated-token readiness on failure/cancellation; they do not invent client receipt or successful application completion.
 
-Pilot5 A/B/C/D and diagnostic20 A/B/D were **not run** after the power stop. HumanEval prefill/decode, Pi wall, official assertions/negative controls, request reconciliation, compatible TTFT and task pass rate are Not Obtained or unverified. They are not filled with zeros or inferred from fixed native stress requests. No HumanEval trend point is fabricated.
+Pilot5 and diagnostic20 were not run after the earlier 35W power stop. The fresh HumanEval run `human-20261027T003048Z` has now started, with pilot order A/B/C/D followed by diagnostic20 order D/B/A. It uses the pinned standard harness at `349400b92b9de5efb88d73ce8cf5931f94f9e7b7`, Pi 1.4.0, seed 0, context 32768, output cap 4096, and task timeout 300 seconds. Actual Python positive and HumanEval/156 assertion-negative preflight controls passed (exit 0 / exit 1). Complete cohort worker metrics, Pi totals, official quality, TTFT, and reconciliation remain pending; no incomplete cohort speed or trend point is invented.
 
 Retained controller failures include an out-of-range 3600-second deadline causing HTTP 500 before the first excluded warmup, a superseded run interrupted to move client t0 after input preparation, and a preflight-only TCP TIME_WAIT bind-probe failure before model loading/service pause. The corrected control deadline is 1800 seconds; planned Pi timeout remains 300 seconds. Finally, the power stop interrupted one main 8K/4096 formal request; no complete worker-result timing is inferred for it. See the [attempt ledger](evaluations/issue98/attempt-ledger.json).
 
 ## Disposition and evidence
 
-Keep code PR #99 unadopted and the experiment Issue open for manual review/resumption. Results PR #100 preserves this failed/interrupted evaluation independently of candidate code. No merge, production-default change, numerical relaxation, memory-limit change, unrelated process/container termination or Windows work was performed.
+Keep code PR #99 unadopted and the experiment Issue open for manual review/resumption. Results PR #100 preserves the complete fixed rerun and all failed/interrupted records independently of candidate code; HumanEval is still running. No merge, production-default change, numerical relaxation, memory-limit change, unrelated process/container termination or Windows work was performed.
 
-Raw logs, full states, prompts and output text remain restricted local artifacts; the public [evidence inventory](evaluations/issue98/evidence.json) provides relative names, sizes and hashes, not download links. The original service's pre-existing readiness failure and the unresolved power condition remain explicit. Correct these conditions and rerun fresh affected groups before making any qualified E2E or adoption claim.
+Raw logs, full states, prompts and output text remain restricted local artifacts; the public [evidence inventory](evaluations/issue98/evidence.json) provides relative names, sizes and hashes, not download links. The original service files were restored unchanged after fixed controls, with the pre-existing readiness failure still recorded. Verified power conditions allowed the complete fresh fixed matrix and the current HumanEval continuation; the earlier power uncertainty remains attached to the earlier run. Known numerical failure and negative fixed E2E results prevent adoption. The inventory will be refreshed after all active evaluation processes stop.

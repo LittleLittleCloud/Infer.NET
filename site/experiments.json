@@ -1,16 +1,16 @@
 [
   {
     "id": "dflash8-native-commit-e2e-20261026",
-    "title": "Real DFlash8 E2E: power-profile rerun in progress; numerical gate failed",
-    "kind": "2026-10-26 · Experiment #98 · Diagnostic rerun / unadopted",
+    "title": "Real DFlash8 E2E: fixed controls complete; HumanEval running",
+    "kind": "2026-10-26 · Experiment #98 · Diagnostic evaluation / unadopted",
     "source": "docs/EXPERIMENT-98-DFLASH8-E2E-20261026.md",
     "question": "Does actual draft generation plus native prefix commit improve emitted-token E2E performance?",
     "setup": "M5 Pro 20-core GPU / 48 GiB, local Metal; main4f51f24 vs candidate9c073ff; affine8 target/BF16 draft/FP32 arithmetic and KV; chunk32/matrix0. Earlier High Power labeling was insufficiently verified.",
     "change": "Same-width DFlash8 scalar snapshot/replay versus native block verification/direct commit, with candidate-off and fresh main controls. Code PR #99.",
-    "result": "Fresh 140W/High Power UI run: 64 complete requests (48 formal). At 8K/4096, main 60.363 / candidate off 60.349 / scalar 15.524 / native 28.702 token/s; median wall main 115.518 / scalar 311.647 / native 190.568 s. Native beats scalar but has 64.97% higher full-request wall than main. 32K/4096 and HumanEval pending; earlier timing drift and 35W results retained.",
-    "validation": "Fresh snapshot: all observed target tokens and cross-length prefixes agree; formal swap-out at most257.516MiB, and all 8K/4096 formal requests have zero new swap-out. Draft numerical gate remains failed. No continuous driver peak or positive adoption claim.",
-    "conclusion": "Physical power adjustment verified at 20:12 UTC: 140W AC, rising charge from 14%, both System Settings controls High Power. Complete diagnostic rerun in progress; code remains unadopted and baseline unchanged.",
-    "next": "Finish the 32K/4096 four-arm matrix, then approved pilot5 and diagnostic20 HumanEval cohorts. Keep frozen packages and acceptance criteria; retain all slow/failed/interrupted attempts. No automatic merge.",
+    "result": "All 80 fixed requests complete (60 formal). At 8K/4096, main / native decode is 60.363 / 28.702 token/s and wall 115.518 / 190.568 s. At 32K/4096, decode is 45.577 / 17.263 and wall 300.119 / 447.618 s. Native improves scalar DFlash but loses to main in both long tiers. HumanEval is running.",
+    "validation": "All fixed target outputs/common prefixes agree; C/D worker tail ratios pass. Formal swap-out maximum 257.516 MiB, all long formal requests zero. Loading added 63830.109375 MiB across 20 readiness intervals (maximum 5497.6875 MiB each); warmups zero. Sampled C/D peak 37.691 GiB; continuous driver peak not obtained. Draft numerical gate still fails.",
+    "conclusion": "Native verification/direct commit improves same-width scalar DFlash but fails the positive main E2E criterion in both completed long-output tiers. Keep code unadopted and baseline unchanged; application metrics remain pending.",
+    "next": "Complete approved pilot5 ABCD and diagnostic20 DBA with full worker-clock reconciliation and official assertion controls. Preserve all failed, slow and interrupted records. No automatic merge.",
     "commands": [],
     "evidence": "docs/evaluations/issue98/power-rerun/fixed-controls.json; power-rerun/target-prefix-check.json; power-condition.json; attempt-ledger.json; runtime-and-restoration.json; evidence.json; https://github.com/LittleLittleCloud/Infer.NET/issues/98"
   },
