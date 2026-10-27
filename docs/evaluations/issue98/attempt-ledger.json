@@ -1,0 +1,372 @@
+{
+  "runs": [
+    {
+      "runId": "e2e-20261026T174029Z",
+      "completed": false,
+      "stages": [
+        {
+          "stage": "21-128-A",
+          "trialRecords": 1,
+          "observerAttempts": 1
+        }
+      ],
+      "failure.json": {
+        "utc": "2026-10-26T17:41:11.949810+00:00",
+        "type": "RuntimeError",
+        "message": "A 21/128 trial0: request failure retained",
+        "trialsRetained": 1
+      }
+    },
+    {
+      "runId": "e2e-20261026T174243Z",
+      "completed": false,
+      "stages": [
+        {
+          "stage": "21-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-D",
+          "trialRecords": 1,
+          "observerAttempts": 2
+        }
+      ],
+      "failure.json": {
+        "utc": "2026-10-26T17:48:49.796875+00:00",
+        "type": "KeyboardInterrupt",
+        "message": "",
+        "trialsRetained": 17
+      },
+      "interruption-reason.json": {
+        "classification": "Controller timing correction, not model/resource failure",
+        "reason": "Client t0 was before fixture file reading and JSON request construction. Restart the entire A/B/C/D control set with t0 after request preparation, before HTTP dispatch; retain earlier clocks as superseded diagnostics.",
+        "productSourceUnchanged": true,
+        "invalidatedForPrimaryComparison": true
+      }
+    },
+    {
+      "runId": "e2e-20261026T174903Z",
+      "completed": false,
+      "stages": [],
+      "startup-failure.json": {
+        "classification": "Controller port preflight error before service pause or model loading",
+        "error": "OSError: [Errno 48] Address already in use",
+        "diagnosis": "All six experiment ports had no LISTEN socket; preflight was sensitive to TCP TIME_WAIT. SO_REUSEADDR added to the bind probe.",
+        "inferenceRequests": 0,
+        "sourceSnapshot": "Not Obtained; failure preceded manifest writing"
+      }
+    },
+    {
+      "runId": "e2e-20261026T174911Z",
+      "completed": false,
+      "stages": [
+        {
+          "stage": "21-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-A",
+          "trialRecords": 1,
+          "observerAttempts": 2
+        },
+        {
+          "stage": "8192-4096-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        }
+      ],
+      "failure.json": {
+        "utc": "2026-10-26T19:50:00.029246+00:00",
+        "type": "KeyboardInterrupt",
+        "message": "",
+        "trialsRetained": 57
+      },
+      "power-condition-stop.json": {
+        "utc": "2026-10-26T19:50:00.028137+00:00",
+        "classification": "Power-condition failure; stop GPU evaluation and retain all attempts",
+        "observedAdapterWatts": 35,
+        "adapterConnected": true,
+        "observedBatteryPercent": 6,
+        "systemReportLowPowerMode": "Yes",
+        "systemReportHighPowerMode": "No",
+        "pmsetRequestedPowermode": 2,
+        "reason": "Observed effective power state contradicts declared High Power condition; battery depletes under load despite AC. Slow trial retained; no replacement run.",
+        "clarification": {
+          "foundationAfterStopIsLowPowerModeEnabled": false,
+          "effectiveLowPowerDuringPriorTiming": "Not established",
+          "causeOfSlowTrial": "Not established",
+          "declaredHighPowerVerification": "Not Obtained; GUI verification blocked by locked Mac",
+          "confirmedFacts": "35W adapter connected, battery fell to6%, late GPU execution slowed; all retained"
+        }
+      }
+    },
+    {
+      "runId": "e2e-20261026T201255Z",
+      "completed": true,
+      "stages": [
+        {
+          "stage": "21-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "21-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "32768-4096-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-128-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-A",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-B",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-C",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        },
+        {
+          "stage": "8192-4096-D",
+          "trialRecords": 4,
+          "observerAttempts": 4
+        }
+      ],
+      "controller-exit.json": {
+        "recordedUtc": "2026-10-27T00:29:53.069245+00:00",
+        "execSession": 76406,
+        "exitCode": 0,
+        "source": "Observed completed exec result after controller finally restored the original LaunchAgent."
+      }
+    },
+    {
+      "runId": "human-20261027T003048Z",
+      "completed": true,
+      "stages": [
+        {
+          "stage": "cohort-A",
+          "trialRecords": 1,
+          "observerAttempts": 101,
+          "piTasks": 20,
+          "piCompleted": 18,
+          "officialPassed": 18,
+          "officialCount": 20
+        },
+        {
+          "stage": "cohort-B",
+          "trialRecords": 1,
+          "observerAttempts": 92,
+          "piTasks": 20,
+          "piCompleted": 20,
+          "officialPassed": 20,
+          "officialCount": 20
+        },
+        {
+          "stage": "cohort-D",
+          "trialRecords": 1,
+          "observerAttempts": 90,
+          "piTasks": 20,
+          "piCompleted": 19,
+          "officialPassed": 20,
+          "officialCount": 20
+        },
+        {
+          "stage": "official-health-staging",
+          "trialRecords": 0,
+          "observerAttempts": null
+        },
+        {
+          "stage": "pilot-A",
+          "trialRecords": 1,
+          "observerAttempts": 24,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-B",
+          "trialRecords": 1,
+          "observerAttempts": 20,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-C",
+          "trialRecords": 1,
+          "observerAttempts": 17,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        },
+        {
+          "stage": "pilot-D",
+          "trialRecords": 1,
+          "observerAttempts": 17,
+          "piTasks": 5,
+          "piCompleted": 5,
+          "officialPassed": 5,
+          "officialCount": 5
+        }
+      ],
+      "controller-exit.json": {
+        "exitCode": 0,
+        "source": "Owned exec session 89789 completed successfully; controller completed.json and restoration.json retained"
+      }
+    }
+  ],
+  "note": "Superseded and preflight failures are retained. Missing trial JSON from an interrupted request is not a completed trial; observer/terminal worker evidence is separate. No selective performance retry."
+}

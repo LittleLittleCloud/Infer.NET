@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, "..");
 const ui = require("../site/trends.js");
 const {production, fixtures} = JSON.parse(execFileSync("python3", ["-c",
   "import importlib.util,json; s=importlib.util.spec_from_file_location('fixture','scripts/test-home-trends.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(json.dumps({'production': m.load_data(), 'fixtures': m.fixture_data()}))"
-], {cwd: root, env: {...process.env, PYTHONPATH: path.join(root, "scripts")}, encoding: "utf8"}));
+], {cwd: root, env: {...process.env, PYTHONPATH: path.join(root, "scripts")}, encoding: "utf8", maxBuffer: 8 * 1024 * 1024}));
 const historical = {...production, runs: ["pi-main-rerun-20261023"].map(id => {
   const run = production.runs.find(run => run.id === id);
   assert.ok(run, "historical run " + id);

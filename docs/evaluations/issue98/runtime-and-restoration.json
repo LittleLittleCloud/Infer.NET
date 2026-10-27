@@ -1,0 +1,1487 @@
+{
+  "packages": [
+    {
+      "arm": "main",
+      "manifestSha256": "44a04d51a6a7089a6d8ab158fb11c92cb11d5402a3253b231a4dee3ecb7af715",
+      "manifest": {
+        "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "rid": "osx-arm64",
+        "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+        "weightBits": 8,
+        "kv": "fp32",
+        "splitProtocol": 4,
+        "maxContextTokens": 262144,
+        "maxOutputTokens": 262144,
+        "requiredPlatform": "macOS 26+ / Apple M5",
+        "files": {
+          "deepinfer": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+          "deploy/acceptance.py": "b9adcd2d036c7abcb1d7d7c79c126b0ccc5033554d25618800a71b7f75bea771",
+          "deploy/install-macos.py": "dd3c8cffce13d113ad9f050ac6320d36ef25a032a1484bbca004cc323b0e837e",
+          "deploy/install-windows.ps1": "4224c38d0d82bb73ab9e824973185733f4286f7c07de5df0484b493ca83db092",
+          "deploy/package.py": "cfbb586244c322dcf7e21869880ae6926114c1f6ef2ca9ce56edcea3747be798",
+          "deploy/prepare.py": "f979dc106f2be9dd677dbb0fd6c0c7eb0d79a312698bc41cb5034460124eaebd",
+          "deploy/verify-package.py": "1730da5c0668aac357a645decc6d51e416ea068db69edba1b9ff7f0308b5b518",
+          "libdeepinfer_metal.dylib": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+        }
+      },
+      "note": "Package maxima describe scalar capability; enabled DFlash combined limit36864/output4096, Pi context32768. No128K acceptance."
+    },
+    {
+      "arm": "candidate",
+      "manifestSha256": "b260a8b8af9fb81215fab2ed5b733d25aa21389bdfb84ad4fbeb6b55de997810",
+      "manifest": {
+        "source": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "rid": "osx-arm64",
+        "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+        "weightBits": 8,
+        "kv": "fp32",
+        "splitProtocol": 4,
+        "maxContextTokens": 262144,
+        "maxOutputTokens": 262144,
+        "requiredPlatform": "macOS 26+ / Apple M5",
+        "files": {
+          "deepinfer": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "deepinfer.staticwebassets.endpoints.json": "c1686417e8d5c31bba969f12b6f3d2b35e6609adb5ca42f212261a3a02771aac",
+          "deploy/acceptance.py": "b9adcd2d036c7abcb1d7d7c79c126b0ccc5033554d25618800a71b7f75bea771",
+          "deploy/install-macos.py": "dd3c8cffce13d113ad9f050ac6320d36ef25a032a1484bbca004cc323b0e837e",
+          "deploy/install-windows.ps1": "4224c38d0d82bb73ab9e824973185733f4286f7c07de5df0484b493ca83db092",
+          "deploy/package.py": "cfbb586244c322dcf7e21869880ae6926114c1f6ef2ca9ce56edcea3747be798",
+          "deploy/prepare.py": "f979dc106f2be9dd677dbb0fd6c0c7eb0d79a312698bc41cb5034460124eaebd",
+          "deploy/verify-package.py": "1730da5c0668aac357a645decc6d51e416ea068db69edba1b9ff7f0308b5b518",
+          "libdeepinfer_metal.dylib": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b"
+        }
+      },
+      "note": "Package maxima describe scalar capability; enabled DFlash combined limit36864/output4096, Pi context32768. No128K acceptance."
+    }
+  ],
+  "runs": [
+    {
+      "runId": "e2e-20261026T174029Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "21-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 10120,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        }
+      ]
+    },
+    {
+      "runId": "e2e-20261026T174243Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "21-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 11208,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 11742,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 12312,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 13066,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 13702,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        }
+      ]
+    },
+    {
+      "runId": "e2e-20261026T174911Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "21-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 15364,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 15891,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 16432,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 17139,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 36510,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 27839,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 55337,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 45893,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 25503,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 23162,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 20297,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 17691,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 86918,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 64934,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 78241,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        }
+      ]
+    },
+    {
+      "runId": "e2e-20261026T201255Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "21-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 98398,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 99015,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 99661,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "21-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 995,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 28387,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 16047,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 50434,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 40246,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-4096-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 94098,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-4096-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 7999,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-4096-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 21462,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "32768-4096-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 47123,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 13024,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 9926,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 5875,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-128-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 1886,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 83245,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 88674,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 60512,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "8192-4096-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 74495,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        }
+      ]
+    },
+    {
+      "runId": "extended-gates-20261026T172049Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original bind failure predates this experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "long-cycle/runtime.json",
+          "profile": {
+            "KvElementBytes": 4,
+            "Bf16Gemm": false,
+            "Matrix": false,
+            "ChunkedDelta": false,
+            "GroupedExperts": true,
+            "PackedExperts": false,
+            "ExpandedGemm": false,
+            "DeviceDelta": false,
+            "ScratchTokens": 128,
+            "FusedAttention": true,
+            "FusedAllAttention": false,
+            "AttentionFeatures": 256,
+            "AttentionBatchTokens": 128,
+            "MatrixRows": 64
+          },
+          "stats": {
+            "Capacity": 2048,
+            "KvBytes": 83886080,
+            "AllocatedBytes": 38887358464
+          },
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "source": "0.3.0"
+        }
+      ]
+    },
+    {
+      "runId": "gates-20261026T171153Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original bind failure predates this experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "full-cycle/runtime.json",
+          "profile": {
+            "KvElementBytes": 4,
+            "Bf16Gemm": false,
+            "Matrix": false,
+            "ChunkedDelta": false,
+            "GroupedExperts": true,
+            "PackedExperts": false,
+            "ExpandedGemm": false,
+            "DeviceDelta": false,
+            "ScratchTokens": 128,
+            "FusedAttention": true,
+            "FusedAllAttention": false,
+            "AttentionFeatures": 256,
+            "AttentionBatchTokens": 128,
+            "MatrixRows": 64
+          },
+          "stats": {
+            "Capacity": 2048,
+            "KvBytes": 83886080,
+            "AllocatedBytes": 38887358464
+          },
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "source": "0.3.0+de5afd9bb24a307300f8596273042c4879c679bb"
+        }
+      ]
+    },
+    {
+      "runId": "human-20261027T003048Z",
+      "originalArtifactHashes": {
+        "plist": "40bb324c3eb926c52618adec6c31a22c89e0fbcf7245656f8d7e02e868a641a9",
+        "config": "fc75cbafa32609631e689cf1d8798c3a3434665a254ca6af1c89a6bd6bb18150",
+        "binary": "f27a2801588cc83f5795ec671f6914ceedc8f7ad88a808ad038067297d2363cb",
+        "native": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "restoration": {
+        "hashesUnchanged": true,
+        "originalReady": false,
+        "realRequestVerified": false,
+        "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+        "wiredLimit": "0"
+      },
+      "restoredHealth": {
+        "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+        "ready": false,
+        "state": "Loading"
+      },
+      "runtimes": [
+        {
+          "file": "cohort-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 15771,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "cohort-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 99434,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "cohort-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 83446,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "pilot-A/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 67686,
+            "build": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+          "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "pilot-B/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 72078,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 262144,
+            "maxOutputTokens": 262144,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "pilot-C/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 76160,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        },
+        {
+          "file": "pilot-D/runtime.json",
+          "health": {
+            "state": "Ready",
+            "ready": true,
+            "pid": 80092,
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+            "weightBits": 8,
+            "kv": "fp32",
+            "maxContextTokens": 36864,
+            "maxOutputTokens": 4096,
+            "completedRequests": 0
+          },
+          "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+          "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+          "environment": {
+            "DEEPINFER_METAL_KV": "fp32",
+            "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+            "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+            "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+            "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+            "DOTNET_GCHeapHardLimit": "0x40000000"
+          }
+        }
+      ]
+    }
+  ],
+  "metalSourceSha256": {
+    "gpu_dflash.mm": "e52f94e573027137325cb33518758c241e931ce78af92b89df3601094edb885c",
+    "target_block.mm": "c4ba815064c72327f9674c00171145d5da7afa8e462300816234ed988a1f883a",
+    "gpu_graph.mm": "43bde81138114b66d6f8b9456017657cd7a81e8a61d0071019c497456ebd6c03",
+    "gpu_prefill.mm": "5551aa222ce263f2c60f98a5970cb0f3ddbb57ee6e6dcdd98b2ebe5782672a6d",
+    "quantized.mm": "067119346ea7ce2bcef3d84c54cdaa145c87efd7726d8cb82b4b50246fb85097"
+  },
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "candidate": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+  "windows": "Not used or modified",
+  "wiredLimitMb": 0,
+  "continuousDriverPeak": "Not Obtained",
+  "numericTemperatures": "Not Obtained; pmset warning snapshots retained",
+  "compiledShaderBinaryHash": "Not Obtained; runtime Metal compilation succeeded, exact source/native library hashes retained"
+}

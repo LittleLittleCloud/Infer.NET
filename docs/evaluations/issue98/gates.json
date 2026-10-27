@@ -1,0 +1,94 @@
+{
+  "issue": 98,
+  "codePr": 99,
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "shortSource": "de5afd9bb24a307300f8596273042c4879c679bb",
+  "longSource": "ccd08e38ad6a598d82bd5ead676dad4a168b74ec",
+  "frozenE2eSource": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+  "diagnosticOnly": true,
+  "draftNumerical": {
+    "checkpoint": "HOut layer 1",
+    "relL2": 8.291167981301167e-07,
+    "maxAbs": 0.0107421875,
+    "requiredRelL2Exclusive": 0.0001,
+    "requiredMaxAbsExclusive": 0.01,
+    "passed": false
+  },
+  "longTargetChecks": [
+    {
+      "name": "growth-ring-poison-cancellation",
+      "passed": true
+    },
+    {
+      "length": 2047,
+      "passed": true
+    },
+    {
+      "length": 4093,
+      "passed": true
+    },
+    {
+      "length": 8192,
+      "passed": true
+    },
+    {
+      "length": 32768,
+      "passed": true
+    },
+    {
+      "name": "natural-eos",
+      "passed": true
+    }
+  ],
+  "notes": [
+    "Draft numerical failure stops qualification; approved diagnostic continuation does not change the threshold.",
+    "Independent draft checkpoint evaluation stops at its first failing intermediate; later checkpoints are not claimed passed.",
+    "Initial model-load swap-out is separate from steady-state request swap-out.",
+    "Short/long gate executables precede the frozen terminal-clock/transport commits; target arithmetic and native verifier sources are unchanged.",
+    "Source-pinned raw logs are restricted local evidence, not public download links.",
+    "Native HOut range/finite checks describe one captured fixture only, not independent-reference passes after the first failed checkpoint or continuous active-run nonfinite coverage. Large activation magnitude does not waive the frozen absolute-error gate.",
+    "The long-tool informational version lacks an embedded commit; its clean-controller source is retained separately and must not be mistaken for an embedded runtime SHA. The actual native library hash matches the short gate and frozen E2E package exactly. Native and managed backend product sources have no diff from the SHA-identified short-gate backend through the frozen E2E source."
+  ],
+  "capturedNativeDraftHOutRanges": [
+    {
+      "checkpoint": "native-output-0",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 7013.1337890625
+    },
+    {
+      "checkpoint": "native-output-1",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 11192.0947265625
+    },
+    {
+      "checkpoint": "native-output-2",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 16142.7431640625
+    },
+    {
+      "checkpoint": "native-output-3",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 24569.19140625
+    },
+    {
+      "checkpoint": "native-output-4",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 26268.33203125
+    },
+    {
+      "checkpoint": "native-output-5",
+      "elements": 16384,
+      "nonfiniteCount": 0,
+      "maxAbsoluteValue": 12634.244140625
+    }
+  ],
+  "nativeLibrarySha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+  "nativeLibraryIdenticalAcrossShortLongAndFrozenE2e": true,
+  "longToolInformationalVersion": "0.3.0",
+  "shortToolBackendInformationalVersion": "0.3.0+de5afd9bb24a307300f8596273042c4879c679bb"
+}

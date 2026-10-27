@@ -1,0 +1,2086 @@
+{
+  "runId": "human-20261027T003048Z",
+  "arm": "B",
+  "cohort": "pilot",
+  "diagnosticOnly": true,
+  "measuredCommit": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+  "performance": {
+    "schema": "infernet-worker-performance-v1",
+    "mac_commit": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+    "windows_commit": null,
+    "change": "Issue98 real DFlash8 E2E diagnostic, armB; numerical gate failed; same explicit FP32/chunk32 profile",
+    "metrics_complete": true,
+    "expected_requests": 19,
+    "observed_requests": 19,
+    "problems": [],
+    "input_tokens": 44718,
+    "output_tokens": 5109,
+    "decode_intervals": 5090,
+    "prefill_ms": 260945.64319999996,
+    "decode_ms": 75223.136,
+    "prefill_tokens_per_second": 171.3690232633093,
+    "decode_tokens_per_second": 67.66535231926518,
+    "client_ttft_ms": 15819.643625,
+    "client_ttft_note": "Same outer observer t0 before HTTP forwarding to first compatible text/tool delta; Pi-to-observer dispatch excluded. Native ServiceEvent token receipt TTFT is a different fixed-control clock.",
+    "tasks": [
+      {
+        "task_id": "HumanEval/156",
+        "expected_requests": 4,
+        "observed_requests": 4,
+        "completed": true,
+        "timeout": false,
+        "worker_metrics": [
+          {
+            "requestId": "3f2a414c-cc98-45f9-9446-dfe7c9e7485d",
+            "startedAt": "2026-10-27T00:38:38.869146+00:00",
+            "completedAt": "2026-10-27T00:38:53.417951+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1605,
+            "outputTokens": 357,
+            "prefillMs": 9268.5622,
+            "decodeIntervals": 356,
+            "decodeMs": 5265.3902,
+            "workerMs": 14548.708,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "dc99cd73-b58b-404c-a3f3-44df895d1ce7",
+            "startedAt": "2026-10-27T00:38:53.430621+00:00",
+            "completedAt": "2026-10-27T00:39:09.247698+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2037,
+            "outputTokens": 266,
+            "prefillMs": 11890.3029,
+            "decodeIntervals": 265,
+            "decodeMs": 3911.8662000000004,
+            "workerMs": 15816.9717,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "25b1ca76-5506-4d1d-b3f1-cb87b71b8f68",
+            "startedAt": "2026-10-27T00:39:09.261245+00:00",
+            "completedAt": "2026-10-27T00:39:26.884866+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2340,
+            "outputTokens": 267,
+            "prefillMs": 13679.8204,
+            "decodeIntervals": 266,
+            "decodeMs": 3928.876599999998,
+            "workerMs": 17623.5032,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "acea5775-2c09-4d58-abe5-c7f576a7a36a",
+            "startedAt": "2026-10-27T00:39:26.927958+00:00",
+            "completedAt": "2026-10-27T00:39:42.649806+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2631,
+            "outputTokens": 22,
+            "prefillMs": 15396.8557,
+            "decodeIntervals": 21,
+            "decodeMs": 310.08669999999984,
+            "workerMs": 15721.7434,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          }
+        ]
+      },
+      {
+        "task_id": "HumanEval/94",
+        "expected_requests": 3,
+        "observed_requests": 3,
+        "completed": true,
+        "timeout": false,
+        "worker_metrics": [
+          {
+            "requestId": "19b80d92-9b9f-4c88-ad7c-6678179738b4",
+            "startedAt": "2026-10-27T00:39:42.874151+00:00",
+            "completedAt": "2026-10-27T00:40:02.014664+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1823,
+            "outputTokens": 582,
+            "prefillMs": 10558.1971,
+            "decodeIntervals": 581,
+            "decodeMs": 8567.2131,
+            "workerMs": 19140.3852,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "027d0b40-b56b-4a2a-8be9-67defb681443",
+            "startedAt": "2026-10-27T00:40:02.026640+00:00",
+            "completedAt": "2026-10-27T00:40:23.296987+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2483,
+            "outputTokens": 459,
+            "prefillMs": 14479.7876,
+            "decodeIntervals": 458,
+            "decodeMs": 6775.562099999999,
+            "workerMs": 21270.205,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "0fd5dc7c-0e1a-4680-bced-c4ad19cb412f",
+            "startedAt": "2026-10-27T00:40:23.340024+00:00",
+            "completedAt": "2026-10-27T00:40:42.738388+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 3065,
+            "outputTokens": 101,
+            "prefillMs": 17895.1567,
+            "decodeIntervals": 100,
+            "decodeMs": 1488.2760999999991,
+            "workerMs": 19398.2353,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          }
+        ]
+      },
+      {
+        "task_id": "HumanEval/72",
+        "expected_requests": 3,
+        "observed_requests": 3,
+        "completed": true,
+        "timeout": false,
+        "worker_metrics": [
+          {
+            "requestId": "356f2bdf-40d5-4e5e-b2d1-66b415cba8a5",
+            "startedAt": "2026-10-27T00:40:42.964251+00:00",
+            "completedAt": "2026-10-27T00:40:58.444974+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1728,
+            "outputTokens": 371,
+            "prefillMs": 10016.7889,
+            "decodeIntervals": 370,
+            "decodeMs": 5449.072099999999,
+            "workerMs": 15480.6196,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "64b78355-7aa9-40a5-9d00-1cc750304e91",
+            "startedAt": "2026-10-27T00:40:58.457229+00:00",
+            "completedAt": "2026-10-27T00:41:14.162693+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2167,
+            "outputTokens": 204,
+            "prefillMs": 12691.0911,
+            "decodeIntervals": 203,
+            "decodeMs": 2999.4444000000003,
+            "workerMs": 15705.3603,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "e22941df-8c2c-4a7f-a38a-13f034bc3cd7",
+            "startedAt": "2026-10-27T00:41:14.206434+00:00",
+            "completedAt": "2026-10-27T00:41:29.367379+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2395,
+            "outputTokens": 76,
+            "prefillMs": 14039.1302,
+            "decodeIntervals": 75,
+            "decodeMs": 1106.9591999999993,
+            "workerMs": 15160.8445,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          }
+        ]
+      },
+      {
+        "task_id": "HumanEval/80",
+        "expected_requests": 3,
+        "observed_requests": 3,
+        "completed": true,
+        "timeout": false,
+        "worker_metrics": [
+          {
+            "requestId": "2bd31b98-5632-43ef-b577-d98030ce0c33",
+            "startedAt": "2026-10-27T00:41:29.589949+00:00",
+            "completedAt": "2026-10-27T00:41:43.011203+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1616,
+            "outputTokens": 278,
+            "prefillMs": 9330.4517,
+            "decodeIntervals": 277,
+            "decodeMs": 4075.936099999999,
+            "workerMs": 13421.1645,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "43ac03d5-ca83-4e5b-8526-4949b2c1def1",
+            "startedAt": "2026-10-27T00:41:43.023415+00:00",
+            "completedAt": "2026-10-27T00:41:56.939241+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1964,
+            "outputTokens": 168,
+            "prefillMs": 11443.4785,
+            "decodeIntervals": 167,
+            "decodeMs": 2457.4129999999986,
+            "workerMs": 13915.7336,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "3103459f-9e90-4b43-9bbc-3cf6612d37e2",
+            "startedAt": "2026-10-27T00:41:56.981323+00:00",
+            "completedAt": "2026-10-27T00:42:10.506249+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2156,
+            "outputTokens": 63,
+            "prefillMs": 12597.0934,
+            "decodeIntervals": 62,
+            "decodeMs": 913.0380000000005,
+            "workerMs": 13524.8365,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          }
+        ]
+      },
+      {
+        "task_id": "HumanEval/149",
+        "expected_requests": 6,
+        "observed_requests": 6,
+        "completed": true,
+        "timeout": false,
+        "worker_metrics": [
+          {
+            "requestId": "67ca215e-fe31-4dcd-b552-c850621f2f45",
+            "startedAt": "2026-10-27T00:42:10.729962+00:00",
+            "completedAt": "2026-10-27T00:42:26.137816+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 1691,
+            "outputTokens": 383,
+            "prefillMs": 9769.6811,
+            "decodeIntervals": 382,
+            "decodeMs": 5623.257099999999,
+            "workerMs": 15407.7502,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "a5b3ea44-3d70-45d5-a2cd-88f7740c9fbc",
+            "startedAt": "2026-10-27T00:42:26.149474+00:00",
+            "completedAt": "2026-10-27T00:42:44.902011+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2154,
+            "outputTokens": 418,
+            "prefillMs": 12580.8154,
+            "decodeIntervals": 417,
+            "decodeMs": 6156.739900000002,
+            "workerMs": 18752.4124,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "c7b11d11-11e9-4569-9039-3046a9890778",
+            "startedAt": "2026-10-27T00:42:44.941854+00:00",
+            "completedAt": "2026-10-27T00:43:07.133747+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 2628,
+            "outputTokens": 461,
+            "prefillMs": 15361.2155,
+            "decodeIntervals": 460,
+            "decodeMs": 6815.632999999998,
+            "workerMs": 22191.7451,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "f2eafc82-0828-4afd-adde-af18460d11b5",
+            "startedAt": "2026-10-27T00:43:07.165154+00:00",
+            "completedAt": "2026-10-27T00:43:27.504328+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 3154,
+            "outputTokens": 127,
+            "prefillMs": 18455.8845,
+            "decodeIntervals": 126,
+            "decodeMs": 1868.3225999999995,
+            "workerMs": 20339.0386,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "50ebeeb0-4280-436e-8a39-d36dd3002a2f",
+            "startedAt": "2026-10-27T00:43:27.529596+00:00",
+            "completedAt": "2026-10-27T00:43:53.504101+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 3306,
+            "outputTokens": 445,
+            "prefillMs": 19353.5532,
+            "decodeIntervals": 444,
+            "decodeMs": 6602.974099999999,
+            "workerMs": 25971.5052,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          },
+          {
+            "requestId": "f3ce13de-4774-4fd0-ad3d-b5c02a604f07",
+            "startedAt": "2026-10-27T00:43:53.529942+00:00",
+            "completedAt": "2026-10-27T00:44:16.591121+00:00",
+            "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+            "inputTokens": 3775,
+            "outputTokens": 61,
+            "prefillMs": 22137.7771,
+            "decodeIntervals": 60,
+            "decodeMs": 907.075499999999,
+            "workerMs": 23059.755,
+            "executionPath": "metal-local",
+            "kv": "fp32",
+            "outcome": "completed",
+            "finishReason": "eos",
+            "timingsComplete": true
+          }
+        ]
+      }
+    ],
+    "worker_timing_coverage": {
+      "durationClocks": 19,
+      "terminalOrReturnedWorkerRecords": 19,
+      "attemptedRequests": 19,
+      "piRecords": 19
+    },
+    "client_ttft_coverage": {
+      "observed": 19,
+      "attempted": 19
+    }
+  },
+  "allAttemptedWorkerClockDiagnostic": {
+    "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+    "completeAttemptedWorkerClocks": true,
+    "attemptedRequests": 19,
+    "workerRecords": 19,
+    "qualifiedApplicationThroughput": false,
+    "prefillTokensPerSecond": 171.3690232633093,
+    "decodeTokensPerSecond": 67.66535231926518,
+    "inputTokens": 44718,
+    "outputTokens": 5109,
+    "prefillMs": 260945.64319999996,
+    "decodeMs": 75223.136,
+    "decodeIntervals": 5090
+  },
+  "requests": [
+    {
+      "id": "observer-00002",
+      "startedUtc": "2026-10-27T00:38:38.866694+00:00",
+      "completedUtc": "2026-10-27T00:38:53.418393+00:00",
+      "inputTokens": 1605,
+      "outputTokens": 357,
+      "prefillSeconds": 9.2685622,
+      "decodeSeconds": 5.2653902,
+      "clientTtftMs": 14551.492042,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/156",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "3f2a414c-cc98-45f9-9446-dfe7c9e7485d",
+        "startedAt": "2026-10-27T00:38:38.869146+00:00",
+        "completedAt": "2026-10-27T00:38:53.417951+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1605,
+        "outputTokens": 357,
+        "prefillMs": 9268.5622,
+        "decodeIntervals": 356,
+        "decodeMs": 5265.3902,
+        "workerMs": 14548.708,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 9268.5622,
+        "firstTokenMs": 9268.5679,
+        "decodeMs": 5265.3902,
+        "decodeTokens": 356,
+        "decodeTokensPerSecond": 67.61132346848673,
+        "contextCapacity": 2048,
+        "kvCacheBytes": 83886080,
+        "metalAllocatedBytes": 37109612544,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 9268.5608,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0014000000010128133
+        }
+      },
+      "tokenIdsSha256": "453da684db199e51d2102aa09bd3ecfc85e72ba0d48e0815d0e4d2ec4aefa595",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00003",
+      "startedUtc": "2026-10-27T00:38:53.428247+00:00",
+      "completedUtc": "2026-10-27T00:39:09.248111+00:00",
+      "inputTokens": 2037,
+      "outputTokens": 266,
+      "prefillSeconds": 11.8903029,
+      "decodeSeconds": 3.9118662000000004,
+      "clientTtftMs": 15819.643625,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/156",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "dc99cd73-b58b-404c-a3f3-44df895d1ce7",
+        "startedAt": "2026-10-27T00:38:53.430621+00:00",
+        "completedAt": "2026-10-27T00:39:09.247698+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2037,
+        "outputTokens": 266,
+        "prefillMs": 11890.3029,
+        "decodeIntervals": 265,
+        "decodeMs": 3911.8662000000004,
+        "workerMs": 15816.9717,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 11890.3029,
+        "firstTokenMs": 11890.3082,
+        "decodeMs": 3911.8662000000004,
+        "decodeTokens": 265,
+        "decodeTokensPerSecond": 67.74260326183958,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 11890.3019,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010000000002037268
+        }
+      },
+      "tokenIdsSha256": "84a839e4ff4f836aa1bb7f7c244b9da36e383d6913b112f760e04586edb18831",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00004",
+      "startedUtc": "2026-10-27T00:39:09.258913+00:00",
+      "completedUtc": "2026-10-27T00:39:26.885226+00:00",
+      "inputTokens": 2340,
+      "outputTokens": 267,
+      "prefillSeconds": 13.6798204,
+      "decodeSeconds": 3.928876599999998,
+      "clientTtftMs": 17626.10025,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/156",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "25b1ca76-5506-4d1d-b3f1-cb87b71b8f68",
+        "startedAt": "2026-10-27T00:39:09.261245+00:00",
+        "completedAt": "2026-10-27T00:39:26.884866+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2340,
+        "outputTokens": 267,
+        "prefillMs": 13679.8204,
+        "decodeIntervals": 266,
+        "decodeMs": 3928.876599999998,
+        "workerMs": 17623.5032,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 13679.8204,
+        "firstTokenMs": 13679.8281,
+        "decodeMs": 3928.876599999998,
+        "decodeTokens": 266,
+        "decodeTokensPerSecond": 67.7038316754464,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 13679.8199,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0005000000001018634
+        }
+      },
+      "tokenIdsSha256": "656c4a8268c4bbbf954873e0a10c711c3c12c14064310250dd89b09803eb8010",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00005",
+      "startedUtc": "2026-10-27T00:39:26.925698+00:00",
+      "completedUtc": "2026-10-27T00:39:42.650113+00:00",
+      "inputTokens": 2631,
+      "outputTokens": 22,
+      "prefillSeconds": 15.3968557,
+      "decodeSeconds": 0.3100866999999998,
+      "clientTtftMs": 15724.205916999992,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/156",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "acea5775-2c09-4d58-abe5-c7f576a7a36a",
+        "startedAt": "2026-10-27T00:39:26.927958+00:00",
+        "completedAt": "2026-10-27T00:39:42.649806+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2631,
+        "outputTokens": 22,
+        "prefillMs": 15396.8557,
+        "decodeIntervals": 21,
+        "decodeMs": 310.08669999999984,
+        "workerMs": 15721.7434,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 15396.8557,
+        "firstTokenMs": 15396.8628,
+        "decodeMs": 310.08669999999984,
+        "decodeTokens": 21,
+        "decodeTokensPerSecond": 67.72299489142878,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 15396.8547,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010000000002037268
+        }
+      },
+      "tokenIdsSha256": "343c09fc598a8970cc4ea9cef0d818fe9587da57f588a38b6edc2b92f0ce8cf7",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00006",
+      "startedUtc": "2026-10-27T00:39:42.872067+00:00",
+      "completedUtc": "2026-10-27T00:40:02.015182+00:00",
+      "inputTokens": 1823,
+      "outputTokens": 582,
+      "prefillSeconds": 10.5581971,
+      "decodeSeconds": 8.5672131,
+      "clientTtftMs": 19142.87391699999,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/94",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "19b80d92-9b9f-4c88-ad7c-6678179738b4",
+        "startedAt": "2026-10-27T00:39:42.874151+00:00",
+        "completedAt": "2026-10-27T00:40:02.014664+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1823,
+        "outputTokens": 582,
+        "prefillMs": 10558.1971,
+        "decodeIntervals": 581,
+        "decodeMs": 8567.2131,
+        "workerMs": 19140.3852,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 10558.1971,
+        "firstTokenMs": 10558.2055,
+        "decodeMs": 8567.2131,
+        "decodeTokens": 581,
+        "decodeTokensPerSecond": 67.8166859185515,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 10558.1957,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.001399999999193824
+        }
+      },
+      "tokenIdsSha256": "fb250627f047982d22a88f4e8b7d64636bf7e968b10fb38f986f798626a68995",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00007",
+      "startedUtc": "2026-10-27T00:40:02.024411+00:00",
+      "completedUtc": "2026-10-27T00:40:23.297441+00:00",
+      "inputTokens": 2483,
+      "outputTokens": 459,
+      "prefillSeconds": 14.4797876,
+      "decodeSeconds": 6.775562099999999,
+      "clientTtftMs": 21272.768708,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/94",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "027d0b40-b56b-4a2a-8be9-67defb681443",
+        "startedAt": "2026-10-27T00:40:02.026640+00:00",
+        "completedAt": "2026-10-27T00:40:23.296987+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2483,
+        "outputTokens": 459,
+        "prefillMs": 14479.7876,
+        "decodeIntervals": 458,
+        "decodeMs": 6775.562099999999,
+        "workerMs": 21270.205,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 14479.7876,
+        "firstTokenMs": 14479.7965,
+        "decodeMs": 6775.562099999999,
+        "decodeTokens": 458,
+        "decodeTokensPerSecond": 67.59586780261375,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 14479.7855,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0020999999997002305
+        }
+      },
+      "tokenIdsSha256": "9fe40d0c8852dd9ee90b078e8815712847fbde583a9588794d6a0bdf6ca4ef85",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00008",
+      "startedUtc": "2026-10-27T00:40:23.337608+00:00",
+      "completedUtc": "2026-10-27T00:40:42.738714+00:00",
+      "inputTokens": 3065,
+      "outputTokens": 101,
+      "prefillSeconds": 17.8951567,
+      "decodeSeconds": 1.488276099999999,
+      "clientTtftMs": 19400.885125,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/94",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "0fd5dc7c-0e1a-4680-bced-c4ad19cb412f",
+        "startedAt": "2026-10-27T00:40:23.340024+00:00",
+        "completedAt": "2026-10-27T00:40:42.738388+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 3065,
+        "outputTokens": 101,
+        "prefillMs": 17895.1567,
+        "decodeIntervals": 100,
+        "decodeMs": 1488.2760999999991,
+        "workerMs": 19398.2353,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 17895.1567,
+        "firstTokenMs": 17895.1656,
+        "decodeMs": 1488.2760999999991,
+        "decodeTokens": 100,
+        "decodeTokensPerSecond": 67.19183355830283,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 17895.1551,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0015999999995983671
+        }
+      },
+      "tokenIdsSha256": "f41bc9f8028ebc6db16ce5d3bfe79bdf75c8c28b3ea78000ce3c052bcf5bf2d3",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00009",
+      "startedUtc": "2026-10-27T00:40:42.962248+00:00",
+      "completedUtc": "2026-10-27T00:40:58.445365+00:00",
+      "inputTokens": 1728,
+      "outputTokens": 371,
+      "prefillSeconds": 10.0167889,
+      "decodeSeconds": 5.4490720999999995,
+      "clientTtftMs": 15482.912457999988,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/72",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "356f2bdf-40d5-4e5e-b2d1-66b415cba8a5",
+        "startedAt": "2026-10-27T00:40:42.964251+00:00",
+        "completedAt": "2026-10-27T00:40:58.444974+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1728,
+        "outputTokens": 371,
+        "prefillMs": 10016.7889,
+        "decodeIntervals": 370,
+        "decodeMs": 5449.072099999999,
+        "workerMs": 15480.6196,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 10016.7889,
+        "firstTokenMs": 10016.7958,
+        "decodeMs": 5449.072099999999,
+        "decodeTokens": 370,
+        "decodeTokensPerSecond": 67.90146894918128,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 10016.7875,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.001399999999193824
+        }
+      },
+      "tokenIdsSha256": "c56aa7e1abee85d92c3672601f50599f371f10b1d93e50d6bf269c3fc52124f0",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00010",
+      "startedUtc": "2026-10-27T00:40:58.454933+00:00",
+      "completedUtc": "2026-10-27T00:41:14.163060+00:00",
+      "inputTokens": 2167,
+      "outputTokens": 204,
+      "prefillSeconds": 12.6910911,
+      "decodeSeconds": 2.9994444000000002,
+      "clientTtftMs": 15707.912915999997,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/72",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "64b78355-7aa9-40a5-9d00-1cc750304e91",
+        "startedAt": "2026-10-27T00:40:58.457229+00:00",
+        "completedAt": "2026-10-27T00:41:14.162693+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2167,
+        "outputTokens": 204,
+        "prefillMs": 12691.0911,
+        "decodeIntervals": 203,
+        "decodeMs": 2999.4444000000003,
+        "workerMs": 15705.3603,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 12691.0911,
+        "firstTokenMs": 12691.0976,
+        "decodeMs": 2999.4444000000003,
+        "decodeTokens": 203,
+        "decodeTokensPerSecond": 67.67920085466494,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 12691.0888,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.002300000000104774
+        }
+      },
+      "tokenIdsSha256": "e581bef8d9edd155c316c1bb0a1f3afb57e8b0fb327337d336b987a858a7ba30",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00011",
+      "startedUtc": "2026-10-27T00:41:14.204219+00:00",
+      "completedUtc": "2026-10-27T00:41:29.367686+00:00",
+      "inputTokens": 2395,
+      "outputTokens": 76,
+      "prefillSeconds": 14.039130199999999,
+      "decodeSeconds": 1.1069591999999993,
+      "clientTtftMs": 15163.26462500001,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/72",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "e22941df-8c2c-4a7f-a38a-13f034bc3cd7",
+        "startedAt": "2026-10-27T00:41:14.206434+00:00",
+        "completedAt": "2026-10-27T00:41:29.367379+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2395,
+        "outputTokens": 76,
+        "prefillMs": 14039.1302,
+        "decodeIntervals": 75,
+        "decodeMs": 1106.9591999999993,
+        "workerMs": 15160.8445,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 14039.1302,
+        "firstTokenMs": 14039.1455,
+        "decodeMs": 1106.9591999999993,
+        "decodeTokens": 75,
+        "decodeTokensPerSecond": 67.7531746427511,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 14039.1285,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.001699999998891144
+        }
+      },
+      "tokenIdsSha256": "d0aa09663519604605069e31c0c72ab2dfbc44e5b3423d2fd97d1cd76e688c7c",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00012",
+      "startedUtc": "2026-10-27T00:41:29.587866+00:00",
+      "completedUtc": "2026-10-27T00:41:43.011559+00:00",
+      "inputTokens": 1616,
+      "outputTokens": 278,
+      "prefillSeconds": 9.3304517,
+      "decodeSeconds": 4.075936099999999,
+      "clientTtftMs": 13423.50645800002,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/80",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "2bd31b98-5632-43ef-b577-d98030ce0c33",
+        "startedAt": "2026-10-27T00:41:29.589949+00:00",
+        "completedAt": "2026-10-27T00:41:43.011203+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1616,
+        "outputTokens": 278,
+        "prefillMs": 9330.4517,
+        "decodeIntervals": 277,
+        "decodeMs": 4075.936099999999,
+        "workerMs": 13421.1645,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 9330.4517,
+        "firstTokenMs": 9330.4596,
+        "decodeMs": 4075.936099999999,
+        "decodeTokens": 277,
+        "decodeTokensPerSecond": 67.95984853638899,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 9330.4502,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0015000000003055902
+        }
+      },
+      "tokenIdsSha256": "60040a90a221c086ec497be41a15d20c3663b61354cdfc0298148f5f372bd23b",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00013",
+      "startedUtc": "2026-10-27T00:41:43.021118+00:00",
+      "completedUtc": "2026-10-27T00:41:56.939626+00:00",
+      "inputTokens": 1964,
+      "outputTokens": 168,
+      "prefillSeconds": 11.4434785,
+      "decodeSeconds": 2.4574129999999985,
+      "clientTtftMs": 13918.291833000012,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/80",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "43ac03d5-ca83-4e5b-8526-4949b2c1def1",
+        "startedAt": "2026-10-27T00:41:43.023415+00:00",
+        "completedAt": "2026-10-27T00:41:56.939241+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1964,
+        "outputTokens": 168,
+        "prefillMs": 11443.4785,
+        "decodeIntervals": 167,
+        "decodeMs": 2457.4129999999986,
+        "workerMs": 13915.7336,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 11443.4785,
+        "firstTokenMs": 11443.4842,
+        "decodeMs": 2457.4129999999986,
+        "decodeTokens": 167,
+        "decodeTokensPerSecond": 67.95764488915786,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 11443.4774,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010999999994965037
+        }
+      },
+      "tokenIdsSha256": "488b9ac8055f32a2df8b0e6a6b970c196cadca46053a6fb278c12adb390158b8",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00014",
+      "startedUtc": "2026-10-27T00:41:56.979188+00:00",
+      "completedUtc": "2026-10-27T00:42:10.506550+00:00",
+      "inputTokens": 2156,
+      "outputTokens": 63,
+      "prefillSeconds": 12.5970934,
+      "decodeSeconds": 0.9130380000000005,
+      "clientTtftMs": 13527.181165999991,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/80",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "3103459f-9e90-4b43-9bbc-3cf6612d37e2",
+        "startedAt": "2026-10-27T00:41:56.981323+00:00",
+        "completedAt": "2026-10-27T00:42:10.506249+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2156,
+        "outputTokens": 63,
+        "prefillMs": 12597.0934,
+        "decodeIntervals": 62,
+        "decodeMs": 913.0380000000005,
+        "workerMs": 13524.8365,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 12597.0934,
+        "firstTokenMs": 12597.1,
+        "decodeMs": 913.0380000000005,
+        "decodeTokens": 62,
+        "decodeTokensPerSecond": 67.90516933577788,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 12597.0921,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.001299999999901047
+        }
+      },
+      "tokenIdsSha256": "446efba7b883327aa0cef45f7cdc0a935a745efe80eb3d494bdc68b539e19565",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00015",
+      "startedUtc": "2026-10-27T00:42:10.728044+00:00",
+      "completedUtc": "2026-10-27T00:42:26.138226+00:00",
+      "inputTokens": 1691,
+      "outputTokens": 383,
+      "prefillSeconds": 9.7696811,
+      "decodeSeconds": 5.623257099999999,
+      "clientTtftMs": 15409.983125000024,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "67ca215e-fe31-4dcd-b552-c850621f2f45",
+        "startedAt": "2026-10-27T00:42:10.729962+00:00",
+        "completedAt": "2026-10-27T00:42:26.137816+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 1691,
+        "outputTokens": 383,
+        "prefillMs": 9769.6811,
+        "decodeIntervals": 382,
+        "decodeMs": 5623.257099999999,
+        "workerMs": 15407.7502,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 9769.6811,
+        "firstTokenMs": 9769.6885,
+        "decodeMs": 5623.257099999999,
+        "decodeTokens": 382,
+        "decodeTokensPerSecond": 67.93215981534973,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 9769.6801,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010000000002037268
+        }
+      },
+      "tokenIdsSha256": "138669afe4d9d5d8ce1f7c1cc0abc8da94a7cfb8e6ed3bb4648a6ed3dfef8a89",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00016",
+      "startedUtc": "2026-10-27T00:42:26.147255+00:00",
+      "completedUtc": "2026-10-27T00:42:44.902397+00:00",
+      "inputTokens": 2154,
+      "outputTokens": 418,
+      "prefillSeconds": 12.580815399999999,
+      "decodeSeconds": 6.1567399000000025,
+      "clientTtftMs": 18754.91608300001,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "a5b3ea44-3d70-45d5-a2cd-88f7740c9fbc",
+        "startedAt": "2026-10-27T00:42:26.149474+00:00",
+        "completedAt": "2026-10-27T00:42:44.902011+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2154,
+        "outputTokens": 418,
+        "prefillMs": 12580.8154,
+        "decodeIntervals": 417,
+        "decodeMs": 6156.739900000002,
+        "workerMs": 18752.4124,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 12580.8154,
+        "firstTokenMs": 12580.8211,
+        "decodeMs": 6156.739900000002,
+        "decodeTokens": 417,
+        "decodeTokensPerSecond": 67.73065076210217,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 12580.8141,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.001299999999901047
+        }
+      },
+      "tokenIdsSha256": "401645d79c3871caac5c95b3852e5e8154dc78467c78ff21d390bb96c39e52c9",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00017",
+      "startedUtc": "2026-10-27T00:42:44.939484+00:00",
+      "completedUtc": "2026-10-27T00:43:07.134186+00:00",
+      "inputTokens": 2628,
+      "outputTokens": 461,
+      "prefillSeconds": 15.3612155,
+      "decodeSeconds": 6.815632999999998,
+      "clientTtftMs": 22194.43445799999,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "c7b11d11-11e9-4569-9039-3046a9890778",
+        "startedAt": "2026-10-27T00:42:44.941854+00:00",
+        "completedAt": "2026-10-27T00:43:07.133747+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 2628,
+        "outputTokens": 461,
+        "prefillMs": 15361.2155,
+        "decodeIntervals": 460,
+        "decodeMs": 6815.632999999998,
+        "workerMs": 22191.7451,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 15361.2155,
+        "firstTokenMs": 15361.2232,
+        "decodeMs": 6815.632999999998,
+        "decodeTokens": 460,
+        "decodeTokensPerSecond": 67.49189693752585,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 15361.2145,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0010000000002037268
+        }
+      },
+      "tokenIdsSha256": "64303713145e669becbe511cb40faec0dbf16fe7d1464b45b782b83d0e7b1d95",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00018",
+      "startedUtc": "2026-10-27T00:43:07.162576+00:00",
+      "completedUtc": "2026-10-27T00:43:27.504632+00:00",
+      "inputTokens": 3154,
+      "outputTokens": 127,
+      "prefillSeconds": 18.4558845,
+      "decodeSeconds": 1.8683225999999995,
+      "clientTtftMs": 20341.815457999986,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "f2eafc82-0828-4afd-adde-af18460d11b5",
+        "startedAt": "2026-10-27T00:43:07.165154+00:00",
+        "completedAt": "2026-10-27T00:43:27.504328+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 3154,
+        "outputTokens": 127,
+        "prefillMs": 18455.8845,
+        "decodeIntervals": 126,
+        "decodeMs": 1868.3225999999995,
+        "workerMs": 20339.0386,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 18455.8845,
+        "firstTokenMs": 18455.8931,
+        "decodeMs": 1868.3225999999995,
+        "decodeTokens": 126,
+        "decodeTokensPerSecond": 67.44017334051412,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 18455.883,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0014999999984866008
+        }
+      },
+      "tokenIdsSha256": "a52ea57a2c723667c01d2df7cc356617173328966ed186fbe951a83d1bda93c5",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00019",
+      "startedUtc": "2026-10-27T00:43:27.526979+00:00",
+      "completedUtc": "2026-10-27T00:43:53.504555+00:00",
+      "inputTokens": 3306,
+      "outputTokens": 445,
+      "prefillSeconds": 19.353553199999997,
+      "decodeSeconds": 6.602974099999999,
+      "clientTtftMs": 25974.454166999974,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "50ebeeb0-4280-436e-8a39-d36dd3002a2f",
+        "startedAt": "2026-10-27T00:43:27.529596+00:00",
+        "completedAt": "2026-10-27T00:43:53.504101+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 3306,
+        "outputTokens": 445,
+        "prefillMs": 19353.5532,
+        "decodeIntervals": 444,
+        "decodeMs": 6602.974099999999,
+        "workerMs": 25971.5052,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 19353.5532,
+        "firstTokenMs": 19353.5613,
+        "decodeMs": 6602.974099999999,
+        "decodeTokens": 444,
+        "decodeTokensPerSecond": 67.24242640903287,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 19353.5518,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0013999999973748345
+        }
+      },
+      "tokenIdsSha256": "5cfb8cad88a3b867036fbc9d02e1540730b3d315bc5484792dbdf45fcf4f6f7a",
+      "newSystemSwapOutBytes": 0
+    },
+    {
+      "id": "observer-00020",
+      "startedUtc": "2026-10-27T00:43:53.527246+00:00",
+      "completedUtc": "2026-10-27T00:44:16.591423+00:00",
+      "inputTokens": 3775,
+      "outputTokens": 61,
+      "prefillSeconds": 22.1377771,
+      "decodeSeconds": 0.907075499999999,
+      "clientTtftMs": 23062.65729100005,
+      "firstTokenReceived": true,
+      "outcome": "completed",
+      "compatibleError": null,
+      "errorType": null,
+      "taskId": "HumanEval/149",
+      "attempt": 1,
+      "workerMetric": {
+        "requestId": "f3ce13de-4774-4fd0-ad3d-b5c02a604f07",
+        "startedAt": "2026-10-27T00:43:53.529942+00:00",
+        "completedAt": "2026-10-27T00:44:16.591121+00:00",
+        "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+        "inputTokens": 3775,
+        "outputTokens": 61,
+        "prefillMs": 22137.7771,
+        "decodeIntervals": 60,
+        "decodeMs": 907.075499999999,
+        "workerMs": 23059.755,
+        "executionPath": "metal-local",
+        "kv": "fp32",
+        "outcome": "completed",
+        "finishReason": "eos",
+        "timingsComplete": true
+      },
+      "workerTiming": {
+        "prefillMs": 22137.7771,
+        "firstTokenMs": 22137.7822,
+        "decodeMs": 907.075499999999,
+        "decodeTokens": 60,
+        "decodeTokensPerSecond": 66.14664380197686,
+        "contextCapacity": 4096,
+        "kvCacheBytes": 167772160,
+        "metalAllocatedBytes": 37197856768,
+        "prefillStages": {
+          "cudaComputeMs": 0,
+          "cudaStateExportMs": 0,
+          "cudaSendMs": 0,
+          "cudaElapsedMs": 0,
+          "wirePayloadBytes": 0,
+          "macHiddenWaitMs": 0,
+          "macSuffixMs": 22137.7757,
+          "macStateWaitMs": 0,
+          "macStateImportMs": 0,
+          "macOtherMs": 0.0014000000010128133
+        }
+      },
+      "tokenIdsSha256": "a775806110cf7fbf9a146afc4d51a741d20e4edfe8c7a4e88448391491385cab",
+      "newSystemSwapOutBytes": 0
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "HumanEval/156",
+      "start_utc": "2026-10-27T00:38:38.666414+00:00",
+      "end_utc": "2026-10-27T00:39:42.661433+00:00",
+      "wall_seconds": 63.994580125000006,
+      "completed": true,
+      "timeout": false,
+      "returncode": 0,
+      "syntax_status": "ok",
+      "errorPresent": false,
+      "errorSha256": null,
+      "pi": {
+        "usage": {
+          "input": 8613,
+          "output": 912,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 9525
+        },
+        "requests": [
+          {
+            "usage": {
+              "input": 1605,
+              "output": 357,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 1962,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2037,
+              "output": 266,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2303,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2340,
+              "output": 267,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2607,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2631,
+              "output": 22,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2653,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "stop"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "HumanEval/94",
+      "start_utc": "2026-10-27T00:39:42.667402+00:00",
+      "end_utc": "2026-10-27T00:40:42.750121+00:00",
+      "wall_seconds": 60.082304834,
+      "completed": true,
+      "timeout": false,
+      "returncode": 0,
+      "syntax_status": "ok",
+      "errorPresent": false,
+      "errorSha256": null,
+      "pi": {
+        "usage": {
+          "input": 7371,
+          "output": 1142,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 8513
+        },
+        "requests": [
+          {
+            "usage": {
+              "input": 1823,
+              "output": 582,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2405,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2483,
+              "output": 459,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2942,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 3065,
+              "output": 101,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 3166,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "stop"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "HumanEval/72",
+      "start_utc": "2026-10-27T00:40:42.756562+00:00",
+      "end_utc": "2026-10-27T00:41:29.378096+00:00",
+      "wall_seconds": 46.62121012499999,
+      "completed": true,
+      "timeout": false,
+      "returncode": 0,
+      "syntax_status": "ok",
+      "errorPresent": false,
+      "errorSha256": null,
+      "pi": {
+        "usage": {
+          "input": 6290,
+          "output": 651,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 6941
+        },
+        "requests": [
+          {
+            "usage": {
+              "input": 1728,
+              "output": 371,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2099,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2167,
+              "output": 204,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2371,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2395,
+              "output": 76,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2471,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "stop"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "HumanEval/80",
+      "start_utc": "2026-10-27T00:41:29.384388+00:00",
+      "end_utc": "2026-10-27T00:42:10.516738+00:00",
+      "wall_seconds": 41.13206075000002,
+      "completed": true,
+      "timeout": false,
+      "returncode": 0,
+      "syntax_status": "ok",
+      "errorPresent": false,
+      "errorSha256": null,
+      "pi": {
+        "usage": {
+          "input": 5736,
+          "output": 509,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 6245
+        },
+        "requests": [
+          {
+            "usage": {
+              "input": 1616,
+              "output": 278,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 1894,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 1964,
+              "output": 168,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2132,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2156,
+              "output": 63,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2219,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "stop"
+          }
+        ]
+      }
+    },
+    {
+      "task_id": "HumanEval/149",
+      "start_utc": "2026-10-27T00:42:10.523142+00:00",
+      "end_utc": "2026-10-27T00:44:16.603076+00:00",
+      "wall_seconds": 126.074977542,
+      "completed": true,
+      "timeout": false,
+      "returncode": 0,
+      "syntax_status": "ok",
+      "errorPresent": false,
+      "errorSha256": null,
+      "pi": {
+        "usage": {
+          "input": 16708,
+          "output": 1895,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "totalTokens": 18603
+        },
+        "requests": [
+          {
+            "usage": {
+              "input": 1691,
+              "output": 383,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2074,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2154,
+              "output": 418,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 2572,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 2628,
+              "output": 461,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 3089,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 3154,
+              "output": 127,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 3281,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 3306,
+              "output": 445,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 3751,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "toolUse"
+          },
+          {
+            "usage": {
+              "input": 3775,
+              "output": 61,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "reasoning": 0,
+              "totalTokens": 3836,
+              "cost": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 0
+              }
+            },
+            "stop_reason": "stop"
+          }
+        ]
+      }
+    }
+  ],
+  "official": {
+    "method": "Official HumanEval test field against complete solution.py files; one offline restricted Docker container per task",
+    "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "image": "python@sha256:5fb4bc53dd0180955e31e5245b648bbb24a4ac4ab03a1de81513642325220bcd",
+    "negative_control": "failed",
+    "count": 5,
+    "passed": 5,
+    "rows": [
+      {
+        "task_id": "HumanEval/156",
+        "status": "passed",
+        "exit_code": 0,
+        "stderrSha256": null
+      },
+      {
+        "task_id": "HumanEval/94",
+        "status": "passed",
+        "exit_code": 0,
+        "stderrSha256": null
+      },
+      {
+        "task_id": "HumanEval/72",
+        "status": "passed",
+        "exit_code": 0,
+        "stderrSha256": null
+      },
+      {
+        "task_id": "HumanEval/80",
+        "status": "passed",
+        "exit_code": 0,
+        "stderrSha256": null
+      },
+      {
+        "task_id": "HumanEval/149",
+        "status": "passed",
+        "exit_code": 0,
+        "stderrSha256": null
+      }
+    ]
+  },
+  "manifest": {
+    "dataset_url": "https://raw.githubusercontent.com/openai/human-eval/b9453e8f1865df0a0057a1383767caa400acfbcf/data/HumanEval.jsonl.gz",
+    "dataset_revision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+    "dataset_sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "ids": [
+      "HumanEval/156",
+      "HumanEval/94",
+      "HumanEval/72",
+      "HumanEval/80",
+      "HumanEval/149"
+    ],
+    "seed": 0,
+    "selection": "pilot",
+    "pi_version": "1.4.0",
+    "context_window": 32768,
+    "max_tokens": 4096,
+    "endpoint_build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+    "model_revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+    "harness_sha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22"
+  },
+  "runtime": {
+    "health": {
+      "state": "Ready",
+      "ready": true,
+      "pid": 72078,
+      "build": "0.3.0+9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "executableSha256": "33e36910338909806043635b1b36ef3e67272df9fbff082efb4c56bdc0c84dea",
+    "nativeSha256": "a3d606266947a6b44214a2396307e3173c2331448b94c79a0bad5e00cffb734b",
+    "environment": {
+      "DEEPINFER_METAL_KV": "fp32",
+      "DEEPINFER_METAL_PREFILL_CHUNK": "32",
+      "DEEPINFER_METAL_PREFILL_GEMM": "fp32",
+      "DEEPINFER_METAL_PREFILL_MATRIX": "0",
+      "DEEPINFER_METAL_PREFILL_DELTA": "sequential",
+      "DOTNET_GCHeapHardLimit": "0x40000000"
+    },
+    "power": {
+      "adapterWatts": 140,
+      "stateOfCharge": 100,
+      "charging": "FALSE",
+      "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+      "uiVerification": {
+        "utc": "2026-10-26T20:12Z",
+        "source": "System Settings Battery accessibility tree",
+        "energyModeControls": [
+          "High Power",
+          "High Power"
+        ],
+        "systemProfilerModeFieldsConflict": true
+      }
+    }
+  },
+  "officialExecutionControls": {
+    "positiveStatus": "passed",
+    "positiveExitCode": 0,
+    "negativeStatus": "failed",
+    "negativeExitCode": 1,
+    "actualPythonAssertionFailure": true,
+    "harnessSha256": "89b8cc5f63819146d986490fd725a2cf79da240d8b6a2e343e42aab720baddef"
+  },
+  "exporterSha256": "0e8e31b7ff69f36cdf3607e64b974c6cbc7f621c7e52549342403d30b5bd6737",
+  "resourceCoverage": {
+    "maxRequestSwapOutBytes": 0,
+    "perRequestSwapBrackets": 19,
+    "attemptedRequests": 19,
+    "continuousDriverPeak": "Not Obtained",
+    "processFootprintPeak": "Not Obtained"
+  },
+  "notes": [
+    "Draft numerical qualification failed.",
+    "Timestamp text normalized to six fractional digits for pinned Python datetime compatibility; original terminal timestamps remain in raw logs; worker durations unchanged.",
+    "Normalized main metrics use actual returned worker timings; missing cancellation clocks remain missing.",
+    "Native cancelled-request records describe generated worker-ready tokens, not client-delivered tokens. Pi/worker discrepancies invalidate whole-cohort performance qualification.",
+    "No successful-only throughput substitutes for a missing complete-cohort value."
+  ]
+}

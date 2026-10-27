@@ -1,0 +1,418 @@
+{
+  "runId": "human-20261027T003048Z",
+  "completed": {
+    "utc": "2026-10-27T02:15:46.793393+00:00",
+    "excludedWarmups": 7,
+    "diagnosticOnly": true
+  },
+  "controllerExit": {
+    "exitCode": 0,
+    "source": "Owned exec session 89789 completed successfully; controller completed.json and restoration.json retained"
+  },
+  "frozenPlan": {
+    "controllerSha256": "b6553a79009d0fd819308fd73e1973dff8494b16cff9b8d9bb2afcff0c26ef69",
+    "admissionSha256": "7ea52aff64943013c4a84ddeb6f9e30b752c97fe719d83d0ff47d8a7b1a1fd0d",
+    "observerSha256": "ca15a4fbfee2a6a5e85d904c902b5eb1a8778eb16341159da0f527bb9fc3f77b",
+    "harnessSourceSha": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+    "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+    "summarizerSha256": "ee47653bedd02c1770eb6a1091266c13dd73f0236ec5dc69be667277c0169df6",
+    "piEntrySha256": "da0c6a49fe94aadc9765cc7afc6ba6b17e553eed0247d0385c160bc188f5cfbb",
+    "officialSha256": "89b8cc5f63819146d986490fd725a2cf79da240d8b6a2e343e42aab720baddef",
+    "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+    "expected": {
+      "A": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "B": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+      "C": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa",
+      "D": "9c073ff81082fe79b1cd7a2d9471d8c2b8f3deaa"
+    },
+    "cohorts": [
+      [
+        "pilot",
+        "ABCD"
+      ],
+      [
+        "cohort",
+        "DBA"
+      ]
+    ],
+    "context": 32768,
+    "maxOutput": 4096,
+    "timeout": 300,
+    "seed": 0,
+    "piVersion": "1.4.0",
+    "diagnosticOnly": true,
+    "knownFailedDraftGate": "HOut layer 1 relL2=8.291167981301167E-07 maxabs=0.0107421875"
+  },
+  "groups": [
+    {
+      "group": "pilot-A",
+      "selectedTasks": 5,
+      "piCompleted": 5,
+      "officialPassed": 5,
+      "piWallSeconds": 386.055940583,
+      "piRequests": 23,
+      "attemptedObserverRequests": 23,
+      "workerDurationClocks": 23,
+      "wholeCohortMetricsComplete": true,
+      "prefillTokensPerSecond": 171.2860674196766,
+      "decodeTokensPerSecond": 67.69227276393599,
+      "workerInputTokens": 54101,
+      "workerOutputTokens": 4654,
+      "piInputTokens": 54101,
+      "piOutputTokens": 4654,
+      "clientTtftMedianMs": 16921.533416000002,
+      "piIncompleteTaskIds": [],
+      "officialFailedTaskIds": [],
+      "problems": [],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 23,
+        "workerRecords": 23,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 171.2860674196766,
+        "decodeTokensPerSecond": 67.69227276393599,
+        "inputTokens": 54101,
+        "outputTokens": 4654,
+        "prefillMs": 315851.72579999996,
+        "decodeMs": 68412.5353,
+        "decodeIntervals": 4631
+      }
+    },
+    {
+      "group": "pilot-B",
+      "selectedTasks": 5,
+      "piCompleted": 5,
+      "officialPassed": 5,
+      "piWallSeconds": 337.905133376,
+      "piRequests": 19,
+      "attemptedObserverRequests": 19,
+      "workerDurationClocks": 19,
+      "wholeCohortMetricsComplete": true,
+      "prefillTokensPerSecond": 171.3690232633093,
+      "decodeTokensPerSecond": 67.66535231926518,
+      "workerInputTokens": 44718,
+      "workerOutputTokens": 5109,
+      "piInputTokens": 44718,
+      "piOutputTokens": 5109,
+      "clientTtftMedianMs": 15819.643625,
+      "piIncompleteTaskIds": [],
+      "officialFailedTaskIds": [],
+      "problems": [],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 19,
+        "workerRecords": 19,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 171.3690232633093,
+        "decodeTokensPerSecond": 67.66535231926518,
+        "inputTokens": 44718,
+        "outputTokens": 5109,
+        "prefillMs": 260945.64319999996,
+        "decodeMs": 75223.136,
+        "decodeIntervals": 5090
+      }
+    },
+    {
+      "group": "pilot-C",
+      "selectedTasks": 5,
+      "piCompleted": 5,
+      "officialPassed": 5,
+      "piWallSeconds": 327.431689626,
+      "piRequests": 16,
+      "attemptedObserverRequests": 16,
+      "workerDurationClocks": 16,
+      "wholeCohortMetricsComplete": true,
+      "prefillTokensPerSecond": 168.88403992319007,
+      "decodeTokensPerSecond": 34.53134828218931,
+      "workerInputTokens": 34693,
+      "workerOutputTokens": 4169,
+      "piInputTokens": 34693,
+      "piOutputTokens": 4169,
+      "clientTtftMedianMs": 19800.690812500005,
+      "piIncompleteTaskIds": [],
+      "officialFailedTaskIds": [],
+      "problems": [],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 16,
+        "workerRecords": 16,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 168.88403992319007,
+        "decodeTokensPerSecond": 34.53134828218931,
+        "inputTokens": 34693,
+        "outputTokens": 4169,
+        "prefillMs": 205424.9769,
+        "decodeMs": 120267.53099999999,
+        "decodeIntervals": 4153
+      }
+    },
+    {
+      "group": "pilot-D",
+      "selectedTasks": 5,
+      "piCompleted": 5,
+      "officialPassed": 5,
+      "piWallSeconds": 276.402735375,
+      "piRequests": 16,
+      "attemptedObserverRequests": 16,
+      "workerDurationClocks": 16,
+      "wholeCohortMetricsComplete": true,
+      "prefillTokensPerSecond": 168.94928713511337,
+      "decodeTokensPerSecond": 63.7757545643695,
+      "workerInputTokens": 35008,
+      "workerOutputTokens": 4332,
+      "piInputTokens": 35008,
+      "piOutputTokens": 4332,
+      "clientTtftMedianMs": 16420.027771000005,
+      "piIncompleteTaskIds": [],
+      "officialFailedTaskIds": [],
+      "problems": [],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 16,
+        "workerRecords": 16,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 168.94928713511337,
+        "decodeTokensPerSecond": 63.7757545643695,
+        "inputTokens": 35008,
+        "outputTokens": 4332,
+        "prefillMs": 207210.10780000003,
+        "decodeMs": 67674.6207,
+        "decodeIntervals": 4316
+      }
+    },
+    {
+      "group": "cohort-D",
+      "selectedTasks": 20,
+      "piCompleted": 19,
+      "officialPassed": 20,
+      "piWallSeconds": 1498.328456334,
+      "piRequests": 89,
+      "attemptedObserverRequests": 89,
+      "workerDurationClocks": 89,
+      "wholeCohortMetricsComplete": false,
+      "prefillTokensPerSecond": null,
+      "decodeTokensPerSecond": null,
+      "workerInputTokens": 200270,
+      "workerOutputTokens": 18487,
+      "piInputTokens": 196569,
+      "piOutputTokens": 18358,
+      "clientTtftMedianMs": 15655.523979000038,
+      "piIncompleteTaskIds": [
+        "HumanEval/149"
+      ],
+      "officialFailedTaskIds": [],
+      "problems": [
+        "HumanEval/149: worker/Pi token mismatch"
+      ],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 89,
+        "workerRecords": 89,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 168.90078374263132,
+        "decodeTokensPerSecond": 60.07735476997064,
+        "inputTokens": 200270,
+        "outputTokens": 18487,
+        "prefillMs": 1185725.6998,
+        "decodeMs": 306238.5164999999,
+        "decodeIntervals": 18398
+      }
+    },
+    {
+      "group": "cohort-B",
+      "selectedTasks": 20,
+      "piCompleted": 20,
+      "officialPassed": 20,
+      "piWallSeconds": 1499.4174258320002,
+      "piRequests": 91,
+      "attemptedObserverRequests": 91,
+      "workerDurationClocks": 91,
+      "wholeCohortMetricsComplete": true,
+      "prefillTokensPerSecond": 171.403488344862,
+      "decodeTokensPerSecond": 67.5582500994659,
+      "workerInputTokens": 204767,
+      "workerOutputTokens": 20198,
+      "piInputTokens": 204767,
+      "piOutputTokens": 20198,
+      "clientTtftMedianMs": 15530.777416000006,
+      "piIncompleteTaskIds": [],
+      "officialFailedTaskIds": [],
+      "problems": [],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 91,
+        "workerRecords": 91,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 171.403488344862,
+        "decodeTokensPerSecond": 67.5582500994659,
+        "inputTokens": 204767,
+        "outputTokens": 20198,
+        "prefillMs": 1194648.9652999998,
+        "decodeMs": 297624.642,
+        "decodeIntervals": 20107
+      }
+    },
+    {
+      "group": "cohort-A",
+      "selectedTasks": 20,
+      "piCompleted": 18,
+      "officialPassed": 18,
+      "piWallSeconds": 1636.135941958,
+      "piRequests": 100,
+      "attemptedObserverRequests": 100,
+      "workerDurationClocks": 100,
+      "wholeCohortMetricsComplete": false,
+      "prefillTokensPerSecond": null,
+      "decodeTokensPerSecond": null,
+      "workerInputTokens": 229462,
+      "workerOutputTokens": 19392,
+      "piInputTokens": 227771,
+      "piOutputTokens": 19060,
+      "clientTtftMedianMs": 15457.757082999933,
+      "piIncompleteTaskIds": [
+        "HumanEval/149",
+        "HumanEval/35"
+      ],
+      "officialFailedTaskIds": [
+        "HumanEval/149",
+        "HumanEval/35"
+      ],
+      "problems": [
+        "HumanEval/149: worker/Pi token mismatch"
+      ],
+      "allAttemptedWorkerClockDiagnostic": {
+        "scope": "All attempted generated-token worker readiness clocks, INCLUDING failed/cancelled/invalid model responses; not valid application throughput",
+        "completeAttemptedWorkerClocks": true,
+        "attemptedRequests": 100,
+        "workerRecords": 100,
+        "qualifiedApplicationThroughput": false,
+        "prefillTokensPerSecond": 170.99006549507908,
+        "decodeTokensPerSecond": 67.31285314607898,
+        "inputTokens": 229462,
+        "outputTokens": 19392,
+        "prefillMs": 1341961.0041999994,
+        "decodeMs": 286602.0247,
+        "decodeIntervals": 19292
+      }
+    }
+  ],
+  "loadingAndWarmup": [
+    {
+      "group": "pilot-A",
+      "loadingSwapOutBytes": 1182466048,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "pilot-B",
+      "loadingSwapOutBytes": 2873491456,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "pilot-C",
+      "loadingSwapOutBytes": 2857107456,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "pilot-D",
+      "loadingSwapOutBytes": 2525347840,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "cohort-D",
+      "loadingSwapOutBytes": 2202402816,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "cohort-B",
+      "loadingSwapOutBytes": 3173122048,
+      "excludedWarmupSwapOutBytes": 0
+    },
+    {
+      "group": "cohort-A",
+      "loadingSwapOutBytes": 3874553856,
+      "excludedWarmupSwapOutBytes": 0
+    }
+  ],
+  "allocationSamples": [
+    {
+      "group": "pilot-A",
+      "allocationTraceValueCount": 0,
+      "sampledOrSubmissionPeakBytes": null,
+      "maximumReturnedMetalAllocatedBytes": 37197856768
+    },
+    {
+      "group": "pilot-B",
+      "allocationTraceValueCount": 0,
+      "sampledOrSubmissionPeakBytes": null,
+      "maximumReturnedMetalAllocatedBytes": 37197856768
+    },
+    {
+      "group": "pilot-C",
+      "allocationTraceValueCount": 34,
+      "sampledOrSubmissionPeakBytes": 38405980160,
+      "maximumReturnedMetalAllocatedBytes": 38401622016
+    },
+    {
+      "group": "pilot-D",
+      "allocationTraceValueCount": 34,
+      "sampledOrSubmissionPeakBytes": 38925107200,
+      "maximumReturnedMetalAllocatedBytes": 38920749056
+    },
+    {
+      "group": "cohort-D",
+      "allocationTraceValueCount": 180,
+      "sampledOrSubmissionPeakBytes": 38925107200,
+      "maximumReturnedMetalAllocatedBytes": 38920749056
+    },
+    {
+      "group": "cohort-B",
+      "allocationTraceValueCount": 0,
+      "sampledOrSubmissionPeakBytes": null,
+      "maximumReturnedMetalAllocatedBytes": 37197856768
+    },
+    {
+      "group": "cohort-A",
+      "allocationTraceValueCount": 0,
+      "sampledOrSubmissionPeakBytes": null,
+      "maximumReturnedMetalAllocatedBytes": 37197856768
+    }
+  ],
+  "power": {
+    "adapterWatts": [
+      140
+    ],
+    "stateOfChargeMin": 100,
+    "stateOfChargeMax": 100,
+    "samples": 413,
+    "configuredHighPower": "Both System Settings energy-mode controls verified High Power before fixed rerun; numeric AC mode remained2; system_profiler mode fields conflict retained",
+    "settingsChangedByAgent": false
+  },
+  "resources": {
+    "allAttemptedObserverRequests": 354,
+    "swapBracketedRequests": 354,
+    "maximumRequestSwapOutBytes": 17170432,
+    "loadingSwapOutBytes": 18688491520,
+    "maximumLoadingSwapOutBytes": 3874553856,
+    "excludedWarmupSwapOutBytes": 0,
+    "workerRssSamples": 12244,
+    "maximumWorkerRssBytes": 19226705920,
+    "rssScope": "Sampled ps RSS; not kernel physical footprint or continuous GPU residency",
+    "continuousDriverPeak": "Not Obtained",
+    "physicalFootprintPeak": "Not Obtained"
+  },
+  "restoration": {
+    "hashesUnchanged": true,
+    "originalReady": false,
+    "realRequestVerified": false,
+    "limitation": "Original address-bind failure predates experiment; Ready restoration not obtained.",
+    "wiredLimit": "0"
+  },
+  "timestampCompatibility": "Pinned Python parser rejected a native timestamp with five fractional digits during initial CPU export. Normalized clock text uses six digits; original terminal logs and all worker duration values unchanged. Initial normalization-attempt1.log retained. No GPU trial repeated.",
+  "publicEvidencePolicy": "No prompts, solutions, full error text, credentials or private runtime configuration published. Raw originals and pristine standard summarizer outputs retained locally."
+}

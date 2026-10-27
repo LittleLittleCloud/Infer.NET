@@ -1,0 +1,92 @@
+{
+  "targetRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "targetFiles": [
+    {
+      "name": "config.json",
+      "bytes": 23591,
+      "sha256": "5da49c3a84c5a4a751b720b62b9f8703bdb8a0796b5fc55df3278f8b9d6ce296",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00001-of-00008.safetensors",
+      "bytes": 5329915945,
+      "sha256": "ae1ced7360792820cfc12f2e0c8e1ca4d95c712c122e08ebb474b197dee3edaf",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00002-of-00008.safetensors",
+      "bytes": 5365574072,
+      "sha256": "b8fdc3700f7339dc29d0e8504d15bc61e9beda7dc69eea037084cfa4067f1b26",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00003-of-00008.safetensors",
+      "bytes": 5358684778,
+      "sha256": "8a7851d9152dd39369026ab0ac7c369e4e62ce67ea1e3836862ff0c651176675",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00004-of-00008.safetensors",
+      "bytes": 5365574256,
+      "sha256": "3ad6623bb7ff4ddf39ee3854d473d66543ea8fdffc48f03ae4a1dc866da34b36",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00005-of-00008.safetensors",
+      "bytes": 5358684632,
+      "sha256": "ec9d987a3c499146e6e8edd92afb3943dfd35c908a3de0685346c1ea6901e383",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00006-of-00008.safetensors",
+      "bytes": 5365574102,
+      "sha256": "9a843214e1e72bfbae1d2c61283e25ee5930b5ccdbe15dccc7d72fba3a5812c4",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00007-of-00008.safetensors",
+      "bytes": 5037050550,
+      "sha256": "0a1ed4b82de64955eefb212b2eda57acfa1c2330a4258448e5c7f0f8aaf3649a",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model-00008-of-00008.safetensors",
+      "bytes": 540344667,
+      "sha256": "41a1d955de1a9a97de3abebc40b5519b02d542adf266fefbd33b24dc674aef39",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "bytes": 215755,
+      "sha256": "3db12edeebeb65cab9a6eeb63cd74be4e0c74139a75f672701290b98230501cf",
+      "matchesPinnedSource": true
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 19989343,
+      "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+      "matchesPinnedSource": true
+    }
+  ],
+  "draftRevision": "51ef7b6923ad6c14cb1bb41c37a9041446496ab6",
+  "draftFiles": [
+    {
+      "name": "config.json",
+      "bytes": 1291,
+      "sha256": "86d2e8e57e7c70bb867240708d00c0535ae9ed3c828dbdcb21584471c7bbce59"
+    },
+    {
+      "name": "model.safetensors",
+      "bytes": 1052513456,
+      "sha256": "d1f16c0ff85afbe6166fabfae998af3ec16fa11da87da4391b5e0e0a7c796a4d"
+    },
+    {
+      "name": "LICENSE",
+      "bytes": 11343,
+      "sha256": "50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32"
+    }
+  ],
+  "hashTiming": "Streaming8MiB rehash after all experiment GPU timings; target host also verifies pinned files before Ready on every load",
+  "verifiedUtc": "2026-10-27T02:20:57.374503+00:00",
+  "precision": "Target affine8/group64 with FP32 operands/KV/recurrence; draft BF16 matrices and FP32 arithmetic/context"
+}
