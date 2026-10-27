@@ -1,5 +1,20 @@
 [
   {
+    "id": "m5-decode-research-20261027",
+    "title": "M5 Pro decode priorities after profiling and negative experiments",
+    "kind": "2026-10-27 · Research only · Implementation not started",
+    "source": "docs/RESEARCH-M5-DECODE-20261027.md",
+    "question": "Which decode optimizations remain worth testing after the latest profiling, expert-kernel, Q8 and DFlash8 results?",
+    "setup": "Read-only review of main 4f51f241 and unmerged results PRs #87/#91/#94/#97/#100; M5 Pro 20 GPU cores / 48 GB, macOS 26.6.2, SDK 27.0. No inference run.",
+    "change": "Codex research and bounded experiment designs; subsequent implementation assigned to GitHub Copilot CLI with user-requested GPT-6.1 Sol, subject to model verification and separate experiment approval.",
+    "result": "No new measurement. Existing profiles prioritize quantized linear work at short context and attention at 32K. Prior smaller-lane experts and complete DFlash8 comparisons do not establish gains over ordinary main.",
+    "validation": "Sources, current main, runtime/SDK distinction, existing kernel capabilities and historical failure scope reviewed. See report for immutable result references and uncertainty.",
+    "conclusion": "Study coordinated affine8 layout/input reuse or FP32 attention partition geometry separately; repair Q8 correctness before performance claims; require complete speculation cost per committed token before more integration.",
+    "next": "Select and approve a bounded experiment under the SOP. Copilot CLI implementation has not started; no default or baseline change.",
+    "commands": [],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/101; docs/RESEARCH-M5-DECODE-20261027.md"
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
