@@ -1,0 +1,106 @@
+{
+  "schema": "issue103-startup-failure-v1",
+  "runId": "battery-assisted-20261027-attempt1",
+  "candidate": "a3977c0842f4612488f15388f3215ae9b3ce9336",
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "powerPolicy": "battery-assisted-35w",
+  "packages": {
+    "main": {
+      "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "manifestSha256": "44a04d51a6a7089a6d8ab158fb11c92cb11d5402a3253b231a4dee3ecb7af715",
+      "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+      "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+    },
+    "candidate": {
+      "source": "a3977c0842f4612488f15388f3215ae9b3ce9336",
+      "version": "0.3.0+a3977c0842f4612488f15388f3215ae9b3ce9336",
+      "manifestSha256": "364ec1abc8ef3d3af9565c1c473be655da05b0c375fdc209d6361907682950da",
+      "executableSha256": "d30f427030de9835b39af900fee393d4175d8df833a1a4386bde21c27c6a9344",
+      "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+    }
+  },
+  "nativeCorrectnessPassed": true,
+  "externalBenchmarkRequestsIssued": 0,
+  "failure": {
+    "utc": "2026-10-28T02:08:05.772880+00:00",
+    "type": "GateError",
+    "completedPhases": [],
+    "reason": "Two-hop observer readiness timeout"
+  },
+  "supplyWatts": 35,
+  "batteryStart": 100,
+  "batteryEnd": 100,
+  "parentRecovery": {
+    "allOwnedChildrenGone": true,
+    "hashesUnchanged": true,
+    "bootstrapExit": 0,
+    "finalState": "Ready",
+    "finalReady": false,
+    "readyBefore": false,
+    "realRequestVerified": false
+  },
+  "metrics": {
+    "decodeTokensPerSecond": null,
+    "prefillTokensPerSecond": null,
+    "humanEval5": null,
+    "humanEval20": null
+  },
+  "evidence": [
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/preflight.json",
+      "sha256": "aab8fde733ac704877d993f881373bb414e143e6165f044deb75917fbf809e1c",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/plan.json",
+      "sha256": "e333957c1f33f5eec6297537552b7f1d5d6ffc30ae563765e6aa82c8016de152",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/failure.json",
+      "sha256": "0677cf6d76ae4a6a69fe08568804f435afab259c09ac411220147090225d0c73",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/native/status.json",
+      "sha256": "72ecf7132735717300fd851295a5ba68dd5c990ab8d2532a6495c2d45e2a1d3c",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/native/gpu.log",
+      "sha256": "e60b1bd53fe9af466b5ed4e3ebb2d4946ddc1e9e331517aa80e0a882a654613c",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/restoration.json",
+      "sha256": "ccc5a5cc02c19573eb01afd5c241735a7ead88ffd031263602722518fc4f6d51",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/parent-recovery/owned-children-gone.json",
+      "sha256": "ee1f46ad48247b1ed174594a1cadaa539dda8210619c58375ce7b979981c8ee7",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/parent-recovery/restoration.json",
+      "sha256": "46680c64f1c592a4494016ca414c4e6b04e6206705a46f4060a22b1d7eb6898f",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/parent-recovery/final-health.json",
+      "sha256": "5e7b240c7ecee418c57e4d6cda2e5f4403ea954a82ec5d4f00f386c1a597ffa8",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/gates-main/observer/transport-errors.jsonl",
+      "sha256": "d20a9c69175ac20e010ada8eaf643ca18d063514408ae82f66cd01bacacd0be3",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-attempt1/power.jsonl",
+      "sha256": "b51fdbb32a21585052305c5b60cb2188beb999f1ce670966156f41b21d6cf92c",
+      "access": "Restricted local-only artifact"
+    }
+  ]
+}

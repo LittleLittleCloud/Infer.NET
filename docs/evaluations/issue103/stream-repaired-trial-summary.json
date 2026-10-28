@@ -1,0 +1,4562 @@
+{
+  "schema": "issue103-stream-repaired-trial-v1",
+  "runId": "battery-assisted-20261027-stream-fixed",
+  "mainWorker": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "candidateWorker": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+  "commonCoordinator": {
+    "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+    "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+    "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+    "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+    "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+  },
+  "comparison": "Unchanged main inference under a common repaired API host; off/on isolate layout; main-to-on also includes candidate worker plumbing.",
+  "date": "2026-10-27 America/Los_Angeles",
+  "powerPolicy": "battery-assisted-35w",
+  "power": {
+    "initialSoc": 100,
+    "finalSoc": 79,
+    "minimumSoc": 79,
+    "adapterWatts": [
+      35
+    ],
+    "samples": 219,
+    "freshHighPowerEvidence": true
+  },
+  "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+  "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+  "toolsCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+  "toolHashes": {
+    "benchmark-pi-humaneval.py": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+    "summarize-pi-humaneval-performance.py": "ee47653bedd02c1770eb6a1091266c13dd73f0236ec5dc69be667277c0169df6",
+    "eval-pi-humaneval-docker.py": "89b8cc5f63819146d986490fd725a2cf79da240d8b6a2e343e42aab720baddef"
+  },
+  "controllerCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+  "nativeDriverSha256": "b91504fce029090adf8fa592c4f8fc822ae45dcb3d314c3109812864480f22c8",
+  "gatesPassed": true,
+  "arms": {
+    "pilot-main": {
+      "runtime": {
+        "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "manifestSha256": "44a04d51a6a7089a6d8ab158fb11c92cb11d5402a3253b231a4dee3ecb7af715",
+        "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+        "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "commonCoordinators": [
+        {
+          "role": "registry",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        },
+        {
+          "role": "clone",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        }
+      ],
+      "effectiveSelector": {
+        "requested": "absent",
+        "effective": "original-main",
+        "extraPayloadBytes": 0,
+        "evidence": "Verified immutable main source/executable/native; no candidate selector exists"
+      },
+      "plannedTaskCount": 5,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 74.282644709,
+          "piUsage": {
+            "input": 8793,
+            "output": 1048,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 9841
+          },
+          "modelRequests": 4,
+          "observedRequests": 4,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 65.058142084,
+          "piUsage": {
+            "input": 7309,
+            "output": 1071,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 8380
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 51.86131125,
+          "piUsage": {
+            "input": 6298,
+            "output": 656,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6954
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 48.09764654099999,
+          "piUsage": {
+            "input": 5835,
+            "output": 617,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6452
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 203.579036334,
+          "piUsage": {
+            "input": 26169,
+            "output": 2030,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 28199
+          },
+          "modelRequests": 9,
+          "observedRequests": 9,
+          "officialValidation": "passed"
+        }
+      ],
+      "completedTasks": 5,
+      "recordedTasks": 5,
+      "timeouts": 0,
+      "officialPassed": 5,
+      "officialCount": 5,
+      "expectedRequests": 22,
+      "observedRequests": 22,
+      "metricsComplete": true,
+      "standardProblems": [],
+      "prefillTokensPerSecond": 154.88135194664687,
+      "decodeTokensPerSecond": 60.28056026177114,
+      "wholeProtocolMetrics": {
+        "complete": true,
+        "inputTokens": 54404,
+        "outputTokens": 5422,
+        "decodeIntervals": 5400,
+        "prefillMs": 351262.4297,
+        "decodeMs": 89581.1183,
+        "prefillTokensPerSecond": 154.88135194664687,
+        "decodeTokensPerSecond": 60.28056026177114
+      },
+      "integrityProblems": [],
+      "piWallSeconds": 442.87878091799996,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:16:38.289569+00:00",
+          "completedUtc": "2026-10-28T05:16:54.452536+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16162.483999999999,
+          "workerInputTokens": 1608,
+          "workerOutputTokens": 360,
+          "prefillMs": 10254.2174,
+          "decodeMs": 5888.1852,
+          "decodeIntervals": 359,
+          "metalAllocatedBytes": 37109612544,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1608,
+            "output": 360,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1968,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:16:54.465680+00:00",
+          "completedUtc": "2026-10-28T05:17:12.880159+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18414.06575,
+          "workerInputTokens": 2046,
+          "workerOutputTokens": 316,
+          "prefillMs": 13187.7946,
+          "decodeMs": 5203.7503,
+          "decodeIntervals": 315,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2046,
+            "output": 316,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2362,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:17:12.895731+00:00",
+          "completedUtc": "2026-10-28T05:17:33.596338+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20700.133875,
+          "workerInputTokens": 2399,
+          "workerOutputTokens": 317,
+          "prefillMs": 15467.8364,
+          "decodeMs": 5212.8436,
+          "decodeIntervals": 316,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2399,
+            "output": 317,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2716,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:17:33.641910+00:00",
+          "completedUtc": "2026-10-28T05:17:52.331643+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18689.337375,
+          "workerInputTokens": 2740,
+          "workerOutputTokens": 55,
+          "prefillMs": 17788.404,
+          "decodeMs": 879.9778000000006,
+          "decodeIntervals": 54,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2740,
+            "output": 55,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2795,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:17:52.573765+00:00",
+          "completedUtc": "2026-10-28T05:18:13.827754+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21253.499333999996,
+          "workerInputTokens": 1824,
+          "workerOutputTokens": 581,
+          "prefillMs": 11626.6317,
+          "decodeMs": 9606.1695,
+          "decodeIntervals": 580,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1824,
+            "output": 581,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2405,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:18:13.840625+00:00",
+          "completedUtc": "2026-10-28T05:18:36.686962+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 22845.860583000005,
+          "workerInputTokens": 2477,
+          "workerOutputTokens": 414,
+          "prefillMs": 15976.1367,
+          "decodeMs": 6851.3164,
+          "decodeIntervals": 413,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2477,
+            "output": 414,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2891,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:18:36.728947+00:00",
+          "completedUtc": "2026-10-28T05:18:57.405331+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20675.92074999999,
+          "workerInputTokens": 3008,
+          "workerOutputTokens": 76,
+          "prefillMs": 19411.401,
+          "decodeMs": 1243.4953999999998,
+          "decodeIntervals": 75,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3008,
+            "output": 76,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3084,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:18:57.629692+00:00",
+          "completedUtc": "2026-10-28T05:19:14.856043+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17225.915582999987,
+          "workerInputTokens": 1729,
+          "workerOutputTokens": 372,
+          "prefillMs": 11063.1657,
+          "decodeMs": 6141.288299999998,
+          "decodeIntervals": 371,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1729,
+            "output": 372,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2101,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:19:14.869382+00:00",
+          "completedUtc": "2026-10-28T05:19:32.318943+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17449.097832999996,
+          "workerInputTokens": 2170,
+          "workerOutputTokens": 205,
+          "prefillMs": 14063.5765,
+          "decodeMs": 3362.040900000002,
+          "decodeIntervals": 204,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2170,
+            "output": 205,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2375,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:19:32.364458+00:00",
+          "completedUtc": "2026-10-28T05:19:49.269299+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16904.310208,
+          "workerInputTokens": 2399,
+          "workerOutputTokens": 79,
+          "prefillMs": 15520.3984,
+          "decodeMs": 1362.4197000000004,
+          "decodeIntervals": 78,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2399,
+            "output": 79,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2478,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:19:49.521702+00:00",
+          "completedUtc": "2026-10-28T05:20:04.429493+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14907.328583999999,
+          "workerInputTokens": 1615,
+          "workerOutputTokens": 277,
+          "prefillMs": 10319.6606,
+          "decodeMs": 4564.4195,
+          "decodeIntervals": 276,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1615,
+            "output": 277,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1892,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:20:04.442827+00:00",
+          "completedUtc": "2026-10-28T05:20:21.663025+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17219.789125000007,
+          "workerInputTokens": 1961,
+          "workerOutputTokens": 274,
+          "prefillMs": 12620.9809,
+          "decodeMs": 4579.550899999998,
+          "decodeIntervals": 273,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1961,
+            "output": 274,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2235,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:20:21.709577+00:00",
+          "completedUtc": "2026-10-28T05:20:37.377960+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15667.923832999975,
+          "workerInputTokens": 2259,
+          "workerOutputTokens": 66,
+          "prefillMs": 14559.2385,
+          "decodeMs": 1088.011700000001,
+          "decodeIntervals": 65,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2259,
+            "output": 66,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2325,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:20:37.613769+00:00",
+          "completedUtc": "2026-10-28T05:20:53.986728+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16372.528000000017,
+          "workerInputTokens": 1691,
+          "workerOutputTokens": 339,
+          "prefillMs": 10772.2228,
+          "decodeMs": 5582.7888,
+          "decodeIntervals": 338,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1691,
+            "output": 339,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2030,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:20:53.999160+00:00",
+          "completedUtc": "2026-10-28T05:21:12.735719+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18736.07820799998,
+          "workerInputTokens": 2100,
+          "workerOutputTokens": 310,
+          "prefillMs": 13601.9042,
+          "decodeMs": 5113.996299999999,
+          "decodeIntervals": 309,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2100,
+            "output": 310,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2410,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:21:12.741582+00:00",
+          "completedUtc": "2026-10-28T05:21:29.096966+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16355.030541000018,
+          "workerInputTokens": 2443,
+          "workerOutputTokens": 31,
+          "prefillMs": 15837.5016,
+          "decodeMs": 500.03889999999956,
+          "decodeIntervals": 30,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2443,
+            "output": 31,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2474,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:21:29.107693+00:00",
+          "completedUtc": "2026-10-28T05:21:51.103629+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21995.442457999958,
+          "workerInputTokens": 2537,
+          "workerOutputTokens": 339,
+          "prefillMs": 16371.6354,
+          "decodeMs": 5604.5669,
+          "decodeIntervals": 338,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2537,
+            "output": 339,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2876,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:21:51.109632+00:00",
+          "completedUtc": "2026-10-28T05:22:15.577322+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 24467.265499999998,
+          "workerInputTokens": 2946,
+          "workerOutputTokens": 320,
+          "prefillMs": 19133.6539,
+          "decodeMs": 5313.208299999998,
+          "decodeIntervals": 319,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2946,
+            "output": 320,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3266,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00020",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:22:15.622667+00:00",
+          "completedUtc": "2026-10-28T05:22:38.915569+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 23292.157083000006,
+          "workerInputTokens": 3319,
+          "workerOutputTokens": 107,
+          "prefillMs": 21508.9008,
+          "decodeMs": 1762.0801999999967,
+          "decodeIntervals": 106,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3319,
+            "output": 107,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3426,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00021",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:22:38.949172+00:00",
+          "completedUtc": "2026-10-28T05:23:03.723375+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 24773.754541000017,
+          "workerInputTokens": 3458,
+          "workerOutputTokens": 140,
+          "prefillMs": 22457.417,
+          "decodeMs": 2297.0033000000003,
+          "decodeIntervals": 139,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3458,
+            "output": 140,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3598,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00022",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:23:03.750242+00:00",
+          "completedUtc": "2026-10-28T05:23:33.737620+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 29986.72191700001,
+          "workerInputTokens": 3631,
+          "workerOutputTokens": 389,
+          "prefillMs": 23469.9662,
+          "decodeMs": 6496.3678999999975,
+          "decodeIntervals": 388,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3631,
+            "output": 389,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 4020,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00023",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:23:33.765439+00:00",
+          "completedUtc": "2026-10-28T05:24:00.963713+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 27197.693500000016,
+          "workerInputTokens": 4044,
+          "workerOutputTokens": 55,
+          "prefillMs": 26249.7854,
+          "decodeMs": 927.5985000000001,
+          "decodeIntervals": 54,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 4044,
+            "output": 55,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 4099,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        }
+      ],
+      "observerRowsIncludingWarmupAndUnfinishedTask": 23,
+      "sampledMetalPeakBytes": 37286100992,
+      "maxSteadyRequestSwapOutBytes": 0,
+      "unassignedObserverRequests": [
+        {
+          "id": "observer-00001",
+          "classification": "excluded warmup",
+          "startedUtc": "2026-10-28T05:16:34.940349+00:00",
+          "completedUtc": "2026-10-28T05:16:37.135939+00:00",
+          "outcome": "completed",
+          "workerInputTokens": 21,
+          "workerOutputTokens": 128,
+          "compatibleErrorCode": null,
+          "firstTokenReceived": true,
+          "clientTtftMs": 149.59800000000013
+        }
+      ]
+    },
+    "pilot-off": {
+      "runtime": {
+        "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+        "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      },
+      "commonCoordinators": [
+        {
+          "role": "registry",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        },
+        {
+          "role": "clone",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        }
+      ],
+      "effectiveSelector": {
+        "requested": "off",
+        "effective": "off",
+        "layout": "original",
+        "N": "248320",
+        "K": "2048",
+        "group": "64",
+        "bits": "8",
+        "extraPayloadBytes": "0",
+        "extraAllocatedBytes": "0",
+        "transientExtraPeakBytes": "0",
+        "scratchBytes": "0",
+        "sourceAlias": "0",
+        "batchedPrefill": "original"
+      },
+      "plannedTaskCount": 5,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 69.954071584,
+          "piUsage": {
+            "input": 8548,
+            "output": 863,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 9411
+          },
+          "modelRequests": 4,
+          "observedRequests": 4,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 173.331051625,
+          "piUsage": {
+            "input": 21232,
+            "output": 2167,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 23399
+          },
+          "modelRequests": 7,
+          "observedRequests": 7,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 52.01604866700001,
+          "piUsage": {
+            "input": 6314,
+            "output": 660,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6974
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 42.78010408299997,
+          "piUsage": {
+            "input": 5518,
+            "output": 423,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 5941
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 175.85950462499994,
+          "piUsage": {
+            "input": 24016,
+            "output": 1393,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 25409
+          },
+          "modelRequests": 9,
+          "observedRequests": 9,
+          "officialValidation": "passed"
+        }
+      ],
+      "completedTasks": 5,
+      "recordedTasks": 5,
+      "timeouts": 0,
+      "officialPassed": 5,
+      "officialCount": 5,
+      "expectedRequests": 26,
+      "observedRequests": 26,
+      "metricsComplete": true,
+      "standardProblems": [],
+      "prefillTokensPerSecond": 155.90046804998755,
+      "decodeTokensPerSecond": 60.31488034862811,
+      "wholeProtocolMetrics": {
+        "complete": true,
+        "inputTokens": 65628,
+        "outputTokens": 5506,
+        "decodeIntervals": 5480,
+        "prefillMs": 420960.8914000001,
+        "decodeMs": 90856.5178,
+        "prefillTokensPerSecond": 155.90046804998755,
+        "decodeTokensPerSecond": 60.31488034862811
+      },
+      "integrityProblems": [],
+      "piWallSeconds": 513.9407805839999,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:24:52.058799+00:00",
+          "completedUtc": "2026-10-28T05:25:08.277331+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16220.545584,
+          "workerInputTokens": 1606,
+          "workerOutputTokens": 358,
+          "prefillMs": 10330.2017,
+          "decodeMs": 5868.003000000001,
+          "decodeIntervals": 357,
+          "metalAllocatedBytes": 37109612544,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1606,
+            "output": 358,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1964,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:25:08.291710+00:00",
+          "completedUtc": "2026-10-28T05:25:25.463147+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17171.728708,
+          "workerInputTokens": 2040,
+          "workerOutputTokens": 241,
+          "prefillMs": 13179.0038,
+          "decodeMs": 3972.6660999999986,
+          "decodeIntervals": 240,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2040,
+            "output": 241,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2281,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:25:25.478356+00:00",
+          "completedUtc": "2026-10-28T05:25:44.425629+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18947.116875,
+          "workerInputTokens": 2318,
+          "workerOutputTokens": 242,
+          "prefillMs": 14945.0109,
+          "decodeMs": 3979.660099999999,
+          "decodeIntervals": 241,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2318,
+            "output": 242,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2560,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:25:44.481159+00:00",
+          "completedUtc": "2026-10-28T05:26:01.771629+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17290.22200000001,
+          "workerInputTokens": 2584,
+          "workerOutputTokens": 22,
+          "prefillMs": 16938.5798,
+          "decodeMs": 331.21069999999963,
+          "decodeIntervals": 21,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2584,
+            "output": 22,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2606,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:26:02.030362+00:00",
+          "completedUtc": "2026-10-28T05:26:23.208274+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21177.53574999999,
+          "workerInputTokens": 1822,
+          "workerOutputTokens": 576,
+          "prefillMs": 11629.3908,
+          "decodeMs": 9530.668899999999,
+          "decodeIntervals": 575,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1822,
+            "output": 576,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2398,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:26:23.220177+00:00",
+          "completedUtc": "2026-10-28T05:26:39.559648+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16338.974875000005,
+          "workerInputTokens": 2459,
+          "workerOutputTokens": 31,
+          "prefillMs": 15825.502,
+          "decodeMs": 494.27889999999934,
+          "decodeIntervals": 30,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2459,
+            "output": 31,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2490,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:26:39.571284+00:00",
+          "completedUtc": "2026-10-28T05:27:04.855921+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 25284.233333000004,
+          "workerInputTokens": 2553,
+          "workerOutputTokens": 533,
+          "prefillMs": 16417.4829,
+          "decodeMs": 8846.672999999999,
+          "decodeIntervals": 532,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2553,
+            "output": 533,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3086,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:27:04.862346+00:00",
+          "completedUtc": "2026-10-28T05:27:25.550518+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20687.716332999997,
+          "workerInputTokens": 3119,
+          "workerOutputTokens": 33,
+          "prefillMs": 20132.1916,
+          "decodeMs": 537.3651000000027,
+          "decodeIntervals": 32,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3119,
+            "output": 33,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3152,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:27:25.563185+00:00",
+          "completedUtc": "2026-10-28T05:27:55.177625+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 29614.032707999995,
+          "workerInputTokens": 3228,
+          "workerOutputTokens": 531,
+          "prefillMs": 20781.1399,
+          "decodeMs": 8813.582699999999,
+          "decodeIntervals": 530,
+          "metalAllocatedBytes": 37197856768,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3228,
+            "output": 531,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3759,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:27:55.183505+00:00",
+          "completedUtc": "2026-10-28T05:28:25.906268+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 30722.366625000006,
+          "workerInputTokens": 3784,
+          "workerOutputTokens": 366,
+          "prefillMs": 24509.0331,
+          "decodeMs": 6188.435000000001,
+          "decodeIntervals": 365,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3784,
+            "output": 366,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 4150,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:28:25.952167+00:00",
+          "completedUtc": "2026-10-28T05:28:55.118067+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 29165.456625000017,
+          "workerInputTokens": 4267,
+          "workerOutputTokens": 97,
+          "prefillMs": 27554.654,
+          "decodeMs": 1590.585500000001,
+          "decodeIntervals": 96,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 4267,
+            "output": 97,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 4364,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:28:55.356826+00:00",
+          "completedUtc": "2026-10-28T05:29:12.584520+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17227.319250000022,
+          "workerInputTokens": 1731,
+          "workerOutputTokens": 374,
+          "prefillMs": 11073.1943,
+          "decodeMs": 6136.461799999999,
+          "decodeIntervals": 373,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1731,
+            "output": 374,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2105,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:29:12.596665+00:00",
+          "completedUtc": "2026-10-28T05:29:30.229988+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17632.940833000022,
+          "workerInputTokens": 2176,
+          "workerOutputTokens": 207,
+          "prefillMs": 14193.7751,
+          "decodeMs": 3420.287400000001,
+          "decodeIntervals": 206,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2176,
+            "output": 207,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2383,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:29:30.280657+00:00",
+          "completedUtc": "2026-10-28T05:29:47.140481+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16859.47349999998,
+          "workerInputTokens": 2407,
+          "workerOutputTokens": 79,
+          "prefillMs": 15559.8663,
+          "decodeMs": 1279.5764,
+          "decodeIntervals": 78,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 180076544,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2407,
+            "output": 79,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2486,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:29:47.376595+00:00",
+          "completedUtc": "2026-10-28T05:30:01.531146+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14153.99633300001,
+          "workerInputTokens": 1618,
+          "workerOutputTokens": 234,
+          "prefillMs": 10292.2112,
+          "decodeMs": 3842.6327,
+          "decodeIntervals": 233,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1618,
+            "output": 234,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1852,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:30:01.542971+00:00",
+          "completedUtc": "2026-10-28T05:30:15.605415+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14062.124208000001,
+          "workerInputTokens": 1877,
+          "workerOutputTokens": 122,
+          "prefillMs": 12053.1191,
+          "decodeMs": 1991.520199999999,
+          "decodeIntervals": 121,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1877,
+            "output": 122,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1999,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:30:15.649706+00:00",
+          "completedUtc": "2026-10-28T05:30:29.927854+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14277.773167000021,
+          "workerInputTokens": 2023,
+          "workerOutputTokens": 67,
+          "prefillMs": 13169.6597,
+          "decodeMs": 1087.7986999999994,
+          "decodeIntervals": 66,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2023,
+            "output": 67,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2090,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:30:30.160172+00:00",
+          "completedUtc": "2026-10-28T05:30:46.390309+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16229.76545800003,
+          "workerInputTokens": 1691,
+          "workerOutputTokens": 331,
+          "prefillMs": 10778.4621,
+          "decodeMs": 5430.821,
+          "decodeIntervals": 330,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1691,
+            "output": 331,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2022,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00020",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:30:46.402829+00:00",
+          "completedUtc": "2026-10-28T05:31:00.353703+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 13950.288333999993,
+          "workerInputTokens": 2088,
+          "workerOutputTokens": 31,
+          "prefillMs": 13437.1037,
+          "decodeMs": 492.1797999999999,
+          "decodeIntervals": 30,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2088,
+            "output": 31,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2119,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00021",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:31:00.364329+00:00",
+          "completedUtc": "2026-10-28T05:31:18.645639+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18280.942166000044,
+          "workerInputTokens": 2182,
+          "workerOutputTokens": 297,
+          "prefillMs": 13371.454,
+          "decodeMs": 4889.586799999999,
+          "decodeIntervals": 296,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2182,
+            "output": 297,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2479,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00022",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:31:18.651739+00:00",
+          "completedUtc": "2026-10-28T05:31:35.126887+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16474.536375000014,
+          "workerInputTokens": 2512,
+          "workerOutputTokens": 33,
+          "prefillMs": 15919.1291,
+          "decodeMs": 534.9730999999992,
+          "decodeIntervals": 32,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2512,
+            "output": 33,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2545,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00023",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:31:35.141497+00:00",
+          "completedUtc": "2026-10-28T05:31:56.691824+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21549.904834000015,
+          "workerInputTokens": 2621,
+          "workerOutputTokens": 294,
+          "prefillMs": 16652.6984,
+          "decodeMs": 4876.3721000000005,
+          "decodeIntervals": 293,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2621,
+            "output": 294,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2915,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00024",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:31:56.703927+00:00",
+          "completedUtc": "2026-10-28T05:32:15.916908+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 19212.62945800004,
+          "workerInputTokens": 2938,
+          "workerOutputTokens": 32,
+          "prefillMs": 18673.6682,
+          "decodeMs": 519.0445999999974,
+          "decodeIntervals": 31,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2938,
+            "output": 32,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2970,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00025",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:32:15.924710+00:00",
+          "completedUtc": "2026-10-28T05:32:35.583810+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 19658.672249999996,
+          "workerInputTokens": 3006,
+          "workerOutputTokens": 33,
+          "prefillMs": 19106.1231,
+          "decodeMs": 532.5927999999985,
+          "decodeIntervals": 32,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3006,
+            "output": 33,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3039,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00026",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:32:35.594386+00:00",
+          "completedUtc": "2026-10-28T05:33:01.267525+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 25672.623874999997,
+          "workerInputTokens": 3312,
+          "workerOutputTokens": 275,
+          "prefillMs": 21084.4684,
+          "decodeMs": 4567.959600000002,
+          "decodeIntervals": 274,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3312,
+            "output": 275,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3587,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00027",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:33:01.316182+00:00",
+          "completedUtc": "2026-10-28T05:33:25.792057+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 24475.478375000024,
+          "workerInputTokens": 3666,
+          "workerOutputTokens": 67,
+          "prefillMs": 23353.7682,
+          "decodeMs": 1101.5818,
+          "decodeIntervals": 66,
+          "metalAllocatedBytes": 37286100992,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3666,
+            "output": 67,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3733,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        }
+      ],
+      "observerRowsIncludingWarmupAndUnfinishedTask": 27,
+      "sampledMetalPeakBytes": 37286100992,
+      "maxSteadyRequestSwapOutBytes": 180076544,
+      "unassignedObserverRequests": [
+        {
+          "id": "observer-00001",
+          "classification": "excluded warmup",
+          "startedUtc": "2026-10-28T05:24:48.908332+00:00",
+          "completedUtc": "2026-10-28T05:24:51.079865+00:00",
+          "outcome": "completed",
+          "workerInputTokens": 21,
+          "workerOutputTokens": 128,
+          "compatibleErrorCode": null,
+          "firstTokenReceived": true,
+          "clientTtftMs": 144.37008299999988
+        }
+      ]
+    },
+    "pilot-on": {
+      "runtime": {
+        "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+        "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      },
+      "commonCoordinators": [
+        {
+          "role": "registry",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        },
+        {
+          "role": "clone",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        }
+      ],
+      "effectiveSelector": {
+        "requested": "tile4",
+        "effective": "tile4",
+        "layout": "tile4-block256-lane32-octet8-v1",
+        "N": "248320",
+        "K": "2048",
+        "group": "64",
+        "bits": "8",
+        "extraPayloadBytes": "540344320",
+        "extraAllocatedBytes": "540344320",
+        "transientExtraPeakBytes": "540344320",
+        "scratchBytes": "0",
+        "sourceAlias": "0",
+        "batchedPrefill": "original"
+      },
+      "plannedTaskCount": 5,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 49.874077375,
+          "piUsage": {
+            "input": 5994,
+            "output": 696,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6690
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 63.986093833000005,
+          "piUsage": {
+            "input": 7277,
+            "output": 1059,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 8336
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 51.449901749999995,
+          "piUsage": {
+            "input": 6314,
+            "output": 662,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6976
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 47.69162758300001,
+          "piUsage": {
+            "input": 5834,
+            "output": 629,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6463
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 93.57014749999999,
+          "piUsage": {
+            "input": 10262,
+            "output": 1682,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 11944
+          },
+          "modelRequests": 4,
+          "observedRequests": 4,
+          "officialValidation": "passed"
+        }
+      ],
+      "completedTasks": 5,
+      "recordedTasks": 5,
+      "timeouts": 0,
+      "officialPassed": 5,
+      "officialCount": 5,
+      "expectedRequests": 16,
+      "observedRequests": 16,
+      "metricsComplete": true,
+      "standardProblems": [],
+      "prefillTokensPerSecond": 157.65388440083558,
+      "decodeTokensPerSecond": 60.1165020555978,
+      "wholeProtocolMetrics": {
+        "complete": true,
+        "inputTokens": 35681,
+        "outputTokens": 4728,
+        "decodeIntervals": 4712,
+        "prefillMs": 226324.90240000002,
+        "decodeMs": 78381.1406,
+        "prefillTokensPerSecond": 157.65388440083558,
+        "decodeTokensPerSecond": 60.1165020555978
+      },
+      "integrityProblems": [],
+      "piWallSeconds": 306.57184804099995,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:34:19.061258+00:00",
+          "completedUtc": "2026-10-28T05:34:35.296660+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16234.978417,
+          "workerInputTokens": 1608,
+          "workerOutputTokens": 367,
+          "prefillMs": 10113.8334,
+          "decodeMs": 6100.177099999999,
+          "decodeIntervals": 366,
+          "metalAllocatedBytes": 37649956864,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1608,
+            "output": 367,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1975,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:34:35.313147+00:00",
+          "completedUtc": "2026-10-28T05:34:52.788374+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17474.876792,
+          "workerInputTokens": 2046,
+          "workerOutputTokens": 270,
+          "prefillMs": 12989.3904,
+          "decodeMs": 4465.446,
+          "decodeIntervals": 269,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2046,
+            "output": 270,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2316,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:34:52.841012+00:00",
+          "completedUtc": "2026-10-28T05:35:08.704614+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15863.200834000005,
+          "workerInputTokens": 2340,
+          "workerOutputTokens": 59,
+          "prefillMs": 14878.1527,
+          "decodeMs": 965.5246999999999,
+          "decodeIntervals": 58,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2340,
+            "output": 59,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2399,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:35:08.952071+00:00",
+          "completedUtc": "2026-10-28T05:35:29.915338+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20962.861624999994,
+          "workerInputTokens": 1822,
+          "workerOutputTokens": 571,
+          "prefillMs": 11470.6913,
+          "decodeMs": 9472.525999999998,
+          "decodeIntervals": 570,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1822,
+            "output": 571,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2393,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:35:29.928449+00:00",
+          "completedUtc": "2026-10-28T05:35:52.407374+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 22478.498208999994,
+          "workerInputTokens": 2463,
+          "workerOutputTokens": 412,
+          "prefillMs": 15613.375,
+          "decodeMs": 6845.288400000001,
+          "decodeIntervals": 411,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2463,
+            "output": 412,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2875,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:35:52.457417+00:00",
+          "completedUtc": "2026-10-28T05:36:12.700371+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20242.558916999995,
+          "workerInputTokens": 2992,
+          "workerOutputTokens": 76,
+          "prefillMs": 18972.2564,
+          "decodeMs": 1249.8246999999974,
+          "decodeIntervals": 75,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2992,
+            "output": 76,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3068,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:36:12.945538+00:00",
+          "completedUtc": "2026-10-28T05:36:30.071854+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17125.9,
+          "workerInputTokens": 1731,
+          "workerOutputTokens": 374,
+          "prefillMs": 10919.6338,
+          "decodeMs": 6186.636399999999,
+          "decodeIntervals": 373,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1731,
+            "output": 374,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2105,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:36:30.084973+00:00",
+          "completedUtc": "2026-10-28T05:36:47.404597+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17319.242624999988,
+          "workerInputTokens": 2176,
+          "workerOutputTokens": 207,
+          "prefillMs": 13868.2053,
+          "decodeMs": 3430.5095,
+          "decodeIntervals": 206,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2176,
+            "output": 207,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2383,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:36:47.452457+00:00",
+          "completedUtc": "2026-10-28T05:37:04.157353+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16704.402541999996,
+          "workerInputTokens": 2407,
+          "workerOutputTokens": 81,
+          "prefillMs": 15350.3933,
+          "decodeMs": 1333.6005000000023,
+          "decodeIntervals": 80,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2407,
+            "output": 81,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2488,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:37:04.403271+00:00",
+          "completedUtc": "2026-10-28T05:37:19.136601+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14732.927625000002,
+          "workerInputTokens": 1615,
+          "workerOutputTokens": 277,
+          "prefillMs": 10136.6469,
+          "decodeMs": 4574.4061,
+          "decodeIntervals": 276,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1615,
+            "output": 277,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1892,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:37:19.149822+00:00",
+          "completedUtc": "2026-10-28T05:37:36.124812+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16974.59487500001,
+          "workerInputTokens": 1961,
+          "workerOutputTokens": 273,
+          "prefillMs": 12434.216,
+          "decodeMs": 4520.369600000002,
+          "decodeIntervals": 272,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1961,
+            "output": 273,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2234,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:37:36.175849+00:00",
+          "completedUtc": "2026-10-28T05:37:51.856610+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15680.397333000003,
+          "workerInputTokens": 2258,
+          "workerOutputTokens": 79,
+          "prefillMs": 14360.0672,
+          "decodeMs": 1299.8353000000006,
+          "decodeIntervals": 78,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2258,
+            "output": 79,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2337,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:37:52.101824+00:00",
+          "completedUtc": "2026-10-28T05:38:09.081226+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16978.888042000024,
+          "workerInputTokens": 1691,
+          "workerOutputTokens": 383,
+          "prefillMs": 10623.1697,
+          "decodeMs": 6336.2979,
+          "decodeIntervals": 382,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1691,
+            "output": 383,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2074,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:38:09.094347+00:00",
+          "completedUtc": "2026-10-28T05:38:31.790431+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 22695.70095900002,
+          "workerInputTokens": 2154,
+          "workerOutputTokens": 541,
+          "prefillMs": 13686.4293,
+          "decodeMs": 8989.7331,
+          "decodeIntervals": 540,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2154,
+            "output": 541,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2695,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:38:31.842801+00:00",
+          "completedUtc": "2026-10-28T05:39:01.350319+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 29507.039832999966,
+          "workerInputTokens": 2809,
+          "workerOutputTokens": 697,
+          "prefillMs": 17878.1595,
+          "decodeMs": 11607.583200000001,
+          "decodeIntervals": 696,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2809,
+            "output": 697,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3506,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:39:01.378832+00:00",
+          "completedUtc": "2026-10-28T05:39:25.432896+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 24053.708416999994,
+          "workerInputTokens": 3608,
+          "workerOutputTokens": 61,
+          "prefillMs": 23030.2822,
+          "decodeMs": 1003.3820999999989,
+          "decodeIntervals": 60,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 18677760,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3608,
+            "output": 61,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3669,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        }
+      ],
+      "observerRowsIncludingWarmupAndUnfinishedTask": 17,
+      "sampledMetalPeakBytes": 37738201088,
+      "maxSteadyRequestSwapOutBytes": 18677760,
+      "unassignedObserverRequests": [
+        {
+          "id": "observer-00001",
+          "classification": "excluded warmup",
+          "startedUtc": "2026-10-28T05:34:15.775479+00:00",
+          "completedUtc": "2026-10-28T05:34:17.970782+00:00",
+          "outcome": "completed",
+          "workerInputTokens": 21,
+          "workerOutputTokens": 128,
+          "compatibleErrorCode": null,
+          "firstTokenReceived": true,
+          "clientTtftMs": 150.41437499999998
+        }
+      ]
+    },
+    "cohort-on": {
+      "runtime": {
+        "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+        "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      },
+      "commonCoordinators": [
+        {
+          "role": "registry",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        },
+        {
+          "role": "clone",
+          "package": {
+            "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+            "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+            "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+            "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+          }
+        }
+      ],
+      "effectiveSelector": {
+        "requested": "tile4",
+        "effective": "tile4",
+        "layout": "tile4-block256-lane32-octet8-v1",
+        "N": "248320",
+        "K": "2048",
+        "group": "64",
+        "bits": "8",
+        "extraPayloadBytes": "540344320",
+        "extraAllocatedBytes": "540344320",
+        "transientExtraPeakBytes": "540344320",
+        "scratchBytes": "0",
+        "sourceAlias": "0",
+        "batchedPrefill": "original"
+      },
+      "plannedTaskCount": 20,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 74.187156833,
+          "piUsage": {
+            "input": 8780,
+            "output": 1091,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 9871
+          },
+          "modelRequests": 4,
+          "observedRequests": 4,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 63.993219374999995,
+          "piUsage": {
+            "input": 7277,
+            "output": 1059,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 8336
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 51.53879120799999,
+          "piUsage": {
+            "input": 6306,
+            "output": 670,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6976
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 47.476639834000025,
+          "piUsage": {
+            "input": 5847,
+            "output": 613,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 6460
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 101.49450450000003,
+          "piUsage": {
+            "input": 12358,
+            "output": 1367,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 13725
+          },
+          "modelRequests": 5,
+          "observedRequests": 5,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 68.93146375000003,
+          "piUsage": {
+            "input": 9581,
+            "output": 479,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 10060
+          },
+          "modelRequests": 5,
+          "observedRequests": 5,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 57.404227624999976,
+          "piUsage": {
+            "input": 7580,
+            "output": 547,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 8127
+          },
+          "modelRequests": 4,
+          "observedRequests": 4,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 68.28332937500005,
+          "piUsage": {
+            "input": 7439,
+            "output": 1249,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 8688
+          },
+          "modelRequests": 3,
+          "observedRequests": 3,
+          "officialValidation": "passed"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "completed": true,
+          "timeout": false,
+          "errorPresent": false,
+          "wallSeconds": 159.15700979199994,
+          "piUsage": {
+            "input": 20774,
+            "output": 1603,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "totalTokens": 22377
+          },
+          "modelRequests": 8,
+          "observedRequests": 8,
+          "officialValidation": "passed"
+        }
+      ],
+      "completedTasks": 9,
+      "recordedTasks": 9,
+      "timeouts": 0,
+      "officialPassed": 9,
+      "officialCount": 20,
+      "expectedRequests": null,
+      "observedRequests": null,
+      "metricsComplete": false,
+      "standardProblems": null,
+      "prefillTokensPerSecond": null,
+      "decodeTokensPerSecond": null,
+      "wholeProtocolMetrics": null,
+      "integrityProblems": null,
+      "piWallSeconds": 692.466342292,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:40:22.630015+00:00",
+          "completedUtc": "2026-10-28T05:40:38.820890+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16190.501584,
+          "workerInputTokens": 1607,
+          "workerOutputTokens": 366,
+          "prefillMs": 10098.9762,
+          "decodeMs": 6071.2016,
+          "decodeIntervals": 365,
+          "metalAllocatedBytes": 37649956864,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1607,
+            "output": 366,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1973,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:40:38.834520+00:00",
+          "completedUtc": "2026-10-28T05:40:57.046018+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18211.100000000002,
+          "workerInputTokens": 2043,
+          "workerOutputTokens": 315,
+          "prefillMs": 12968.9689,
+          "decodeMs": 5222.2577,
+          "decodeIntervals": 314,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2043,
+            "output": 315,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2358,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:40:57.060201+00:00",
+          "completedUtc": "2026-10-28T05:41:17.549252+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20488.590917000005,
+          "workerInputTokens": 2395,
+          "workerOutputTokens": 316,
+          "prefillMs": 15215.8976,
+          "decodeMs": 5252.768899999999,
+          "decodeIntervals": 315,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2395,
+            "output": 316,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2711,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "startedUtc": "2026-10-28T05:41:17.596504+00:00",
+          "completedUtc": "2026-10-28T05:41:36.581568+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18984.710875000004,
+          "workerInputTokens": 2735,
+          "workerOutputTokens": 94,
+          "prefillMs": 17408.0493,
+          "decodeMs": 1557.1327999999994,
+          "decodeIntervals": 93,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2735,
+            "output": 94,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2829,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:41:36.823019+00:00",
+          "completedUtc": "2026-10-28T05:41:57.806027+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20982.55387500001,
+          "workerInputTokens": 1822,
+          "workerOutputTokens": 571,
+          "prefillMs": 11479.9699,
+          "decodeMs": 9483.2136,
+          "decodeIntervals": 570,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1822,
+            "output": 571,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2393,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:41:57.818936+00:00",
+          "completedUtc": "2026-10-28T05:42:20.298943+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 22479.616084,
+          "workerInputTokens": 2463,
+          "workerOutputTokens": 412,
+          "prefillMs": 15610.2944,
+          "decodeMs": 6848.878200000001,
+          "decodeIntervals": 411,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2463,
+            "output": 412,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2875,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "startedUtc": "2026-10-28T05:42:20.349416+00:00",
+          "completedUtc": "2026-10-28T05:42:40.582506+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20232.68441600001,
+          "workerInputTokens": 2992,
+          "workerOutputTokens": 76,
+          "prefillMs": 18965.0022,
+          "decodeMs": 1247.7720999999983,
+          "decodeIntervals": 75,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2992,
+            "output": 76,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3068,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:42:40.822524+00:00",
+          "completedUtc": "2026-10-28T05:42:57.878942+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17056.053208999998,
+          "workerInputTokens": 1730,
+          "workerOutputTokens": 370,
+          "prefillMs": 10912.0505,
+          "decodeMs": 6124.7406999999985,
+          "decodeIntervals": 369,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1730,
+            "output": 370,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2100,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:42:57.891456+00:00",
+          "completedUtc": "2026-10-28T05:43:15.190396+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 17298.534165999998,
+          "workerInputTokens": 2173,
+          "workerOutputTokens": 206,
+          "prefillMs": 13848.77,
+          "decodeMs": 3429.6969999999983,
+          "decodeIntervals": 205,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2173,
+            "output": 206,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2379,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/72",
+          "startedUtc": "2026-10-28T05:43:15.233275+00:00",
+          "completedUtc": "2026-10-28T05:43:32.130909+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16897.282667000014,
+          "workerInputTokens": 2403,
+          "workerOutputTokens": 94,
+          "prefillMs": 15324.2582,
+          "decodeMs": 1552.6693000000014,
+          "decodeIntervals": 93,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2403,
+            "output": 94,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2497,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:43:32.361893+00:00",
+          "completedUtc": "2026-10-28T05:43:47.147845+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14785.53149999999,
+          "workerInputTokens": 1617,
+          "workerOutputTokens": 279,
+          "prefillMs": 10154.2515,
+          "decodeMs": 4611.998799999999,
+          "decodeIntervals": 278,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1617,
+            "output": 279,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1896,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:43:47.160890+00:00",
+          "completedUtc": "2026-10-28T05:44:04.154274+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16993.025958000006,
+          "workerInputTokens": 1967,
+          "workerOutputTokens": 272,
+          "prefillMs": 12468.2073,
+          "decodeMs": 4504.984099999998,
+          "decodeIntervals": 271,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1967,
+            "output": 272,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2239,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/80",
+          "startedUtc": "2026-10-28T05:44:04.199198+00:00",
+          "completedUtc": "2026-10-28T05:44:19.614161+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15414.560249999993,
+          "workerInputTokens": 2263,
+          "workerOutputTokens": 62,
+          "prefillMs": 14382.3235,
+          "decodeMs": 1012.1695,
+          "decodeIntervals": 61,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2263,
+            "output": 62,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2325,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:44:19.851739+00:00",
+          "completedUtc": "2026-10-28T05:44:36.757444+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16905.280833000004,
+          "workerInputTokens": 1692,
+          "workerOutputTokens": 379,
+          "prefillMs": 10621.0303,
+          "decodeMs": 6264.3987,
+          "decodeIntervals": 378,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1692,
+            "output": 379,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2071,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:44:36.770548+00:00",
+          "completedUtc": "2026-10-28T05:44:56.939542+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 20168.558624999947,
+          "workerInputTokens": 2152,
+          "workerOutputTokens": 390,
+          "prefillMs": 13676.7306,
+          "decodeMs": 6471.4522,
+          "decodeIntervals": 389,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2152,
+            "output": 390,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2542,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:44:56.982634+00:00",
+          "completedUtc": "2026-10-28T05:45:15.439821+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18456.804207999994,
+          "workerInputTokens": 2598,
+          "workerOutputTokens": 117,
+          "prefillMs": 16502.9321,
+          "decodeMs": 1934.0069000000003,
+          "decodeIntervals": 116,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2598,
+            "output": 117,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2715,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:45:15.471920+00:00",
+          "completedUtc": "2026-10-28T05:45:39.841022+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 24368.381582999973,
+          "workerInputTokens": 2736,
+          "workerOutputTokens": 420,
+          "prefillMs": 17365.6603,
+          "decodeMs": 6982.8361,
+          "decodeIntervals": 419,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2736,
+            "output": 420,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3156,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "startedUtc": "2026-10-28T05:45:39.873057+00:00",
+          "completedUtc": "2026-10-28T05:46:01.115551+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21242.124917000012,
+          "workerInputTokens": 3180,
+          "workerOutputTokens": 61,
+          "prefillMs": 20218.2288,
+          "decodeMs": 1003.8665000000001,
+          "decodeIntervals": 60,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3180,
+            "output": 61,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3241,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00020",
+          "taskId": "HumanEval/2",
+          "startedUtc": "2026-10-28T05:46:01.362337+00:00",
+          "completedUtc": "2026-10-28T05:46:14.155323+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 12792.592707999973,
+          "workerInputTokens": 1580,
+          "workerOutputTokens": 174,
+          "prefillMs": 9907.332,
+          "decodeMs": 2866.0514999999996,
+          "decodeIntervals": 173,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1580,
+            "output": 174,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1754,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00021",
+          "taskId": "HumanEval/2",
+          "startedUtc": "2026-10-28T05:46:14.168044+00:00",
+          "completedUtc": "2026-10-28T05:46:26.211253+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 12042.797915999983,
+          "workerInputTokens": 1825,
+          "workerOutputTokens": 31,
+          "prefillMs": 11526.0897,
+          "decodeMs": 497.6785,
+          "decodeIntervals": 30,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1825,
+            "output": 31,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1856,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00022",
+          "taskId": "HumanEval/2",
+          "startedUtc": "2026-10-28T05:46:26.221430+00:00",
+          "completedUtc": "2026-10-28T05:46:40.579018+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14357.17895800002,
+          "workerInputTokens": 1919,
+          "workerOutputTokens": 133,
+          "prefillMs": 12139.6084,
+          "decodeMs": 2198.1750999999986,
+          "decodeIntervals": 132,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1919,
+            "output": 133,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2052,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00023",
+          "taskId": "HumanEval/2",
+          "startedUtc": "2026-10-28T05:46:40.585238+00:00",
+          "completedUtc": "2026-10-28T05:46:54.814149+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 14228.51483300002,
+          "workerInputTokens": 2077,
+          "workerOutputTokens": 61,
+          "prefillMs": 13209.8552,
+          "decodeMs": 999.358400000001,
+          "decodeIntervals": 60,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2077,
+            "output": 61,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2138,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00024",
+          "taskId": "HumanEval/2",
+          "startedUtc": "2026-10-28T05:46:54.854602+00:00",
+          "completedUtc": "2026-10-28T05:47:10.053298+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15198.32870800002,
+          "workerInputTokens": 2180,
+          "workerOutputTokens": 80,
+          "prefillMs": 13866.3635,
+          "decodeMs": 1312.4902000000002,
+          "decodeIntervals": 79,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2180,
+            "output": 80,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2260,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00025",
+          "taskId": "HumanEval/35",
+          "startedUtc": "2026-10-28T05:47:10.299485+00:00",
+          "completedUtc": "2026-10-28T05:47:23.038987+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 12739.094709000028,
+          "workerInputTokens": 1582,
+          "workerOutputTokens": 170,
+          "prefillMs": 9920.7828,
+          "decodeMs": 2799.170899999999,
+          "decodeIntervals": 169,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1582,
+            "output": 170,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1752,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00026",
+          "taskId": "HumanEval/35",
+          "startedUtc": "2026-10-28T05:47:23.052406+00:00",
+          "completedUtc": "2026-10-28T05:47:36.897743+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 13844.973041000003,
+          "workerInputTokens": 1829,
+          "workerOutputTokens": 137,
+          "prefillMs": 11549.1918,
+          "decodeMs": 2276.1466,
+          "decodeIntervals": 136,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1829,
+            "output": 137,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1966,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00027",
+          "taskId": "HumanEval/35",
+          "startedUtc": "2026-10-28T05:47:36.908273+00:00",
+          "completedUtc": "2026-10-28T05:47:51.939412+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15030.704958999992,
+          "workerInputTokens": 2003,
+          "workerOutputTokens": 138,
+          "prefillMs": 12715.3245,
+          "decodeMs": 2295.768900000001,
+          "decodeIntervals": 137,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2003,
+            "output": 138,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2141,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00028",
+          "taskId": "HumanEval/35",
+          "startedUtc": "2026-10-28T05:47:51.987828+00:00",
+          "completedUtc": "2026-10-28T05:48:07.463662+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15475.507832999994,
+          "workerInputTokens": 2166,
+          "workerOutputTokens": 102,
+          "prefillMs": 13771.3341,
+          "decodeMs": 1684.710000000001,
+          "decodeIntervals": 101,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2166,
+            "output": 102,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2268,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00029",
+          "taskId": "HumanEval/32",
+          "startedUtc": "2026-10-28T05:48:07.712710+00:00",
+          "completedUtc": "2026-10-28T05:48:30.230194+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 22517.03808299999,
+          "workerInputTokens": 1762,
+          "workerOutputTokens": 686,
+          "prefillMs": 11108.2342,
+          "decodeMs": 11389.4734,
+          "decodeIntervals": 685,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1762,
+            "output": 686,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2448,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00030",
+          "taskId": "HumanEval/32",
+          "startedUtc": "2026-10-28T05:48:30.244070+00:00",
+          "completedUtc": "2026-10-28T05:48:53.789215+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 23544.756749999975,
+          "workerInputTokens": 2526,
+          "workerOutputTokens": 450,
+          "prefillMs": 16023.71,
+          "decodeMs": 7501.206500000002,
+          "decodeIntervals": 449,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2526,
+            "output": 450,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2976,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00031",
+          "taskId": "HumanEval/32",
+          "startedUtc": "2026-10-28T05:48:53.837631+00:00",
+          "completedUtc": "2026-10-28T05:49:15.754111+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21916.013792000056,
+          "workerInputTokens": 3151,
+          "workerOutputTokens": 113,
+          "prefillMs": 20025.9379,
+          "decodeMs": 1870.312600000001,
+          "decodeIntervals": 112,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3151,
+            "output": 113,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3264,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00032",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:49:16.001642+00:00",
+          "completedUtc": "2026-10-28T05:49:31.552653+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 15550.648708999915,
+          "workerInputTokens": 1622,
+          "workerOutputTokens": 324,
+          "prefillMs": 10173.2951,
+          "decodeMs": 5358.316700000001,
+          "decodeIntervals": 323,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 1622,
+            "output": 324,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 1946,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00033",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:49:31.565228+00:00",
+          "completedUtc": "2026-10-28T05:49:44.833938+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 13268.262707999951,
+          "workerInputTokens": 2012,
+          "workerOutputTokens": 31,
+          "prefillMs": 12750.4586,
+          "decodeMs": 498.3240000000005,
+          "decodeIntervals": 30,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2012,
+            "output": 31,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2043,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00034",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:49:44.844745+00:00",
+          "completedUtc": "2026-10-28T05:50:03.053302+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 18208.169833000058,
+          "workerInputTokens": 2105,
+          "workerOutputTokens": 291,
+          "prefillMs": 13360.9904,
+          "decodeMs": 4827.3855,
+          "decodeIntervals": 290,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2105,
+            "output": 291,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2396,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00035",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:50:03.059308+00:00",
+          "completedUtc": "2026-10-28T05:50:19.767887+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 16713.312958000075,
+          "workerInputTokens": 2429,
+          "workerOutputTokens": 77,
+          "prefillMs": 15426.9537,
+          "decodeMs": 1266.8302999999996,
+          "decodeIntervals": 76,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2429,
+            "output": 77,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2506,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00036",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:50:19.781396+00:00",
+          "completedUtc": "2026-10-28T05:50:41.704597+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 21936.175791000096,
+          "workerInputTokens": 2582,
+          "workerOutputTokens": 332,
+          "prefillMs": 16401.1945,
+          "decodeMs": 5515.285100000001,
+          "decodeIntervals": 331,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2582,
+            "output": 332,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 2914,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00037",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:50:41.715868+00:00",
+          "completedUtc": "2026-10-28T05:51:01.634823+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 19921.740957999988,
+          "workerInputTokens": 2937,
+          "workerOutputTokens": 73,
+          "prefillMs": 18699.4535,
+          "decodeMs": 1202.3385999999991,
+          "decodeIntervals": 72,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 2937,
+            "output": 73,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3010,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00038",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:51:01.642983+00:00",
+          "completedUtc": "2026-10-28T05:51:28.950656+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 27308.39558299999,
+          "workerInputTokens": 3277,
+          "workerOutputTokens": 382,
+          "prefillMs": 20925.8097,
+          "decodeMs": 6350.800900000002,
+          "decodeIntervals": 381,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3277,
+            "output": 382,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3659,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        },
+        {
+          "id": "observer-00039",
+          "taskId": "HumanEval/146",
+          "startedUtc": "2026-10-28T05:51:28.996748+00:00",
+          "completedUtc": "2026-10-28T05:51:54.894062+00:00",
+          "outcome": "completed",
+          "firstTokenReceived": true,
+          "clientTtftMs": 25897.233333000033,
+          "workerInputTokens": 3810,
+          "workerOutputTokens": 93,
+          "prefillMs": 24335.768,
+          "decodeMs": 1539.9775999999983,
+          "decodeIntervals": 92,
+          "metalAllocatedBytes": 37738201088,
+          "newSwapOutBytes": 0,
+          "workerFinishReason": "eos",
+          "piUsage": {
+            "input": 3810,
+            "output": 93,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "reasoning": 0,
+            "totalTokens": 3903,
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0,
+              "total": 0
+            }
+          },
+          "piErrorPresent": false,
+          "compatibleErrorCode": null
+        }
+      ],
+      "observerRowsIncludingWarmupAndUnfinishedTask": 40,
+      "sampledMetalPeakBytes": 37738201088,
+      "maxSteadyRequestSwapOutBytes": 0,
+      "unassignedObserverRequests": [
+        {
+          "id": "observer-00001",
+          "classification": "excluded warmup",
+          "startedUtc": "2026-10-28T05:40:19.386282+00:00",
+          "completedUtc": "2026-10-28T05:40:21.603378+00:00",
+          "outcome": "completed",
+          "workerInputTokens": 21,
+          "workerOutputTokens": 128,
+          "compatibleErrorCode": null,
+          "firstTokenReceived": true,
+          "clientTtftMs": 152.87533399999998
+        },
+        {
+          "id": "observer-00040",
+          "classification": "not assigned to a completed Pi task record; interrupted request retained",
+          "startedUtc": "2026-10-28T05:51:55.139927+00:00",
+          "completedUtc": "2026-10-28T05:52:08.934558+00:00",
+          "outcome": "failed",
+          "workerInputTokens": null,
+          "workerOutputTokens": null,
+          "compatibleErrorCode": "worker_request_failed",
+          "firstTokenReceived": false,
+          "clientTtftMs": null
+        }
+      ]
+    }
+  },
+  "failure": {
+    "utc": "2026-10-28T05:52:09.027814+00:00",
+    "type": "GateError",
+    "completedPhases": [
+      "gates",
+      "pilot"
+    ],
+    "reason": "Battery SOC must remain at least 80 percent"
+  },
+  "automaticRestoration": {
+    "utc": "2026-10-28T05:52:09.028221+00:00",
+    "attemptedBootout": true,
+    "hashesUnchanged": true,
+    "definitionRestored": false,
+    "healthReady": false,
+    "realRequestVerified": false,
+    "originalReady": false,
+    "errors": [
+      "childCleanup:GateError",
+      "GateError"
+    ]
+  },
+  "parentRestoration": {
+    "utc": "2026-10-28T05:54:04.331690+00:00",
+    "automaticRecoveryFailed": true,
+    "originalHashesUnchanged": true,
+    "recordedChildrenGone": true,
+    "signalsSent": [],
+    "definitionRestored": true,
+    "realRequestVerified": false,
+    "health": {
+      "state": "Ready",
+      "ready": false,
+      "pid": 158,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "finalHashesUnchanged": true,
+    "limitation": "Original Ready/ready=false condition restored; successful real request not verified."
+  },
+  "evidence": [
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/plan.json",
+      "sha256": "651585b2d550282bbf0f18d527d278d7acdcf5abbebfeadbbeb6d2cf8d061b99",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/preflight.json",
+      "sha256": "cc3a4e8e7ed834de585aaa31823e8ee1ff547cb7a5a9da239c4cd90ab98adb11",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/gates.json",
+      "sha256": "9de6b65d9271c96539ab0bfae850b5448e8f6f6c27ab0d4fb90a75649f4408d4",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/failure.json",
+      "sha256": "2d43f9d40f9e056458a0f944ce75d5131e3f6985c050f0c30fe3283a660f61d0",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/restoration.json",
+      "sha256": "3030d9613a2181a83f19966e6e0c72c8326ea9dfb297ba829973f5b883c75920",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/parent-restoration.json",
+      "sha256": "a9b64be31b613e72b6242dd3cc3a0e9acf783430f12ead3838da018e82cf8e7f",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/parent-summary.json",
+      "sha256": "25551c888c2c04645a0b2825415795b52598214aacf633c37b95fa89ee46f14a",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/power.jsonl",
+      "sha256": "310eb3a96a211d19ee7241ff7339121f3c61a5b52c68e285bbd8c7b5bcf275dd",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/request-resource-gates.jsonl",
+      "sha256": "18acc2cd1b9eb0c726a37c8584c80b356eaf0f21c8faa88e8575bc24243b24d3",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/evidence-sha256.json",
+      "sha256": "9b1bb8af7ef800892cbb12c8008e79172c7949c7ea1267c2b9c42ae96654d91c",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/runtime.json",
+      "sha256": "03099a0130bc3baf7c6b569b91ea3f894f09143b5cace4343f729232b91f5652",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/ready-registration.json",
+      "sha256": "2e1ae011200d16c42fe0727e394512555318949233a9672d99b2f01a746bba88",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/pi/tasks.jsonl",
+      "sha256": "e369e7f24e09fb053724ab20a30950df122c5399e5f3465531c66018b76dfcef",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/standard-performance.json",
+      "sha256": "cc66224c1066b3cc02177899f39c18fe58d9b08ecfad864e786faefbf6489475",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/reconciliation.json",
+      "sha256": "d9365dfd254fe308d042c2a00f3afe85f1cda170fcd8f2b99316acdf2e01e1d0",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/official.json",
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/official-controls.json",
+      "sha256": "a774ad48423f8b98ce2a564b1ed3a6f8c8d05302ca2b74f2ca572374bb5e401d",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/observer/requests.jsonl",
+      "sha256": "cf4dbab5379bd8347a07102e919e9f6ee16a3aaa12fa8e47b695db5be4800c38",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-main/clone.log",
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/runtime.json",
+      "sha256": "401d1cd3be1e44f91715c899f700d5f700cab1969c3b2f50fdeac7e302ac8842",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/ready-registration.json",
+      "sha256": "c2ae3b286c242309de38aa4b75b13bf2c1bb36bd2983a56c734cf55ec6c88b77",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/pi/tasks.jsonl",
+      "sha256": "81ab8a902e7e89e7e92199277a6672ef019ecc39865a80a9a894ca6214204b2e",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/standard-performance.json",
+      "sha256": "967e9ac0f358fac4d4f7cd928d5034142276184eb2a214140228031731381335",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/reconciliation.json",
+      "sha256": "15810480ea01aaecfc4dc8d5e87ba73489e815a70b5e88ca6a5c64b2a53eeba9",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/official.json",
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/official-controls.json",
+      "sha256": "e246bf092ae49b88f06583d0101a6da7e7000cadd221b2514b7235200a6d3c0c",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/observer/requests.jsonl",
+      "sha256": "d50e659f06862eea044cdd74d16db5acd9bf6fa67a2c3c4cc113157de855c779",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-off/clone.log",
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/runtime.json",
+      "sha256": "e57430fff87fd8891acfedf36779f044e089578a499592102b9dbd75429c165b",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/ready-registration.json",
+      "sha256": "a19bdc5efe2123f59cb45b4707825ec7a6d76db5ddde0a7a3819a5bd5b2ef12a",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/pi/tasks.jsonl",
+      "sha256": "2c84b3f83b1e7e320f5da435abc30bf06fc72cbf0af5ef70dafd54195d57cd31",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/standard-performance.json",
+      "sha256": "3c4d0fb7fe60d4dc5bf4363542b2e9d67c504ad50db8e0bb098d2f1f4e3c4896",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/reconciliation.json",
+      "sha256": "aa187d498d1adb9f86e9fbce16a996e101d878a97686a94525309e65c1b48619",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/official.json",
+      "sha256": "1774722b9294db5391e469b1c4af164a05e8aa34c445f1ed03df8dd42227a828",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/official-controls.json",
+      "sha256": "deb6ec54a8ff0477305473a06e5deec8db91ac66a8f901ba94270c284e381904",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/observer/requests.jsonl",
+      "sha256": "60d5876402a8e6c1be3d17c1a68478c4e5a8c88d95708e8ce6ff0bbda362a1b1",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/pilot-on/clone.log",
+      "sha256": "3fd6cf6c5a788b76bdff6c1e5f02257bb599a7fe358668b413d74229cdae82d8",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/runtime.json",
+      "sha256": "ecd9d6cb2424c003407d746f5063de764267d8856fcf2db690b10701c4c388be",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/ready-registration.json",
+      "sha256": "7da608135e7b0c05de5364d7baf81d4f54f76006a298e35c5cf27e9243868e52",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/pi/tasks.jsonl",
+      "sha256": "718c8a206285c24d2b130966df7f94d035b26107a1f51c99d724aee1eb4b2b16",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/parent-partial-official.json",
+      "sha256": "76ba2bc1e5450bfbcef8f3d944e358fa0f27ac39806c9c40f01d31407b50fb70",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/parent-partial-official-absolute.json",
+      "sha256": "648fb0e45bdde275abfa07e2f52fb5fa80007e623b284d28e3ce517491b817ed",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/official-controls.json",
+      "sha256": "489971008def115500888561865f5871aef6134448e93290e9049643dc23a2a0",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/observer/requests.jsonl",
+      "sha256": "2995f1f2676d40c0bb44edb673e96e77934a5158f88465914d6bc3e72075c8ce",
+      "access": "Restricted local-only raw evidence; not a public download"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-stream-fixed/cohort-on/clone.log",
+      "sha256": "4f3fea02f7c715498765945d631ee61ad943dd29c8b123cb211f152b3edfc051",
+      "access": "Restricted local-only raw evidence; not a public download"
+    }
+  ],
+  "pilotVersusMain": {
+    "off": {
+      "prefillChangePercent": 0.6579979387652424,
+      "decodeChangePercent": 0.05693392149630494
+    },
+    "on": {
+      "prefillChangePercent": 1.7901008864797285,
+      "decodeChangePercent": -0.2721577328759328
+    }
+  },
+  "formal20Comparison": null,
+  "limitations": [
+    "35 W battery-assisted exploratory trial, not stable140 W acceptance",
+    "Main means unchanged inference worker under the common repaired API host",
+    "Full checkpoint logits/internal states and continuous physical GPU residency peak unavailable",
+    "Partial formal20 must not be compared against pilot5 or presented as complete"
+  ]
+}

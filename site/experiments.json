@@ -1,5 +1,23 @@
 [
   {
+    "id": "lmhead-affine8-20261027",
+    "title": "LM-head affine8: no decode gain in complete pilot; formal20 power stop",
+    "kind": "2026-10-27 · Experiment #103 · Default off; no adoption",
+    "source": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md",
+    "question": "Can exact affine8/group64 LM-head packing and coordinated lane/input reuse improve decode without numerical or resource regression?",
+    "setup": "Main worker 4f51f241e87999c8cc3f79d733cd95ade9c711cd; candidate and common repaired API dcf72d8769ed6836c3885f3f23d7b528324e2154; M5 Pro 20GPU/48GB, 35 W battery-assisted, High Power; SOC100% to79%.",
+    "change": "One default-off tile4 layout/kernel; original checkpoint bits, FP32 arithmetic, batched prefill and vocabulary semantics retained. No other inference kernels or deployment settings changed.",
+    "result": "Complete HumanEval5 main/off/on: Pi5/5 and official5/5 each. Decode60.2806/60.3149/60.1165 tok/s; on/main -0.2722%. Formal20 on stopped after9/20 tasks at battery79%; off/main not run.",
+    "validation": "Native/full-model gates, 59 CPU harness tests, 32 managed chat tests, actual Pi fault-path tests and AOT package verified. Pilot request coverage22/22,26/26,16/16. Automatic cleanup error retained; parent restored unchanged original definition/hashes, pre-existing ready=false remains.",
+    "conclusion": "No demonstrated pilot decoding gain for 515.3125 MiB extra layout payload. Formal20 comparison Not Obtained; keep default off and unmerged. Repaired API retains genuine error usage.",
+    "next": "Review cleanup-only follow-up and design a pre-registered power schedule that can finish all comparable20-task arms. Preserve all failed and interrupted evidence.",
+    "commands": [
+      "bash scripts/check-metal-lmhead.sh --cpu NEW_LOCAL_OUTPUT_DIRECTORY",
+      "bash scripts/check-metal-lmhead.sh --compile NEW_LOCAL_OUTPUT_DIRECTORY"
+    ],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/103; code PR #104; results PR #105; docs/evaluations/issue103/stream-repaired-trial-summary.json; previous failures retained."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
