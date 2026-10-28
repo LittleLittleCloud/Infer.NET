@@ -143,7 +143,12 @@ scheduling; it is not silently mixed with clean application throughput.
 
 The observer adapts the pinned #98 collector, removing speculation fields and
 making both coordinators controller-owned. All arms use two identical loopback
-hops. Standard summary inputs are explicitly labeled
+hops. Before any request, observer readiness waits for the cloned registration to be
+healthy, explicitly accepting requests, advertising the requested chat-v1 model
+and an inference-capable Metal device, with the verified arm's worker ID/PID/build.
+`ready-registration.json` retains only sanitized identity/eligibility fields;
+readiness never probes or retries inference.
+Standard summary inputs are explicitly labeled
 `ServiceEvent.result.timings`, converted to the pinned `INFERENCE_METRIC` schema;
 they are **not fabricated native worker logs**. Worker decode sums N-1 intervals,
 not per-request rate averages. Pi counts, worker counts, delivered raw fixed

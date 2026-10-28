@@ -509,6 +509,49 @@ class ObserverLoopbackTests(unittest.TestCase):
                 self.assertEqual(process.returncode, 0)
 
 
+class ObserverReadinessTests(unittest.TestCase):
+    def setUp(self):
+        self.health = {"pid": 42, "build": "0.3.0+" + "a" * 40}
+        self.registration = {
+            "workerId": "issue103-on", "endpoint": "http://private.invalid:9000",
+            "telemetry": {"acceptingRequests": True, **self.health,
+                          "lastRequest": {"timings": {"decodeMs": 123}}},
+            "devices": [{"backend": "metal", "supportsInference": True}],
+            "models": [{"id": controller.MODEL, "format": "mlx-qwen36-affine-chat-v1"}],
+        }
+        self.snapshot = {"workers": [{"healthy": True, "registration": self.registration}]}
+
+    def test_loading_registration_waits_for_acceptance_and_evidence_is_sanitized(self):
+        self.registration["telemetry"]["acceptingRequests"] = False
+        self.assertIsNone(controller.ready_registration(self.snapshot, "issue103-on", self.health))
+        self.registration["telemetry"]["acceptingRequests"] = True
+        evidence = controller.ready_registration(self.snapshot, "issue103-on", self.health)
+        self.assertEqual(evidence, {
+            "workerId": "issue103-on", "healthy": True,
+            "telemetry": {"acceptingRequests": True, **self.health},
+            "devices": [{"backend": "metal", "supportsInference": True}],
+            "models": [{"id": controller.MODEL, "format": "mlx-qwen36-affine-chat-v1"}],
+        })
+
+    def test_ineligible_or_wrong_arm_registration_cannot_pass(self):
+        for target, key, value in (
+                (self.snapshot["workers"][0], "healthy", False),
+                (self.registration, "workerId", "issue103-off"),
+                (self.registration["telemetry"], "acceptingRequests", None),
+                (self.registration["telemetry"], "pid", 43),
+                (self.registration["telemetry"], "build", "0.3.0+" + "b" * 40),
+                (self.registration["devices"][0], "backend", "cuda"),
+                (self.registration["devices"][0], "supportsInference", False),
+                (self.registration["models"][0], "id", "wrong-model"),
+                (self.registration["models"][0], "format", "mlx-qwen36-affine"),
+                (self.registration, "telemetry", None)):
+            with self.subTest(key=key, value=value), patch.dict(target, {key: value}):
+                self.assertIsNone(controller.ready_registration(self.snapshot, "issue103-on", self.health))
+        for workers in ([], self.snapshot["workers"] * 2):
+            with self.subTest(workers=len(workers)):
+                self.assertIsNone(controller.ready_registration({"workers": workers}, "issue103-on", self.health))
+
+
 class SafetyTests(unittest.TestCase):
     def test_child_start_waits_for_complete_identity_to_stabilize(self):
         with tempfile.TemporaryDirectory() as temp:

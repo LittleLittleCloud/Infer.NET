@@ -108,6 +108,28 @@ def native_profile(log):
     return text
 
 
+def ready_registration(snapshot, worker_id, health):
+    workers = snapshot.get("workers") or []
+    if len(workers) != 1 or workers[0].get("healthy") is not True:
+        return None
+    registration = workers[0].get("registration") or {}
+    telemetry = registration.get("telemetry") or {}
+    if (registration.get("workerId") != worker_id or telemetry.get("acceptingRequests") is not True or
+            telemetry.get("pid") != health["pid"] or telemetry.get("build") != health["build"]):
+        return None
+    devices = [{"backend": d["backend"], "supportsInference": True}
+               for d in registration.get("devices", [])
+               if d.get("backend") == "metal" and d.get("supportsInference") is True]
+    models = [{"id": m["id"], "format": m["format"]}
+              for m in registration.get("models", [])
+              if m.get("id") == MODEL and m.get("format", "").endswith("-chat-v1")]
+    if not devices or not models:
+        return None
+    return {"workerId": worker_id, "healthy": True,
+            "telemetry": {"acceptingRequests": True, "pid": telemetry["pid"], "build": telemetry["build"]},
+            "devices": devices, "models": models}
+
+
 def official_controls(module, dataset, out):
     stage = out / "official-controls"
     stage.mkdir()
@@ -478,7 +500,8 @@ class Controller:
 
         self.wait(ready, 900, "Worker load/warm readiness timeout")
         h = self.health()
-        require(h["build"].split("+")[-1] == expected and h["revision"] == REVISION and h["kv"] == "fp32" and h["weightBits"] == 8,
+        require(h["pid"] == self.worker.pid and h["build"].split("+")[-1] == expected and
+                h["revision"] == REVISION and h["kv"] == "fp32" and h["weightBits"] == 8,
                 "Actual runtime model/build/precision mismatch")
         require(h.get("maxContextTokens", 0) >= max(n + m for n, m in SHAPES) and
                 h.get("maxOutputTokens", 0) >= 4096, "Runtime capacity does not cover approved long fixed requests")
@@ -505,9 +528,13 @@ class Controller:
                 if code != 200 or not status.get("ready") or status.get("fatal"):
                     return False
                 code, registry = http(self.endpoint + "/v1/workers", self.token)
-                return code == 200 and len(registry["workers"]) == 1 and registry["workers"][0].get("healthy")
+                evidence = ready_registration(registry, conf["id"], h) if code == 200 else None
             except (OSError, ValueError):
                 return False
+            if evidence is None:
+                return False
+            save(out / "ready-registration.json", {"utc": stamp(), **evidence})
+            return True
 
         self.wait(observer_ready, 60, "Two-hop observer readiness timeout")
         self.active_out = out

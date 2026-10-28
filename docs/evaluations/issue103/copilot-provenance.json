@@ -60,5 +60,17 @@
       "session.jsonl": "68c83145666ffd2a251716740969860bee10dd54c2d52d178659434283574820",
       "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
     }
+  },
+  "readyRegistrationFix": {
+    "model": "gpt-6.1-sol",
+    "provider": "copilot",
+    "noSubagents": true,
+    "scope": "Wait for actually eligible cloned registration before any request; inference unchanged",
+    "files": {
+      "prompt.txt": "374d96ad81ac6992573a12fc85d82c949e033e6730af8fb1746119a445c7421e",
+      "usage.json": "83f348944f679ae193c497a7c91a14133aa92385d17911f84c526d5bb8df2709",
+      "session.jsonl": "bd6b2851831bd2908e75090b2c7058ca4c0524f5a221e80f9e07c001fb7442d5",
+      "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+    }
   }
 }
