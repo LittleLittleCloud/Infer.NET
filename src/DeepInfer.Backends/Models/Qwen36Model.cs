@@ -23,6 +23,12 @@ public sealed class Qwen36Model : IInferenceModel
         if (!allowDiagnosticRouting && Environment.GetEnvironmentVariable("DEEPINFER_GRAPH_FORCE_ROUTES") is not null)
             throw new NotSupportedException("Forced routing is for explicit numerical verification only; unavailable in normal inference workers.");
         if (info.Id != Protocol.Qwen36Model || info.IsSimulation || info.Format != "mlx-qwen36-affine") throw new NotSupportedException("Expected quantized Qwen3.6 text weights.");
+        if (Qwen36Gpu.ReadLmHeadMode() != 0 &&
+            (Environment.GetEnvironmentVariable("DEEPINFER_METAL_SERIAL") == "1" ||
+             Environment.GetEnvironmentVariable("DEEPINFER_METAL_EXPERT_UNFUSED") == "1" ||
+             Environment.GetEnvironmentVariable("DEEPINFER_METAL_GENERIC") == "1" ||
+             Environment.GetEnvironmentVariable("DEEPINFER_METAL_HOST_EXECUTOR") == "1"))
+            throw new NotSupportedException("tile4 LM head requires the native GPU graph executor.");
         Info = info; device = new(batchSubmissions: Environment.GetEnvironmentVariable("DEEPINFER_METAL_SERIAL") != "1");
         fuseExperts = device.BatchSubmissions && Environment.GetEnvironmentVariable("DEEPINFER_METAL_EXPERT_UNFUSED") != "1";
         try
