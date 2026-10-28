@@ -15,7 +15,7 @@ import threading
 import time
 from urllib.parse import urlsplit
 
-from issue103_common import append, http, new_output, read_json, require, save, stamp, vm_snapshot
+from issue103_common import append, http as json_http, new_output, read_json, require, save, stamp, vm_snapshot
 from pathlib import Path
 
 
@@ -220,11 +220,11 @@ def main():
         def heartbeat():
             while not stop.is_set():
                 try:
-                    code, snapshot = http(registry.geturl() + "/v1/workers", token)
+                    code, snapshot = json_http(registry.geturl() + "/v1/workers", token)
                     require(code == 200 and len(snapshot["workers"]) == 1, "Observer registry coverage")
                     registration = snapshot["workers"][0]["registration"]
                     registration["endpoint"] = f"http://127.0.0.1:{args.inner_port}"
-                    code, _ = http(clone.geturl() + "/v1/workers/register", token, registration)
+                    code, _ = json_http(clone.geturl() + "/v1/workers/register", token, registration)
                     require(code == 204, "Observer registration rejected")
                     state["registered"] = True
                 except Exception as ex:

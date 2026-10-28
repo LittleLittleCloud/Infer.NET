@@ -20,7 +20,7 @@ needs a **new, nonexisting** output directory under this checkout's ignored
 Pi output and recovery commands remain local-only. Never publish raw directories.
 
 ```sh
-# Safe: CPU only, no services, Docker containers, model or GPU.
+# Safe: CPU only, owned Python children/loopback fakes; no real services, Docker, model or GPU.
 python3 scripts/test-lmhead-evaluation.py -v
 python3 -m py_compile scripts/issue103_common.py scripts/*lmhead*.py
 dotnet build DeepInfer.slnx --no-restore
@@ -169,7 +169,14 @@ loopback-only; Windows cannot attach to them.
 Every exception/SIGINT/SIGTERM/SIGHUP passes through cleanup/restoration.
 Only recorded child identities are signaled, with bounded graceful waits and
 specific-PID escalation. Pi gets SIGINT so its established harness cleans up its
-own process tree. After cleanup/quiescence, bootstrap the unchanged original
+own process tree. Startup records three matching full process identities,
+sampling 50 ms apart with a two-second stabilization deadline to accommodate
+launcher re-exec. Sampling never polls/reaps the child, preventing PID reuse;
+subsequent cleanup still requires exact PID, start time, executable and full
+arguments. CPU regressions exercise real Python spawn/cleanup and two-hop fake
+HTTP discovery/registration, GET forwarding and SSE timing/token collection;
+only the observer resource sampler is synthetic.
+After cleanup/quiescence, bootstrap the unchanged original
 definition, verify hashes/process identity and poll health plus authenticated
 ready. A real request is attempted only if ready; report success only if it
 actually succeeds. The parent recorded original state Ready but `ready=false`;

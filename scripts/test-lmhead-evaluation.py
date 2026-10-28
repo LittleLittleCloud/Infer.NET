@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
-"""CPU/synthetic-only checks. Never starts a model, HTTP service, Docker or GPU."""
+"""CPU-only checks with owned subprocesses and loopback fake HTTP, never models/GPU."""
+import contextlib
 import copy
 import datetime as dt
+import hashlib
+from http.client import HTTPConnection
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import importlib.util
 import json
 from pathlib import Path
 import signal
+import socket
+import struct
 import subprocess
 import sys
 import tempfile
 import threading
+import time
 import types
 import unittest
 from unittest.mock import Mock, patch
@@ -316,7 +323,253 @@ class MetricsTests(unittest.TestCase):
         self.assertTrue(common.reconcile([task([observed])], [observed], common.MAIN)["metrics"]["complete"])
 
 
+class ObserverLoopbackTests(unittest.TestCase):
+    def test_real_two_hop_discovery_get_and_sse_timings(self):
+        token = "cpu-only-fake-token"
+        registration = {"workerId": "cpu-fake", "endpoint": "unused", "capabilities": ["fake"]}
+        timings = {"prefillMs": 12.5, "decodeMs": 7.5, "decodeTokens": 1}
+        events = [{"heartbeat": True}, {"tokenId": 0}, {"tokenId": 42},
+                  {"result": {"requestId": "cpu-request", "promptTokens": 7, "tokenIds": [0, 42],
+                              "timings": timings, "executionPath": "cpu-fake", "finishReason": "stop"}}]
+        stream = b"".join(b"data: " + json.dumps(event).encode() + b"\n\n" for event in events)
+        stream += b"data: [DONE]\n\n"
+        calls, registrations = [], []
+        lock = threading.Lock()
+
+        class FakeHandler(BaseHTTPRequestHandler):
+            protocol_version = "HTTP/1.1"
+
+            def log_message(self, *_):
+                pass
+
+            def reply(self, status, body=b"", content_type="application/json"):
+                self.send_response(status)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                self.wfile.flush()
+
+            def do_GET(self):
+                self.dispatch()
+
+            def do_POST(self):
+                self.dispatch()
+
+            def dispatch(self):
+                body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+                with lock:
+                    calls.append((self.server.role, self.command, self.path,
+                                  self.headers.get("X-DeepInfer-Token"), body))
+                if self.headers.get("X-DeepInfer-Token") != token:
+                    self.reply(403, b"{}")
+                elif self.server.role == "registry" and self.path == "/v1/workers":
+                    self.reply(200, json.dumps({"workers": [{"registration": registration}]}).encode())
+                elif self.server.role == "clone" and self.path == "/v1/workers/register":
+                    with lock:
+                        registrations.append(json.loads(body))
+                    self.reply(204)
+                elif self.server.role == "clone":
+                    with lock:
+                        endpoint = registrations[-1]["endpoint"]
+                    target = observer.loopback(endpoint)
+                    conn = HTTPConnection(target.hostname, target.port, timeout=5)
+                    try:
+                        conn.request(self.command, self.path, body or None,
+                                     {"Content-Type": self.headers.get("Content-Type", "application/json"),
+                                      "X-DeepInfer-Token": self.headers["X-DeepInfer-Token"]})
+                        response = conn.getresponse()
+                        self.send_response(response.status)
+                        self.send_header("Content-Type", response.getheader("Content-Type"))
+                        self.send_header("Connection", "close")
+                        self.end_headers()
+                        self.close_connection = True
+                        for line in iter(response.readline, b""):
+                            self.wfile.write(line)
+                            self.wfile.flush()
+                    finally:
+                        conn.close()
+                elif self.server.role == "worker" and self.path == "/v1/models?cpu=1":
+                    self.reply(200, b'{"data":[{"id":"cpu-fake"}]}')
+                elif self.server.role == "worker" and self.path == "/v1/infer/stream":
+                    self.reply(200, stream, "text/event-stream")
+                else:
+                    self.reply(404, b"{}")
+
+        @contextlib.contextmanager
+        def serve(role):
+            server = ThreadingHTTPServer(("127.0.0.1", 0), FakeHandler)
+            server.role, server.daemon_threads = role, True
+            thread = threading.Thread(target=server.serve_forever)
+            thread.start()
+            try:
+                yield server
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=5)
+                self.assertFalse(thread.is_alive())
+
+        root = HERE.parent
+        (root / "artifacts").mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="issue103-observer-cpu-", dir=root / "artifacts") as temp, \
+                serve("registry") as registry, serve("clone") as clone, serve("worker") as worker:
+            run = Path(temp)
+            (run / "token").write_text(token)
+            common.save(run / "coordinator.json",
+                        {"listen": f"http://127.0.0.1:{registry.server_port}", "token-file": str(run / "token")})
+            common.save(run / "worker.json", {"listen": f"http://127.0.0.1:{worker.server_port}"})
+            with socket.socket() as outer_socket, socket.socket() as inner_socket:
+                outer_socket.bind(("127.0.0.1", 0))
+                inner_socket.bind(("127.0.0.1", 0))
+                outer_port, inner_port = outer_socket.getsockname()[1], inner_socket.getsockname()[1]
+            # Only the OS resource sampler is synthetic; imports, HTTP and the observer are real.
+            wrapper = ("import runpy, sys, issue103_common as c; "
+                       "c.vm_snapshot = lambda: {'utc': c.stamp(), 'swapOutBytes': 0}; "
+                       "sys.argv = sys.argv[1:]; runpy.run_path(sys.argv[0], run_name='__main__')")
+            with (run / "observer.log").open("x") as log:
+                process = subprocess.Popen(
+                    [sys.executable, "-u", "-c", wrapper, str(HERE / "observe-lmhead-e2e.py"),
+                     "--config-dir", str(run), "--outer-port", str(outer_port),
+                     "--inner-port", str(inner_port), "--clone-port", str(clone.server_port),
+                     "--output", str(run / "observer")], cwd=HERE, stdout=log, stderr=subprocess.STDOUT)
+                try:
+                    endpoint = f"http://127.0.0.1:{outer_port}"
+                    ready = False
+                    deadline = time.monotonic() + 8
+                    while time.monotonic() < deadline:
+                        self.assertIsNone(process.poll(), (run / "observer.log").read_text())
+                        try:
+                            code, status = common.http(endpoint + "/observer/health", token, timeout=.5)
+                        except (common.urllib.error.URLError, TimeoutError):
+                            time.sleep(.02)
+                            continue
+                        if code == 200 and status["ready"]:
+                            self.assertIsNone(status["fatal"])
+                            ready = True
+                            break
+                        time.sleep(.02)
+                    self.assertTrue(ready, "Real observer discovery/registration did not become ready")
+                    with lock:
+                        self.assertEqual(registrations[0], dict(registration, endpoint=f"http://127.0.0.1:{inner_port}"))
+                    conn = HTTPConnection("127.0.0.1", outer_port, timeout=5)
+                    try:
+                        conn.request("GET", "/v1/models?cpu=1", headers={"X-DeepInfer-Token": token})
+                        response = conn.getresponse()
+                        self.assertEqual(response.status, 200,
+                                         common.rows(run / "observer/transport-errors.jsonl"))
+                        self.assertEqual(json.loads(response.read()), {"data": [{"id": "cpu-fake"}]})
+                    finally:
+                        conn.close()
+                    conn = HTTPConnection("127.0.0.1", outer_port, timeout=5)
+                    payload = b'{"input":"cpu-only-fake","maxTokens":2}'
+                    try:
+                        conn.request("POST", "/v1/infer/stream", payload,
+                                     {"Content-Type": "application/json", "X-DeepInfer-Token": token})
+                        response = conn.getresponse()
+                        self.assertEqual(response.status, 200)
+                        self.assertEqual(response.getheader("Content-Type"), "text/event-stream")
+                        self.assertEqual(response.read(), stream)
+                    finally:
+                        conn.close()
+                    requests = []
+                    deadline = time.monotonic() + 5
+                    while not requests and time.monotonic() < deadline:
+                        requests = common.rows(run / "observer/requests.jsonl", partial=True)
+                        time.sleep(.02)
+                    self.assertEqual(len(requests), 1)
+                    row = requests[0]
+                    self.assertEqual((row["outcome"], row["httpStatus"]), ("completed", 200))
+                    self.assertEqual((row["inputTokens"], row["outputTokens"]), (7, 2))
+                    self.assertEqual(row["workerResult"]["timings"], timings)
+                    self.assertEqual(row["workerResult"]["requestId"], "cpu-request")
+                    self.assertEqual(row["workerResult"]["tokenIdsSha256"],
+                                     hashlib.sha256(struct.pack("<ii", 0, 42)).hexdigest())
+                    self.assertTrue(row["firstTokenReceived"])
+                    self.assertEqual(len(row["nativeTokenReceiptMs"]), 2)
+                    self.assertGreater(row["clientTtftMs"], 0)
+                    self.assertEqual(row["clientTtftMs"], row["nativeTokenReceiptMs"][0])
+                    self.assertLessEqual(row["nativeTokenReceiptMs"][0], row["nativeTokenReceiptMs"][1])
+                    self.assertLessEqual(row["nativeTokenReceiptMs"][-1], row["observedSeconds"] * 1000)
+                    self.assertEqual(row["newSwapOutBytes"], 0)
+                    with lock:
+                        for role in ("clone", "worker"):
+                            self.assertIn((role, "GET", "/v1/models?cpu=1", token, b""), calls)
+                            self.assertIn((role, "POST", "/v1/infer/stream", token, payload), calls)
+                    for filename in ("transport-errors.jsonl", "registration-errors.jsonl", "fatal.jsonl"):
+                        self.assertFalse((run / "observer" / filename).exists(), filename)
+                finally:
+                    if process.poll() is None:
+                        process.terminate()
+                        try:
+                            process.wait(timeout=10)
+                        except subprocess.TimeoutExpired:
+                            process.kill()
+                            process.wait(timeout=5)
+                self.assertEqual(process.returncode, 0)
+
+
 class SafetyTests(unittest.TestCase):
+    def test_child_start_waits_for_complete_identity_to_stabilize(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            process = Mock(pid=42)
+            launcher = {"pid": 42, "comm": "/launcher/python3", "args": "/real/Python -c owned",
+                        "lstart": "same"}
+            stable = dict(launcher, comm="/real/Python")
+            with patch.object(common.subprocess, "Popen", return_value=process), \
+                    patch.object(common, "identity", side_effect=[launcher, stable, stable, stable]) as probe:
+                children.start(["cpu-only"], Path(temp) / "raw.log")
+            self.assertEqual(probe.call_count, 4)
+            process.poll.assert_not_called()
+            self.assertEqual(children.items, [(process, stable)])
+            self.assertEqual(common.rows(Path(temp) / "children.jsonl")[0]["comm"], stable["comm"])
+            process.poll.return_value = 0
+            children.cleanup()
+
+    def test_unstable_child_start_is_bounded_and_cleans_up_unreaped_child(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            process = Mock(pid=42)
+            process.poll.return_value = None
+            first = {"pid": 42, "comm": "launcher", "args": "owned", "lstart": "same"}
+            with patch.object(common.subprocess, "Popen", return_value=process), \
+                    patch.object(common, "identity", side_effect=[first, dict(first, comm="real")]), \
+                    patch.object(common.time, "monotonic", side_effect=[0, 0, 3]), \
+                    patch.object(common.time, "sleep"), \
+                    self.assertRaisesRegex(common.GateError, "stabilize"):
+                children.start(["cpu-only"], Path(temp) / "raw.log")
+            process.terminate.assert_called_once()
+            process.wait.assert_called_once()
+            self.assertEqual(children.items, [])
+            children.cleanup()
+
+    def test_real_python_child_start_and_identity_checked_cleanup(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            process = None
+            log = Path(temp) / "python.log"
+            try:
+                process = children.start(
+                    [sys.executable, "-u", "-c", "import time; print('ready'); time.sleep(60)"], log)
+                deadline = time.monotonic() + 5
+                while "ready" not in log.read_text() and time.monotonic() < deadline:
+                    self.assertIsNone(process.poll())
+                    time.sleep(.02)
+                self.assertIn("ready", log.read_text())
+                record = children.items[0][1]
+                self.assertTrue(common.same_identity(record, common.identity(process.pid)))
+                children.cleanup()
+                self.assertIsNotNone(process.returncode)
+                self.assertEqual(children.items, [])
+                self.assertEqual(children.logs, [])
+            finally:
+                if process is not None and process.poll() is None:
+                    # This Popen has not been reaped; its PID cannot be reused.
+                    process.kill()
+                    process.wait(timeout=5)
+                children.cleanup()
+
     def test_live_swap_limit_excludes_only_declared_warmup(self):
         for phase in ("steady", "warmup"):
             with self.subTest(phase=phase), tempfile.TemporaryDirectory() as temp:
@@ -404,6 +657,28 @@ class SafetyTests(unittest.TestCase):
         with self.assertRaises(common.GateError):
             common.stop_owned(process, expected, probe=lambda _: dict(expected, lstart="reused"))
         process.send_signal.assert_not_called()
+        process.kill.assert_not_called()
+
+    def test_stable_child_executable_or_arguments_change_is_never_signalled(self):
+        expected = {"pid": 42, "comm": "python", "args": "owned", "lstart": "same"}
+        for field in ("comm", "args"):
+            with self.subTest(field=field):
+                process = Mock(pid=42, args=["owned"])
+                process.poll.return_value = None
+                with self.assertRaises(common.GateError):
+                    common.stop_owned(process, expected, probe=lambda _: dict(expected, **{field: "changed"}))
+                process.send_signal.assert_not_called()
+                process.kill.assert_not_called()
+
+    def test_reused_child_pid_is_never_signalled_during_escalation(self):
+        process = Mock(pid=42, args=["owned"])
+        process.poll.return_value = None
+        process.wait.side_effect = subprocess.TimeoutExpired("owned", 1)
+        expected = {"pid": 42, "comm": "python", "args": "owned", "lstart": "old"}
+        probe = Mock(side_effect=[expected, dict(expected, lstart="reused")])
+        with self.assertRaises(common.GateError):
+            common.stop_owned(process, expected, probe=probe, timeout=1)
+        process.send_signal.assert_called_once_with(signal.SIGTERM)
         process.kill.assert_not_called()
 
     def test_bounded_owned_cleanup_escalates_only_same_identity(self):

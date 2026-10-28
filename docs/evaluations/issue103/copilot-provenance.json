@@ -48,5 +48,17 @@
       "session.jsonl": "177ba579ea2a8e280e2bf1e8b4209ba55029673caeede3da559cb2927fc989b5",
       "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
     }
+  },
+  "observerStartupFix": {
+    "model": "gpt-6.1-sol",
+    "provider": "copilot",
+    "noSubagents": true,
+    "scope": "Observer import shadowing and bounded child identity stabilization; inference unchanged",
+    "files": {
+      "prompt.txt": "5c918569082f916978107c4a1b7937954ba99dfe7f8b8c98b60384277703b449",
+      "usage.json": "baebc01a76b7bd6d82c73a8f90ea963dd259028e8e3572969d1b562ae0a27592",
+      "session.jsonl": "68c83145666ffd2a251716740969860bee10dd54c2d52d178659434283574820",
+      "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+    }
   }
 }

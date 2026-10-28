@@ -192,7 +192,20 @@ class Children:
         self.logs.append(handle)
         process = subprocess.Popen([str(x) for x in args], stdout=handle, stderr=subprocess.STDOUT, **kwargs)
         try:
-            record = identity(process.pid)
+            deadline, previous, stable_samples = time.monotonic() + 2, None, 0
+            while True:
+                # Do not poll/reap during sampling: a launcher can exec, but
+                # this unreaped Popen child's PID cannot have been reused.
+                record = identity(process.pid)
+                require(record["pid"] == process.pid and
+                        (previous is None or record["lstart"] == previous["lstart"]),
+                        "Child PID/start identity changed during startup")
+                require(time.monotonic() < deadline, "Child identity did not stabilize")
+                stable_samples = stable_samples + 1 if previous and same_identity(previous, record) else 1
+                if stable_samples == 3:
+                    break
+                previous = record
+                time.sleep(.05)
         except (GateError, subprocess.SubprocessError):
             if process.poll() is None:
                 # The Popen child has not been reaped; its PID cannot have
