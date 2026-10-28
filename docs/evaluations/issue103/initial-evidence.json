@@ -76,6 +76,73 @@
       "relativeLocalPath": "control/implementation-prompt.txt",
       "sha256": "ae811396859786a0e82a188fbf31724339df5c9fdc07da1b482fc329078ffa72",
       "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "control/evaluation-usage.json",
+      "sha256": "a4cfa91909833cf1df74ec607202bba4e4d85cf76910e6b8542c1a6e8c87f5f5",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "control/evaluation-exit.json",
+      "sha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "harness-implementation-final-02/cpu-tests.log",
+      "sha256": "5e326eb348155260693061b94e7042303a0f303c3afeea848453b5d783532c68",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "package-f595ddf/0.log",
+      "sha256": "682a3cfc6fbb93c7e5f6a9e9661ff66b6784b750af3a122b0da96168ddcb20bd",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "package-f595ddf/1.log",
+      "sha256": "827707ca1b0c8a5fc971712e1b8abf3a903c9c4b92696806b63e6c446cf1ab87",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "package-f595ddf/2.log",
+      "sha256": "214826ac9bbd92d99b156345e32e7aab0f21a8acdc0fd60c5c11fa9417a6b99c",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "preflight-f595ddf-20261027/preflight.json",
+      "sha256": "4d2f6204534146de81dfc0887efa5017448fefe8ed28b91fd9f2a8fc081789b7",
+      "access": "Restricted local-only artifact, not a public download"
     }
-  ]
+  ],
+  "preparedCandidateSource": "f595ddf672579143683ea2e12e08c0fd586bed61",
+  "preparedPackages": {
+    "main": {
+      "source": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "version": "0.3.0+4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "manifestSha256": "44a04d51a6a7089a6d8ab158fb11c92cb11d5402a3253b231a4dee3ecb7af715",
+      "executableSha256": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+      "nativeSha256": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+    },
+    "candidate": {
+      "source": "f595ddf672579143683ea2e12e08c0fd586bed61",
+      "version": "0.3.0+f595ddf672579143683ea2e12e08c0fd586bed61",
+      "manifestSha256": "ea19a44d8ea4538e9ca602c03afeee403e2dcdb80031d2a0607fa6d43f045626",
+      "executableSha256": "91b6f00d4b66b60c49ba288633dd2d688fab55ee942b43832db1e974e671933d",
+      "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+    }
+  },
+  "readOnlyPreflight": {
+    "utc": "2026-10-28T00:25:09.265692+00:00",
+    "sourceClean": true,
+    "blockers": [
+      "140W AC supply not verified",
+      "fresh parent High Power evidence missing"
+    ],
+    "serviceMutation": false,
+    "modelInference": false
+  },
+  "harnessCpuTests": {
+    "passed": 32,
+    "total": 32,
+    "doesNotEstablishLiveAcceptance": true
+  }
 }

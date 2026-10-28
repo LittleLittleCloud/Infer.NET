@@ -4,6 +4,8 @@ The candidate passed the native operator checks described below. **Decoding impr
 
 - Experiment: [Issue #103](https://github.com/LittleLittleCloud/Infer.NET/issues/103).
 - Candidate: [code PR #104](https://github.com/LittleLittleCloud/Infer.NET/pull/104), default off and unmerged.
+- Independent [initial results PR #105](https://github.com/LittleLittleCloud/Infer.NET/pull/105).
+- Prepared candidate: `f595ddf672579143683ea2e12e08c0fd586bed61`.
 - Main baseline: `4f51f241e87999c8cc3f79d733cd95ade9c711cd`.
 - Native correctness source: `a13abd9c5b3dc37a74e39cbbf82fcb3eda0f92ba`.
 - Run: `gpu-correctness-20261027`, measured October 27, 2026, America/Los_Angeles.
@@ -53,4 +55,6 @@ No throughput trend point is created for these missing measurements. The impleme
 
 The original service remained build `0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb`. Bootstrap exited successfully, and its plist, worker configuration, executable and native-library hashes were unchanged. Health reported `state=Ready, ready=false` both before and after the check. No successful real-request restoration is claimed. The wired limit remained zero; the coordinator, Windows service and power settings were not changed.
 
-Next: verify the 140 W supply and fresh High Power evidence, freeze and verify the candidate package, execute full-model sequence/lifecycle gates, then the fixed controls and HumanEval5/20. Preserve this initial record when appending results. Until valid end-to-end data exist, keep the code unmerged and make no adoption recommendation.
+The candidate Native AOT package at `f595ddf672579143683ea2e12e08c0fd586bed61` built successfully and passed all nine file-hash checks. All 32 CPU/synthetic harness tests passed. The read-only preflight verified both packages, model files, fixtures, Pi, dataset and source-pinned tools; its remaining blockers were the 140 W supply and fresh High Power evidence. Neither a runtime model request nor a service mutation occurred during preflight. Package hashes and versions are in the sanitized evidence.
+
+Next: verify the 140 W supply and fresh High Power evidence, execute full-model sequence/lifecycle gates, then the fixed controls and HumanEval5/20. Preserve this initial record when appending results. Until valid end-to-end data exist, keep the code unmerged and make no adoption recommendation.
