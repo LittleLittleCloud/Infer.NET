@@ -1,6 +1,7 @@
 // Original fixed-geometry Qwen3.6 GPU executor. One submitted command buffer per
 // token; tensors, convolution history, recurrent state and KV remain on device.
 #include <array>
+#include "lmhead_affine8.mm"
 static NSString *graph_source = @R"metal(
 #include <metal_stdlib>
 using namespace metal;
@@ -229,6 +230,7 @@ struct GModel {
     QContext compute;
     std::array<id<MTLComputePipelineState>,GPCount> ps;
     QMatrix embedding{},classifier{};
+    LmHead lmHead;
     std::array<GLayer,40> layers;
     id<MTLBuffer> finalNorm,x,norm,attention,out,qkv,z,a,b,conv,q,k,v,router,ids,prob,sharedAct,sharedRoute,
         sharedOut,expertAct,expertOut,scores,logits,zero,trace;
@@ -292,6 +294,12 @@ static void g_gemv(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &m,id<MTLBuf
     [e dispatchThreadgroups:MTLSizeMake((m.rows+(small?0:c->rowTile-1))/(small?1:c->rowTile),experts?8:1,1) threadsPerThreadgroup:MTLSizeMake(small?32:c->rowTile*32,1,1)];g->dispatches++;
     g_profile_end(g,e);
 }
+static void g_classifier(GModel *g,id<MTLComputeCommandEncoder> e) {
+    if(!g->lmHead.mode){g_gemv(g,e,g->classifier,g->norm,g->logits);return;}
+    g_profile_begin(g,e,GPCount+2);
+    lmhead_encode(g->lmHead,e,g->norm,g->logits);g->dispatches++;
+    g_profile_end(g,e);
+}
 // Expert gate/up consumes one shared layer input, even with eight selected slots.
 static void g_gate_up(GModel *g,id<MTLComputeCommandEncoder> e,QMatrix &gate,QMatrix &up,id<MTLBuffer> out,bool selected){
     struct {uint32_t experts,rows,columns,bits,group,count,batched;} shape{gate.experts,gate.rows,gate.columns,gate.bits,gate.group,selected?8u:1u,0};
@@ -319,6 +327,30 @@ static void g_router(GModel *g,id<MTLComputeCommandEncoder> e,GLayer &l,GStep &s
     g_run(g,e,GMerge,1,256);g_barrier(e);
 }
 extern "C" {
+int di_graph_lmhead_configure(void *graph,int mode,char *error,int capacity) {
+    if(!graph){error_text(error,capacity,@"Missing LM head graph");return -1;}
+    auto *g=static_cast<GModel*>(graph);
+    bool loaded=false;for(auto &layer:g->layers)loaded|=layer.loaded;
+    if(g->position||g->prefill||loaded) {
+        error_text(error,capacity,@"Configure LM head before registering layers or preparing prefill");return -1;
+    }
+    if(!lmhead_prepare(g->lmHead,g->compute,g->classifier,mode,error,capacity))return -1;
+    bool alias=g->embedding.packed==g->classifier.packed&&g->embedding.scales==g->classifier.scales&&g->embedding.biases==g->classifier.biases;
+    fprintf(stderr,"LMHEAD requested=%s effective=%s layout=%s N=%u K=%u group=%u bits=%u extraPayloadBytes=%llu extraAllocatedBytes=%llu transientExtraPeakBytes=%llu scratchBytes=0 sourceAlias=%d batchedPrefill=original\n",
+        mode?"tile4":"off",mode?"tile4":"off",mode?"tile4-block256-lane32-octet8-v1":"original",
+        g->classifier.rows,g->classifier.columns,g->classifier.group,g->classifier.bits,
+        (unsigned long long)(mode?lmhead_affine8::Layout(lmhead_affine8::Rows).bytes:0),
+        (unsigned long long)g->lmHead.packed.allocatedSize,(unsigned long long)g->lmHead.packed.allocatedSize,alias);
+    return 0;
+}
+int di_graph_lmhead_info(void *graph,uint64_t *values,int count) {
+    if(!graph||!values||count!=6)return -1;
+    auto *g=static_cast<GModel*>(graph);
+    const uint64_t info[]={uint64_t(g->lmHead.mode),g->lmHead.packed.length,g->lmHead.packed.allocatedSize,
+        g->lmHead.packed.allocatedSize,0,uint64_t(g->embedding.packed==g->classifier.packed&&
+        g->embedding.scales==g->classifier.scales&&g->embedding.biases==g->classifier.biases)};
+    memcpy(values,info,sizeof(info));return 0;
+}
 void di_graph_destroy(void *p){delete static_cast<GModel*>(p);}
 void *di_graph_create(void *ctx,QMatrix *embedding,QMatrix *classifier,const float *norm,float epsilon,float theta,char *error,int capacity){
     @autoreleasepool {
@@ -443,7 +475,7 @@ int di_graph_forward(void *graph,int token,int position,int classifier,float *lo
             // The next input norm is at offset zero; final layer uses the final norm.
             g_router(g,e,l,s,index==39?g->finalNorm:g->layers[index+1].parameters);
         }
-        if(classifier){g_gemv(g,e,g->classifier,g->norm,g->logits);g_barrier(e);
+        if(classifier){g_classifier(g,e);g_barrier(e);
             g_bind(e,g->logits,0);g_bind(e,g->argValues,1);g_bind(e,g->argIds,2);g_run(g,e,GArgBlocks,970,32);g_barrier(e);
             g_bind(e,g->argValues,0);g_bind(e,g->argIds,1);g_bind(e,g->nextToken,2);g_run(g,e,GArgFinal,1,32);}
         [e endEncoding];if(!q_complete(command,ms,error,capacity))return -1;

@@ -1,0 +1,24 @@
+{
+  "sessionId": "bf2bd5ce-d879-40eb-85b5-4a180fbdaa15",
+  "model": "gpt-6.1-sol",
+  "cliVersion": "1.0.103",
+  "promptSha256": "ae811396859786a0e82a188fbf31724339df5c9fdc07da1b482fc329078ffa72",
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "actualProviderModels": [
+    {
+      "provider": {
+        "id": "copilot",
+        "label": "GitHub Copilot",
+        "kind": "copilot"
+      },
+      "modelId": "gpt-6.1-sol",
+      "displayName": "GPT-6.1 Sol",
+      "requests": 26
+    }
+  ],
+  "noSubagents": true,
+  "usageSha256": "3a843f80d801943ccec66c5c73668a14c6d2fe8909a2d710d38ed2bc5f6513a6",
+  "sessionLogSha256": "de764bd14e1abef29f0a68660ce25a086a1b2c99a2d48656c7c4400840b17143",
+  "scope": "Copilot authored candidate implementation/tests/docs; Codex researched, reviewed and coordinated. No GPU evaluation in this phase.",
+  "rawAvailability": "Restricted local artifacts; hashes only are public."
+}

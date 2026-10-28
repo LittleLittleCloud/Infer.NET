@@ -14,9 +14,16 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
     private readonly QuantizedMetal device;
     private readonly int prefillChunk = Environment.GetEnvironmentVariable("DEEPINFER_METAL_PREFILL_CHUNK") switch
     { "32" => 32, "64" => 64, "128" => 128, "256" => 256, "512" => 512, "1024" => 1024, _ => 2048 };
+    internal static int ReadLmHeadMode() => Environment.GetEnvironmentVariable("DEEPINFER_METAL_LMHEAD") switch
+    {
+        null or "off" => 0,
+        "tile4" => 1,
+        _ => throw new ArgumentException("DEEPINFER_METAL_LMHEAD must be off or tile4.")
+    };
     public Qwen36Gpu(QuantizedMetal device, Qwen36Weights weights, int prefillScratchTokens = 0)
     {
         this.device = device;
+        var lmHeadMode = ReadLmHeadMode();
         Span<byte> error = stackalloc byte[2048]; error.Clear();
         fixed (float* norm = weights.FinalNorm) fixed (byte* e = error)
         {
@@ -27,6 +34,9 @@ internal sealed unsafe class Qwen36Gpu : IDisposable
         }
         try
         {
+            fixed (byte* e = error)
+                if (GraphNative.LmHeadConfigure(handle, lmHeadMode, e, error.Length) != 0)
+                    throw new InvalidOperationException(Message(error));
             for (var index = 0; index < 40; index++)
             {
                 var w = weights.Blocks[index];
@@ -173,6 +183,8 @@ internal sealed class GraphHandle : SafeHandleZeroOrMinusOneIsInvalid
 }
 internal static unsafe partial class GraphNative
 {
+    [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_lmhead_configure")]
+    internal static partial int LmHeadConfigure(GraphHandle graph, int mode, byte* error, int capacity);
     [LibraryImport("deepinfer_metal", EntryPoint = "di_graph_prefill_range")]
     internal static partial int Range(GraphHandle graph, int* tokens, int count, int classifier, int begin, int end,
         float* hidden, float* output, float* logits, float* trace, out int nextToken, out int dispatches, out double ms, byte* error, int capacity);

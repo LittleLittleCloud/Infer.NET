@@ -1,5 +1,23 @@
 [
   {
+    "id": "lmhead-affine8-20261027",
+    "title": "LM-head affine8 tile-interleaved layout: planned evaluation",
+    "kind": "2026-10-27 · Issue #103 approved · Default-off implementation candidate",
+    "source": "docs/evaluations/issue103/implementation.md",
+    "question": "Can exact affine8/group64 LM-head packing and coordinated lane/input reuse improve decode without numerical or resource regression?",
+    "setup": "Fresh main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; pinned Qwen3.6-35B-A3B 8bit; Mac-only implementation by GitHub Copilot CLI 1.0.103 / GPT-6.1 Sol. GPU scheduling remains with the parent.",
+    "change": "One default-off tile4 layout/kernel; original checkpoint bits, FP32 arithmetic, batched prefill and vocabulary semantics retained. No other inference kernels or deployment settings changed.",
+    "result": "Not measured. No GPU dispatch or full-model inference in the implementation phase; no throughput trend point.",
+    "validation": "Independent CPU byte roundtrip/operator tests and native/managed/Metal compilation; GPU correctness, resource gates and performance remain pending.",
+    "conclusion": "Implementation candidate only; expected benefit is not a measured result and code is not adopted.",
+    "next": "Parent schedules exclusive GPU correctness and bounded microbenchmark; review/freeze before approved main/off/on HumanEval5 and fixed20 evaluation.",
+    "commands": [
+      "bash scripts/check-metal-lmhead.sh --cpu NEW_LOCAL_OUTPUT_DIRECTORY",
+      "bash scripts/check-metal-lmhead.sh --compile NEW_LOCAL_OUTPUT_DIRECTORY"
+    ],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/103; docs/evaluations/issue103/implementation.md; complete raw logs retained in local-only ignored artifacts/dual-host/issue103-lmhead-affine8/."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",
