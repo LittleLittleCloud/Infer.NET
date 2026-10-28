@@ -1,5 +1,23 @@
 [
   {
+    "id": "lmhead-affine8-20261027",
+    "title": "LM-head affine8 layout: native checks passed; end-to-end speed pending",
+    "kind": "2026-10-27 · Experiment #103 · Performance blocked on supply",
+    "source": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md",
+    "question": "Can exact affine8/group64 LM-head packing and coordinated lane/input reuse improve decode without numerical or resource regression?",
+    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; native correctness source a13abd9c5b3dc37a74e39cbbf82fcb3eda0f92ba; M5 Pro20GPU/48GB; 35 W, battery100%; synthetic correctness only.",
+    "change": "One default-off tile4 layout/kernel; original checkpoint bits, FP32 arithmetic, batched prefill and vocabulary semantics retained. No other inference kernels or deployment settings changed.",
+    "result": "63 small native cases bit-identical; full-vocabulary synthetic operator passes the independent numeric reference. HumanEval5/20 and fixed-shape speeds Not Obtained; no trend point.",
+    "validation": "CPU/compile and synthetic native GPU checks passed on a13abd9. Full-checkpoint sequences and performance gates remain pending. Original service definition and hashes restored; ready=false predated and followed the run.",
+    "conclusion": "No measured decoding improvement or adoption conclusion. The detected 35 W supply does not meet the registered 140 W performance condition.",
+    "next": "Verify adequate supply and fresh High Power evidence, freeze packages, run full-model gates and the approved main/off/on HumanEval5/20 comparison.",
+    "commands": [
+      "bash scripts/check-metal-lmhead.sh --cpu NEW_LOCAL_OUTPUT_DIRECTORY",
+      "bash scripts/check-metal-lmhead.sh --compile NEW_LOCAL_OUTPUT_DIRECTORY"
+    ],
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/103; code PR #104; docs/evaluations/issue103/initial-evidence.json; restricted local raw logs with public SHA256 inventory."
+  },
+  {
     "id": "speculative-decode-closeout-20261025",
     "title": "Speculative decoding closeout: retain evidence, reject unadopted code",
     "kind": "2026-10-25 · Session closed · Baseline unchanged",

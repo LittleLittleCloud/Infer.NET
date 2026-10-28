@@ -1,0 +1,81 @@
+{
+  "schema": "issue103-initial-evidence-v1",
+  "issue": 103,
+  "codePr": 104,
+  "baseline": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+  "nativeCorrectnessSource": "a13abd9c5b3dc37a74e39cbbf82fcb3eda0f92ba",
+  "runId": "gpu-correctness-20261027",
+  "measurementDateLocal": "2026-10-27",
+  "hardware": "Apple M5 Pro, 20 GPU cores, 48 GB unified memory",
+  "power": {
+    "adapterWatts": 35,
+    "batteryPercent": 100,
+    "performanceRunAdmitted": false
+  },
+  "operator": {
+    "exitCode": 0,
+    "smallCases": 63,
+    "smallCasesBitIdentical": true,
+    "realGeometry": {
+      "rows": 248320,
+      "columns": 2048,
+      "groupSize": 64
+    },
+    "originalVsReference": {
+      "relativeL2": 8.19919096e-07,
+      "maxAbsolute": 7.2479248e-05
+    },
+    "candidateVsReference": {
+      "relativeL2": 8.19919096e-07,
+      "maxAbsolute": 7.2479248e-05
+    },
+    "extraPayloadBytes": 540344320,
+    "candidateScratchBytes": 0,
+    "checkpointWeightsUsed": false
+  },
+  "performance": {
+    "humanEval5": null,
+    "humanEval20": null,
+    "fixedShapes": null,
+    "prefillTokensPerSecond": null,
+    "decodeTokensPerSecond": null,
+    "decodeChangePercent": null,
+    "officialPassRate": null
+  },
+  "restoration": {
+    "originalBuild": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+    "bootstrapExit": 0,
+    "hashesUnchanged": true,
+    "readyBefore": false,
+    "readyAfter": false,
+    "realRequestVerified": false,
+    "wiredLimit": 0
+  },
+  "evidence": [
+    {
+      "relativeLocalPath": "gpu-correctness-20261027/native/gpu-checks.log",
+      "sha256": "e60b1bd53fe9af466b5ed4e3ebb2d4946ddc1e9e331517aa80e0a882a654613c",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "gpu-correctness-20261027/result.json",
+      "sha256": "6dcec213cff0f980114bf469cf594e03ad011f39cda0ce677794abaea4d29719",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "gpu-correctness-20261027/restoration.json",
+      "sha256": "3187ba2ff51c6526e36f34610655fb7f4c32a1942ef10d8b4539cfa820f72a14",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "control/implementation-usage.json",
+      "sha256": "3a843f80d801943ccec66c5c73668a14c6d2fe8909a2d710d38ed2bc5f6513a6",
+      "access": "Restricted local-only artifact, not a public download"
+    },
+    {
+      "relativeLocalPath": "control/implementation-prompt.txt",
+      "sha256": "ae811396859786a0e82a188fbf31724339df5c9fdc07da1b482fc329078ffa72",
+      "access": "Restricted local-only artifact, not a public download"
+    }
+  ]
+}
