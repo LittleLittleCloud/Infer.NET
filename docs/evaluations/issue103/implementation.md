@@ -128,6 +128,62 @@ use `di_graph_lmhead_configure(graph, 0|1, error, capacity)` once, before
 registering layers; there is no separate native environment selector.
 An off native graph remains compatible with existing unconfigured callers.
 
+The evaluation-harness preparation found that `SplitService.Profile` cleared
+this managed selector before model construction. Its environment reset now
+preserves only `DEEPINFER_METAL_LMHEAD`; all other managed experimental settings
+retain their original reset behavior. This is required for `split-serve`
+candidate-on to reach the existing selector, not kernel retuning. The parent
+must freeze and package this correction before evaluation.
+
+## Prepared evaluation harness (not executed)
+
+The [harness README](../../../scripts/README-lmhead-evaluation.md) supplies
+concrete read-only preflight and explicitly exclusive execution commands,
+phase dependencies, fresh parent High Power evidence schema, all input/tool
+pins, recovery behavior and resource/metric limitations.
+
+`scripts/run-lmhead-evaluation.py` orchestrates gates/fixed/pilot/cohort without
+building packages. `observe-lmhead-e2e.py` preserves two identical observation
+hops for every arm and labels unchanged `ServiceEvent.result.timings`.
+`summarize-lmhead-evaluation.py` reconciles clocks/tokens against the pinned
+independent standard summarizer, retains failures/null metrics and reports
+predeclared comparisons without automatic adoption. `issue103_common.py`
+contains shared safety/metrics primitives; `test-lmhead-evaluation.py` exercises
+them with CPU-only synthetic/mock evidence, including the independent pinned
+summarizer on synthetic events. New output directories never overwrite runs.
+Private configuration and request evidence stay in ignored restricted output.
+
+No harness preflight/execution, GPU test, inference, Docker container, service
+operation or power change has run during this preparation. The streaming API
+does not expose full checkpoint logits/internal states: no such oracle is
+claimed. Independent native operator checks and exact full-model sequences,
+request reset/natural EOS/cancellation recovery remain mandatory scheduled
+gates. Historical input-token-ID manifests are pinned, but only actual input
+counts can be rechecked through this immutable API. Continuous physical
+residency/device high-water queries are unavailable; sampled device allocation,
+RSS and memory pressure are explicitly distinguished.
+
+Preparation validation commands (full raw logs remain in the ignored evidence
+root, with separate attempts):
+
+```sh
+python3 scripts/test-lmhead-evaluation.py -v
+python3 -m py_compile scripts/issue103_common.py scripts/*lmhead*.py
+python3 scripts/run-lmhead-evaluation.py --help
+python3 scripts/observe-lmhead-e2e.py --help
+python3 scripts/summarize-lmhead-evaluation.py --help
+dotnet build DeepInfer.slnx --no-restore
+git diff --check
+```
+
+The final harness CPU/synthetic suite passes **32/32**, including agreement
+with the pinned independent summarizer. Python compilation/CLI help and diff
+checks pass. The solution builds with zero warnings/errors. Complete logs and
+exit codes are retained in `harness-implementation-final-02/`,
+`harness-cli-final-02/` and `harness-build-02/` under the same local-only evidence
+root; earlier attempts remain intact. These checks do not establish live
+service recovery, GPU correctness, resource acceptance or measured speed.
+
 ## Validation and raw evidence
 
 All commands below are run from the repository root. Every script invocation

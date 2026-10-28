@@ -20,5 +20,21 @@
   "usageSha256": "3a843f80d801943ccec66c5c73668a14c6d2fe8909a2d710d38ed2bc5f6513a6",
   "sessionLogSha256": "de764bd14e1abef29f0a68660ce25a086a1b2c99a2d48656c7c4400840b17143",
   "scope": "Copilot authored candidate implementation/tests/docs; Codex researched, reviewed and coordinated. No GPU evaluation in this phase.",
-  "rawAvailability": "Restricted local artifacts; hashes only are public."
+  "rawAvailability": "Restricted local artifacts; hashes only are public.",
+  "evaluationHarnessPhase": {
+    "sessionId": "bf2bd5ce-d879-40eb-85b5-4a180fbdaa15",
+    "model": "gpt-6.1-sol",
+    "actualModelIds": [
+      "gpt-6.1-sol"
+    ],
+    "cumulativeSessionRequests": 74,
+    "noSubagents": true,
+    "files": {
+      "evaluation-prompt.txt": "f9274bf19cb29e774c9af73f7be2496a6fea0fa461b18c6e063fc246cce6f66f",
+      "evaluation-usage.json": "a4cfa91909833cf1df74ec607202bba4e4d85cf76910e6b8542c1a6e8c87f5f5",
+      "evaluation.jsonl": "e4ba86b7f07788f6298f08724d021d483ea06b63d6b49d18a62b4908f29a7c18",
+      "evaluation-exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+    },
+    "scope": "Copilot authored the evaluation controller, observer, summarizer and CPU tests, and the narrow SplitService selector preservation fix. No GPU or performance phase executed by Copilot."
+  }
 }

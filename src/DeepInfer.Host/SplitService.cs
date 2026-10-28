@@ -34,7 +34,8 @@ public static class SplitService
         // Keep the managed chunk policy; verify native precision before warming or accepting requests.
         if (o.Get("kv", "fp32") != "fp32") throw new ArgumentException("Deployment currently accepts only verified FP32 KV; BF16 remains experimental.");
         foreach (System.Collections.DictionaryEntry item in Environment.GetEnvironmentVariables())
-            if (item.Key is string key && key.StartsWith("DEEPINFER_METAL_", StringComparison.Ordinal) || item.Key is string k && k.StartsWith("DEEPINFER_GRAPH_", StringComparison.Ordinal))
+            if (item.Key is string key && key != "DEEPINFER_METAL_LMHEAD" &&
+                (key.StartsWith("DEEPINFER_METAL_", StringComparison.Ordinal) || key.StartsWith("DEEPINFER_GRAPH_", StringComparison.Ordinal)))
                 Environment.SetEnvironmentVariable((string)item.Key, null);
         var residency = o.Get("metal-residency", "on");
         if (residency is not ("on" or "off")) throw new ArgumentException("metal-residency must be on or off.");
