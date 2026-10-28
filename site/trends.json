@@ -50,6 +50,16 @@
       "sha": "c706064676ad5ad263ab23f146c285726167aa35",
       "committedAt": "2026-10-25T06:36:41Z",
       "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/c706064676ad5ad263ab23f146c285726167aa35"
+    },
+    {
+      "sha": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "committedAt": "2026-10-25T18:30:13Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+    },
+    {
+      "sha": "dee76d916361d4ad0d81cf44543cbee4b7a78488",
+      "committedAt": "2026-10-28T02:18:35Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dee76d916361d4ad0d81cf44543cbee4b7a78488"
     }
   ],
   "configurations": [
@@ -559,6 +569,36 @@
         "wall": "Pi task subprocess start to exit, including tools",
         "prefill": "Sum worker input tokens / sum ServiceEvent.result.timings.prefillMs; needed draft bootstrap included",
         "decode": "Sum(N-1)/sum worker decode seconds; all measured requests, failures retained",
+        "ttft": "client-send-to-first-valid-output-token"
+      },
+      "latestBaselineRun": null
+    },
+    {
+      "id": "issue103-lmhead-pilot35w",
+      "label": "Issue #103 · M5 Pro · HumanEval5 · exploratory 35 W LM-head trial",
+      "model": "qwen3.6-35b-a3b",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weights": "affine 8bit / group64",
+      "kv": "FP32",
+      "cache": "No prefix cache; cacheRead/cacheWrite = 0",
+      "chunking": "Managed prefill 32, native scratch 128, fused FP32 decode, threshold 262144; original affine8 LM head or opt-in tile4; no speculation",
+      "topology": "Single M5 Pro 20GPU/48GiB full local Metal; Windows absent",
+      "network": "Loopback; two observer hops; TTFT excludes Pi-to-observer dispatch",
+      "power": "35 W AC plus battery 100% to 91%; High Power UI verified; wired 0; exploratory, not stable 140 W acceptance",
+      "workload": "Pi 1.4.0 seed 0 fixed pilot 5, timeout 300 s, context 32768, output 4096; formal 20 not reached",
+      "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+      "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "plannedTasks": [
+        "HumanEval/156",
+        "HumanEval/94",
+        "HumanEval/72",
+        "HumanEval/80",
+        "HumanEval/149"
+      ],
+      "timing": {
+        "wall": "Pi task subprocess start to exit, including tools",
+        "prefill": "Worker clock; chart aggregate withheld for incomplete protocol",
+        "decode": "Worker N-1 clock; chart aggregate withheld for incomplete protocol",
         "ttft": "client-send-to-first-valid-output-token"
       },
       "latestBaselineRun": null
@@ -31610,6 +31650,288 @@
           "url": "docs/evaluations/issue80/evidence.json"
         }
       ]
+    },
+    {
+      "id": "issue103-pilot-main-35w",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-lmhead-pilot35w",
+      "title": "Issue #103 · main pilot 5 · incomplete 35 W trial",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "state": "failed",
+      "change": "Unchanged main baseline",
+      "result": "Official 5/5; Pi 4/5 with HumanEval/149 timeout. All 21 request clocks reconcile: diagnostic observed-request prefill 152.862 and decode 58.512 tok/s. Whole-protocol chart rates withheld.",
+      "provenance": {
+        "kind": "main",
+        "mainCommit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+      },
+      "baselineRunId": null,
+      "runtime": {
+        "coordinator": {
+          "commit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+        },
+        "macServe": {
+          "commit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+        }
+      },
+      "conditions": {
+        "power": "35 W exploratory battery-assisted; battery 100 to 91 across full run",
+        "integrity": "Official 5/5; Pi 4/5 with HumanEval/149 timeout. All 21 request clocks reconcile: diagnostic observed-request prefill 152.862 and decode 58.512 tok/s. Whole-protocol chart rates withheld.",
+        "quality": "Task status means official assertions only. Pi completion is 4/5 in both arms; see per-task piStatus and report.",
+        "timing": "Requests retained in public summary; chart prefill/decode/TTFT deliberately withheld for whole-protocol integrity. Main observed-request speed is diagnostic only.",
+        "adoption": "No measured gain; candidate-on performance and HumanEval20 not run; no adoption"
+      },
+      "binarySha256": {
+        "macExecutable": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+        "macMetalLibrary": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/battery-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "requestCount": 21,
+      "requests": null,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 51.5756,
+          "inputTokens": 6049,
+          "outputTokens": 745,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 65.92400699999999,
+          "inputTokens": 7346,
+          "outputTokens": 1109,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 51.93110816699999,
+          "inputTokens": 6314,
+          "outputTokens": 657,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 48.56958779200002,
+          "inputTokens": 5843,
+          "outputTokens": 622,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 300.01474370799997,
+          "inputTokens": 31841,
+          "outputTokens": 3195,
+          "modelRequests": 9,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "timeout",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        }
+      ],
+      "reportedTotals": {
+        "wallSeconds": 518.015046667,
+        "inputTokens": 57393,
+        "outputTokens": 6328,
+        "modelRequests": 21
+      },
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/battery-trial-summary.json",
+        "availability": "Restricted local raw artifacts; public sanitized request/task records and hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized evidence",
+          "url": "docs/evaluations/issue103/battery-trial-summary.json"
+        }
+      ],
+      "controllerCommit": "dee76d916361d4ad0d81cf44543cbee4b7a78488"
+    },
+    {
+      "id": "issue103-pilot-off-35w",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-lmhead-pilot35w",
+      "title": "Issue #103 · off pilot 5 · incomplete 35 W trial",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "dee76d916361d4ad0d81cf44543cbee4b7a78488",
+      "state": "failed",
+      "change": "Candidate-off control; tile4 disabled, zero extra allocation",
+      "result": "Official 5/5; Pi 4/5 with HumanEval/149 stream error. Worker 3645/151 versus Pi 0/0; no valid whole-arm speed. Experiment stopped before candidate-on and formal 20.",
+      "provenance": {
+        "kind": "candidate",
+        "mainCommit": null,
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dee76d916361d4ad0d81cf44543cbee4b7a78488"
+      },
+      "baselineRunId": "issue103-pilot-main-35w",
+      "runtime": {
+        "coordinator": {
+          "commit": "dee76d916361d4ad0d81cf44543cbee4b7a78488"
+        },
+        "macServe": {
+          "commit": "dee76d916361d4ad0d81cf44543cbee4b7a78488"
+        }
+      },
+      "conditions": {
+        "power": "35 W exploratory battery-assisted; battery 100 to 91 across full run",
+        "integrity": "Official 5/5; Pi 4/5 with HumanEval/149 stream error. Worker 3645/151 versus Pi 0/0; no valid whole-arm speed. Experiment stopped before candidate-on and formal 20.",
+        "quality": "Task status means official assertions only. Pi completion is 4/5 in both arms; see per-task piStatus and report.",
+        "timing": "Requests retained in public summary; chart prefill/decode/TTFT deliberately withheld for whole-protocol integrity. Main observed-request speed is diagnostic only.",
+        "adoption": "No measured gain; candidate-on performance and HumanEval20 not run; no adoption"
+      },
+      "binarySha256": {
+        "macExecutable": "355dd6ec02fe689be34e6547a8c4e873ceca831051e0b58a61ec61f6698e407b",
+        "macMetalLibrary": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/battery-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "requestCount": 21,
+      "requests": null,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 90.49110800000001,
+          "inputTokens": 11001,
+          "outputTokens": 1037,
+          "modelRequests": 5,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 59.262042917,
+          "inputTokens": 7285,
+          "outputTokens": 1063,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 47.312965209,
+          "inputTokens": 6298,
+          "outputTokens": 653,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 44.842037292000015,
+          "inputTokens": 5872,
+          "outputTokens": 666,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 138.80817075,
+          "inputTokens": 15191,
+          "outputTokens": 1639,
+          "modelRequests": 7,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "error",
+          "source": "docs/evaluations/issue103/battery-trial-summary.json"
+        }
+      ],
+      "reportedTotals": {
+        "wallSeconds": 380.716324168,
+        "inputTokens": 45647,
+        "outputTokens": 5058,
+        "modelRequests": 21
+      },
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/battery-trial-summary.json",
+        "availability": "Restricted local raw artifacts; public sanitized request/task records and hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized evidence",
+          "url": "docs/evaluations/issue103/battery-trial-summary.json"
+        }
+      ],
+      "controllerCommit": "dee76d916361d4ad0d81cf44543cbee4b7a78488"
     }
   ]
 }

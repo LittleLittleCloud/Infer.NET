@@ -1,0 +1,69 @@
+{
+  "schema": "issue103-registration-failure-v1",
+  "runId": "battery-assisted-20261027-startup-fixed",
+  "candidate": "ba8bf880d7b9ae83f1c4099c15c4bd8b0c37e3fa",
+  "failure": {
+    "utc": "2026-10-28T02:16:15.156572+00:00",
+    "type": "GateError",
+    "completedPhases": [],
+    "reason": "Fixed/gate request error retained"
+  },
+  "excludedWarmup": {
+    "httpStatus": 503,
+    "outcome": "failed",
+    "outputTokens": null,
+    "workerTimings": null
+  },
+  "performanceSamples": 0,
+  "restoration": {
+    "utc": "2026-10-28T02:16:15.156744+00:00",
+    "attemptedBootout": true,
+    "hashesUnchanged": true,
+    "definitionRestored": true,
+    "healthReady": false,
+    "realRequestVerified": false,
+    "originalReady": false,
+    "errors": [],
+    "lastProbeError": "URLError",
+    "health": {
+      "state": "Ready",
+      "ready": false,
+      "pid": 4752,
+      "build": "0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb",
+      "revision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weightBits": 8,
+      "kv": "fp32",
+      "maxContextTokens": 262144,
+      "maxOutputTokens": 262144,
+      "completedRequests": 0
+    },
+    "limitation": "Unchanged definition restored, but real readiness not obtained; original ready=false may predate experiment. No successful request restoration claimed."
+  },
+  "evidence": [
+    {
+      "relativeLocalPath": "battery-assisted-20261027-startup-fixed/failure.json",
+      "sha256": "b601d3c13dc62074b5afee65d181383b8af44f92b6fd5a6a6a7415e3d3fec78a",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-startup-fixed/restoration.json",
+      "sha256": "b561984ec270a7e0f52951fd3c92ab281609bfc923b711bc8b98da0824bde243",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-startup-fixed/gates-main/excluded-warmup.json",
+      "sha256": "d757289c3fd1d1e5cb2f87d5ebc6ebaacfefff6e407d6a4b0ffe1c2b3978edd3",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-startup-fixed/gates-main/excluded-warmup-observation.json",
+      "sha256": "e92389c658595f75768072521e5e02dd50ed65f45f595b473e482ad88f38e44b",
+      "access": "Restricted local-only artifact"
+    },
+    {
+      "relativeLocalPath": "battery-assisted-20261027-startup-fixed/power.jsonl",
+      "sha256": "1458ee1c93f78b9e5e3d5d2b0a0c206bd7c1b246e4f93000b6020f2d4f24a3f8",
+      "access": "Restricted local-only artifact"
+    }
+  ]
+}
