@@ -1,7 +1,12 @@
 # Experiment #103 evaluation harness
 
-**Execution attempted; repaired-host rerun pending parent review.** Retain the
-local-only `battery-assisted-20261027-*` directories unchanged. The
+**Post-measurement cleanup tooling repair; not re-measured.** The retained
+`battery-assisted-20261027-stream-fixed` run measured frozen SHA
+`dcf72d8769ed6836c3885f3f23d7b528324e2154`: gates and all main/off/on
+HumanEval5 completed; formal20 stopped at SOC79 under the 35W policy after
+nine completed tasks. These cleanup changes are not part of that measured SHA
+and do not authorize a retry. Retain all local-only
+`battery-assisted-20261027-*` directories unchanged. The earlier
 `battery-assisted-20261027-ready-fixed` attempt reached pilot-off, then stopped
 on a Pi/worker count mismatch; it did not complete main/off/on fixed20.
 This implementation stage ran only CPU fake-worker/Pi tests and compilation.
@@ -307,7 +312,29 @@ own process tree. Startup records three matching full process identities,
 sampling 50 ms apart with a two-second stabilization deadline to accommodate
 launcher re-exec. Sampling never polls/reaps the child, preventing PID reuse;
 subsequent cleanup still requires exact PID, start time, executable and full
-arguments. CPU regressions exercise real Python spawn/cleanup and two-hop fake
+arguments, including a fresh full check before escalation. If an identity
+probe fails or mismatches, cleanup rechecks the owned `Popen`: only a confirmed
+exit status allows it to skip signaling without a cleanup failure. A live child
+with an unavailable or changed identity still fails closed, without signaling
+that identity. `child-cleanup.jsonl` records each child's PID, cleanup stage,
+outcome and exit status; errors include exception type, the failed `ps` field
+when identifiable, and mismatched field names. Neither raw exception messages
+nor command/identity values, arguments, tokens or subprocess output are copied
+into these diagnostics or cleanup error summaries. Diagnostics are persisted
+after all child cleanup attempts and log closure, so evidence-writing failure
+does not skip remaining children.
+
+The stream-fixed run's `restoration.json` retained only
+`childCleanup:GateError`; the failing child/probe was not preserved. An
+exit-versus-identity-probe race is a plausible explanation, not a proved cause.
+The parent separately recorded that all recorded children were gone and
+original hashes were unchanged. This tooling repair neither rewrites that
+evidence nor establishes real-request restoration.
+
+CPU regressions exercise exit during each `ps` field probe, failed probes and
+changed live identities before both initial signaling and escalation, sanitized
+failure evidence, real Python SIGINT/finally cleanup and bounded SIGKILL
+escalation. They also cover two-hop fake
 HTTP discovery/registration, GET forwarding and SSE timing/token collection;
 only the observer resource sampler is synthetic.
 After cleanup/quiescence, bootstrap the unchanged original

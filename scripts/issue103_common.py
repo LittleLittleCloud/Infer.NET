@@ -169,18 +169,63 @@ def wait_pid_gone(expected, timeout=180):
     raise GateError("Identified original PID did not exit after bootout")
 
 
+class ChildCleanupError(GateError):
+    def __init__(self, evidence):
+        self.evidence = evidence
+        super().__init__("Owned-child cleanup incomplete: " + json.dumps(evidence, sort_keys=True))
+
+
 def stop_owned(process, expected, probe=identity, timeout=45):
-    if process.poll() is not None:
-        return
-    require(same_identity(expected, probe(process.pid)), "Child identity changed; refusing signal")
-    first = signal.SIGINT if any(str(x).endswith("benchmark-pi-humaneval.py") for x in process.args) else signal.SIGTERM
-    process.send_signal(first)
+    evidence = {"pid": process.pid, "stage": "initial-poll"}
+
+    def checked_identity(stage):
+        evidence["stage"] = stage
+        try:
+            current = probe(process.pid)
+            changed = [key for key in ("pid", "comm", "lstart", "args") if expected[key] != current[key]]
+            if changed:
+                evidence["mismatchFields"] = changed
+                raise GateError("Child identity changed; refusing signal")
+        except (OSError, GateError, subprocess.SubprocessError) as ex:
+            evidence["errorType"] = type(ex).__name__
+            if isinstance(ex, subprocess.CalledProcessError):
+                evidence["probeReturnCode"] = ex.returncode
+            if isinstance(ex, (subprocess.CalledProcessError, subprocess.TimeoutExpired)):
+                for field in ("comm", "lstart", "args"):
+                    if ex.cmd == ["ps", "-ww", "-p", str(process.pid), "-o", field + "="]:
+                        evidence["probeField"] = field
+            # A multi-command ps probe can race with exit. Only this owned
+            # Popen's exit status, never a missing/mismatched ps row, proves exit.
+            if process.poll() is None:
+                raise
+            evidence.update(outcome="exited-during-probe", exitCode=process.returncode)
+            return False
+        return True
+
     try:
-        process.wait(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        require(same_identity(expected, probe(process.pid)), "Child identity changed before escalation")
-        process.kill()
-        process.wait(timeout=10)
+        if process.poll() is not None:
+            evidence.update(outcome="already-exited", exitCode=process.returncode)
+            return evidence
+        if not checked_identity("identity-before-signal"):
+            return evidence
+        first = signal.SIGINT if any(str(x).endswith("benchmark-pi-humaneval.py") for x in process.args) else signal.SIGTERM
+        evidence.update(stage="signal", signal=int(first))
+        process.send_signal(first)
+        evidence["stage"] = "graceful-wait"
+        try:
+            process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            if not checked_identity("identity-before-kill"):
+                return evidence
+            evidence["stage"] = "kill"
+            process.kill()
+            evidence.update(stage="kill-wait", escalated=True)
+            process.wait(timeout=10)
+        evidence.update(outcome="stopped", exitCode=process.returncode)
+        return evidence
+    except (OSError, GateError, subprocess.SubprocessError) as ex:
+        evidence.update(outcome="failed", errorType=type(ex).__name__)
+        raise ChildCleanupError(evidence) from None
 
 
 class Children:
@@ -225,17 +270,22 @@ class Children:
         return process
 
     def cleanup(self):
-        failures = []
+        failures, events = [], []
         for process, record in reversed(self.items):
             try:
-                stop_owned(process, record)
+                evidence = stop_owned(process, record)
             except (OSError, GateError, subprocess.SubprocessError) as ex:
-                failures.append(type(ex).__name__)
+                evidence = ex.evidence if isinstance(ex, ChildCleanupError) else {
+                    "pid": process.pid, "stage": "cleanup", "outcome": "failed", "errorType": type(ex).__name__}
+                failures.append(evidence)
+            events.append({"utc": stamp(), **evidence})
         self.items = [(p, r) for p, r in self.items if p.poll() is None]
         for handle in self.logs:
             handle.close()
         self.logs = []
-        require(not failures, "Owned-child cleanup incomplete: " + ",".join(failures))
+        for event in events:
+            append(self.output / "child-cleanup.jsonl", event)
+        require(not failures, "Owned-child cleanup incomplete: " + json.dumps(failures, sort_keys=True))
 
 
 def vm_snapshot():

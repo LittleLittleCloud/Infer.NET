@@ -93,5 +93,20 @@
       "chatIntegrationChecks": 37,
       "solutionBuild": "passed"
     }
+  },
+  "postMeasurementCleanupRepair": {
+    "model": "gpt-6.1-sol",
+    "provider": "copilot",
+    "noSubagents": true,
+    "scope": "Post-measurement owned-child exit/probe race handling and sanitized diagnostics; no inference, API or benchmark changes",
+    "measuredSourceUnchanged": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+    "gpuMeasured": false,
+    "validation": "70 CPU harness tests passed; 269 snapshotted original trial artifacts remained hash-identical",
+    "files": {
+      "prompt.txt": "279f0ba4802c5a95d9459c06d2b3bcd0f8321fd8e526b0dc0037db1a6d1a9ae0",
+      "usage.json": "f7c19a9e88d59f3f71ceeaeef8f32dbaefb58138483421e0b42dc1943bfc0a9b",
+      "session.jsonl": "319cb00bb9dff08a5ca6a3efbd5c69b8363e5fa78bbb6a1eb466a3ac49054fbb",
+      "exit.json": "7c837612896e253b37e3ac98c592f5c5f225039d614b89e5d8056e8031140bca"
+    }
   }
 }

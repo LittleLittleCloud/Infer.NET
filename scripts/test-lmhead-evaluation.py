@@ -614,6 +614,7 @@ class SafetyTests(unittest.TestCase):
             self.assertEqual(children.items, [(process, stable)])
             self.assertEqual(common.rows(Path(temp) / "children.jsonl")[0]["comm"], stable["comm"])
             process.poll.return_value = 0
+            process.returncode = 0
             children.cleanup()
 
     def test_unstable_child_start_is_bounded_and_cleans_up_unreaped_child(self):
@@ -905,6 +906,309 @@ class SafetyTests(unittest.TestCase):
         with self.assertRaises(common.GateError):
             common.power_gate({"onAC": True, "adapterWatts": 140, "soc": 100, "adapterIdentity": {"serial": "changed"}},
                               {"soc": 100, "adapterIdentity": {"serial": "original"}})
+
+
+class OwnedCleanupTests(unittest.TestCase):
+    def expected(self, pid=42):
+        return {"pid": pid, "comm": "python", "args": "owned --token private-token", "lstart": "same"}
+
+    def process(self, pid=42):
+        process = Mock(pid=pid, args=["owned", "--token", "private-token"], returncode=None)
+        process.poll.return_value = None
+        return process
+
+    def test_exit_during_each_ps_probe_is_rechecked_before_signal_or_kill(self):
+        expected = self.expected()
+        fields = ("comm", "lstart", "args")
+        for escalating in (False, True):
+            for index, field in enumerate(fields):
+                with self.subTest(escalating=escalating, field=field):
+                    process = self.process()
+                    process.returncode = 0
+                    process.poll.side_effect = [None, 0]
+                    process.wait.side_effect = subprocess.TimeoutExpired("private-token", 1)
+                    failure = subprocess.CalledProcessError(
+                        1, ["ps", "-ww", "-p", "42", "-o", field + "="], stderr="private-token")
+                    values = [expected[k] for k in fields[:index]] + [failure]
+                    if escalating:
+                        values = [expected[k] for k in fields] + values
+                    with patch.object(common, "command", side_effect=values):
+                        result = common.stop_owned(process, expected, probe=common.identity, timeout=1)
+                    self.assertEqual(result["outcome"], "exited-during-probe")
+                    self.assertEqual(result["stage"], "identity-before-kill" if escalating else "identity-before-signal")
+                    self.assertEqual(result["probeField"], field)
+                    self.assertEqual(result["errorType"], "CalledProcessError")
+                    self.assertEqual(result["probeReturnCode"], 1)
+                    self.assertEqual(result["exitCode"], 0)
+                    self.assertEqual(process.poll.call_count, 2)
+                    self.assertEqual(process.send_signal.call_count, int(escalating))
+                    process.kill.assert_not_called()
+                    self.assertNotIn("private-token", json.dumps(result))
+
+    def test_probe_errors_do_not_prove_exit_for_a_live_child(self):
+        failures = [
+            OSError("private-token"), common.GateError("private-token"),
+            subprocess.CalledProcessError(1, ["private-token"], stderr="private-token"),
+            subprocess.TimeoutExpired(["private-token"], 1, stderr="private-token"),
+        ]
+        for escalating in (False, True):
+            for failure in failures:
+                with self.subTest(escalating=escalating, error=type(failure).__name__):
+                    process, expected = self.process(), self.expected()
+                    process.wait.side_effect = subprocess.TimeoutExpired("private-token", 1)
+                    probe = Mock(side_effect=[expected, failure] if escalating else [failure])
+                    with self.assertRaises(common.ChildCleanupError) as raised:
+                        common.stop_owned(process, expected, probe=probe, timeout=1)
+                    result = raised.exception.evidence
+                    self.assertEqual(result["outcome"], "failed")
+                    self.assertEqual(result["stage"], "identity-before-kill" if escalating else "identity-before-signal")
+                    self.assertEqual(result["errorType"], type(failure).__name__)
+                    self.assertNotIn("private-token", str(raised.exception))
+                    self.assertTrue(raised.exception.__suppress_context__)
+                    self.assertEqual(process.poll.call_count, 2)
+                    self.assertEqual(process.send_signal.call_count, int(escalating))
+                    process.kill.assert_not_called()
+
+    def test_every_identity_mismatch_requires_owned_exit_or_refuses_signal(self):
+        for escalating in (False, True):
+            for exited in (False, True):
+                for field in ("pid", "comm", "lstart", "args"):
+                    with self.subTest(escalating=escalating, exited=exited, field=field):
+                        process, expected = self.process(), self.expected()
+                        process.returncode = 0 if exited else None
+                        process.poll.side_effect = [None, process.returncode]
+                        process.wait.side_effect = subprocess.TimeoutExpired("private-token", 1)
+                        changed = dict(expected, **{field: 43 if field == "pid" else "changed-private-token"})
+                        probe = Mock(side_effect=[expected, changed] if escalating else [changed])
+                        if exited:
+                            result = common.stop_owned(process, expected, probe=probe, timeout=1)
+                            self.assertEqual(result["outcome"], "exited-during-probe")
+                        else:
+                            with self.assertRaises(common.ChildCleanupError) as raised:
+                                common.stop_owned(process, expected, probe=probe, timeout=1)
+                            result = raised.exception.evidence
+                            self.assertEqual(result["outcome"], "failed")
+                        self.assertEqual(result["mismatchFields"], [field])
+                        self.assertEqual(process.poll.call_count, 2)
+                        self.assertEqual(process.send_signal.call_count, int(escalating))
+                        process.kill.assert_not_called()
+                        self.assertNotIn("private-token", json.dumps(result))
+
+    def test_cleanup_records_sanitized_failures_attempts_all_children_and_closes_logs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            exited, changed, failed = (self.process(pid) for pid in (42, 43, 44))
+            exited.poll.return_value = exited.returncode = 0
+            children.items = [(p, self.expected(p.pid)) for p in (exited, changed, failed)]
+            handle = Mock()
+            children.logs = [handle]
+            stop_owned = common.stop_owned
+
+            def probe(pid):
+                if pid == 44:
+                    raise subprocess.CalledProcessError(
+                        1, ["ps", "-ww", "-p", "44", "-o", "args="], stderr="private-token")
+                return dict(self.expected(pid), args="changed-private-token")
+
+            with patch.object(common, "stop_owned", side_effect=lambda p, r: stop_owned(p, r, probe=probe)), \
+                    self.assertRaises(common.GateError) as raised:
+                children.cleanup()
+            events = common.rows(Path(temp) / "child-cleanup.jsonl")
+            self.assertEqual([r["pid"] for r in events], [44, 43, 42])
+            self.assertEqual([r["outcome"] for r in events], ["failed", "failed", "already-exited"])
+            self.assertEqual(events[0]["stage"], "identity-before-signal")
+            self.assertEqual(events[0]["errorType"], "CalledProcessError")
+            self.assertEqual(events[0]["probeField"], "args")
+            self.assertEqual(events[1]["mismatchFields"], ["args"])
+            self.assertEqual([p.pid for p, _ in children.items], [43, 44])
+            self.assertEqual(children.logs, [])
+            handle.close.assert_called_once()
+            for process in (exited, changed, failed):
+                process.send_signal.assert_not_called()
+                process.kill.assert_not_called()
+            self.assertNotIn("private-token", json.dumps(events) + str(raised.exception))
+
+    def test_cleanup_after_exit_during_probe_is_successful_and_idempotent(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            process = self.process()
+            process.returncode = -signal.SIGTERM
+            process.poll.side_effect = [None, process.returncode, process.returncode]
+            children.items = [(process, self.expected())]
+            handle = Mock()
+            children.logs = [handle]
+            stop_owned = common.stop_owned
+            probe = Mock(side_effect=common.GateError("private-token"))
+            with patch.object(common, "stop_owned", side_effect=lambda p, r: stop_owned(p, r, probe=probe)):
+                children.cleanup()
+            path = Path(temp) / "child-cleanup.jsonl"
+            original = path.read_bytes()
+            children.cleanup()
+            self.assertEqual(path.read_bytes(), original)
+            self.assertEqual(common.rows(path)[0]["outcome"], "exited-during-probe")
+            self.assertEqual(children.items, [])
+            self.assertEqual(children.logs, [])
+            handle.close.assert_called_once()
+            process.send_signal.assert_not_called()
+            process.kill.assert_not_called()
+
+    def test_signal_and_wait_failures_keep_sanitized_stage_evidence(self):
+        for stage in ("signal", "graceful-wait", "kill", "kill-wait"):
+            with self.subTest(stage=stage):
+                process = self.process()
+                error = OSError("private-token")
+                if stage == "signal":
+                    process.send_signal.side_effect = error
+                elif stage == "graceful-wait":
+                    process.wait.side_effect = error
+                else:
+                    process.wait.side_effect = [subprocess.TimeoutExpired("private-token", 1), error]
+                    if stage == "kill":
+                        process.kill.side_effect = error
+                with self.assertRaises(common.ChildCleanupError) as raised:
+                    common.stop_owned(process, self.expected(), probe=lambda _: self.expected(), timeout=1)
+                self.assertEqual(raised.exception.evidence["stage"], stage)
+                self.assertEqual(raised.exception.evidence["errorType"], "OSError")
+                self.assertNotIn("private-token", str(raised.exception))
+
+    def test_evidence_write_failure_does_not_skip_children_or_log_closure(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children = common.Children(temp)
+            processes = [self.process(pid) for pid in (42, 43)]
+            for process in processes:
+                process.poll.return_value = process.returncode = 0
+            children.items = [(p, self.expected(p.pid)) for p in processes]
+            handle = Mock()
+            children.logs = [handle]
+            with patch.object(common, "append", side_effect=OSError("synthetic write failure")), \
+                    self.assertRaises(OSError):
+                children.cleanup()
+            self.assertTrue(all(p.poll.call_count == 2 for p in processes))
+            self.assertEqual(children.items, [])
+            self.assertEqual(children.logs, [])
+            handle.close.assert_called_once()
+
+    def test_only_confirmed_exit_unblocks_mocked_restoration_after_probe_failure(self):
+        for exited in (False, True):
+            with self.subTest(exited=exited), tempfile.TemporaryDirectory() as temp:
+                c = controller.Controller.__new__(controller.Controller)
+                c.out = Path(temp)
+                c.children, c.stop = common.Children(temp), Mock()
+                process = self.process()
+                process.returncode = 0 if exited else None
+                process.poll.return_value = process.returncode
+                process.poll.side_effect = [None, process.returncode, process.returncode]
+                c.children.items = [(process, self.expected())]
+                c.attempted_bootout = True
+                c.original_health, c.original_identity = {"ready": False}, {}
+                c.original_exe = Path("/release/deepinfer")
+                c.original_config = {"listen": "http://127.0.0.1:1"}
+                c.token = "unused"
+                c.domain, c.label, c.plist = "gui/1", "gui/1/com.infernet.metal", Path("/original.plist")
+                c.unchanged_original = Mock()
+                c.health = Mock(return_value={"pid": 42, "ready": True})
+                fixture = c.out / "synthetic.txt"
+                fixture.write_text("synthetic CPU fixture")
+                c.files = {21: fixture}
+                failure = subprocess.CalledProcessError(
+                    1, ["ps", "-ww", "-p", "42", "-o", "comm="], stderr="private-token")
+                with patch.object(common, "command", side_effect=failure), \
+                        patch.object(controller, "wait_quiescent") as quiescent, \
+                        patch.object(controller.subprocess, "run",
+                                     side_effect=[types.SimpleNamespace(returncode=1),
+                                                  types.SimpleNamespace(returncode=0)]) as run, \
+                        patch.object(controller, "verify_original_identity"), \
+                        patch.object(controller, "identity", return_value={"pid": 42}), \
+                        patch.object(controller, "command", return_value="pid = 42"), \
+                        patch.object(controller, "http", side_effect=[(200, {"ready": True}), (200, {"tokenIds": [1]})]):
+                    record = c.restore()
+                self.assertEqual(c.restored, exited)
+                self.assertEqual(record["realRequestVerified"], exited)
+                self.assertEqual(run.call_count, 2 if exited else 0)
+                self.assertEqual(quiescent.call_count, int(exited))
+                process.send_signal.assert_not_called()
+                process.kill.assert_not_called()
+
+    def test_already_exited_child_never_probes_or_signals(self):
+        process = self.process()
+        process.poll.return_value = process.returncode = 0
+        probe = Mock()
+        result = common.stop_owned(process, self.expected(), probe=probe)
+        self.assertEqual(result["outcome"], "already-exited")
+        probe.assert_not_called()
+        process.send_signal.assert_not_called()
+        process.kill.assert_not_called()
+
+    def test_real_pi_named_child_interrupt_runs_finally_and_closes_logs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            script = root / "benchmark-pi-humaneval.py"
+            script.write_text(
+                "import signal, time\n"
+                "from pathlib import Path\n"
+                "def interrupted(*_):\n"
+                "    raise SystemExit(0)\n"
+                "signal.signal(signal.SIGINT, interrupted)\n"
+                "try:\n"
+                "    print('ready', flush=True)\n"
+                "    while True: time.sleep(60)\n"
+                "finally:\n"
+                "    Path(__file__).with_suffix('.cleaned').write_text('finally ran')\n")
+            children, process = common.Children(root), None
+            log = root / "pi.log"
+            try:
+                process = children.start([sys.executable, "-u", script], log)
+                deadline = time.monotonic() + 5
+                while "ready" not in log.read_text() and time.monotonic() < deadline:
+                    self.assertIsNone(process.poll())
+                    time.sleep(.02)
+                self.assertIn("ready", log.read_text())
+                handles = list(children.logs)
+                children.cleanup()
+                self.assertEqual(process.returncode, 0)
+                self.assertEqual(script.with_suffix(".cleaned").read_text(), "finally ran")
+                self.assertTrue(all(h.closed for h in handles))
+                self.assertEqual(children.items, [])
+                self.assertEqual(children.logs, [])
+                event = common.rows(root / "child-cleanup.jsonl")[0]
+                self.assertEqual(event["signal"], signal.SIGINT)
+                self.assertEqual(event["outcome"], "stopped")
+                self.assertEqual(event["stage"], "graceful-wait")
+            finally:
+                if process is not None and process.poll() is None:
+                    process.kill()
+                    process.wait(timeout=5)
+                children.cleanup()
+
+    def test_real_uncooperative_child_escalates_after_full_identity_recheck(self):
+        with tempfile.TemporaryDirectory() as temp:
+            children, process = common.Children(temp), None
+            log = Path(temp) / "uncooperative.log"
+            try:
+                process = children.start(
+                    [sys.executable, "-u", "-c",
+                     "import signal, time; signal.signal(signal.SIGTERM, signal.SIG_IGN); "
+                     "print('ready', flush=True); time.sleep(60)"], log)
+                deadline = time.monotonic() + 5
+                while "ready" not in log.read_text() and time.monotonic() < deadline:
+                    self.assertIsNone(process.poll())
+                    time.sleep(.02)
+                self.assertIn("ready", log.read_text())
+                probe = Mock(wraps=common.identity)
+                result = common.stop_owned(process, children.items[0][1], probe=probe, timeout=.05)
+                self.assertEqual(probe.call_count, 2)
+                self.assertTrue(result["escalated"])
+                self.assertEqual(result["stage"], "kill-wait")
+                self.assertEqual(result["outcome"], "stopped")
+                self.assertEqual(process.returncode, -signal.SIGKILL)
+                children.cleanup()
+                self.assertEqual(children.items, [])
+                self.assertEqual(children.logs, [])
+            finally:
+                if process is not None and process.poll() is None:
+                    process.kill()
+                    process.wait(timeout=5)
+                children.cleanup()
 
 
 class CommonCoordinatorTests(unittest.TestCase):
