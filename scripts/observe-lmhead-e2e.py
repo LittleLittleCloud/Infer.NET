@@ -148,6 +148,8 @@ def main():
                                     row["nativeTokenReceiptMs"].append((received - start) * 1000)
                                 if event.get("error"):
                                     row["compatibleError"] = True
+                                    row["compatibleErrorCode"] = (event["error"].get("code")
+                                                                  if isinstance(event["error"], dict) else None)
                                 if valid and row["clientTtftMs"] is None:
                                     row["clientTtftMs"] = (received - start) * 1000
                                     row["firstTokenReceived"] = True

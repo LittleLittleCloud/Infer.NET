@@ -124,8 +124,9 @@ class PowerPolicyTests(unittest.TestCase):
             self.assertEqual(common.rows(c.out / "power.jsonl"), [value])
 
     def test_preflight_plan_and_identity_bind_policy_thresholds(self):
-        for policy, watts in (("stable-140w", 140), ("battery-assisted-35w", 35)):
-            with self.subTest(policy=policy), tempfile.TemporaryDirectory() as temp:
+        for policy, watts, shared in (("stable-140w", 140, False), ("battery-assisted-35w", 35, False),
+                                      ("stable-140w", 140, True), ("battery-assisted-35w", 35, True)):
+            with self.subTest(policy=policy, shared=shared), tempfile.TemporaryDirectory() as temp:
                 c = controller.Controller.__new__(controller.Controller)
                 c.out = Path(temp)
                 c.args = types.SimpleNamespace(
@@ -134,6 +135,10 @@ class PowerPolicyTests(unittest.TestCase):
                     tools=Path("/synthetic/tools"), dataset=c.out / "dataset", fixtures=c.out / "fixtures",
                     pi=Path("/synthetic/pi"), original_preflight=c.out / "original", native_driver=None,
                     native_driver_sha256=None, high_power_evidence=c.out / "ui", base_port=5380, power_policy=policy)
+                if shared:
+                    c.args.common_coordinator_package = Path("/synthetic/host")
+                    c.args.common_coordinator_source = Path("/synthetic/host-source")
+                    c.args.common_coordinator_sha = "b" * 40
                 c.args.dataset.write_bytes(b"synthetic")
                 c.packages = {}
                 c.original_hashes = {k: "synthetic" for k in ("plist", "config", "binary", "native")}
@@ -162,7 +167,8 @@ class PowerPolicyTests(unittest.TestCase):
                             return ""
                         if "merge-base" in args:
                             return common.MAIN
-                        return common.TOOLS_SHA if args[2] == c.args.tools else c.args.candidate_sha
+                        return (common.TOOLS_SHA if args[2] == c.args.tools else "b" * 40
+                                if shared and args[2] == c.args.common_coordinator_source else c.args.candidate_sha)
                     if args[0] == c.args.pi:
                         return "1.4.0"
                     return "pid = 42" if args[0] == "launchctl" else "{}"
@@ -172,7 +178,7 @@ class PowerPolicyTests(unittest.TestCase):
                 hashes.update({c.files[n]: pair[0] for n, pair in common.FIXTURES.items()})
                 dataset = b"\n".join(json.dumps({"task_id": str(i)}).encode() for i in range(164))
                 power = {"onAC": True, "adapterWatts": watts, "soc": 99, "thermal": "synthetic raw therm"}
-                with patch.object(controller, "package", return_value={"source": "synthetic"}), \
+                with patch.object(controller, "package", side_effect=lambda exe, expected: {"source": expected}), \
                         patch.object(controller, "command", side_effect=command), \
                         patch.object(controller, "read_json", side_effect=read_json), \
                         patch.object(controller, "sha", side_effect=lambda p: hashes.get(Path(p), "0" * 64)), \
@@ -194,6 +200,15 @@ class PowerPolicyTests(unittest.TestCase):
                 self.assertTrue(report["powerAdmission"])
                 self.assertTrue(report["freshHighPowerEvidence"])
                 self.assertEqual(report["power"], power)
+                self.assertEqual(report["coordinators"]["mode"], "common" if shared else "same-arm")
+                self.assertEqual(report["coordinators"], plan["identity"]["coordinators"])
+                self.assertEqual(report["coordinators"], c.evidence_identity["coordinators"])
+                self.assertEqual(report["coordinators"]["arms"],
+                                 {arm: {"source": "b" * 40 if shared else common.MAIN if arm == "main" else c.args.candidate_sha}
+                                  for arm in ("main", "off", "on")})
+                if shared:
+                    self.assertEqual(report["coordinators"]["commonSource"],
+                                     {"sourceSha": "b" * 40, "sourceClean": True})
 
     def test_selected_phase_order_is_executed_once_and_recorded(self):
         for policy, expected in (("stable-140w", ["gates", "fixed", "pilot", "cohort"]),
@@ -234,6 +249,18 @@ class PowerPolicyTests(unittest.TestCase):
 
 
 class MetricsTests(unittest.TestCase):
+    def test_accounted_model_failures_do_not_mask_infrastructure_or_count_failures(self):
+        model_error = {"id": "r1", "compatibleError": True, "compatibleErrorCode": "invalid_model_output"}
+        self.assertEqual(controller.request_integrity_problems(
+            ["HumanEval/156: request failed", "HumanEval/156: incomplete task retained"], [model_error]), [])
+        for problem in ("Pi/worker token mismatch", "Pi cumulative token mismatch", "coverage mismatch", "N-1 mismatch"):
+            with self.subTest(problem=problem):
+                self.assertEqual(controller.request_integrity_problems([problem], [model_error]), [problem])
+        for code in ("invalid_worker_response", "worker_request_failed", None):
+            with self.subTest(code=code):
+                self.assertTrue(controller.request_integrity_problems(
+                    [], [dict(model_error, compatibleErrorCode=code)]))
+
     def test_pinned_standard_summarizer_agrees_on_synthetic_worker_events(self):
         source = controller.REFERENCE84 / "scripts/summarize-pi-humaneval-performance.py"
         if not source.exists():
@@ -391,8 +418,10 @@ class ObserverLoopbackTests(unittest.TestCase):
                         conn.close()
                 elif self.server.role == "worker" and self.path == "/v1/models?cpu=1":
                     self.reply(200, b'{"data":[{"id":"cpu-fake"}]}')
-                elif self.server.role == "worker" and self.path == "/v1/infer/stream":
-                    self.reply(200, stream, "text/event-stream")
+                elif self.server.role == "worker" and self.path in ("/v1/infer/stream", "/v1/chat/completions"):
+                    error = b'data: {"error":{"type":"api_error","code":"invalid_model_output","message":"Synthetic"}}\n\n'
+                    payload = stream if self.path == "/v1/infer/stream" else stream.replace(b"data: [DONE]\n\n", error)
+                    self.reply(200, payload, "text/event-stream")
                 else:
                     self.reply(404, b"{}")
 
@@ -498,6 +527,23 @@ class ObserverLoopbackTests(unittest.TestCase):
                             self.assertIn((role, "POST", "/v1/infer/stream", token, payload), calls)
                     for filename in ("transport-errors.jsonl", "registration-errors.jsonl", "fatal.jsonl"):
                         self.assertFalse((run / "observer" / filename).exists(), filename)
+                    conn = HTTPConnection("127.0.0.1", outer_port, timeout=5)
+                    try:
+                        conn.request("POST", "/v1/chat/completions", payload,
+                                     {"Content-Type": "application/json", "X-DeepInfer-Token": token})
+                        response = conn.getresponse()
+                        self.assertEqual(response.status, 200)
+                        response.read()
+                    finally:
+                        conn.close()
+                    deadline = time.monotonic() + 5
+                    while len(common.rows(run / "observer/requests.jsonl", partial=True)) < 2 and time.monotonic() < deadline:
+                        time.sleep(.02)
+                    failure = common.rows(run / "observer/requests.jsonl")[-1]
+                    self.assertEqual(failure["outcome"], "failed")
+                    self.assertTrue(failure["compatibleError"])
+                    self.assertEqual(failure["compatibleErrorCode"], "invalid_model_output")
+                    self.assertEqual(controller.request_integrity_problems(["request failed"], [failure]), [])
                 finally:
                     if process.poll() is None:
                         process.terminate()
@@ -859,6 +905,195 @@ class SafetyTests(unittest.TestCase):
         with self.assertRaises(common.GateError):
             common.power_gate({"onAC": True, "adapterWatts": 140, "soc": 100, "adapterIdentity": {"serial": "changed"}},
                               {"soc": 100, "adapterIdentity": {"serial": "original"}})
+
+
+class CommonCoordinatorTests(unittest.TestCase):
+    def args(self, directory):
+        directory = directory.resolve()
+        return types.SimpleNamespace(
+            main_package=directory / "main/deepinfer", candidate_package=directory / "candidate/deepinfer",
+            candidate_source=directory / "candidate-source", candidate_sha="a" * 40,
+            common_coordinator_package=directory / "host/deepinfer",
+            common_coordinator_source=directory / "host-source", common_coordinator_sha="b" * 40)
+
+    def test_common_arguments_are_optional_but_atomic(self):
+        base = ["controller", "--output", "unused", "--candidate-package", "unused",
+                "--candidate-sha", "a" * 40, "--candidate-source", "unused"]
+        with patch.object(sys, "argv", base):
+            args = controller.arguments()
+            self.assertIsNone(controller.common_coordinator(args))
+        flags = ["--common-coordinator-package", "host", "--common-coordinator-source", "source",
+                 "--common-coordinator-sha", "b" * 40]
+        for extra in (flags[:2], flags[2:4], flags[4:], flags[:4]):
+            with self.subTest(extra=extra), patch.object(sys, "argv", base + extra), \
+                    patch("sys.stderr"), self.assertRaises(SystemExit):
+                controller.arguments()
+        with patch.object(sys, "argv", base + flags):
+            args = controller.arguments()
+            self.assertEqual(args.common_coordinator_sha, "b" * 40)
+
+    def test_source_full_sha_and_cleanliness_are_mandatory(self):
+        for head, dirty, expected in (("b" * 40, "", "b" * 40), ("a" * 40, "", "b" * 40),
+                                      ("b" * 40, " M tracked", "b" * 40),
+                                      ("b" * 40, "?? untracked", "b" * 40),
+                                      ("b" * 40, "", "bbbbbbb")):
+            with self.subTest(head=head, dirty=dirty, expected=expected):
+                calls = []
+
+                def command(args):
+                    calls.append(args)
+                    return dirty if "status" in args else head
+
+                with patch.object(controller, "command", side_effect=command):
+                    if head == expected and not dirty:
+                        self.assertEqual(controller.frozen_source(Path("."), expected),
+                                         {"sourceSha": expected, "sourceClean": True})
+                        self.assertIn("--untracked-files=all", calls[-1])
+                    else:
+                        with self.assertRaises(common.GateError):
+                            controller.frozen_source(Path("."), expected)
+
+    def test_common_package_requires_the_verified_source_before_execution(self):
+        with tempfile.TemporaryDirectory() as temp:
+            args = self.args(Path(temp))
+            for dirty in (" M tracked", "?? new"):
+                with self.subTest(dirty=dirty), patch.object(controller, "command", side_effect=["b" * 40, dirty]), \
+                        patch.object(controller, "package") as package, self.assertRaises(common.GateError):
+                    controller.common_coordinator(args)
+                package.assert_not_called()
+            with patch.object(controller, "command", side_effect=["b" * 40, ""]), \
+                    patch.object(controller, "package", return_value={"source": "b" * 40}) as package:
+                evidence = controller.common_coordinator(args)
+                package.assert_called_once_with(args.common_coordinator_package, "b" * 40)
+                self.assertEqual(evidence["source"], {"sourceSha": "b" * 40, "sourceClean": True})
+
+    def test_real_package_hashes_and_manifest_cannot_drift(self):
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            executable = folder / "deepinfer"
+            executable.write_text("#!/bin/sh\nprintf '0.3.0+" + "b" * 40 + "\\n'\n")
+            executable.chmod(0o700)
+            native = folder / "libdeepinfer_metal.dylib"
+            native.write_bytes(b"cpu-only-placeholder")
+            manifest = {"source": "b" * 40, "rid": "osx-arm64", "modelRevision": common.REVISION,
+                        "weightBits": 8, "kv": "fp32",
+                        "files": {p.name: common.sha(p) for p in (executable, native)}}
+            common.save(folder / "manifest.json", manifest)
+            evidence = controller.package(executable, "b" * 40)
+            self.assertEqual(evidence["source"], "b" * 40)
+            self.assertEqual(evidence["executableSha256"], common.sha(executable))
+            with self.assertRaises(common.GateError):
+                controller.package(executable, "a" * 40)
+            native.write_bytes(b"tampered")
+            with self.assertRaises(common.GateError):
+                controller.package(executable, "b" * 40)
+            executable.write_text("#!/bin/sh\nprintf '0.3.0+" + "b" * 40 + "+" + "c" * 40 + "\\n'\n")
+            manifest["files"] = {p.name: common.sha(p) for p in (executable, native)}
+            (folder / "manifest.json").write_text(json.dumps(manifest))
+            with self.assertRaises(common.GateError):
+                controller.package(executable, "b" * 40)
+
+    def test_both_coordinators_share_one_package_across_all_arms_without_changing_workers(self):
+        with tempfile.TemporaryDirectory() as temp:
+            c = controller.Controller.__new__(controller.Controller)
+            c.args = self.args(Path(temp))
+            c.common_coordinator = {"source": "frozen"}
+            c.packages = {"main": {"source": common.MAIN}, "candidate": {"source": "a" * 40},
+                          "common-coordinator": {"source": "b" * 40, "executableSha256": "same-host"}}
+            c.children = Mock()
+            calls = []
+
+            def start(args, log, **kwargs):
+                calls.append(args)
+                return Mock(pid=40 + len(calls), poll=Mock(return_value=None))
+
+            c.children.start.side_effect = start
+            exe = str(c.args.common_coordinator_package)
+            with patch.object(controller, "identity", side_effect=lambda pid: {
+                    "pid": pid, "comm": exe, "args": exe + " coordinator --config synthetic"}):
+                for arm in ("main", "off", "on"):
+                    runtime = c.start_coordinators(arm, Path(temp), Path(temp), controller.environment(arm))
+                    self.assertEqual([r["role"] for r in runtime], ["registry", "clone"])
+                    self.assertTrue(all(r["package"] == c.packages["common-coordinator"] for r in runtime))
+            self.assertEqual(len(calls), 6)
+            self.assertTrue(all(args[0] == c.args.common_coordinator_package for args in calls))
+            self.assertEqual(c.packages["main"]["source"], common.MAIN)
+            self.assertEqual(c.packages["candidate"]["source"], c.args.candidate_sha)
+            c.common_coordinator = None
+            self.assertEqual(c.coordinator_executable("main"), (c.args.main_package, c.packages["main"]))
+            for arm in ("off", "on"):
+                self.assertEqual(c.coordinator_executable(arm), (c.args.candidate_package, c.packages["candidate"]))
+
+    def test_runtime_identity_must_be_the_selected_host(self):
+        with tempfile.TemporaryDirectory() as temp:
+            c = controller.Controller.__new__(controller.Controller)
+            c.args = self.args(Path(temp))
+            c.common_coordinator = {"source": "frozen"}
+            c.packages = {"common-coordinator": {"source": "b" * 40}}
+            c.children = Mock()
+            c.children.start.return_value = Mock(pid=42, poll=Mock(return_value=None))
+            exe = str(c.args.common_coordinator_package)
+            for process in ({"pid": 42, "comm": "/wrong", "args": exe + " coordinator --config synthetic"},
+                            {"pid": 42, "comm": exe, "args": exe + " split-serve --config synthetic"}):
+                with self.subTest(process=process), patch.object(controller, "identity", return_value=process), \
+                        self.assertRaises(common.GateError):
+                    c.start_coordinators("main", Path(temp), Path(temp), {})
+
+    def test_revalidation_binds_package_and_clean_source_again(self):
+        with tempfile.TemporaryDirectory() as temp:
+            c = controller.Controller.__new__(controller.Controller)
+            c.args = self.args(Path(temp))
+            c.packages = {"main": {"source": common.MAIN}, "candidate": {"source": "a" * 40}}
+            c.common_coordinator = {"package": {"source": "b" * 40}, "source": {"sourceClean": True}}
+            with patch.object(controller, "frozen_source") as source, \
+                    patch.object(controller, "package", side_effect=lambda exe, expected: {"source": expected}), \
+                    patch.object(controller, "common_coordinator", return_value=c.common_coordinator):
+                c.revalidate_packages()
+                source.assert_called_once_with(c.args.candidate_source, c.args.candidate_sha)
+            for changed in ({"package": {"source": "c" * 40}}, None):
+                with self.subTest(changed=changed), patch.object(controller, "frozen_source"), \
+                        patch.object(controller, "package", side_effect=lambda exe, expected: {"source": expected}), \
+                        patch.object(controller, "common_coordinator", return_value=changed), self.assertRaises(common.GateError):
+                    c.revalidate_packages()
+            with patch.object(controller, "frozen_source", side_effect=common.GateError("dirty")), \
+                    self.assertRaises(common.GateError):
+                c.revalidate_packages()
+
+    def test_gates_and_pilot_cannot_reuse_different_common_host(self):
+        for phase in ("pilot", "cohort"):
+            for changed in ("sourceSha", "executableSha256", "sourceClean"):
+                with self.subTest(phase=phase, changed=changed), tempfile.TemporaryDirectory() as temp:
+                    c = controller.Controller.__new__(controller.Controller)
+                    c.out = Path(temp)
+                    c.args = types.SimpleNamespace(phase=phase, gates_evidence=c.out / "gates.json",
+                                                   pilot_evidence=c.out / "pilot.json")
+                    c.evidence_identity = {"coordinators": {"sourceSha": "b" * 40,
+                                                          "executableSha256": "fixed", "sourceClean": True}}
+                    prior = copy.deepcopy(c.evidence_identity)
+                    prior["coordinators"][changed] = "changed"
+                    common.save(c.args.gates_evidence, {"passed": True, "identity": prior if phase == "pilot" else c.evidence_identity})
+                    common.save(c.args.pilot_evidence, {"completed": True, "phases": ["pilot"], "identity": prior})
+                    with self.assertRaises(common.GateError):
+                        c.dependency_evidence()
+
+    def test_summary_rejects_mixed_runtime_coordinators(self):
+        with tempfile.TemporaryDirectory() as temp:
+            run = Path(temp)
+            expected = {"mode": "common", "arms": {"main": {"source": "b" * 40}}}
+            common.save(run / "plan.json", {"candidate": "a" * 40, "coordinators": expected})
+            folder = run / "pilot-main"
+            folder.mkdir()
+            common.save(folder / "runtime.json", {
+                "arm": "main", "coordinatorProvenance": expected,
+                "coordinators": [{"role": "registry", "package": {"source": "b" * 40}},
+                                 {"role": "clone", "package": {"source": common.MAIN}}]})
+            with self.assertRaises(common.GateError):
+                summarizer.summarize(run)
+            (folder / "runtime.json").unlink()
+            (folder / "pi").mkdir()
+            (folder / "pi/tasks.jsonl").write_text("")
+            with self.assertRaises(common.GateError):
+                summarizer.summarize(run)
 
 
 class PlanObserverTests(unittest.TestCase):

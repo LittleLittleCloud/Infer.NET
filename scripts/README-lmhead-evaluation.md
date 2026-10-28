@@ -1,15 +1,21 @@
 # Experiment #103 evaluation harness
 
-**Prepared, not executed.** Only CPU/synthetic tests and compilation have run.
+**Execution attempted; repaired-host rerun pending parent review.** Retain the
+local-only `battery-assisted-20261027-*` directories unchanged. The
+`battery-assisted-20261027-ready-fixed` attempt reached pilot-off, then stopped
+on a Pi/worker count mismatch; it did not complete main/off/on fixed20.
+This implementation stage ran only CPU fake-worker/Pi tests and compilation.
 This controller never builds packages, changes power/sysctl, edits LaunchAgents,
 or controls the original coordinator/Windows. It is not 128K acceptance.
 
-The only additional product correction is in `SplitService.Profile`: preserve
+The earlier product correction in `SplitService.Profile` preserves
 the managed `DEEPINFER_METAL_LMHEAD` selector while clearing other experimental
 environment settings. Without this, `split-serve` would erase candidate-on.
-The parent must freeze/repackage this correction before running; the original
-`a13abd9c5b3dc37a74e39cbbf82fcb3eda0f92ba` package is insufficient. No kernel
-retuning, precision, model, protocol or formatter change is included.
+The API host now also handles invalid model output explicitly and preserves
+known worker usage on failures (see protocol semantics below). The parent must
+freeze/repackage the repaired source before running; historical packages do not
+include this repair. No kernel, quantization, sampling or tool-prompt change is
+included. The source-pinned external Pi driver/evaluator remain unchanged.
 
 ## Preparation and commands
 
@@ -22,7 +28,12 @@ Pi output and recovery commands remain local-only. Never publish raw directories
 ```sh
 # Safe: CPU only, owned Python children/loopback fakes; no real services, Docker, model or GPU.
 python3 scripts/test-lmhead-evaluation.py -v
-python3 -m py_compile scripts/issue103_common.py scripts/*lmhead*.py
+dotnet test tests/DeepInfer.Tests/DeepInfer.Tests.csproj --no-restore \
+  --filter 'FullyQualifiedName~Chat' -v quiet
+dotnet build src/DeepInfer.Host/DeepInfer.Host.csproj -c Release --no-restore -v quiet
+python3 scripts/test-chat-termination.py --pi pi -v
+python3 scripts/chat-integration.py
+python3 -m py_compile scripts/issue103_common.py scripts/*lmhead*.py scripts/test-chat-termination.py
 dotnet build DeepInfer.slnx --no-restore
 
 # Read-only preflight; never pauses the worker or submits model/GPU work.
@@ -33,8 +44,36 @@ python3 scripts/run-lmhead-evaluation.py \
   --candidate-package CANDIDATE_RELEASE/deepinfer \
   --candidate-sha CANDIDATE_FULL_SHA \
   --candidate-source FROZEN_CANDIDATE_CHECKOUT \
+  --common-coordinator-package REPAIRED_RELEASE/deepinfer \
+  --common-coordinator-sha REPAIRED_HOST_FULL_SHA \
+  --common-coordinator-source FROZEN_REPAIRED_HOST_CHECKOUT \
   --output artifacts/dual-host/issue103-lmhead-affine8/preflight-UNIQUE
 ```
+
+For this rerun, use the three explicit `--common-coordinator-*` arguments.
+They are optional as a group: without them, the original same-arm coordinator
+selection remains unchanged. With them, **both** controller-owned loopback
+coordinators in **every** main/off/on arm use the exact same verified repaired
+executable. The common host can be the new frozen candidate package/source;
+its full SHA is still recorded separately as coordinator provenance.
+The main **worker** remains immutable
+`4f51f241e87999c8cc3f79d733cd95ade9c711cd`; off/on workers use the frozen
+candidate package, never the common host argument as an implicit worker override.
+The deployed original coordinator is not changed.
+
+Preflight verifies the common source HEAD and a clean tracked/untracked status,
+manifest, executable/native SHA-256 and executable version. Source cleanliness
+and package hashes are revalidated before bootout and before/after each arm's
+startup. Runtime evidence records both owned coordinator process identities,
+roles, actual executable paths and package provenance separately from the worker.
+Preflight, plan, gate and pilot identities bind these fields; old evidence or
+evidence from a different host cannot authorize a new phase. Summaries reject
+mixed runtime coordinator provenance.
+
+This comparison is **unchanged main inference under a common repaired API
+host**, not the original main coordinator. Candidate off/on isolate the LM-head
+layout; main-to-on also includes candidate worker plumbing. All other fixed
+settings remain unchanged.
 
 Default external paths are the user-provided main package, independent #84
 harness checkout, #98 fixed fixtures, private Mac config and parent original
@@ -66,11 +105,12 @@ This is a schema example, **not verification evidence**. Evidence must be at
 most 30 minutes old at initial admission and immediately before bootout.
 The default `--power-policy stable-140w` still requires 140W AC and no battery
 decline greater than one percentage point from admission.
-The user explicitly authorized **one attempt** with a full battery at 35W:
+The user renewed authorization after the API repair for an exploratory
+full-battery 35W experiment, to be run by the parent only after review:
 select `--power-policy battery-assisted-35w` for initial AC35W and SOC >=99%,
 unchanged adapter identity and AC35W throughout, SOC >=80%, and at most a
 20-percentage-point drop from admission. This is exploratory, **not stable-140W
-acceptance**. It does not authorize retries. Both policies retain the fresh
+acceptance**. No automatic retries are authorized. Both policies retain the fresh
 parent High Power UI gate; the controller does not change OS settings.
 Explicit `pmset -g therm` CPU speed/scheduler limits below 100 or thermal
 warning values stop execution. Missing limit lines and the normal
@@ -89,6 +129,9 @@ python3 scripts/run-lmhead-evaluation.py \
   --candidate-package CANDIDATE_RELEASE/deepinfer \
   --candidate-sha CANDIDATE_FULL_SHA \
   --candidate-source FROZEN_CANDIDATE_CHECKOUT \
+  --common-coordinator-package REPAIRED_RELEASE/deepinfer \
+  --common-coordinator-sha REPAIRED_HOST_FULL_SHA \
+  --common-coordinator-source FROZEN_REPAIRED_HOST_CHECKOUT \
   --native-driver FROZEN_NATIVE_DRIVER \
   --native-driver-sha256 NATIVE_DRIVER_SHA256 \
   --native-driver-source CANDIDATE_FULL_SHA \
@@ -108,6 +151,92 @@ immutable packages, source, harness, native driver and input hashes. Execute
 the scripts from the clean frozen candidate checkout itself.
 Separate runs are summarized separately; do not combine
 incomplete rounds as if they were one formal cohort.
+
+### Parent freeze/build handoff
+
+Review the diff, then freeze it on the feature branch using the parent's
+normal commit/PR process; no commit/push is performed in this implementation
+stage. From that clean full SHA, publish Native AOT into a **new** staging
+directory using `dotnet publish src/DeepInfer.Host -c Release -r osx-arm64 -o NEW_STAGING`,
+then run `scripts/deploy/package.py --publish-dir NEW_STAGING --rid osx-arm64 --output NEW_RELEASE`
+and `scripts/deploy/verify-package.py NEW_RELEASE` with Python. Do not overwrite
+any historical package or deployed service. Run
+`python3 scripts/test-chat-termination.py --executable NEW_RELEASE/deepinfer --pi pi -v`
+against the packaged AOT host (still CPU fake-worker only). Rebuild the native gate driver
+with `scripts/check-metal-lmhead.sh --compile NEW_DRIVER_DIRECTORY`; record
+its full source SHA and executable SHA-256. These build instructions are not
+GPU execution or deployment authorization.
+
+Use the new candidate package as the common host in all arms (or explicitly
+pin a separately frozen repaired host). Start a **new** evidence run, repeat
+gates and pilot5 before fixed20, and do not reuse historical gates/pilot identity.
+After review, the parent selects `--power-policy battery-assisted-35w` and
+supplies fresh High Power UI evidence; initial SOC >=99%, SOC floor 80%,
+maximum 20-point drop, unchanged AC35W/adapter, thermal, resource and integrity
+stops are unchanged. Slow or unsuccessful model tasks alone do not cancel20;
+infrastructure, coverage/count or correctness failures still stop explicitly.
+
+## Compatible API termination and accounting
+
+In the retained pilot-off final HumanEval/149 request, the worker completed
+with prompt3645/output151/EOS. `ChatTools.ParseOutput` rejected model tool text;
+`CompatibleChat.Writer.End` let `InvalidDataException` escape because it is
+not an `IOException`. Pi consequently reported a stream without a finish reason
+and usage0/0. Those zeros were missing accounting, not zero model work.
+
+**Evidence limitation:** the observer deliberately retained counts, timing,
+finish reason and token-ID hashes, not output text or raw token IDs; tool-enabled
+streaming buffered the text before rejection. The retained Pi/worker/controller
+artifacts contain no recoverable rejected tool text. Its precise malformed
+syntax cannot be established from this evidence. No parser extension or claimed
+syntax repair is justified. The sanitized synthetic regression uses a declared
+`read` call with a complete parameter/function but a missing `</tool_call>`;
+this reproduces the exception path, not the historical private contents.
+Additional parser negatives reject incomplete wrappers, undeclared/duplicate
+arguments, trailing text and inter-call garbage.
+
+- Success uses only worker `eos` -> `stop`/`end_turn`/`completed`, or `length` ->
+  `length`/`max_tokens`/`incomplete`; valid structured tools use `tool_calls`.
+  Unknown finish reasons, missing token IDs and contradictory stream/terminal
+  counts fail explicitly rather than becoming length completions.
+- A terminal worker result supplies exact usage even when tool conversion fails.
+  Streaming Chat Completions sends the requested usage-only chunk **before**
+  the error event, because OpenAI clients throw on that event. The error also
+  includes usage. There is no tool-call delta, success finish reason or `[DONE]`
+  on failure. Nonstream conversion failures return HTTP 502 JSON error plus
+  genuine usage, not a successful assistant message.
+  The `invalid_model_output` code identifies a rejected tool call; worker
+  metadata/accounting errors use `invalid_worker_response`, and transport
+  failures use `worker_request_failed`. The observer retains only these
+  sanitized codes, not rejected arguments. Accounted model failures remain
+  failures in the task denominator; worker/infrastructure errors still stop.
+- Without a terminal result, total generated usage is unknown. Errors omit
+  exact usage and include `observed_usage` with known prompt count (or null),
+  `output_tokens_at_least` from received token events and `complete:false`.
+  These are lower-bound observations, not billable/exact totals. No tokenizer
+  estimation, zero-filling or count reconciliation by fabrication is used.
+- Messages streams terminate failures with `error`, never `message_stop`;
+  Responses streams use `response.failed` with failed status and known usage
+  or explicit partial observations, never `response.completed`. Input errors
+  remain 4xx; malformed upstream/model output is 502 before headers or an explicit
+  terminal error after headers. Client cancellation cannot guarantee delivery
+  of a final event and does not synthesize usage or completion.
+
+`scripts/test-chat-termination.py --pi pi -v` exercises the installed Pi 1.4.0
+against the real managed loopback coordinator and a CPU fake worker with the
+same provider compatibility settings as the frozen driver. It checks success,
+length, empty EOS, a valid tool/result round-trip, malformed tool failure with
+genuine 3645/151 usage and **no tool execution/retry**, upstream faults and
+truncation. Private prompts, rejected tool arguments and credentials are not
+published. Live-model behavior and Native AOT runtime acceptance still require
+parent verification; CPU tests do not establish benchmark correctness or gains.
+
+CPU verification of this working-tree repair (not a frozen package): the
+focused managed Chat suite passed 32 tests; the evaluation harness passed all
+49 existing plus 10 new CPU tests; the new protocol suite passed 6 tests,
+including 7 Pi scenarios; the existing chat integration passed 37 checks.
+Release host and solution builds completed without warnings/errors, and the
+Python compile checks passed. The commands above reproduce these checks.
 
 ## Frozen protocol and safety
 

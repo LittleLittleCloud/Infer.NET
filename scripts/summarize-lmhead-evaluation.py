@@ -159,6 +159,22 @@ def fixed_comparisons(fixed):
 
 def summarize(run):
     plan = read_json(run / "plan.json")
+    coordinators = plan.get("coordinators")
+    if coordinators is not None:
+        directories = {p.parent for p in run.glob("*/runtime.json")}
+        directories.update(p.parent.parent for p in run.glob("*/pi/tasks.jsonl"))
+        directories.update(p.parent.parent for p in run.glob("*/observer/requests.jsonl"))
+        directories.update(p.parent for p in run.glob("*/trial-*.json"))
+        for directory in directories:
+            path = directory / "runtime.json"
+            require(path.is_file(), "Missing runtime coordinator provenance for measured arm")
+            runtime = read_json(path)
+            expected = coordinators["arms"][runtime["arm"]]
+            actual = runtime.get("coordinators", [])
+            require(runtime.get("coordinatorProvenance") == coordinators and len(actual) == 2 and
+                    {c["role"] for c in actual} == {"registry", "clone"} and
+                    all(c["package"] == expected for c in actual),
+                    "Runtime coordinator provenance differs from preflight/plan")
     fixed, fixed_errors = fixed_summary(run)
     humans = [human_summary(run, cohort, arm, plan["candidate"])
               for cohort in ("pilot", "cohort") for arm in ("main", "off", "on")]
@@ -176,6 +192,7 @@ def summarize(run):
     on, off = comparisons["on"], comparisons["off"]
     main_passed, on_passed = formal["main"].get("officialPassed"), formal["on"].get("officialPassed")
     return {"schema": "issue103-evaluation-summary-v1", "main": MAIN, "candidate": plan["candidate"],
+            "coordinators": coordinators, "comparison": plan.get("comparison"),
             "powerPolicy": plan.get("powerPolicy"), "powerThresholds": plan.get("powerThresholds"),
             "powerWarnings": [BATTERY_ASSISTED_WARNING] if plan.get("powerPolicy") == "battery-assisted-35w" else [],
             "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS, "fixed": fixed, "fixedProblems": fixed_errors,

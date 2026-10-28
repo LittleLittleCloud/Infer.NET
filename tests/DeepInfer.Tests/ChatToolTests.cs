@@ -55,6 +55,11 @@ public sealed class ChatToolTests
     [InlineData("<tool_call><function=bash><parameter=other>x</parameter></function></tool_call>")]
     [InlineData("<tool_call><function=bash><parameter=command>x</parameter></function>")]
     [InlineData("<bash><parameter=command>x</parameter></tool_call>")]
+    [InlineData("<function=bash><parameter=command>x</parameter></function></tool_call>")]
+    [InlineData("<tool_call><bash><parameter=command>x</parameter></function></tool_call>")]
+    [InlineData("<tool_call><function=bash><parameter=command>x</parameter><parameter=command>y</parameter></function></tool_call>")]
+    [InlineData("<tool_call><function=bash><parameter=command>x</parameter></function></tool_call>trailing")]
+    [InlineData("<tool_call><function=bash><parameter=command>x</parameter></function></tool_call>gap<tool_call><function=bash><parameter=command>y</parameter></function></tool_call>")]
     public void RefusesUndeclaredOrMalformedModelCalls(string output)
     {
         using var document = JsonDocument.Parse(Tools);

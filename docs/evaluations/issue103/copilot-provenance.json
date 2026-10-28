@@ -72,5 +72,26 @@
       "session.jsonl": "bd6b2851831bd2908e75090b2c7058ca4c0524f5a221e80f9e07c001fb7442d5",
       "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
     }
+  },
+  "streamTerminationRepair": {
+    "model": "gpt-6.1-sol",
+    "provider": "copilot",
+    "noSubagents": true,
+    "requests": 43,
+    "scope": "User-authorized truthful stream error/usage repair, CPU Pi regression and common-coordinator provenance; no inference kernel changes or GPU execution in this phase",
+    "files": {
+      "prompt.txt": "a7ba0778bc19d1d6bd7b0781e3d4963bcab8725a462b487858373214ede912f2",
+      "usage.json": "6060d4e62723e65f1b4cf65da87d8a25e307c294fa5a7f6188a96bebb16a1c5a",
+      "session.jsonl": "6ba720ceef34495a9b36d1e63094a2fb9a79ffda999f3c578b7db705c11852cc",
+      "exit.json": "1476d9b3659cd2cb72bf2ee427d164d9cd424dd65b9f3caa2effb5b23325a735"
+    },
+    "validation": {
+      "managedChatTests": 32,
+      "cpuHarnessTests": 59,
+      "cpuTerminationTests": 6,
+      "piScenarios": 7,
+      "chatIntegrationChecks": 37,
+      "solutionBuild": "passed"
+    }
   }
 }

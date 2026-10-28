@@ -47,6 +47,7 @@ def load_module(name, path):
 
 def package(exe, expected):
     exe = exe.resolve()
+    require(exe.name == "deepinfer", "Package executable must be the manifest's deepinfer")
     root = exe.parent
     manifest = read_json(root / "manifest.json")
     require(manifest["source"] == expected and manifest["rid"] == "osx-arm64", "Package source/RID mismatch")
@@ -58,9 +59,44 @@ def package(exe, expected):
         path = (root / name).resolve()
         require(root in path.parents and path.is_file() and sha(path) == digest, "Immutable package hash mismatch")
     version = command([exe, "version"]).strip()
-    require(expected in version, "Actual executable version mismatch")
+    require(version.split("+")[-1] == expected, "Actual executable version mismatch")
     return {"source": expected, "version": version, "manifestSha256": sha(root / "manifest.json"),
             "executableSha256": sha(exe), "nativeSha256": sha(root / "libdeepinfer_metal.dylib")}
+
+
+def frozen_source(source, expected):
+    require(re.fullmatch("[0-9a-f]{40}", expected) is not None, "Require full source SHA")
+    source = source.resolve()
+    require(command(["git", "-C", source, "rev-parse", "HEAD"]).strip() == expected,
+            "Frozen source checkout differs from package")
+    require(not command(["git", "-C", source, "status", "--porcelain", "--untracked-files=all"]).strip(),
+            "Frozen source is dirty")
+    return {"sourceSha": expected, "sourceClean": True}
+
+
+def common_coordinator(args):
+    values = [getattr(args, "common_coordinator_" + key, None) for key in ("package", "source", "sha")]
+    require(all(v is not None for v in values) or all(v is None for v in values),
+            "Common coordinator requires package, source and full SHA together")
+    if values[0] is None:
+        return None
+    exe, source, expected = values
+    provenance = frozen_source(source, expected)
+    return {"package": package(exe, expected), "source": provenance}
+
+
+def coordinator_key(arm, shared):
+    require(arm in ("main", "off", "on"), "Unknown arm")
+    return "common-coordinator" if shared else "main" if arm == "main" else "candidate"
+
+
+def request_integrity_problems(problems, observations):
+    wrong = [p for p in problems if any(k in p for k in (
+        "Pi/worker token mismatch", "Pi cumulative token mismatch", "coverage mismatch",
+        "N-1 mismatch", "not metal-local", "duplicate worker", "multiply assigned"))]
+    wrong.extend("Compatible API infrastructure failure: " + row["id"] for row in observations
+                 if row.get("compatibleError") and row.get("compatibleErrorCode") != "invalid_model_output")
+    return wrong
 
 
 def environment(arm):
@@ -210,6 +246,15 @@ class Controller:
         if self.args.execute:
             require(source == ROOT, "Execute the controller from the frozen candidate source checkout")
             require(not dirty, "Freeze source before execution; never build dirty packages")
+        self.common_coordinator = common_coordinator(self.args)
+        if self.common_coordinator is not None:
+            self.packages["common-coordinator"] = self.common_coordinator["package"]
+        self.coordinator_evidence = {
+            "mode": "common" if self.common_coordinator else "same-arm",
+            "commonSource": self.common_coordinator["source"] if self.common_coordinator else None,
+            "arms": {arm: self.packages[coordinator_key(arm, self.common_coordinator is not None)]
+                     for arm in ("main", "off", "on")},
+        }
         require(command(["git", "-C", self.args.tools, "rev-parse", "HEAD"]).strip() == TOOLS_SHA, "Independent tools checkout changed")
         for name, digest in TOOLS.items():
             require(sha(self.args.tools / "scripts" / name) == digest, "Independent harness hash changed")
@@ -271,6 +316,7 @@ class Controller:
                     raise
         report = {"utc": stamp(), "mode": "execute-admission" if self.args.execute else "non-mutating-preflight",
                   "phase": self.args.phase, "packages": self.packages, "candidateSourceClean": not dirty,
+                  "coordinators": self.coordinator_evidence,
                   "sourceSha": head, "fixtures": fixture_evidence, "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS,
                   "piVersion": "1.4.0", "piEntrySha256": sha(self.args.pi.resolve()), "datasetSha256": DATASET,
                   "originalHealth": h, "originalHashes": self.original_hashes,
@@ -285,6 +331,7 @@ class Controller:
         save(self.out / "preflight.json", report)
         self.evidence_identity = {
             **power_metadata,
+            "coordinators": self.coordinator_evidence,
             "packages": self.packages, "sourceSha": head, "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS,
             "datasetSha256": DATASET, "fixtures": fixture_evidence,
             "harnessSha256": {p.name: sha(p) for p in (ROOT / "scripts").glob("*lmhead*.py")} |
@@ -294,6 +341,10 @@ class Controller:
         }
         save(self.out / "plan.json", {
             "schema": "issue103-controller-v1", "createdUtc": stamp(), "main": MAIN, "candidate": self.args.candidate_sha,
+            "coordinators": self.coordinator_evidence,
+            "comparison": ("Unchanged main inference under a common repaired API host; off/on isolate layout; "
+                           "main-to-on also includes candidate worker plumbing."
+                           if self.common_coordinator else "Original same-arm coordinator/worker packages."),
             **power_metadata, "phaseOrder": phase_order(self.args.phase, self.args.power_policy),
             "phase": self.args.phase, "fixedShapes": SHAPES, "fixedOrders": ["main,on", "on,main", "main,on", "on,main", "main,on"],
             "warmupsPerArmShape": 1, "formalPerArmShape": 3, "pilotOrder": ["main", "off", "on"],
@@ -329,15 +380,43 @@ class Controller:
     def unchanged_original(self):
         require({k: sha(p) for k, p in self.tracked.items()} == self.original_hashes, "Original files changed; recovery identity failure")
 
+    def revalidate_packages(self):
+        frozen_source(self.args.candidate_source, self.args.candidate_sha)
+        for key, exe, expected in (("main", self.args.main_package, MAIN),
+                                   ("candidate", self.args.candidate_package, self.args.candidate_sha)):
+            require(package(exe, expected) == self.packages[key], "Package changed after admission")
+        require(common_coordinator(self.args) == self.common_coordinator,
+                "Common coordinator package/source changed after admission")
+
+    def coordinator_executable(self, arm):
+        key = coordinator_key(arm, self.common_coordinator is not None)
+        exe = (self.args.common_coordinator_package if key == "common-coordinator" else
+               self.args.main_package if key == "main" else self.args.candidate_package)
+        return exe.resolve(), self.packages[key]
+
+    def start_coordinators(self, arm, config_dir, out, env):
+        exe, evidence = self.coordinator_executable(arm)
+        coordinators = []
+        for role, config, log in (("registry", "coordinator.json", "registry.log"),
+                                  ("clone", "clone.json", "clone.log")):
+            process = self.children.start([exe, "coordinator", "--config", config_dir / config],
+                                          out / log, env=env)
+            current = identity(process.pid)
+            require(process.poll() is None and current["comm"] == str(exe) and
+                    current["args"].startswith(str(exe) + " coordinator "),
+                    "Coordinator runtime executable/arguments mismatch")
+            coordinators.append({"role": role, "package": evidence, "process": current})
+        require(coordinators[0]["process"]["pid"] != coordinators[1]["process"]["pid"],
+                "Both coordinator roles must be independent owned processes")
+        return coordinators
+
     def pause(self):
         self.idle_original()
         self.unchanged_original()
         free_ports(list(range(self.args.base_port, self.args.base_port + 6)))
         require(all(p["pid"] == self.original_identity["pid"] for p in model_processes()),
                 "Another model appeared before pausing the original")
-        for key, exe, expected in (("main", self.args.main_package, MAIN),
-                                   ("candidate", self.args.candidate_package, self.args.candidate_sha)):
-            require(package(exe, expected) == self.packages[key], "Package changed before bootout")
+        self.revalidate_packages()
         high_power_evidence(read_json(self.args.high_power_evidence))
         self.check_power()
         require(same_identity(self.original_identity, identity(self.original_identity["pid"])), "Original identity changed before bootout")
@@ -460,7 +539,7 @@ class Controller:
         self.check_power()
         exe = self.args.main_package if arm == "main" else self.args.candidate_package
         expected = MAIN if arm == "main" else self.args.candidate_sha
-        require(package(exe, expected) == self.packages["main" if arm == "main" else "candidate"], "Package changed after admission")
+        self.revalidate_packages()
         config_dir = out / "private"
         config_dir.mkdir(mode=0o700)
         registry = f"http://127.0.0.1:{self.registry_port}"
@@ -483,10 +562,7 @@ class Controller:
         save(config_dir / "worker.json", conf)
         env = environment(arm)
         before = vm_snapshot()
-        self.children.start([exe, "coordinator", "--config", config_dir / "coordinator.json"],
-                            out / "registry.log", env=env)
-        self.children.start([exe, "coordinator", "--config", config_dir / "clone.json"],
-                            out / "clone.log", env=env)
+        coordinators = self.start_coordinators(arm, config_dir, out, env)
         self.worker_out = out
         self.worker = self.children.start([exe, "split-serve", "--config", config_dir / "worker.json"],
                                           out / "worker.log", env=env)
@@ -508,9 +584,11 @@ class Controller:
         log = (out / "worker.log").read_text()
         selector = selector_evidence(log, arm)
         profile = native_profile(log)
+        self.revalidate_packages()
         # Fused decode is an explicit managed->native ABI selector, not getenv.
         require(conf["decode-attention"] == "fused-fp32", "Decode attention selector changed")
         save(out / "runtime.json", {"arm": arm, "health": h, "package": self.packages["main" if arm == "main" else "candidate"],
+                                   "coordinators": coordinators, "coordinatorProvenance": self.coordinator_evidence,
                                    "environment": {k: v for k, v in env.items() if k.startswith(("DEEPINFER_", "DOTNET_"))},
                                    "selector": selector, "nativeProfile": profile, "beforeLoad": before,
                                    "afterLoadWarmup": vm_snapshot(), "managedChunk": 32, "nativeScratch": 128,
@@ -737,8 +815,7 @@ class Controller:
             self.finish_arm()
             # Slow or assertion-failed pilots do not cancel formal20. Invalid
             # clocks/tokens or infrastructure/resource failures are different.
-            wrong = [p for p in result["problems"] if any(k in p for k in (
-                "Pi/worker token mismatch", "N-1 mismatch", "not metal-local", "duplicate worker", "multiply assigned"))]
+            wrong = request_integrity_problems(result["problems"], observations)
             require(not wrong, "Pi/worker correctness mismatch; no whole-cohort claim")
 
     def dependency_evidence(self):
@@ -874,6 +951,10 @@ def arguments():
     parser.add_argument("--candidate-sha", required=True)
     parser.add_argument("--candidate-source", type=Path, required=True)
     parser.add_argument("--main-package", type=Path, default=Path("/Users/littlecloud/.codex/worktrees/experiment-92-main/Infer.NET/artifacts/deploy/releases/issue95-main/deepinfer"))
+    parser.add_argument("--common-coordinator-package", type=Path,
+                        help="Optional verified host executable used by BOTH loopback coordinators in EVERY arm; never changes workers")
+    parser.add_argument("--common-coordinator-source", type=Path, help="Clean frozen source checkout for the common host")
+    parser.add_argument("--common-coordinator-sha", help="Full source SHA of the common coordinator package")
     parser.add_argument("--tools", type=Path, default=REFERENCE84)
     parser.add_argument("--fixtures", type=Path, default=REFERENCE98 / "artifacts/dual-host/issue98-dflash8-e2e/fixtures")
     parser.add_argument("--dataset", type=Path, default=DATA_ROOT / "main-eval-20261023/artifacts/HumanEval.jsonl.gz")
@@ -891,7 +972,11 @@ def arguments():
     parser.add_argument("--execute", action="store_true", help="Explicit service/GPU mutation authorization for this invocation")
     parser.add_argument("--exclusive-gpu", action="store_true")
     parser.add_argument("--clients-paused", action="store_true")
-    return parser.parse_args()
+    args = parser.parse_args()
+    common = [args.common_coordinator_package, args.common_coordinator_source, args.common_coordinator_sha]
+    if any(v is not None for v in common) and not all(v is not None for v in common):
+        parser.error("--common-coordinator-package, --common-coordinator-source and --common-coordinator-sha are required together")
+    return args
 
 
 def main():
