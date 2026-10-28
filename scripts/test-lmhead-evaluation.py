@@ -48,6 +48,184 @@ def task(requests):
                                   "error": None} for r in requests]}}
 
 
+class PowerPolicyTests(unittest.TestCase):
+    def test_default_arguments_and_stable_policy_are_unchanged(self):
+        argv = ["controller", "--output", "unused", "--candidate-package", "unused",
+                "--candidate-sha", "a" * 40, "--candidate-source", "unused"]
+        with patch.object(sys, "argv", argv):
+            self.assertEqual(controller.arguments().power_policy, "stable-140w")
+        with patch.object(sys, "argv", argv + ["--power-policy", "battery-assisted-35w"]):
+            self.assertEqual(controller.arguments().power_policy, "battery-assisted-35w")
+        self.assertEqual(common.POWER_POLICIES["stable-140w"],
+                         {"adapterWatts": 140, "initialMinSoc": None, "minSoc": None, "maxSocDropPoints": 1})
+        initial = {"onAC": True, "adapterWatts": 140, "soc": 50, "adapterIdentity": {"serial": "same"}}
+        common.power_gate(initial)
+        common.power_gate(dict(initial, soc=49), initial)
+        with self.assertRaises(common.GateError):
+            common.power_gate(dict(initial, soc=48), initial)
+
+    def test_battery_assisted_initial_admission(self):
+        for soc in (99, 100):
+            common.power_gate({"onAC": True, "adapterWatts": 35, "soc": soc}, policy="battery-assisted-35w")
+        for value in ({"onAC": True, "adapterWatts": 35, "soc": 98},
+                      {"onAC": False, "adapterWatts": 35, "soc": 100},
+                      {"onAC": True, "adapterWatts": 140, "soc": 100}):
+            with self.subTest(value=value), self.assertRaises(common.GateError):
+                common.power_gate(value, policy="battery-assisted-35w")
+
+    def test_battery_assisted_continuous_bounds_and_adapter(self):
+        for soc in (99, 100):
+            initial = {"onAC": True, "adapterWatts": 35, "soc": soc, "adapterIdentity": {"serial": "same"}}
+            common.power_gate(dict(initial, soc=80), initial, "battery-assisted-35w")
+            for value in (dict(initial, soc=79), dict(initial, soc=soc - 21),
+                          dict(initial, onAC=False), dict(initial, adapterWatts=140),
+                          dict(initial, adapterIdentity={"serial": "changed"})):
+                with self.subTest(initial=soc, value=value), self.assertRaises(common.GateError):
+                    common.power_gate(value, initial, "battery-assisted-35w")
+        self.assertEqual(common.POWER_POLICIES["battery-assisted-35w"]["maxSocDropPoints"], 20)
+        initial = {"onAC": True, "adapterWatts": 35, "soc": 99}
+        common.power_gate(dict(initial, soc=100), initial, "battery-assisted-35w")
+        with self.assertRaises(common.GateError):
+            common.power_gate(dict(initial, soc=79), initial, "battery-assisted-35w")
+
+    def test_explicit_thermal_limits_without_false_absence_warning(self):
+        for raw in ("", "Note: No thermal warning level has been recorded\n"
+                    "Note: No performance warning level has been recorded\n"
+                    "Note: No CPU power status has been recorded\n",
+                    "CPU_Speed_Limit = 100\nCPU_Scheduler_Limit = 100",
+                    "Scheduler_Limit = 100\nThermal warning level: 0",
+                    "Thermal_Level = 0\nThermal Warning Level: Nominal"):
+            common.thermal_gate(raw)
+        for raw in ("CPU_Speed_Limit = 99", "CPU_Scheduler_Limit = 50", "Scheduler_Limit: 99.5",
+                    "CPU_Speed_Limit = -1", "Thermal warning level: 1", "Thermal_Level = 2",
+                    "Thermal Warning: Serious", "Thermal Warning Level = Critical"):
+            for policy, watts in (("stable-140w", 140), ("battery-assisted-35w", 35)):
+                with self.subTest(raw=raw, policy=policy), self.assertRaises(common.GateError):
+                    common.power_gate({"onAC": True, "adapterWatts": watts, "soc": 100, "thermal": raw},
+                                      policy=policy)
+
+    def test_monitor_power_check_uses_selected_policy_and_preserves_raw(self):
+        with tempfile.TemporaryDirectory() as temp:
+            c = controller.Controller.__new__(controller.Controller)
+            c.out = Path(temp)
+            c.args = types.SimpleNamespace(power_policy="battery-assisted-35w")
+            c.initial_power = {"soc": 100, "adapterIdentity": {"serial": "same"}}
+            value = {"onAC": True, "adapterWatts": 35, "soc": 80, "adapterIdentity": {"serial": "same"},
+                     "thermal": "CPU_Speed_Limit = 90", "batteryRaw": "synthetic battery", "custom": "synthetic settings"}
+            with patch.object(controller, "power_snapshot", return_value=value), self.assertRaises(common.GateError):
+                c.check_power()
+            self.assertEqual(common.rows(c.out / "power.jsonl"), [value])
+
+    def test_preflight_plan_and_identity_bind_policy_thresholds(self):
+        for policy, watts in (("stable-140w", 140), ("battery-assisted-35w", 35)):
+            with self.subTest(policy=policy), tempfile.TemporaryDirectory() as temp:
+                c = controller.Controller.__new__(controller.Controller)
+                c.out = Path(temp)
+                c.args = types.SimpleNamespace(
+                    candidate_sha="a" * 40, candidate_source=controller.ROOT, execute=False, phase="all",
+                    main_package=Path("/synthetic/main"), candidate_package=Path("/synthetic/candidate"),
+                    tools=Path("/synthetic/tools"), dataset=c.out / "dataset", fixtures=c.out / "fixtures",
+                    pi=Path("/synthetic/pi"), original_preflight=c.out / "original", native_driver=None,
+                    native_driver_sha256=None, high_power_evidence=c.out / "ui", base_port=5380, power_policy=policy)
+                c.args.dataset.write_bytes(b"synthetic")
+                c.packages = {}
+                c.original_hashes = {k: "synthetic" for k in ("plist", "config", "binary", "native")}
+                c.original_config = {"weights": "/synthetic/weights"}
+                c.original_exe, c.label = Path("/synthetic/original"), "synthetic"
+                c.files = {n: c.out / f"prompt-{n}" for n in common.FIXTURES}
+                health = {"pid": 42, "build": common.ORIGINAL}
+                c.health = Mock(return_value=health)
+                ui = {"utc": common.stamp(), "verifiedBy": "parent", "source": "synthetic UI",
+                      "energyModeControls": ["High Power", "High Power"]}
+
+                def read_json(path):
+                    if path == c.args.original_preflight:
+                        return {"hashes": c.original_hashes, "health": health}
+                    if path == c.args.high_power_evidence:
+                        return ui
+                    n = int(path.parent.name)
+                    return {"inputTokens": n, "textSha256": common.FIXTURES[n][0],
+                            "tokenIdsSha256": common.FIXTURES[n][1]}
+
+                def command(args, **_):
+                    if args[:2] == ["git", "show"]:
+                        return "\n".join(f'["{i}"] = "' + "0" * 64 + '"' for i in range(11))
+                    if args[0] == "git":
+                        if "status" in args:
+                            return ""
+                        if "merge-base" in args:
+                            return common.MAIN
+                        return common.TOOLS_SHA if args[2] == c.args.tools else c.args.candidate_sha
+                    if args[0] == c.args.pi:
+                        return "1.4.0"
+                    return "pid = 42" if args[0] == "launchctl" else "{}"
+
+                hashes = {c.args.dataset: common.DATASET}
+                hashes.update({c.args.tools / "scripts" / name: digest for name, digest in common.TOOLS.items()})
+                hashes.update({c.files[n]: pair[0] for n, pair in common.FIXTURES.items()})
+                dataset = b"\n".join(json.dumps({"task_id": str(i)}).encode() for i in range(164))
+                power = {"onAC": True, "adapterWatts": watts, "soc": 99, "thermal": "synthetic raw therm"}
+                with patch.object(controller, "package", return_value={"source": "synthetic"}), \
+                        patch.object(controller, "command", side_effect=command), \
+                        patch.object(controller, "read_json", side_effect=read_json), \
+                        patch.object(controller, "sha", side_effect=lambda p: hashes.get(Path(p), "0" * 64)), \
+                        patch.object(controller.gzip, "decompress", return_value=dataset), \
+                        patch.object(controller, "identity", return_value={"pid": 42}), \
+                        patch.object(controller, "verify_original_identity"), \
+                        patch.object(controller, "model_processes", return_value=[{"pid": 42}]), \
+                        patch.object(controller, "free_ports"), \
+                        patch.object(controller, "power_snapshot", return_value=power):
+                    report = c.preflight()
+                plan = common.read_json(c.out / "plan.json")
+                self.assertEqual(json.loads(json.dumps(report)), common.read_json(c.out / "preflight.json"))
+                for evidence in (report, plan, plan["identity"], c.evidence_identity):
+                    self.assertEqual(evidence["powerPolicy"], policy)
+                    self.assertEqual(evidence["powerThresholds"], common.POWER_POLICIES[policy])
+                    self.assertEqual(bool(evidence["powerWarnings"]), policy == "battery-assisted-35w")
+                self.assertEqual(plan["phaseOrder"], controller.phase_order("all", policy))
+                self.assertEqual(report["supply140W"], watts == 140)
+                self.assertTrue(report["powerAdmission"])
+                self.assertTrue(report["freshHighPowerEvidence"])
+                self.assertEqual(report["power"], power)
+
+    def test_selected_phase_order_is_executed_once_and_recorded(self):
+        for policy, expected in (("stable-140w", ["gates", "fixed", "pilot", "cohort"]),
+                                 ("battery-assisted-35w", ["gates", "pilot", "cohort", "fixed"])):
+            with self.subTest(policy=policy), tempfile.TemporaryDirectory() as temp:
+                c = controller.Controller.__new__(controller.Controller)
+                c.out = Path(temp)
+                c.args = types.SimpleNamespace(phase="all", power_policy=policy)
+                c.packages, c.evidence_identity = {}, {"powerPolicy": policy}
+                c.dependency_evidence, c.pause, c.monitor, c.healthy, c.restore = [Mock() for _ in range(5)]
+                called = []
+                c.gates = lambda: called.append("gates")
+                c.fixed = lambda: called.append("fixed")
+                c.human = called.append
+                c.execute()
+                c.monitor_thread.join()
+                self.assertEqual(called, expected)
+                self.assertEqual(common.read_json(c.out / "completed.json")["phases"], expected)
+                self.assertEqual([r["phase"] for r in common.rows(c.out / "phases.jsonl") if r["status"] == "starting"], expected)
+                c.restore.assert_called_once()
+            for phase in ("gates", "fixed", "pilot", "cohort"):
+                self.assertEqual(controller.phase_order(phase, policy), [phase])
+
+    def test_summary_carries_policy_without_inventing_results(self):
+        for policy in common.POWER_POLICIES:
+            with self.subTest(policy=policy), tempfile.TemporaryDirectory() as temp:
+                run = Path(temp)
+                thresholds = common.POWER_POLICIES[policy]
+                common.save(run / "plan.json", {"candidate": "a" * 40, "powerPolicy": policy, "powerThresholds": thresholds})
+                result = summarizer.summarize(run)
+                self.assertEqual(result["powerPolicy"], policy)
+                self.assertEqual(result["powerThresholds"], thresholds)
+                self.assertEqual(result["powerWarnings"],
+                                 [common.BATTERY_ASSISTED_WARNING] if policy == "battery-assisted-35w" else [])
+                self.assertIsNone(result["formal20VersusMain"]["on"]["decodeChangePercent"])
+                self.assertFalse(any(row["worker"]["complete"] for row in result["human"]))
+                self.assertIsNone(result["predeclaredChecks"]["officialOnPassesNotBelowMain"])
+
+
 class MetricsTests(unittest.TestCase):
     def test_pinned_standard_summarizer_agrees_on_synthetic_worker_events(self):
         source = controller.REFERENCE84 / "scripts/summarize-pi-humaneval-performance.py"
@@ -249,7 +427,7 @@ class SafetyTests(unittest.TestCase):
             with self.subTest(signal=fail_signal), tempfile.TemporaryDirectory() as temp:
                 c = controller.Controller.__new__(controller.Controller)
                 c.out = Path(temp)
-                c.args = types.SimpleNamespace(phase="gates")
+                c.args = types.SimpleNamespace(phase="gates", power_policy="stable-140w")
                 c.dependency_evidence = Mock()
                 c.pause = Mock()
                 c.monitor = Mock()
@@ -432,6 +610,21 @@ class PlanObserverTests(unittest.TestCase):
                                    "identity": {"packages": c.packages, "harnessSha256": {"controller": "old"}}})
             with self.assertRaises(common.GateError):
                 c.dependency_evidence()
+
+    def test_prior_gates_bind_power_policy_and_thresholds(self):
+        for changed in ("powerPolicy", "powerThresholds"):
+            with self.subTest(changed=changed), tempfile.TemporaryDirectory() as temp:
+                c = controller.Controller.__new__(controller.Controller)
+                c.out = Path(temp)
+                c.args = types.SimpleNamespace(phase="fixed", gates_evidence=c.out / "gate.json")
+                c.evidence_identity = {"powerPolicy": "battery-assisted-35w",
+                                       "powerThresholds": common.POWER_POLICIES["battery-assisted-35w"]}
+                prior = copy.deepcopy(c.evidence_identity)
+                prior[changed] = ("stable-140w" if changed == "powerPolicy"
+                                  else dict(prior[changed], maxSocDropPoints=21))
+                common.save(c.args.gates_evidence, {"passed": True, "identity": prior})
+                with self.assertRaises(common.GateError):
+                    c.dependency_evidence()
 
     def test_missing_error_and_nonfinite_client_durations_are_null(self):
         for value in (None, "error", -1, float("inf"), float("nan"), True):

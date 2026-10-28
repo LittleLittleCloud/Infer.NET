@@ -7,7 +7,7 @@ from pathlib import Path
 import statistics
 
 from issue103_common import (
-    COHORT, DATASET, IMAGE, MAIN, METAL_LIMIT, PACKED_BYTES, PILOT, SHAPES, SWAP_LIMIT, TOOLS, TOOLS_SHA,
+    BATTERY_ASSISTED_WARNING, COHORT, DATASET, IMAGE, MAIN, METAL_LIMIT, PACKED_BYTES, PILOT, SHAPES, SWAP_LIMIT, TOOLS, TOOLS_SHA,
     aggregate, instant, metric_from_observation, read_json, reconcile, require, rows, save, sha,
 )
 
@@ -176,6 +176,8 @@ def summarize(run):
     on, off = comparisons["on"], comparisons["off"]
     main_passed, on_passed = formal["main"].get("officialPassed"), formal["on"].get("officialPassed")
     return {"schema": "issue103-evaluation-summary-v1", "main": MAIN, "candidate": plan["candidate"],
+            "powerPolicy": plan.get("powerPolicy"), "powerThresholds": plan.get("powerThresholds"),
+            "powerWarnings": [BATTERY_ASSISTED_WARNING] if plan.get("powerPolicy") == "battery-assisted-35w" else [],
             "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS, "fixed": fixed, "fixedProblems": fixed_errors,
             "fixedMedianVersusMain": fixed_comparisons(fixed),
             "human": humans, "formal20VersusMain": comparisons,
@@ -203,7 +205,8 @@ def main():
     result = summarize(run)
     save(args.output, result)
     print(json.dumps({"written": True, "fixedProblems": len(result["fixedProblems"]),
-                      "formal20VersusMain": result["formal20VersusMain"]}, allow_nan=False))
+                      "formal20VersusMain": result["formal20VersusMain"],
+                      "powerPolicy": result["powerPolicy"], "powerWarnings": result["powerWarnings"]}, allow_nan=False))
 
 
 if __name__ == "__main__":

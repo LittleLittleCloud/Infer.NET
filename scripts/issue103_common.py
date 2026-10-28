@@ -44,6 +44,11 @@ FIXTURES = {
 METAL_LIMIT = int(38.5 * 2**30)
 SWAP_LIMIT = 512 * 2**20
 PACKED_BYTES = 540344320
+POWER_POLICIES = {
+    "stable-140w": {"adapterWatts": 140, "initialMinSoc": None, "minSoc": None, "maxSocDropPoints": 1},
+    "battery-assisted-35w": {"adapterWatts": 35, "initialMinSoc": 99, "minSoc": 80, "maxSocDropPoints": 20},
+}
+BATTERY_ASSISTED_WARNING = "Battery-assisted 35W is exploratory, not stable-140W acceptance."
 
 
 class GateError(RuntimeError):
@@ -279,10 +284,31 @@ def power_snapshot():
             "custom": command(["pmset", "-g", "custom"])}
 
 
-def power_gate(current, initial):
-    require(current["onAC"] and current["adapterWatts"] == 140, "Require verified 140W AC supply throughout")
+def thermal_gate(raw):
+    for name, value in re.findall(
+            r"\b(CPU_Speed_Limit|(?:CPU_)?Scheduler_Limit)\s*[:=]\s*([-+]?\d+(?:\.\d+)?)", raw, re.IGNORECASE):
+        require(float(value) >= 100, f"Thermal/power limit reported: {name}={value}")
+    for value in re.findall(
+            r"\bThermal(?:[ _]+Warning(?:[ _]+Level)?|[ _]+Level)\s*[:=]\s*([^\r\n,;}]+)",
+            raw, re.IGNORECASE):
+        value = value.strip()
+        require(value.lower() in ("0", "0.0", "none", "normal", "nominal", "no warning"),
+                "Thermal warning reported: " + value)
+
+
+def power_gate(current, initial=None, policy="stable-140w"):
+    thresholds = POWER_POLICIES[policy]
+    initial = current if initial is None else initial
+    require(current["onAC"] and current["adapterWatts"] == thresholds["adapterWatts"],
+            f"Require verified {thresholds['adapterWatts']}W AC supply throughout")
     require(current.get("adapterIdentity") == initial.get("adapterIdentity"), "Power adapter identity changed")
-    require(current["soc"] >= initial["soc"] - 1, "Battery declined by more than one percentage point")
+    if thresholds["initialMinSoc"] is not None:
+        require(initial["soc"] >= thresholds["initialMinSoc"], "Initial battery SOC must be at least 99 percent")
+    if thresholds["minSoc"] is not None:
+        require(current["soc"] >= thresholds["minSoc"], "Battery SOC must remain at least 80 percent")
+    require(current["soc"] >= initial["soc"] - thresholds["maxSocDropPoints"],
+            f"Battery declined by more than {thresholds['maxSocDropPoints']} percentage points")
+    thermal_gate(current.get("thermal", ""))
 
 
 def high_power_evidence(value, now=None):

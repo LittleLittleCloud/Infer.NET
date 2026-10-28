@@ -36,5 +36,17 @@
       "evaluation-exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
     },
     "scope": "Copilot authored the evaluation controller, observer, summarizer and CPU tests, and the narrow SplitService selector preservation fix. No GPU or performance phase executed by Copilot."
+  },
+  "batteryPolicyAmendment": {
+    "model": "gpt-6.1-sol",
+    "provider": "copilot",
+    "noSubagents": true,
+    "scope": "User-authorized one battery-assisted 35W attempt; harness policy only, inference code unchanged",
+    "files": {
+      "prompt.txt": "fb7a0da1475dc28d03bec2b05160898525053ccbb3069ee6752e4b558fe48176",
+      "usage.json": "d9684a8d2dddd016b520c7553f85d1ba3b48cdfcc8ab45f0f1f63dea6ca6e6ef",
+      "session.jsonl": "177ba579ea2a8e280e2bf1e8b4209ba55029673caeede3da559cb2927fc989b5",
+      "exit.json": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+    }
   }
 }

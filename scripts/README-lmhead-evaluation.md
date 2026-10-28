@@ -51,7 +51,7 @@ preflight record. `--help` lists overrides. Preflight pins:
   Actual runtime input counts are checked on every fixed request.
 
 The parent supplies a fresh, private JSON file after physically connecting
-140W AC and re-verifying the settings UI, for example:
+the selected policy's AC adapter and re-verifying the settings UI, for example:
 
 ```json
 {
@@ -64,9 +64,19 @@ The parent supplies a fresh, private JSON file after physically connecting
 
 This is a schema example, **not verification evidence**. Evidence must be at
 most 30 minutes old at initial admission and immediately before bootout.
-The controller independently requires a 140W adapter, AC and no battery decline
-greater than one percentage point from admission. It does not change settings.
-With the previously reported 35W adapter, execution is blocked.
+The default `--power-policy stable-140w` still requires 140W AC and no battery
+decline greater than one percentage point from admission.
+The user explicitly authorized **one attempt** with a full battery at 35W:
+select `--power-policy battery-assisted-35w` for initial AC35W and SOC >=99%,
+unchanged adapter identity and AC35W throughout, SOC >=80%, and at most a
+20-percentage-point drop from admission. This is exploratory, **not stable-140W
+acceptance**. It does not authorize retries. Both policies retain the fresh
+parent High Power UI gate; the controller does not change OS settings.
+Explicit `pmset -g therm` CPU speed/scheduler limits below 100 or thermal
+warning values stop execution. Missing limit lines and the normal
+`No thermal warning level has been recorded` are not warnings. Raw diagnostics
+are retained. Policy and thresholds are recorded in preflight, plan and bound
+evidence identity, and carried into summaries.
 
 Compile the native gate driver from the frozen candidate source without running
 it (the existing `check-metal-lmhead.sh --compile NEW_DIRECTORY` does this).
@@ -111,8 +121,11 @@ is established by its verified main package; it cannot emit a new candidate
 metadata API. Candidate-off must log zero extra bytes. Native on/off mismatch
 is an error, never a fallback.
 
-Order: gates; five fixed shapes main/on with AB/BA shape-wise counterbalancing;
-pilot main/off/on; fixed20 on/off/main. Each fixed arm/shape has one excluded
+Default stable-policy order: gates, fixed, pilot, cohort. Battery-assisted
+`--phase all` prioritizes HumanEval: gates, pilot, cohort, fixed.
+The selected phase order is recorded in the plan. Fixed uses five shapes
+main/on with AB/BA shape-wise counterbalancing; pilot uses main/off/on;
+fixed20 uses on/off/main. Each fixed arm/shape has one excluded
 warmup and three retained formal trials. Only fixed-length requests ignore EOS;
 Pi handles EOS naturally and retains its 300-second per-task timeout. Fixed
 requests and both observation hops allow up to 3600 seconds; the worker's
@@ -169,7 +182,7 @@ Power/battery/thermal, RSS, memory-pressure and `vm_stat` are sampled throughout
 Loading/warmup swap is separate from steady requests. The observer brackets
 every request directly; live steady-request swap growth is also monitored.
 Stop above 512 MiB additional system swap-out or 38.5 GiB observed Metal
-allocation, supply changes, meaningful battery decline, crashes or count/token
+allocation, supply changes, policy battery/thermal limits, crashes or count/token
 mismatch. No whole-cohort claim is made from incomplete coverage.
 
 ## Explicit limitations

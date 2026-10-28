@@ -16,8 +16,8 @@ import time
 import urllib.request
 
 from issue103_common import (
-    ADAPTED_REFERENCES, Children, COHORT, DATASET, FIXTURES, GateError, IMAGE, MAIN, METAL_LIMIT,
-    PACKED_BYTES, PILOT, REVISION, SHAPES, SWAP_LIMIT, TOOLS, TOOLS_SHA, append, command,
+    ADAPTED_REFERENCES, BATTERY_ASSISTED_WARNING, Children, COHORT, DATASET, FIXTURES, GateError, IMAGE, MAIN, METAL_LIMIT,
+    PACKED_BYTES, PILOT, POWER_POLICIES, REVISION, SHAPES, SWAP_LIMIT, TOOLS, TOOLS_SHA, append, command,
     free_ports, high_power_evidence, http, identity, instant, metric_from_observation,
     metric_problems, model_processes, new_output, power_gate, power_snapshot, read_json,
     reconcile, require, rows, same_identity, save, sha, stamp, verify_original_identity,
@@ -29,6 +29,13 @@ REFERENCE84 = Path("/Users/littlecloud/.codex/worktrees/experiment-84-prefill-de
 REFERENCE98 = Path("/Users/littlecloud/.codex/worktrees/experiment-98-dflash8-e2e/Infer.NET")
 DATA_ROOT = Path("/Users/littlecloud/repos/Infer.NET/artifacts")
 MODEL = "qwen3.6-35b-a3b"
+
+
+def phase_order(phase, policy):
+    if phase != "all":
+        return [phase]
+    return (["gates", "pilot", "cohort", "fixed"] if policy == "battery-assisted-35w"
+            else ["gates", "fixed", "pilot", "cohort"])
 
 
 def load_module(name, path):
@@ -223,6 +230,15 @@ class Controller:
                     sha(self.args.native_driver) == self.args.native_driver_sha256, "Native gate driver provenance mismatch")
         observed_power = power_snapshot()
         supply_ok = observed_power["onAC"] and observed_power["adapterWatts"] == 140
+        power_blockers = []
+        try:
+            power_gate(observed_power, policy=self.args.power_policy)
+        except GateError as ex:
+            power_blockers.append(str(ex))
+        power_metadata = {
+            "powerPolicy": self.args.power_policy, "powerThresholds": POWER_POLICIES[self.args.power_policy],
+            "powerWarnings": [BATTERY_ASSISTED_WARNING] if self.args.power_policy == "battery-assisted-35w" else [],
+        }
         ui_ok = False
         if self.args.high_power_evidence:
             try:
@@ -236,8 +252,9 @@ class Controller:
                   "sourceSha": head, "fixtures": fixture_evidence, "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS,
                   "piVersion": "1.4.0", "piEntrySha256": sha(self.args.pi.resolve()), "datasetSha256": DATASET,
                   "originalHealth": h, "originalHashes": self.original_hashes,
-                  "power": observed_power, "supply140W": supply_ok, "freshHighPowerEvidence": ui_ok,
-                  "blockers": ([] if supply_ok else ["140W AC supply not verified"]) +
+                  **power_metadata, "power": observed_power, "supply140W": supply_ok,
+                  "powerAdmission": not power_blockers, "freshHighPowerEvidence": ui_ok,
+                  "blockers": power_blockers +
                               ([] if ui_ok else ["fresh parent High Power evidence missing"]) +
                               ([] if not dirty else ["candidate checkout not frozen"]),
                   "limitations": ["Streaming API exposes no full logits or internal states. Independent native operator plus exact deterministic full-model checks only.",
@@ -245,6 +262,7 @@ class Controller:
                                   "No physical GPU residency high-water query; device allocation observations are not physical-residency proof."]}
         save(self.out / "preflight.json", report)
         self.evidence_identity = {
+            **power_metadata,
             "packages": self.packages, "sourceSha": head, "toolsCommit": TOOLS_SHA, "toolHashes": TOOLS,
             "datasetSha256": DATASET, "fixtures": fixture_evidence,
             "harnessSha256": {p.name: sha(p) for p in (ROOT / "scripts").glob("*lmhead*.py")} |
@@ -254,6 +272,7 @@ class Controller:
         }
         save(self.out / "plan.json", {
             "schema": "issue103-controller-v1", "createdUtc": stamp(), "main": MAIN, "candidate": self.args.candidate_sha,
+            **power_metadata, "phaseOrder": phase_order(self.args.phase, self.args.power_policy),
             "phase": self.args.phase, "fixedShapes": SHAPES, "fixedOrders": ["main,on", "on,main", "main,on", "on,main", "main,on"],
             "warmupsPerArmShape": 1, "formalPerArmShape": 3, "pilotOrder": ["main", "off", "on"],
             "cohortOrder": ["on", "off", "main"], "pilotIds": PILOT, "cohortIds": COHORT,
@@ -263,7 +282,7 @@ class Controller:
             "identity": self.evidence_identity,
         })
         if self.args.execute:
-            require(supply_ok and ui_ok, "Power admission not satisfied")
+            require(not power_blockers and ui_ok, "Power admission not satisfied")
             self.initial_power = observed_power
             require(self.args.exclusive_gpu and self.args.clients_paused, "Parent-exclusive GPU scheduling and paused clients required")
             require(self.args.phase != "preflight", "Choose an explicit execution phase")
@@ -317,7 +336,7 @@ class Controller:
     def check_power(self):
         value = power_snapshot()
         append(self.out / "power.jsonl", value)
-        power_gate(value, self.initial_power)
+        power_gate(value, self.initial_power, self.args.power_policy)
 
     def monitor(self):
         try:
@@ -789,7 +808,7 @@ class Controller:
             self.pause()
             self.monitor_thread = threading.Thread(target=self.monitor)
             self.monitor_thread.start()
-            phases = ("gates", "fixed", "pilot", "cohort") if self.args.phase == "all" else (self.args.phase,)
+            phases = phase_order(self.args.phase, self.args.power_policy)
             for phase in phases:
                 self.healthy()
                 append(self.out / "phases.jsonl", {"utc": stamp(), "phase": phase, "status": "starting"})
@@ -821,6 +840,8 @@ class Controller:
 def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--phase", choices=("preflight", "gates", "fixed", "pilot", "cohort", "all"), default="preflight")
+    parser.add_argument("--power-policy", choices=tuple(POWER_POLICIES), default="stable-140w",
+                        help="Default: 140W AC, at most 1 SOC point drop; exploratory 35W requires initial SOC >=99, SOC >=80 and at most 20 points drop")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--candidate-package", type=Path, required=True, help="Frozen Native AOT deepinfer executable")
     parser.add_argument("--candidate-sha", required=True)
@@ -855,9 +876,11 @@ def main():
         report = controller.preflight()
         if args.execute:
             controller.execute()
-            print(json.dumps({"completed": True, "restorationVerified": controller.restored, "evidence": str(out)}))
+            print(json.dumps({"completed": True, "restorationVerified": controller.restored, "evidence": str(out),
+                              "powerPolicy": report["powerPolicy"], "powerWarnings": report["powerWarnings"]}))
             return 0 if controller.restored else 3
-        print(json.dumps({"mode": "non-mutating-preflight", "blockers": report["blockers"], "evidence": str(out)}))
+        print(json.dumps({"mode": "non-mutating-preflight", "blockers": report["blockers"], "evidence": str(out),
+                          "powerPolicy": report["powerPolicy"], "powerWarnings": report["powerWarnings"]}))
         return 0
     except BaseException as ex:
         if not (out / "failure.json").exists():
