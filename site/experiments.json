@@ -1,21 +1,21 @@
 [
   {
     "id": "lmhead-affine8-20261027",
-    "title": "LM-head affine8 layout: gates passed; pilot stopped on stream integrity",
-    "kind": "2026-10-27 · Experiment #103 · No speedup conclusion",
+    "title": "LM-head affine8: no decode gain in complete pilot; formal20 power stop",
+    "kind": "2026-10-27 · Experiment #103 · Default off; no adoption",
     "source": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md",
     "question": "Can exact affine8/group64 LM-head packing and coordinated lane/input reuse improve decode without numerical or resource regression?",
-    "setup": "Main 4f51f241e87999c8cc3f79d733cd95ade9c711cd; candidate dee76d916361d4ad0d81cf44543cbee4b7a78488; M5 Pro 20GPU/48GB; user-authorized 35 W battery-assisted trial, SOC 100% to 91%; High Power.",
+    "setup": "Main worker 4f51f241e87999c8cc3f79d733cd95ade9c711cd; candidate and common repaired API dcf72d8769ed6836c3885f3f23d7b528324e2154; M5 Pro 20GPU/48GB, 35 W battery-assisted, High Power; SOC100% to79%.",
     "change": "One default-off tile4 layout/kernel; original checkpoint bits, FP32 arithmetic, batched prefill and vocabulary semantics retained. No other inference kernels or deployment settings changed.",
-    "result": "Main observed-request decode 58.5122 tok/s (diagnostic only). Main and off each completed 4/5 Pi tasks and passed 5/5 official assertions. Off stopped on malformed tool-call stream/token mismatch; on performance and HumanEval20 did not run. Throughput chart values remain null.",
-    "validation": "49 CPU tests and package checks passed; native and full-model main/off/on sequence, EOS, cancellation/reset gates passed. Original service definition/hashes restored; ready=false predated and followed the run.",
-    "conclusion": "No valid decoding comparison or adoption conclusion. The stream failure occurred with the optimization off. Candidate remains default off and unmerged.",
-    "next": "Repair malformed-tool-call terminal stream/usage handling separately; then run fresh fixed controls and HumanEval5/20. Do not rerun this measured attempt automatically.",
+    "result": "Complete HumanEval5 main/off/on: Pi5/5 and official5/5 each. Decode60.2806/60.3149/60.1165 tok/s; on/main -0.2722%. Formal20 on stopped after9/20 tasks at battery79%; off/main not run.",
+    "validation": "Native/full-model gates, 59 CPU harness tests, 32 managed chat tests, actual Pi fault-path tests and AOT package verified. Pilot request coverage22/22,26/26,16/16. Automatic cleanup error retained; parent restored unchanged original definition/hashes, pre-existing ready=false remains.",
+    "conclusion": "No demonstrated pilot decoding gain for 515.3125 MiB extra layout payload. Formal20 comparison Not Obtained; keep default off and unmerged. Repaired API retains genuine error usage.",
+    "next": "Review cleanup-only follow-up and design a pre-registered power schedule that can finish all comparable20-task arms. Preserve all failed and interrupted evidence.",
     "commands": [
       "bash scripts/check-metal-lmhead.sh --cpu NEW_LOCAL_OUTPUT_DIRECTORY",
       "bash scripts/check-metal-lmhead.sh --compile NEW_LOCAL_OUTPUT_DIRECTORY"
     ],
-    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/103; code PR #104; results PR #105; docs/evaluations/issue103/battery-trial-summary.json; initial startup failures and restricted raw SHA256 inventory retained."
+    "evidence": "https://github.com/LittleLittleCloud/Infer.NET/issues/103; code PR #104; results PR #105; docs/evaluations/issue103/stream-repaired-trial-summary.json; previous failures retained."
   },
   {
     "id": "speculative-decode-closeout-20261025",

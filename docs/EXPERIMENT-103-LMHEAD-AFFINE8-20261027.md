@@ -1,4 +1,63 @@
-# Experiment 103: LM-head affine8 layout — pilot stopped on stream integrity
+# Experiment 103: LM-head affine8 layout — no gain in complete HumanEval5; HumanEval20 power stop
+
+**The repaired trial completed all three HumanEval5 arms and showed no decoding improvement.** Main measured 60.2806 tok/s, candidate off 60.3149 tok/s, and candidate on 60.1165 tok/s: **on versus main -0.2722%**. All three completed Pi 5/5, passed official assertions 5/5, and had complete request-clock/token coverage. This single pilot does not establish a statistically meaningful regression or meet the predeclared +5% adoption threshold.
+
+HumanEval20 started in the registered on/off/main order. The enabled arm completed 9/20 tasks before battery charge fell to 79%, triggering the unchanged 80% floor. The other two formal arms and fixed-shape performance controls did not run. **The formal20 decoding comparison is Not Obtained.** Keep the implementation default off and unmerged.
+
+- [Experiment #103](https://github.com/LittleLittleCloud/Infer.NET/issues/103), [code PR #104](https://github.com/LittleLittleCloud/Infer.NET/pull/104), [independent results PR #105](https://github.com/LittleLittleCloud/Infer.NET/pull/105).
+- New run: `battery-assisted-20261027-stream-fixed`, measured October 27, 2026, America/Los_Angeles.
+- Main inference worker: `4f51f241e87999c8cc3f79d733cd95ade9c711cd`.
+- Measured candidate worker and common repaired API host: `dcf72d8769ed6836c3885f3f23d7b528324e2154`.
+- [Sanitized request/task evidence and restricted raw hashes](evaluations/issue103/stream-repaired-trial-summary.json).
+- [Plan revision 3 and user authorization](https://github.com/LittleLittleCloud/Infer.NET/issues/103#issuecomment-6461018668). The user separately confirmed continuing with 35 W.
+
+## Repair and comparison boundary
+
+GitHub Copilot CLI 1.0.103 using only GPT-6.1 Sol implemented the repair. An invalid generated tool call now emits genuine terminal usage before an explicit API error, instead of escaping as an uncaught exception and losing Pi accounting. Malformed calls are not executable, are not labeled successful, and the parser was not broadened. Missing or inconsistent worker accounting remains invalid. The exact historical malformed text was not retained; the sanitized regression reproduces its exception/accounting failure without claiming that text was recovered.
+
+All three arms use the same repaired binary for both experimental loopback coordinators. The main inference worker remains the immutable main package. Thus main means **unchanged main inference under a common repaired API host**, not unchanged whole-stack main. Off/on isolates the layout switch; main/on additionally includes candidate worker plumbing. The deployed original coordinator was not changed. Separate coordinator and worker SHAs, package hashes and runtime identities are bound to the evidence.
+
+The LM-head native code and all inference settings remain unchanged from the earlier candidate: affine8/group64, FP32 KV/operands/state, fused FP32 decode attention, managed prefill32/native scratch128, no prefix cache/speculation, the same model revision, dataset, Pi1.4.0, seed0, context32768, output4096 and task timeout300 s. Neither tuning nor measured retries occurred during the run.
+
+Validation before measurement passed: 32 managed chat tests, 59 CPU harness tests, six termination tests including seven real Pi scenarios, 37 existing chat integration checks, solution build, Native AOT publish and all nine package hashes. The packaged host also passed all six termination tests. A parent invocation first used a nonexistent Pi path; it failed before its Pi scenario, was retained, and the corrected installed path passed. Native and full-model main/off/on short/8K sequence, EOS, cancellation and exact recovery gates then passed. Full-checkpoint logits/internal states remain unavailable.
+
+## Complete HumanEval5 results
+
+| Worker arm | Pi completion | Official assertions | Requests | Prefill tok/s | Decode tok/s | Decode vs main |
+| --- | --- | --- | --- | ---: | ---: | ---: |
+| main | 5/5 | 5/5 | 22/22 | 154.8814 | 60.2806 | baseline |
+| off | 5/5 | 5/5 | 26/26 | 155.9005 | 60.3149 | +0.0569% |
+| on | 5/5 | 5/5 | 16/16 | 157.6539 | 60.1165 | -0.2722% |
+
+Both the standard source-pinned summarizer and strict controller reconciliation report complete metrics with no problems for all three pilot arms. No measured pilot request encountered a compatible API error. Rates use total worker input tokens/prefill time and total N-1 decode intervals/decode time; they are not means of request rates. Pi interactions and context lengths differ across arms, so application wall time is reported separately in the evidence and is not a decoding speedup. On versus off decode is also slightly lower; no reproducible gain is established.
+
+The site retains valid pilot throughput points in a separate 35 W/common-host configuration. The x-axis identifies the measured inference worker; the shared API host identity is explicit in configuration and evidence. No candidate is promoted to adopted main.
+
+## Interrupted HumanEval20 and power conditions
+
+The registered sequence was gates, pilot main/off/on, formal20 on/off/main, then fixed controls. On completed HumanEval/156, /94, /72, /80, /149, /2, /35, /32 and /146. The next request was interrupted at the power stop and has no complete terminal worker accounting. All observed requests, including that failure, remain in raw evidence. Do not infer an independent stream-repair regression from this stop-associated incomplete request.
+
+The supply remained 35 W with High Power verified. The controller sampled battery charge from 100% down to 79% and stopped at `2026-10-28T05:52:09.027814+00:00` with `Battery SOC must remain at least 80 percent`. This is an exploratory battery-assisted trial, not stable140 W acceptance. The pilot finished before the later power violation; the incomplete formal cohort has no aggregate speed claim.
+
+After restoration, the pinned Docker evaluator checked existing artifacts without any new model request: all nine available solutions passed; eleven planned solutions were missing. Report this as nine verified artifacts from an interrupted twenty-task cohort, not a complete20 success rate or performance result. An initial parent evaluator invocation supplied a relative bind path, causing Docker exit125. That infrastructure failure is retained separately and is not a model assertion failure; using the required absolute path produced the nine genuine passes. The pre-arm positive/assertion-negative controls had already passed. No generated solution was changed or regenerated.
+
+Maximum request-sampled Metal allocation was 37,286,100,992 bytes for main and off, and 37,738,201,088 bytes for on. Maximum observed steady-request new system swap-out was respectively 0, 180,076,544 and 18,677,760 bytes in the pilot. These are below the resource limits, but off/on are not zero-swap runs. Sampled allocation is not a continuous physical residency high-water mark. The enabled layout's separate payload remains 540,344,320 bytes (515.3125 MiB).
+
+## Restoration and disposition
+
+Automatic cleanup reported `childCleanup:GateError` and refused to reload the original service while ownership cleanup was uncertain. The exact child/probe failure was not recorded, so its root cause is not established. The parent subsequently verified all recorded children had exited, sent no signals, checked unchanged original file hashes, waited for resource quiescence and bootstrapped the original definition. Final hashes remained unchanged. Original build `0.3.0+cd6f7da401fadf044dac13e87b415d27bb5eadfb` returned to its prior `Ready/ready=false` state; successful real-request readiness is not claimed. Both failed automatic restoration and successful definition recovery are preserved.
+
+Copilot subsequently added an owned-Popen exit recheck around failed/mismatched identity probes, preserving refusal to signal changed live identities and checks before escalation. The cleanup-only commit is `0bfc338e7e7a94a863cdb296b5232e4fc03dfbf6`; 70 CPU tests passed, including eleven new race/refusal/cancellation cases. All 269 snapshotted original trial artifacts remained hash-identical. The historical cleanup cause remains unproved, and this follow-up has no GPU measurement. [Copilot provenance](evaluations/issue103/stream-repair-provenance.json) records all three repair/tooling sessions.
+
+The measured source remains `dcf72d8769ed6836c3885f3f23d7b528324e2154`. Any subsequent cleanup-only fix must be identified separately and cannot inherit this measurement identity. Original coordinator, Windows service, power settings and wired limit were unchanged.
+
+The stream/accounting repair has CPU fault-path evidence and complete live pilot accounting. The affine8 layout has correctness evidence but **no measured pilot benefit**, while adding memory. Do not recommend adoption. The requested formal20 comparison remains unfinished because of the explicit power stop. Before another run, validate the cleanup follow-up under its appropriate acceptance scope and choose a pre-registered power schedule capable of completing comparable arms; do not relax thresholds or stitch these nine tasks into a complete cohort. No merge or GPU rerun is performed as part of documenting this result. Results validation passed 26 Python site tests, 27 JavaScript checks, the site build and whitespace/privacy checks. The JavaScript fixture loader initially exceeded its default 1 MiB buffer; Copilot set a bounded 8 MiB buffer without reducing evidence or assertions, and the checks passed.
+
+---
+
+The earlier incomplete attempt and its observations are preserved below. Statements in that section describe that earlier attempt, not the repaired trial above.
+
+# Retained first attempt: pilot stopped on stream integrity
 
 **Decoding improvement is Not Obtained.** The user-authorized, fully charged 35 W attempt passed native and full-model sequence/lifecycle gates. HumanEval5 ran on main and candidate off, but stopped on a malformed tool-call stream and token reconciliation failure in the off arm. Candidate-on performance, HumanEval20 and formal fixed-shape performance did not run. No measured sample was retried. Keep the candidate default off and unmerged.
 

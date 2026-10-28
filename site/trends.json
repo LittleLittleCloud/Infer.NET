@@ -60,6 +60,11 @@
       "sha": "dee76d916361d4ad0d81cf44543cbee4b7a78488",
       "committedAt": "2026-10-28T02:18:35Z",
       "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dee76d916361d4ad0d81cf44543cbee4b7a78488"
+    },
+    {
+      "sha": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "committedAt": "2026-10-28T05:08:05Z",
+      "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dcf72d8769ed6836c3885f3f23d7b528324e2154"
     }
   ],
   "configurations": [
@@ -602,6 +607,95 @@
         "ttft": "client-send-to-first-valid-output-token"
       },
       "latestBaselineRun": null
+    },
+    {
+      "id": "issue103-stream35w-pilot",
+      "label": "Issue #103 · repaired common API host · complete pilot5 · 35 W",
+      "model": "qwen3.6-35b-a3b",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weights": "affine 8bit / group64",
+      "kv": "FP32",
+      "cache": "No prefix cache; cacheRead/cacheWrite = 0",
+      "chunking": "Managed prefill 32, native scratch 128, fused FP32 decode, threshold 262144; original affine8 LM head or opt-in tile4; no speculation",
+      "topology": "Single M5 Pro 20GPU/48GiB inference worker; common repaired API host dcf72d8769ed6836c3885f3f23d7b528324e2154 for both loopback coordinators; Windows absent. Chart commit is the inference worker.",
+      "network": "Loopback; two observer hops; TTFT excludes Pi-to-observer dispatch",
+      "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+      "workload": "Pi 1.4.0 seed0 fixed pilot5, all arms complete; timeout300s/context32768/output4096",
+      "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+      "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "plannedTasks": [
+        "HumanEval/156",
+        "HumanEval/94",
+        "HumanEval/72",
+        "HumanEval/80",
+        "HumanEval/149"
+      ],
+      "timing": {
+        "wall": "Pi task subprocess start to exit, including tools",
+        "prefill": "Worker prefill clock; complete pilot coverage, incomplete formal aggregate withheld",
+        "decode": "Worker N-1 decode clock; complete pilot coverage, incomplete formal aggregate withheld",
+        "ttft": "client-send-to-first-valid-output-token"
+      },
+      "latestBaselineRun": null,
+      "commonCoordinator": {
+        "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+        "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      }
+    },
+    {
+      "id": "issue103-stream35w-cohort",
+      "label": "Issue #103 · repaired common API host · interrupted formal20 · 35 W",
+      "model": "qwen3.6-35b-a3b",
+      "modelRevision": "e06a74e6236a60c8367e1a3214e83d8b61b637b0",
+      "weights": "affine 8bit / group64",
+      "kv": "FP32",
+      "cache": "No prefix cache; cacheRead/cacheWrite = 0",
+      "chunking": "Managed prefill 32, native scratch 128, fused FP32 decode, threshold 262144; original affine8 LM head or opt-in tile4; no speculation",
+      "topology": "Single M5 Pro 20GPU/48GiB inference worker; common repaired API host dcf72d8769ed6836c3885f3f23d7b528324e2154 for both loopback coordinators; Windows absent. Chart commit is the inference worker.",
+      "network": "Loopback; two observer hops; TTFT excludes Pi-to-observer dispatch",
+      "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+      "workload": "Pi 1.4.0 seed0 fixed20, on interrupted after9 completed tasks; off/main not run; timeout300s/context32768/output4096",
+      "datasetRevision": "b9453e8f1865df0a0057a1383767caa400acfbcf",
+      "datasetSha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+      "plannedTasks": [
+        "HumanEval/156",
+        "HumanEval/94",
+        "HumanEval/72",
+        "HumanEval/80",
+        "HumanEval/149",
+        "HumanEval/2",
+        "HumanEval/35",
+        "HumanEval/32",
+        "HumanEval/146",
+        "HumanEval/137",
+        "HumanEval/97",
+        "HumanEval/154",
+        "HumanEval/6",
+        "HumanEval/161",
+        "HumanEval/115",
+        "HumanEval/131",
+        "HumanEval/162",
+        "HumanEval/50",
+        "HumanEval/47",
+        "HumanEval/148"
+      ],
+      "timing": {
+        "wall": "Pi task subprocess start to exit, including tools",
+        "prefill": "Worker prefill clock; complete pilot coverage, incomplete formal aggregate withheld",
+        "decode": "Worker N-1 decode clock; complete pilot coverage, incomplete formal aggregate withheld",
+        "ttft": "client-send-to-first-valid-output-token"
+      },
+      "latestBaselineRun": null,
+      "commonCoordinator": {
+        "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+        "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+      }
     }
   ],
   "imports": [
@@ -31932,6 +32026,1657 @@
         }
       ],
       "controllerCommit": "dee76d916361d4ad0d81cf44543cbee4b7a78488"
+    },
+    {
+      "id": "issue103-stream35w-pilot-main",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-stream35w-pilot",
+      "title": "Issue #103 · main inference · complete pilot5 · common repaired API",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+      "state": "pending-review",
+      "change": "Unchanged main inference under common repaired API",
+      "result": "Complete Pi5/5 and official5/5; request coverage 22/22; prefill 154.8814, decode 60.2806 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+      "provenance": {
+        "kind": "main",
+        "mainCommit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd",
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+      },
+      "baselineRunId": null,
+      "runtime": {
+        "macServe": {
+          "commit": "4f51f241e87999c8cc3f79d733cd95ade9c711cd"
+        }
+      },
+      "commonCoordinator": {
+        "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "package": {
+          "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+          "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+          "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+        }
+      },
+      "conditions": {
+        "topology": "The runtime axis identifies the inference worker only. Both loopback API coordinators use dcf72d8769ed6836c3885f3f23d7b528324e2154 in every arm; this is not an untouched whole-stack main run.",
+        "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+        "integrity": "Complete Pi5/5 and official5/5; request coverage 22/22; prefill 154.8814, decode 60.2806 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+        "adoption": "No pilot decoding gain; formal20 comparison incomplete; candidate default-off and unmerged",
+        "timing": "Worker-clock sums, no mean of request rates. Observer TTFT excludes Pi-to-observer dispatch. Complete pilot requests retained; interrupted formal aggregate null."
+      },
+      "binarySha256": {
+        "macExecutable": "7c30c7ff8fba970e90c0934f3d54a199c67f2a46410240995c349b8cc22d816f",
+        "macMetalLibrary": "1739ff5dd22a4b158f97d84d39268478a75d5683f4a9ad1a3cd0d1a8f79d4aef",
+        "commonApiExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "controllerCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "requestCount": 22,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 1608,
+          "outputTokens": 360,
+          "prefillSeconds": 10.2542174,
+          "decodeSeconds": 5.8881852,
+          "clientTtftMs": 16162.483999999999,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2046,
+          "outputTokens": 316,
+          "prefillSeconds": 13.1877946,
+          "decodeSeconds": 5.203750299999999,
+          "clientTtftMs": 18414.06575,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2399,
+          "outputTokens": 317,
+          "prefillSeconds": 15.4678364,
+          "decodeSeconds": 5.2128436,
+          "clientTtftMs": 20700.133875,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2740,
+          "outputTokens": 55,
+          "prefillSeconds": 17.788404,
+          "decodeSeconds": 0.8799778000000006,
+          "clientTtftMs": 18689.337375,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 1824,
+          "outputTokens": 581,
+          "prefillSeconds": 11.6266317,
+          "decodeSeconds": 9.6061695,
+          "clientTtftMs": 21253.499333999996,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2477,
+          "outputTokens": 414,
+          "prefillSeconds": 15.9761367,
+          "decodeSeconds": 6.8513164,
+          "clientTtftMs": 22845.860583000005,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3008,
+          "outputTokens": 76,
+          "prefillSeconds": 19.411401,
+          "decodeSeconds": 1.2434953999999998,
+          "clientTtftMs": 20675.92074999999,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 1729,
+          "outputTokens": 372,
+          "prefillSeconds": 11.063165699999999,
+          "decodeSeconds": 6.1412882999999985,
+          "clientTtftMs": 17225.915582999987,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2170,
+          "outputTokens": 205,
+          "prefillSeconds": 14.0635765,
+          "decodeSeconds": 3.362040900000002,
+          "clientTtftMs": 17449.097832999996,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2399,
+          "outputTokens": 79,
+          "prefillSeconds": 15.5203984,
+          "decodeSeconds": 1.3624197000000005,
+          "clientTtftMs": 16904.310208,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1615,
+          "outputTokens": 277,
+          "prefillSeconds": 10.319660599999999,
+          "decodeSeconds": 4.5644195,
+          "clientTtftMs": 14907.328583999999,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1961,
+          "outputTokens": 274,
+          "prefillSeconds": 12.620980900000001,
+          "decodeSeconds": 4.579550899999998,
+          "clientTtftMs": 17219.789125000007,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2259,
+          "outputTokens": 66,
+          "prefillSeconds": 14.5592385,
+          "decodeSeconds": 1.088011700000001,
+          "clientTtftMs": 15667.923832999975,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 1691,
+          "outputTokens": 339,
+          "prefillSeconds": 10.7722228,
+          "decodeSeconds": 5.5827888,
+          "clientTtftMs": 16372.528000000017,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2100,
+          "outputTokens": 310,
+          "prefillSeconds": 13.601904200000002,
+          "decodeSeconds": 5.113996299999999,
+          "clientTtftMs": 18736.07820799998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2443,
+          "outputTokens": 31,
+          "prefillSeconds": 15.8375016,
+          "decodeSeconds": 0.5000388999999995,
+          "clientTtftMs": 16355.030541000018,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2537,
+          "outputTokens": 339,
+          "prefillSeconds": 16.3716354,
+          "decodeSeconds": 5.6045669,
+          "clientTtftMs": 21995.442457999958,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2946,
+          "outputTokens": 320,
+          "prefillSeconds": 19.133653900000002,
+          "decodeSeconds": 5.3132082999999986,
+          "clientTtftMs": 24467.265499999998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00020",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3319,
+          "outputTokens": 107,
+          "prefillSeconds": 21.5089008,
+          "decodeSeconds": 1.7620801999999967,
+          "clientTtftMs": 23292.157083000006,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00021",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3458,
+          "outputTokens": 140,
+          "prefillSeconds": 22.457417,
+          "decodeSeconds": 2.2970033000000005,
+          "clientTtftMs": 24773.754541000017,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00022",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3631,
+          "outputTokens": 389,
+          "prefillSeconds": 23.4699662,
+          "decodeSeconds": 6.496367899999997,
+          "clientTtftMs": 29986.72191700001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00023",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 4044,
+          "outputTokens": 55,
+          "prefillSeconds": 26.2497854,
+          "decodeSeconds": 0.9275985000000001,
+          "clientTtftMs": 27197.693500000016,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 74.282644709,
+          "inputTokens": 8793,
+          "outputTokens": 1048,
+          "modelRequests": 4,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 65.058142084,
+          "inputTokens": 7309,
+          "outputTokens": 1071,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 51.86131125,
+          "inputTokens": 6298,
+          "outputTokens": 656,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 48.09764654099999,
+          "inputTokens": 5835,
+          "outputTokens": 617,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 203.579036334,
+          "inputTokens": 26169,
+          "outputTokens": 2030,
+          "modelRequests": 9,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+        "availability": "Public sanitized request/task records and restricted local raw hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized trial evidence",
+          "url": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ]
+    },
+    {
+      "id": "issue103-stream35w-pilot-off",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-stream35w-pilot",
+      "title": "Issue #103 · off inference · complete pilot5 · common repaired API",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "state": "pending-review",
+      "change": "Candidate worker with tile4 disabled",
+      "result": "Complete Pi5/5 and official5/5; request coverage 26/26; prefill 155.9005, decode 60.3149 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+      "provenance": {
+        "kind": "candidate",
+        "mainCommit": null,
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dcf72d8769ed6836c3885f3f23d7b528324e2154"
+      },
+      "baselineRunId": "issue103-stream35w-pilot-main",
+      "runtime": {
+        "macServe": {
+          "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154"
+        }
+      },
+      "commonCoordinator": {
+        "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "package": {
+          "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+          "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+          "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+        }
+      },
+      "conditions": {
+        "topology": "The runtime axis identifies the inference worker only. Both loopback API coordinators use dcf72d8769ed6836c3885f3f23d7b528324e2154 in every arm; this is not an untouched whole-stack main run.",
+        "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+        "integrity": "Complete Pi5/5 and official5/5; request coverage 26/26; prefill 155.9005, decode 60.3149 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+        "adoption": "No pilot decoding gain; formal20 comparison incomplete; candidate default-off and unmerged",
+        "timing": "Worker-clock sums, no mean of request rates. Observer TTFT excludes Pi-to-observer dispatch. Complete pilot requests retained; interrupted formal aggregate null."
+      },
+      "binarySha256": {
+        "macExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "macMetalLibrary": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458",
+        "commonApiExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "controllerCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "requestCount": 26,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 1606,
+          "outputTokens": 358,
+          "prefillSeconds": 10.3302017,
+          "decodeSeconds": 5.868003000000001,
+          "clientTtftMs": 16220.545584,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2040,
+          "outputTokens": 241,
+          "prefillSeconds": 13.1790038,
+          "decodeSeconds": 3.9726660999999988,
+          "clientTtftMs": 17171.728708,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2318,
+          "outputTokens": 242,
+          "prefillSeconds": 14.9450109,
+          "decodeSeconds": 3.9796600999999994,
+          "clientTtftMs": 18947.116875,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2584,
+          "outputTokens": 22,
+          "prefillSeconds": 16.9385798,
+          "decodeSeconds": 0.33121069999999964,
+          "clientTtftMs": 17290.22200000001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 1822,
+          "outputTokens": 576,
+          "prefillSeconds": 11.6293908,
+          "decodeSeconds": 9.530668899999998,
+          "clientTtftMs": 21177.53574999999,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2459,
+          "outputTokens": 31,
+          "prefillSeconds": 15.825502,
+          "decodeSeconds": 0.49427889999999935,
+          "clientTtftMs": 16338.974875000005,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2553,
+          "outputTokens": 533,
+          "prefillSeconds": 16.4174829,
+          "decodeSeconds": 8.846673,
+          "clientTtftMs": 25284.233333000004,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3119,
+          "outputTokens": 33,
+          "prefillSeconds": 20.1321916,
+          "decodeSeconds": 0.5373651000000027,
+          "clientTtftMs": 20687.716332999997,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3228,
+          "outputTokens": 531,
+          "prefillSeconds": 20.7811399,
+          "decodeSeconds": 8.8135827,
+          "clientTtftMs": 29614.032707999995,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 3784,
+          "outputTokens": 366,
+          "prefillSeconds": 24.5090331,
+          "decodeSeconds": 6.188435000000001,
+          "clientTtftMs": 30722.366625000006,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 4267,
+          "outputTokens": 97,
+          "prefillSeconds": 27.554654,
+          "decodeSeconds": 1.590585500000001,
+          "clientTtftMs": 29165.456625000017,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 1731,
+          "outputTokens": 374,
+          "prefillSeconds": 11.073194299999999,
+          "decodeSeconds": 6.136461799999999,
+          "clientTtftMs": 17227.319250000022,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2176,
+          "outputTokens": 207,
+          "prefillSeconds": 14.1937751,
+          "decodeSeconds": 3.420287400000001,
+          "clientTtftMs": 17632.940833000022,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2407,
+          "outputTokens": 79,
+          "prefillSeconds": 15.5598663,
+          "decodeSeconds": 1.2795763999999998,
+          "clientTtftMs": 16859.47349999998,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1618,
+          "outputTokens": 234,
+          "prefillSeconds": 10.2922112,
+          "decodeSeconds": 3.8426327000000002,
+          "clientTtftMs": 14153.99633300001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1877,
+          "outputTokens": 122,
+          "prefillSeconds": 12.0531191,
+          "decodeSeconds": 1.991520199999999,
+          "clientTtftMs": 14062.124208000001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00018",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2023,
+          "outputTokens": 67,
+          "prefillSeconds": 13.1696597,
+          "decodeSeconds": 1.0877986999999993,
+          "clientTtftMs": 14277.773167000021,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00019",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 1691,
+          "outputTokens": 331,
+          "prefillSeconds": 10.7784621,
+          "decodeSeconds": 5.430821,
+          "clientTtftMs": 16229.76545800003,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00020",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2088,
+          "outputTokens": 31,
+          "prefillSeconds": 13.4371037,
+          "decodeSeconds": 0.4921797999999999,
+          "clientTtftMs": 13950.288333999993,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00021",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2182,
+          "outputTokens": 297,
+          "prefillSeconds": 13.371454,
+          "decodeSeconds": 4.889586799999999,
+          "clientTtftMs": 18280.942166000044,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00022",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2512,
+          "outputTokens": 33,
+          "prefillSeconds": 15.9191291,
+          "decodeSeconds": 0.5349730999999992,
+          "clientTtftMs": 16474.536375000014,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00023",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2621,
+          "outputTokens": 294,
+          "prefillSeconds": 16.652698400000002,
+          "decodeSeconds": 4.8763721,
+          "clientTtftMs": 21549.904834000015,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00024",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2938,
+          "outputTokens": 32,
+          "prefillSeconds": 18.6736682,
+          "decodeSeconds": 0.5190445999999974,
+          "clientTtftMs": 19212.62945800004,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00025",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3006,
+          "outputTokens": 33,
+          "prefillSeconds": 19.1061231,
+          "decodeSeconds": 0.5325927999999985,
+          "clientTtftMs": 19658.672249999996,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00026",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3312,
+          "outputTokens": 275,
+          "prefillSeconds": 21.084468400000002,
+          "decodeSeconds": 4.567959600000002,
+          "clientTtftMs": 25672.623874999997,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00027",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3666,
+          "outputTokens": 67,
+          "prefillSeconds": 23.353768199999998,
+          "decodeSeconds": 1.1015818,
+          "clientTtftMs": 24475.478375000024,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 69.954071584,
+          "inputTokens": 8548,
+          "outputTokens": 863,
+          "modelRequests": 4,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 173.331051625,
+          "inputTokens": 21232,
+          "outputTokens": 2167,
+          "modelRequests": 7,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 52.01604866700001,
+          "inputTokens": 6314,
+          "outputTokens": 660,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 42.78010408299997,
+          "inputTokens": 5518,
+          "outputTokens": 423,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 175.85950462499994,
+          "inputTokens": 24016,
+          "outputTokens": 1393,
+          "modelRequests": 9,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+        "availability": "Public sanitized request/task records and restricted local raw hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized trial evidence",
+          "url": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ]
+    },
+    {
+      "id": "issue103-stream35w-pilot-on",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-stream35w-pilot",
+      "title": "Issue #103 · on inference · complete pilot5 · common repaired API",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "state": "pending-review",
+      "change": "Candidate worker with tile4 enabled",
+      "result": "Complete Pi5/5 and official5/5; request coverage 16/16; prefill 157.6539, decode 60.1165 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+      "provenance": {
+        "kind": "candidate",
+        "mainCommit": null,
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dcf72d8769ed6836c3885f3f23d7b528324e2154"
+      },
+      "baselineRunId": "issue103-stream35w-pilot-main",
+      "runtime": {
+        "macServe": {
+          "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154"
+        }
+      },
+      "commonCoordinator": {
+        "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "package": {
+          "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+          "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+          "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+        }
+      },
+      "conditions": {
+        "topology": "The runtime axis identifies the inference worker only. Both loopback API coordinators use dcf72d8769ed6836c3885f3f23d7b528324e2154 in every arm; this is not an untouched whole-stack main run.",
+        "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+        "integrity": "Complete Pi5/5 and official5/5; request coverage 16/16; prefill 157.6539, decode 60.1165 tok/s. Pilot on/main decode -0.2722%; no demonstrated gain.",
+        "adoption": "No pilot decoding gain; formal20 comparison incomplete; candidate default-off and unmerged",
+        "timing": "Worker-clock sums, no mean of request rates. Observer TTFT excludes Pi-to-observer dispatch. Complete pilot requests retained; interrupted formal aggregate null."
+      },
+      "binarySha256": {
+        "macExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "macMetalLibrary": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458",
+        "commonApiExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "controllerCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "requestCount": 16,
+      "requests": [
+        {
+          "id": "observer-00002",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 1608,
+          "outputTokens": 367,
+          "prefillSeconds": 10.113833399999999,
+          "decodeSeconds": 6.100177099999999,
+          "clientTtftMs": 16234.978417,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00003",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2046,
+          "outputTokens": 270,
+          "prefillSeconds": 12.9893904,
+          "decodeSeconds": 4.465446,
+          "clientTtftMs": 17474.876792,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00004",
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "inputTokens": 2340,
+          "outputTokens": 59,
+          "prefillSeconds": 14.878152700000001,
+          "decodeSeconds": 0.9655246999999999,
+          "clientTtftMs": 15863.200834000005,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00005",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 1822,
+          "outputTokens": 571,
+          "prefillSeconds": 11.4706913,
+          "decodeSeconds": 9.472525999999998,
+          "clientTtftMs": 20962.861624999994,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00006",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2463,
+          "outputTokens": 412,
+          "prefillSeconds": 15.613375,
+          "decodeSeconds": 6.845288400000001,
+          "clientTtftMs": 22478.498208999994,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00007",
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "inputTokens": 2992,
+          "outputTokens": 76,
+          "prefillSeconds": 18.9722564,
+          "decodeSeconds": 1.2498246999999973,
+          "clientTtftMs": 20242.558916999995,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00008",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 1731,
+          "outputTokens": 374,
+          "prefillSeconds": 10.9196338,
+          "decodeSeconds": 6.186636399999999,
+          "clientTtftMs": 17125.9,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00009",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2176,
+          "outputTokens": 207,
+          "prefillSeconds": 13.8682053,
+          "decodeSeconds": 3.4305095000000003,
+          "clientTtftMs": 17319.242624999988,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00010",
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "inputTokens": 2407,
+          "outputTokens": 81,
+          "prefillSeconds": 15.3503933,
+          "decodeSeconds": 1.3336005000000022,
+          "clientTtftMs": 16704.402541999996,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00011",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1615,
+          "outputTokens": 277,
+          "prefillSeconds": 10.1366469,
+          "decodeSeconds": 4.5744061,
+          "clientTtftMs": 14732.927625000002,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00012",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 1961,
+          "outputTokens": 273,
+          "prefillSeconds": 12.434216000000001,
+          "decodeSeconds": 4.520369600000002,
+          "clientTtftMs": 16974.59487500001,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00013",
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "inputTokens": 2258,
+          "outputTokens": 79,
+          "prefillSeconds": 14.3600672,
+          "decodeSeconds": 1.2998353000000007,
+          "clientTtftMs": 15680.397333000003,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00014",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 1691,
+          "outputTokens": 383,
+          "prefillSeconds": 10.6231697,
+          "decodeSeconds": 6.3362979,
+          "clientTtftMs": 16978.888042000024,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00015",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2154,
+          "outputTokens": 541,
+          "prefillSeconds": 13.6864293,
+          "decodeSeconds": 8.989733099999999,
+          "clientTtftMs": 22695.70095900002,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00016",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 2809,
+          "outputTokens": 697,
+          "prefillSeconds": 17.878159500000002,
+          "decodeSeconds": 11.6075832,
+          "clientTtftMs": 29507.039832999966,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "id": "observer-00017",
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "inputTokens": 3608,
+          "outputTokens": 61,
+          "prefillSeconds": 23.030282200000002,
+          "decodeSeconds": 1.003382099999999,
+          "clientTtftMs": 24053.708416999994,
+          "ttftBoundary": "client-send-to-first-valid-output-token",
+          "firstTokenReceived": true,
+          "outcome": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 49.874077375,
+          "inputTokens": 5994,
+          "outputTokens": 696,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 63.986093833000005,
+          "inputTokens": 7277,
+          "outputTokens": 1059,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 51.449901749999995,
+          "inputTokens": 6314,
+          "outputTokens": 662,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 47.69162758300001,
+          "inputTokens": 5834,
+          "outputTokens": 629,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 93.57014749999999,
+          "inputTokens": 10262,
+          "outputTokens": 1682,
+          "modelRequests": 4,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+        "availability": "Public sanitized request/task records and restricted local raw hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized trial evidence",
+          "url": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ]
+    },
+    {
+      "id": "issue103-stream35w-cohort-on",
+      "experimentId": "lmhead-affine8-20261027",
+      "configurationId": "issue103-stream35w-cohort",
+      "title": "Issue #103 · on inference · power-stopped formal20 · common repaired API",
+      "date": "2026-10-27 America/Los_Angeles",
+      "measuredCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "state": "failed",
+      "change": "Candidate worker with tile4 enabled",
+      "result": "Power stop at SOC79: only9/20 Pi tasks completed. All9 available artifacts passed official assertions;11 planned artifacts missing. Active request interrupted; no complete formal20 throughput or comparison.",
+      "provenance": {
+        "kind": "candidate",
+        "mainCommit": null,
+        "evidence": "https://github.com/LittleLittleCloud/Infer.NET/commit/dcf72d8769ed6836c3885f3f23d7b528324e2154"
+      },
+      "baselineRunId": null,
+      "runtime": {
+        "macServe": {
+          "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154"
+        }
+      },
+      "commonCoordinator": {
+        "commit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+        "package": {
+          "source": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "version": "0.3.0+dcf72d8769ed6836c3885f3f23d7b528324e2154",
+          "manifestSha256": "8b7ee09b29c11e8895c57d7c3d4f5474a872d8d46e6fb049a29735255e632e1c",
+          "executableSha256": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+          "nativeSha256": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458"
+        }
+      },
+      "conditions": {
+        "topology": "The runtime axis identifies the inference worker only. Both loopback API coordinators use dcf72d8769ed6836c3885f3f23d7b528324e2154 in every arm; this is not an untouched whole-stack main run.",
+        "power": "35 W battery-assisted, High Power; whole trial SOC 100% to 79%; pilot completed before later 80% floor violation; no stable140 W acceptance",
+        "integrity": "Power stop at SOC79: only9/20 Pi tasks completed. All9 available artifacts passed official assertions;11 planned artifacts missing. Active request interrupted; no complete formal20 throughput or comparison.",
+        "adoption": "No pilot decoding gain; formal20 comparison incomplete; candidate default-off and unmerged",
+        "timing": "Worker-clock sums, no mean of request rates. Observer TTFT excludes Pi-to-observer dispatch. Complete pilot requests retained; interrupted formal aggregate null."
+      },
+      "binarySha256": {
+        "macExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10",
+        "macMetalLibrary": "2c8f58f5488301cfc66b4c66d0ed371f3c4e2a1427316938a2b84aabd10ee458",
+        "commonApiExecutable": "d8babfaaa74f0d2d9b1e0d624f72c5fa60b43d8b8e1b52412976f352faa09f10"
+      },
+      "binaryEvidence": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+      "harnessCommit": "349400b92b9de5efb88d73ce8cf5931f94f9e7b7",
+      "harnessSha256": "594f60571fabc5d05d7aa849cfd25ad668a3ee8fed7c5f278b6a7ea47b9d9c22",
+      "controllerCommit": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+      "requestCount": 39,
+      "requests": null,
+      "tasks": [
+        {
+          "taskId": "HumanEval/156",
+          "attempt": 1,
+          "wallSeconds": 74.187156833,
+          "inputTokens": 8780,
+          "outputTokens": 1091,
+          "modelRequests": 4,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/94",
+          "attempt": 1,
+          "wallSeconds": 63.993219374999995,
+          "inputTokens": 7277,
+          "outputTokens": 1059,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/72",
+          "attempt": 1,
+          "wallSeconds": 51.53879120799999,
+          "inputTokens": 6306,
+          "outputTokens": 670,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/80",
+          "attempt": 1,
+          "wallSeconds": 47.476639834000025,
+          "inputTokens": 5847,
+          "outputTokens": 613,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/149",
+          "attempt": 1,
+          "wallSeconds": 101.49450450000003,
+          "inputTokens": 12358,
+          "outputTokens": 1367,
+          "modelRequests": 5,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/2",
+          "attempt": 1,
+          "wallSeconds": 68.93146375000003,
+          "inputTokens": 9581,
+          "outputTokens": 479,
+          "modelRequests": 5,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/35",
+          "attempt": 1,
+          "wallSeconds": 57.404227624999976,
+          "inputTokens": 7580,
+          "outputTokens": 547,
+          "modelRequests": 4,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/32",
+          "attempt": 1,
+          "wallSeconds": 68.28332937500005,
+          "inputTokens": 7439,
+          "outputTokens": 1249,
+          "modelRequests": 3,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/146",
+          "attempt": 1,
+          "wallSeconds": 159.15700979199994,
+          "inputTokens": 20774,
+          "outputTokens": 1603,
+          "modelRequests": 8,
+          "status": "passed",
+          "officialValidation": "passed",
+          "piStatus": "completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/137",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/97",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/154",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/6",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/161",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/115",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/131",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/162",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/50",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/47",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        },
+        {
+          "taskId": "HumanEval/148",
+          "attempt": 1,
+          "wallSeconds": null,
+          "inputTokens": null,
+          "outputTokens": null,
+          "modelRequests": null,
+          "status": "incomplete",
+          "officialValidation": "not-run",
+          "piStatus": "not-completed",
+          "source": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ],
+      "rawEvidence": {
+        "inventory": "docs/evaluations/issue103/stream-repaired-trial-summary.json",
+        "availability": "Public sanitized request/task records and restricted local raw hashes"
+      },
+      "links": [
+        {
+          "role": "issue",
+          "label": "Experiment #103",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/issues/103"
+        },
+        {
+          "role": "code-pr",
+          "label": "Candidate #104",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/104"
+        },
+        {
+          "role": "results-pr",
+          "label": "Results #105",
+          "url": "https://github.com/LittleLittleCloud/Infer.NET/pull/105"
+        },
+        {
+          "role": "report",
+          "label": "Report",
+          "url": "docs/EXPERIMENT-103-LMHEAD-AFFINE8-20261027.md"
+        },
+        {
+          "role": "evidence",
+          "label": "Sanitized trial evidence",
+          "url": "docs/evaluations/issue103/stream-repaired-trial-summary.json"
+        }
+      ]
     }
   ]
 }

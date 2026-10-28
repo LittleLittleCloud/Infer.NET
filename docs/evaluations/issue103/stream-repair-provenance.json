@@ -1,0 +1,44 @@
+{
+  "measuredSource": "dcf72d8769ed6836c3885f3f23d7b528324e2154",
+  "postMeasurementCleanupSource": "0bfc338e7e7a94a863cdb296b5232e4fc03dfbf6",
+  "postMeasurementCleanupGpuTested": false,
+  "implementationProvider": "GitHub Copilot CLI 1.0.103",
+  "phases": {
+    "stream-fix": {
+      "actualModel": "gpt-6.1-sol",
+      "noSubagents": true,
+      "exitCode": 0,
+      "rawAvailability": "Restricted local artifacts; hashes only are public",
+      "files": {
+        "prompt.txt": "a7ba0778bc19d1d6bd7b0781e3d4963bcab8725a462b487858373214ede912f2",
+        "usage.json": "6060d4e62723e65f1b4cf65da87d8a25e307c294fa5a7f6188a96bebb16a1c5a",
+        "session.jsonl": "6ba720ceef34495a9b36d1e63094a2fb9a79ffda999f3c578b7db705c11852cc",
+        "exit.json": "1476d9b3659cd2cb72bf2ee427d164d9cd424dd65b9f3caa2effb5b23325a735"
+      }
+    },
+    "stream-cleanup-fix": {
+      "actualModel": "gpt-6.1-sol",
+      "noSubagents": true,
+      "exitCode": 0,
+      "rawAvailability": "Restricted local artifacts; hashes only are public",
+      "files": {
+        "prompt.txt": "279f0ba4802c5a95d9459c06d2b3bcd0f8321fd8e526b0dc0037db1a6d1a9ae0",
+        "usage.json": "f7c19a9e88d59f3f71ceeaeef8f32dbaefb58138483421e0b42dc1943bfc0a9b",
+        "session.jsonl": "319cb00bb9dff08a5ca6a3efbd5c69b8363e5fa78bbb6a1eb466a3ac49054fbb",
+        "exit.json": "7c837612896e253b37e3ac98c592f5c5f225039d614b89e5d8056e8031140bca"
+      }
+    },
+    "results-buffer-fix": {
+      "actualModel": "gpt-6.1-sol",
+      "noSubagents": true,
+      "exitCode": 0,
+      "rawAvailability": "Restricted local artifacts; hashes only are public",
+      "files": {
+        "prompt.txt": "2a8d1eb3693f25ccfc3ffaffedb632cae74cf90d6cd7e715a9d62febabb44923",
+        "usage.json": "dd73aa0cf0d7534fe8786b16cf61f83039634e1a2d4d37984693ea576e1c4d2e",
+        "session.jsonl": "d97b25b50a93aeca7a7187060fc17f57195ee3621718575e497a446d75cf5b2f",
+        "exit.json": "b92d5889352e7767debe844b858580923d479119f1cf226816a0c046a03d69c5"
+      }
+    }
+  }
+}
